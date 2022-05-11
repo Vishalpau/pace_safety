@@ -529,14 +529,13 @@ const AssessmentAndDocument = (props) => {
             data.append('additionalRemarks', additinalJobDetails.additionalRemarks);
             data.append('workStopCondition', additinalJobDetails.workStopCondition.toString());
             data.append('link', "");
-            data.append('qrCodeUrl', undefined);
+            data.append('qrCodeUrl', null);
 
             data.append('jhaAssessmentAttachment', formDocument.jhaAssessmentAttachment);
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
         } else {
             delete formDocument.jhaAssessmentAttachment;
-            formDocument['qrCodeUrl'] = undefined
-
+            formDocument['qrCodeUrl'] = null
             formDocument["jhaStatus"] = "Open"
             formDocument["jhaStage"] = "Open"
             formDocument['link'] = ""

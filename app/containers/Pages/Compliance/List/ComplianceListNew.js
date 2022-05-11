@@ -967,7 +967,7 @@ function ComplianceListNew(props) {
 
                 <Grid item sm={12} xs={12}>
                   <Grid container spacing={3}>
-                    {/* <Grid item sm={3} xs={12}>
+                    <Grid item sm={3} xs={12}>
                       <Typography
                         variant="body1"
                         color="textPrimary"
@@ -979,9 +979,11 @@ function ComplianceListNew(props) {
                       <Typography
                         className={classes.listingLabelValue}
                       >
-                        data not available in api
+                         {value["area"] !== null
+                              ? value["area"]
+                              : "-"}
                       </Typography>
-                    </Grid> */}
+                    </Grid>
 
                     <Grid item sm={3} xs={12}>
                       <Typography
@@ -1039,7 +1041,7 @@ function ComplianceListNew(props) {
               alignItems="left"
               className={classes.cardBottomSection}
             >
-              <Grid item xs={12} sm={6} md={5}>
+              {/* <Grid item xs={12} sm={6} md={5}>
                 <Typography
                   variant="body1"
                   display="inline"
@@ -1060,7 +1062,7 @@ function ComplianceListNew(props) {
                       {`${value['attachmentCount'] ? value['attachmentCount'] : '0'}`}
                     </Link>
                   </span>
-                </Typography>
+                </Typography> */}
                 {/* <span
                   item
                   xs={1}
@@ -1099,7 +1101,7 @@ function ComplianceListNew(props) {
                     </Link>
                   </span>
                 </Typography> */}
-              </Grid>
+              {/* </Grid> */}
 
               <Grid
                 item

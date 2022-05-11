@@ -350,8 +350,8 @@ function Actions(props) {
                   //title="Compliance List"
                   data={allComplianceData.map((data) => [
                     data["auditNumber"],
-                    data["auditType"],
-                    "data not available in api",
+                    data["auditType"] ,
+                    data["area"] ? data["area"] : '-',
                     moment(data["createdAt"]).format("Do MMMM YYYY"),
                     data["username"] !== null ? data["username"] : "-",
                   ])}
