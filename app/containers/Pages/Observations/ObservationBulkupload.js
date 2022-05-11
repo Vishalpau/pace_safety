@@ -235,22 +235,22 @@ function ObservationBulkupload() {
   }
 
   const handleChange = async (event, value) => {
-  //   const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  //   const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-  //     .projectName.projectId;
-  //   const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-  //     : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-  //       ? JSON.parse(localStorage.getItem("selectBreakDown"))
-  //       : null;
-  //  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-  //       ? JSON.parse(localStorage.getItem('userDetails')).id
-  //       : null;
-  //   let struct = "";
+    //   const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    //   const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+    //     .projectName.projectId;
+    //   const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+    //     : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    //       ? JSON.parse(localStorage.getItem("selectBreakDown"))
+    //       : null;
+    //  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    //       ? JSON.parse(localStorage.getItem('userDetails')).id
+    //       : null;
+    //   let struct = "";
 
-  //   for (const i in selectBreakdown) {
-  //     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  //   }
-  //   const fkProjectStructureIds = struct.slice(0, -1);
+    //   for (const i in selectBreakdown) {
+    //     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    //   }
+    //   const fkProjectStructureIds = struct.slice(0, -1);
     // if(props.observation === "My Observations"){
     const res = await appapi.get(`/api/v1/core/bulkuploads/?page=${value}`);
     await setData(res.data.data.results.results);
@@ -289,94 +289,100 @@ function ObservationBulkupload() {
   }, []);
 
   return (
-    <CustomPapperBlock title="iCare Uploads" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
-      {isLoading == false ?
-        <Grid container spacing={3}>
-          <Grid item md={12} xs={12}>
-            <div className="bulkUploadSection">
-              <Grid container spacing={3}>
-                <Grid item xs={12} align="right" className={classes.bulkBTNTopBox}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    className={classes.newFormButton}
-                    disableElevation
-                    startIcon={<CloudUploadIcon />}
-                    style={{ marginLeft: '0.625rem' }}
-                    onClick={() => handleBulkUploadfilePush()}
-                  >
-                   New upload
-                  </Button>
-                </Grid>
+    <Acl
+      module="safety-observations"
+      action="add_observations"
+      html={(
+        <CustomPapperBlock title="iCare Uploads" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
+          {isLoading == false ?
+            <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                <div className="bulkUploadSection">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} align="right" className={classes.bulkBTNTopBox}>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        className={classes.newFormButton}
+                        disableElevation
+                        startIcon={<CloudUploadIcon />}
+                        style={{ marginLeft: '0.625rem' }}
+                        onClick={() => handleBulkUploadfilePush()}
+                      >
+                        New upload
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  {/* <MUIDataTable
+                  className="dataTableSectionDesign"
+                  columns={columns}
+                  data={data}
+                  options={options}
+                /> */}
+                  <Table component={Paper} className="simpleTableDesign">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell className="tableHeadCellFirst">File</TableCell>
+                        <TableCell className="tableHeadCellSecond">Number of records</TableCell>
+                        <TableCell className="tableHeadCellSecond">Processed records</TableCell>
+                        <TableCell className="tableHeadCellSecond">Failed record</TableCell>
+                        <TableCell className="tableHeadCellSecond">Status</TableCell>
+                        <TableCell className="tableHeadCellSecond">Processer</TableCell>
+                        <TableCell className="tableHeadCellSecond">Uploaded date</TableCell>
+                        <TableCell className="tableHeadCellSecond">Processed date</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data.map(row =>
+                        <TableRow>
+                          <TableCell align="left">
+                            {/* <Link to="#">{row.filename}</Link> */}
+                            <Attachment value={row.filename} />
+                          </TableCell>
+                          <TableCell>
+                            {row.numberOfRecords ? row.numberOfRecords : "-"}
+                          </TableCell>
+                          <TableCell>
+                            {row.processedRecords ? row.processedRecords : "-"}
+                          </TableCell>
+                          <TableCell>
+                            {/* <Link to="#"> */}
+                            {row.failedRecordFile != null ?
+                              <Attachment value={row.failedRecordFile} />
+                              : '-'}
+                            {/* {row.failedRecordFile} */}
+                            {/* </Link> */}
+                          </TableCell>
+                          <TableCell>
+                            {row.uploadStatus ? row.uploadStatus : "-"}
+                          </TableCell>
+                          <TableCell>
+                            {row.processer ? row.processer : "-"}
+                          </TableCell>
+                          <TableCell>
+                            {handelDateTime(row.uploadedDate) ? handelDateTime(row.uploadedDate, false) : "-"}
+                          </TableCell>
+                          <TableCell>
+                            {handelDateTime(row.processedDate) ? handelDateTime(row.processedDate) : '-'}
+                          </TableCell>
+                        </TableRow>)}
+                    </TableBody>
+                  </Table>
+                </div>
               </Grid>
-              {/* <MUIDataTable
-                className="dataTableSectionDesign"
-                columns={columns}
-                data={data}
-                options={options}
-              /> */}
-              <Table component={Paper} className="simpleTableDesign">
-                <TableHead>
-                  <TableRow>
-                    <TableCell className="tableHeadCellFirst">File</TableCell>
-                    <TableCell className="tableHeadCellSecond">Number of records</TableCell>
-                    <TableCell className="tableHeadCellSecond">Processed records</TableCell>
-                    <TableCell className="tableHeadCellSecond">Failed record</TableCell>
-                    <TableCell className="tableHeadCellSecond">Status</TableCell>
-                    <TableCell className="tableHeadCellSecond">Processer</TableCell>
-                    <TableCell className="tableHeadCellSecond">Uploaded date</TableCell>
-                    <TableCell className="tableHeadCellSecond">Processed date</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.map(row =>
-                    <TableRow>
-                      <TableCell align="left">
-                        {/* <Link to="#">{row.filename}</Link> */}
-                        <Attachment value={row.filename}/>
-                      </TableCell>
-                      <TableCell>
-                        {row.numberOfRecords ? row.numberOfRecords : "-"}
-                      </TableCell>
-                      <TableCell>
-                        {row.processedRecords ? row.processedRecords : "-"}
-                      </TableCell>
-                      <TableCell>
-                        {/* <Link to="#"> */}
-                         {row.failedRecordFile != null ? 
-                         <Attachment value={row.failedRecordFile}/>
-                         : '-'}
-                          {/* {row.failedRecordFile} */}
-                        {/* </Link> */}
-                      </TableCell>
-                      <TableCell>
-                        {row.uploadStatus ? row.uploadStatus : "-"}
-                      </TableCell>
-                      <TableCell>
-                        {row.processer ? row.processer : "-" }
-                      </TableCell>
-                      <TableCell>
-                        {handelDateTime(row.uploadedDate) ? handelDateTime(row.uploadedDate, false) : "-"}
-                      </TableCell>
-                      <TableCell>
-                        {handelDateTime(row.processedDate) ? handelDateTime(row.processedDate) : '-'}
-                      </TableCell>
-                    </TableRow>)}
-                </TableBody>
-              </Table>
-            </div>
-          </Grid>
-          <div className={classes.pagination}>
-          <span>{totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}</span>
-            <Pagination count={pageCount} page={page} 
-            onChange={handleChange}
-             />
-          </div>
+              <div className={classes.pagination}>
+                <span>{totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}</span>
+                <Pagination count={pageCount} page={page}
+                  onChange={handleChange}
+                />
+              </div>
 
-        </Grid>
-        : <Loading />}
+            </Grid>
+            : <Loading />}
 
-    </CustomPapperBlock>
+        </CustomPapperBlock>
+      )} />
+
     //   </Box>
     // </PapperBlock>
   );
