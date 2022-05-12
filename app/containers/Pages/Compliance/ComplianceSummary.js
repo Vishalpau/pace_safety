@@ -258,6 +258,10 @@ function ComplianceSummary(props) {
     // );
   };
 
+  useEffect(() => {
+    console.log(result, 'result');
+  },[result])
+
   // const handleComplianceCommentPush = async () => {
   //   history.push("/app/pages/compliance-comment");
   // };
@@ -1195,7 +1199,7 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddBRemove"
                                     >
-                                      {console.log(groupData, quesData, 'groupData')}
+                                      {/* {console.log(groupData, quesData, 'groupData')} */}
 
                                       {groupData.map(val => {
                                         // console.log(val, 'val');
