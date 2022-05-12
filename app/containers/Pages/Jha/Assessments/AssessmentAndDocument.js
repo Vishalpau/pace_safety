@@ -517,19 +517,22 @@ const AssessmentAndDocument = (props) => {
             const data = new FormData();
             data.append('fkCompanyId', formDocument.fkCompanyId);
             data.append('fkProjectId', formDocument.fkProjectId);
+            data.append("fkProjectStructureIds", formDocument.fkProjectStructureIds);
             data.append('location', formDocument.location);
             data.append('jhaAssessmentDate', formDocument.jhaAssessmentDate);
             data.append('permitToPerform', formDocument.permitToPerform);
             data.append('jobTitle', formDocument.jobTitle);
             data.append('description', formDocument.description);
             data.append('classification', formDocument.classification);
-            data.append('workHours', formDocument.workHours);
+            // data.append('workHours', formDocument.workHours);
             data.append('notifyTo', formDocument.notifyTo.toString());
             data.append('humanPerformanceAspects', additinalJobDetails.humanPerformanceAspects.toString());
             data.append('additionalRemarks', additinalJobDetails.additionalRemarks);
             data.append('workStopCondition', additinalJobDetails.workStopCondition.toString());
-            data.append('link', "");
-            data.append('qrCodeUrl', null);
+            // data.append('link', "");
+            data.append("createdBy", formDocument.createdBy);
+            data.append("updatedBy", formDocument.updatedBy);
+            // data.append('qrCodeUrl', null);
 
             data.append('jhaAssessmentAttachment', formDocument.jhaAssessmentAttachment);
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());

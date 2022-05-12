@@ -636,6 +636,7 @@ const Checks = (props) => {
             createdBy: parseInt(userId),
             fkAuditId: localStorage.getItem("fkComplianceId"),
           });
+          console.log(value,'value')
           categoriesData[value["groupName"]].push(value);
         });
       }
