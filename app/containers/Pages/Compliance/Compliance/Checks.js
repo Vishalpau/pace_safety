@@ -646,6 +646,8 @@ const Checks = (props) => {
             const key = Object.keys(value).includes("groupName") ? value['groupName'] : null;
             categoriesData[key] = [value];
           }
+          // console.log(value,'value')
+          // categoriesData[value["groupName"]].push(value);
         });
       }
     });
