@@ -360,13 +360,13 @@ const Checks = (props) => {
     setColorData(result)
   }
 
-  useEffect(() => {
-    console.log(criticalityData);
-  }, [criticalityData])
+  // useEffect(() => {
+  //   console.log(criticalityData);
+  // }, [criticalityData])
 
-  useEffect(() => {
-    console.log(statusData, 'hiiiiiiii');
-  }, [statusData])
+  // useEffect(() => {
+  //   console.log(statusData, 'hiiiiiiii');
+  // }, [statusData])
 
   const radioDecide = ["Yes", "No", "N/A"];
 
@@ -500,12 +500,12 @@ const Checks = (props) => {
 
   //fetch initial data and sending the data to fetchComplianceData method
   const fetchCheklistData = async () => {
-    let temp = {};
+    // let temp = {};
     const res = await api.get(
       `/api/v1/core/checklists/compliance-groups/${project}/`
       // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
     );
-    console.log(res.data.data.results);
+    // console.log(res.data.data.results);
     const result = res.data.data.results;
     await fetchComplianceData(result);
   };
@@ -567,6 +567,7 @@ const Checks = (props) => {
 
   //method to get the data according to groupName and subGroupName
   const fetchCheklist = async (data, groups, subGroups, strId) => {
+    // console.log(data);
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -581,15 +582,18 @@ const Checks = (props) => {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
 
-    const fkProjectStructureIds = struct.slice(0, -1);
+    // const fkProjectStructureIds = struct.slice(0, -1);
     let temp = [];
     let tempCheckData = [];
     let categoriesData = {};
+
+    console.log(data);
 
     for (let i = 0; i < data.length; i++) {
       let groupName = data[i].groupName;
       let subGroupName = data[i].subGroupName;
       categoriesData[groupName] = [];
+      console.log(categoriesData);
 
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${strId}`
@@ -601,15 +605,14 @@ const Checks = (props) => {
     let tempQuestionId = [];
 
     //here we are getting the data
-    let fd = await fetchData()
+    let fd = await fetchData();
+
+    console.log(temp);
 
     //here we are making a separate array according to the key
     temp.map((tempvalue, i) => {
-
       if (tempvalue['message'] === undefined) {
-        // console.log(tempvalue);
         tempvalue.map((value, index) => {
-
           let defRes = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].defaultResponse : '';
           let crtic = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '';
           let auditS = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '';
@@ -636,7 +639,13 @@ const Checks = (props) => {
             createdBy: parseInt(userId),
             fkAuditId: localStorage.getItem("fkComplianceId"),
           });
-          categoriesData[value["groupName"]].push(value);
+          if (Object.keys(categoriesData).includes(value['groupName'])) {
+            categoriesData[value.groupName].push(value);
+          }
+          else {
+            const key = Object.keys(value).includes("groupName") ? value['groupName'] : null;
+            categoriesData[key] = [value];
+          }
         });
       }
     });
@@ -741,7 +750,7 @@ const Checks = (props) => {
     const factorCriticality = result.filter(item =>
       item.factorType === "Criticality"
     )
-    console.log(result, 'factorDataResult');
+    // console.log(result, 'factorDataResult');
     setCriticalityData(factorCriticality)
     const factorStatus = result.filter(item =>
       item.factorType === "Status"
@@ -1809,7 +1818,7 @@ const Checks = (props) => {
                               })
                               :
                               <p>No questions configured for this group</p>
-                            }
+                          }
                         </>
                       )
                     })
