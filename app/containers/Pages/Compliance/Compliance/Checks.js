@@ -324,6 +324,7 @@ const styles = (theme) => ({
 });
 
 const Checks = (props) => {
+  // states
   const routeNavigation = localStorage.getItem('compliance-navigation')
   const history = useHistory();
   const [form, setForm] = useState({});
@@ -334,23 +335,17 @@ const Checks = (props) => {
   const [colordata, setColorData] = useState([]);
   const [questionId, setQuestionId] = useState();
   const [loading, setLoading] = useState(false);
-
   const [stateToggle, setStateToggle] = useState("")
-
   const [showCheckData, setShowCheckData] = useState({});
   const [ratingColor, setRatingColor] = useState({});
   const [complianceData, setComplianceData] = useState({});
-
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel4"
   );
-
   const [criticalityData, setCriticalityData] = useState([]);
   const [statusData, setStatusData] = useState([])
   const [errorBoundary, setErrorBoundary] = useState("");
-
   const [valueStar, setValueStar] = React.useState([]);
-
   const [categories, setCategories] = useState([]);
 
   //fetch matrix color and color data
@@ -361,11 +356,11 @@ const Checks = (props) => {
   }
 
   useEffect(() => {
-    console.log(criticalityData);
+    // console.log(criticalityData);
   }, [criticalityData])
 
   useEffect(() => {
-    console.log(statusData, 'hiiiiiiii');
+    // console.log(statusData, 'hiiiiiiii');
   }, [statusData])
 
   const radioDecide = ["Yes", "No", "N/A"];
@@ -473,6 +468,7 @@ const Checks = (props) => {
     }
 
     setCheckData(temp);
+    // validation cahecking for accordians
     const isValid = temp.every((a) => a.check === true)
     if (isValid) {
       setLoading(false);
@@ -480,13 +476,10 @@ const Checks = (props) => {
     }
     else {
       setLoading(false);
+      // showing validation msg for accordians 
       setErrorBoundary(`${routeNavigation === 'Add New' ? "Please answer all the compliance questions and close all accordions" : "Please close all the accordions after updating the details"}`);
     }
   }
-
-  // useEffect(() => {
-  //   updateAccordian();
-  // }, [stateToggle])
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -510,9 +503,6 @@ const Checks = (props) => {
     await fetchComplianceData(result);
   };
 
-  // useEffect(() => {
-  //   console.log(categories);
-  // }, [categories])
 
   //method to set the group and subgroups and then sending the data to fetchChecklist data
   const fetchComplianceData = async (data) => {
@@ -636,7 +626,6 @@ const Checks = (props) => {
             createdBy: parseInt(userId),
             fkAuditId: localStorage.getItem("fkComplianceId"),
           });
-          console.log(value,'value')
           categoriesData[value["groupName"]].push(value);
         });
       }
@@ -657,7 +646,6 @@ const Checks = (props) => {
         }
       }
     }
-    // handelCommonObject("commonObject", "audit", "assessmentIds", temp);
     handelCommonObject("commonObject", "audit", "qustionsIds", tempQuestionId);
     await setCheckData(tempCheckData);
     await setCategories(categoriesData);
@@ -669,7 +657,7 @@ const Checks = (props) => {
     let temp = [...checkData];
     const name = event.target.name;
     const file = event.target.files[0];
-
+    // checking type of attachments
     temp.map((a, i) => {
       if (a.questionId === questionId) {
         if (name === 'attachment') {
@@ -685,8 +673,6 @@ const Checks = (props) => {
   };
 
   const handelSubmit = async () => {
-    // const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
-    // console.log(isValids)
     updateAccordian();
   };
 
@@ -719,7 +705,7 @@ const Checks = (props) => {
     setCheckData(temp);
   };
 
-  // for get action tracker 
+  // for get action tracker & showing
   const handelActionTracker = async () => {
     if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
       let jhaId = localStorage.getItem("fkComplianceId");
@@ -731,18 +717,14 @@ const Checks = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(checkData);
-  // }, [checkData])
-
   //fetch factor data
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
+    // gettinng the type of factor data in dropdown
     const factorCriticality = result.filter(item =>
       item.factorType === "Criticality"
     )
-    console.log(result, 'factorDataResult');
     setCriticalityData(factorCriticality)
     const factorStatus = result.filter(item =>
       item.factorType === "Status"
@@ -762,6 +744,7 @@ const Checks = (props) => {
     }
     temp.splice(id, 1,)
 
+    // calculating the factor & get color code which set into configurations
     if (foundObject.criticValue >= 0 && foundObject.statValue >= 0) {
       let ratingValue = (foundObject.criticValue * foundObject.statValue) / 5 * 100;
       for (var i = 0; i < colordata.length; i++) {
@@ -772,6 +755,7 @@ const Checks = (props) => {
           break; // stop the loop
         }
         else {
+          // default color 
           setRatingColor("#FFFFFF")
         }
       }

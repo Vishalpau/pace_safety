@@ -447,6 +447,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ComplianceListNew(props) {
+  // states
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [allComplianceData, setAllComplianceData] = useState([]);
@@ -458,18 +459,8 @@ function ComplianceListNew(props) {
   const [page, setPage] = useState(1);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
   const [deleteValue, setDeleteValue] = useState("")
-
   const [deleteQ, setDeleteQ] = useState(false);
 
-  // const [attachmentId, setAttachmentId] = useState()
-
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
 
   const handleChangeOne = (event, newValue) => {
     setValue(newValue);
@@ -486,85 +477,6 @@ function ComplianceListNew(props) {
     setDeleteValue("");
   };
 
-  // const [listToggle, setListToggle] = useState(false);
-
-  // const handelView = (e) => {
-  //   setListToggle(false);
-  // };
-  // const handelViewTabel = (e) => {
-  //   setListToggle(true);
-  // };
-
-  // const [value, setValue] = React.useState(2);
-
-  // const handleChange = (event, newValue) => {
-  //   setValue(newValue);
-  // };
-
-  //view comments
-
-  // useEffect(() => {
-  //   console.log(allComplianceData);
-  // }, [allComplianceData])
-
-  // useEffect(() => {
-  //   console.log(attachOpen);
-  // }, [attachOpen])
-
-  //   Data for the table view
-  const columns = [
-    "Number",
-    "Type",
-    "Schedule",
-    "Status",
-    "Requested by",
-    "Date submitted",
-    "Date approved",
-    "Approved by",
-  ];
-
-  const data = [
-    [
-      "AT-125-256-251",
-      "Action",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "Action",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "Action",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "Action",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-  ];
   const options = {
     filterType: "dropdown",
     responsive: "vertical",
@@ -589,10 +501,6 @@ function ComplianceListNew(props) {
     history.push(`/app/pages/compliance/compliance-summary/${id}`);
   };
 
-  // const handleNewCompliancePush = async () => {
-  //   history.push("/app/pages/compliance/compliance");
-  // };
-
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
   //Method to open ownership modal when we click on avatar
@@ -606,9 +514,10 @@ function ComplianceListNew(props) {
 
   const classes = useStyles();
 
-  //method to fetch all compliance data
+  //method to fetch all compliance data filetrs
   const fetchAllComplianceData = async () => {
     await setPage(1);
+    // get all the ids (fkCompanyId,fkProjectId, selectBreakdown,fkProjectStructureIds, createdBy )
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -628,6 +537,7 @@ function ComplianceListNew(props) {
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
         : null;
+    // for types filter
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
@@ -685,7 +595,7 @@ function ComplianceListNew(props) {
     await setIsLoading(true);
   };
 
-  //method for pagination
+  //method for  all the filters
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =

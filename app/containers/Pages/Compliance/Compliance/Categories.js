@@ -166,23 +166,10 @@ const Categories = () => {
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
 
-  // const [state, setState] = React.useState({
-  //   checkedA: true,
-  //   checkedB: true,
-  //   checkedF: true,
-  //   checkedG: true,
-  // });
-
-  // const workArea = [
-  //   { title: "Operation" },
-  //   { title: "Functional" },
-  //   { title: "Foundation" },
-  //   { title: "Production" },
-  // ];
-
-  // console.log(checkData,'checkData')
+  // submit groups & subgroups and moving to next page
   const handelSubmit = async () => {
     if (checkData.length > 0 && subGroupId.length > 0) {
+      // sent the groups & sub groups with comma separated
       form["groupIds"] = groupId.join(',');
       form["subGroupIds"] = subGroupId.join(',');
       form["updatedBy"] = userId;
@@ -190,7 +177,6 @@ const Categories = () => {
       const res = await api
         .put(`/api/v1/audits/${form.id}/`, form)
         .then((response) => {
-          // history.push("/app/pages/compliance/performance-summary");
           history.push("/app/pages/compliance/checks");
         })
         .catch((error) => {
@@ -204,6 +190,7 @@ const Categories = () => {
 
   const classes = useStyles();
 
+  // fetching all groups 
   const fetchCheklist = async () => {
     let temp = {};
     const res = await api.get(
@@ -226,6 +213,7 @@ const Categories = () => {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
+        // converted ids into string with comma separated 
         let groupIds = result.groupIds.split(",").map(i => i * 1).filter(i => i != 0);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1).filter(i => i != 0);
         setGroupId(groupIds);
@@ -251,7 +239,7 @@ const Categories = () => {
     let tempGroupId = [...groupId];
     let temp = [...checkData];
     let findData;
-
+    // checking checked & unchecked groups
     if (e.target.checked == false) {
       temp.map((data, key) => {
         if (data["checklistgroupId"] === value["checklistgroupId"]) {
@@ -259,7 +247,7 @@ const Categories = () => {
           temp.splice(key, 1);
         }
       });
-
+      // mapping the groups value with subgroups
       findData.checkListValues.map((a, key) => {
         tempSubgroupId.map((data, key) => {
           if (a.id === data) {
@@ -267,16 +255,13 @@ const Categories = () => {
           }
         });
       })
-
       setSubGroupId(tempSubgroupId);
-
       tempGroupId.map((data, key) => {
         if (data == value["checklistgroupId"]) {
           tempGroupId.splice(key, 1);
         }
       });
     }
-
     else {
       tempGroupId.push(value.checklistgroupId);
       temp.push(value);
@@ -284,11 +269,6 @@ const Categories = () => {
     await setGroupId(tempGroupId);
     await setCheckData(temp);
   };
-
-  // useEffect(() => {
-  //   let temp = [...subGroupId]
-  //   console.log(temp);
-  // },[checkData])
 
   //method to handle groups i.e to add or remove the groups
   const handleGroups = async (e, value, index, checkListId) => {
