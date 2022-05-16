@@ -198,16 +198,19 @@ const Categories = () => {
     );
     const result = res.data.data.results;
     await fetchComplianceData(result);
-    await setCheckListGroups(result);
-    await setIsLoading(true);
+    // await fetchCheklist();
+    setCheckListGroups(result);
+    setIsLoading(true);
   };
 
   useEffect(() => {
-    console.log(checkGroups, 'checkGroups');
-  }, [checkGroups])
+    console.log(checkData, 'checkData');
+  }, [checkData])
 
   //method to initially get the data
   const fetchComplianceData = async (data) => {
+    console.log(data, 'dataaaaaaaaaaa');
+    const checkListGroupData = data;
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
@@ -220,13 +223,36 @@ const Categories = () => {
         setSubGroupId(subGroupIds);
         setComplianceData(result)
         let tempGroup = [];
+        console.log(data);
         for (let j = 0; j < data.length; j++) {
+
           for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
             if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
+              // console.log('hhhhhhhhhh');
               tempGroup.push(data[j]['checklistGroups'][i]);
+              // tempGroup.push({...data[j]['checklistGroups'][i],is_disabled: true});
             }
           }
         }
+        // console.log(result);
+        // console.log(checkListGroupData);
+        checkListGroupData[0].checklistGroups = checkListGroupData[0].checklistGroups.map(a => {
+          // console.log(a);
+          if (groupIds.includes(a.checklistgroupId)) {
+            return {
+              ...a,
+              disabled: true
+            }
+          }
+          else {
+            return {
+              ...a,
+              disabled: false
+            }
+          }
+        })
+        // console.log(tempData);
+        setCheckListGroups([...checkListGroupData])
         setCheckData(tempGroup);
         setForm(result);
       })
@@ -266,6 +292,7 @@ const Categories = () => {
       tempGroupId.push(value.checklistgroupId);
       temp.push(value);
     }
+
     await setGroupId(tempGroupId);
     await setCheckData(temp);
   };
@@ -288,11 +315,15 @@ const Categories = () => {
   //select a group specific to the group that is selected
   const handelSelectOption = (key) => {
     for (let i = 0; i <= groupId.length; i++) {
-      if (groupId[i] != undefined && groupId[i] == key["checklistgroupId"]) {
+      if (groupId[i] !== undefined && groupId[i] === key["checklistgroupId"]) {
         return true;
       }
     }
   };
+
+  // useEffect(() => {
+  //   console.log(groupId);
+  // }, [groupId])
 
   //select a subgroup specific to the subGroup that is selected
   const handelSelectOptionSubGroup = (id) => {
@@ -354,6 +385,7 @@ const Categories = () => {
                               {/* <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel> */}
                               <FormGroup className={classes.customCheckBoxList}>
                                 {checkGroups[0].checklistGroups.map((value, index) => {
+                                  
                                   return (
                                     <FormControlLabel
                                       control={
@@ -362,6 +394,7 @@ const Categories = () => {
                                           icon={
                                             <CheckBoxOutlineBlankIcon fontSize="small" />
                                           }
+                                          disabled={value.disabled}
                                           checkedIcon={
                                             <CheckBoxIcon fontSize="small" />
                                           }

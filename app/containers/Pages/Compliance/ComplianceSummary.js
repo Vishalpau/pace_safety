@@ -1142,7 +1142,7 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddBRemove"
                                     >
-                                      {console.log(groupData, quesData, 'groupData')}
+                                      {/* {console.log(groupData, quesData, 'groupData')} */}
 
                                       {groupData.map(val => {
                                         // console.log(val, 'val');

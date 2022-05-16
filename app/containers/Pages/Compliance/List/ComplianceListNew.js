@@ -544,6 +544,7 @@ function ComplianceListNew(props) {
           `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
+        console.log(result, 'resssssssssssssssuuult');
         const result = res.data.data.results.results;
         await setAllComplianceData(result);
         await setTotalData(res.data.data.results.count);
@@ -659,7 +660,7 @@ function ComplianceListNew(props) {
 
   //method to delete a compliance
   const handleDelete = async () => {
-    let temp = {...deleteValue}
+    let temp = { ...deleteValue }
     // let temp = { ...item };
     temp.status = "Delete";
     let id = deleteValue.id;
@@ -889,9 +890,9 @@ function ComplianceListNew(props) {
                       <Typography
                         className={classes.listingLabelValue}
                       >
-                         {value["area"] !== null
-                              ? value["area"]
-                              : "-"}
+                        {value["area"] !== null
+                          ? value["area"]
+                          : "-"}
                       </Typography>
                     </Grid>
 
@@ -973,7 +974,7 @@ function ComplianceListNew(props) {
                     </Link>
                   </span>
                 </Typography> */}
-                {/* <span
+              {/* <span
                   item
                   xs={1}
                   className={classes.sepHeightTen}
@@ -1082,42 +1083,44 @@ function ComplianceListNew(props) {
             </Grid>
           </CardActions>
         </Card>
-        <Grid
-          item
-          md={12}
-          sm={12}
-          xs={12}
-          hidden={!hidden}
-          onBlur={handleAttachClose}
-          onClick={handleAttachClick}
-          onClose={handleAttachClose}
-          onFocus={handleAttachOpen}
-          onMouseEnter={handleAttachOpen}
-          onMouseLeave={handleAttachClose}
-          open={showGrid}
-          className="paddTBRemove attactmentShowSection"
-        >
-          <Paper elevation={1} className="cardSectionBottom">
-            <Grid container spacing={3}>
-              <Grid item md={12} sm={12} xs={12}>
-                <List>
-                  <ListItem>
-                    <Grid
-                      item
-                      md={12}
-                      sm={12}
-                      xs={12}
-                    >
-                      <div className="attachFileThumb">
-                        <Attachment src={value.avatar} value={value.avatar} />
-                      </div>
-                    </Grid>
-                  </ListItem>
-                </List>
+        {value.avatar &&
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            hidden={!hidden}
+            onBlur={handleAttachClose}
+            onClick={handleAttachClick}
+            onClose={handleAttachClose}
+            onFocus={handleAttachOpen}
+            onMouseEnter={handleAttachOpen}
+            onMouseLeave={handleAttachClose}
+            open={showGrid}
+            className="paddTBRemove attactmentShowSection"
+          >
+            <Paper elevation={1} className="cardSectionBottom">
+              <Grid container spacing={3}>
+                <Grid item md={12} sm={12} xs={12}>
+                  <List>
+                    <ListItem>
+                      <Grid
+                        item
+                        md={12}
+                        sm={12}
+                        xs={12}
+                      >
+                        <div className="attachFileThumb">
+                          <Attachment src={value.avatar} value={value.avatar} />
+                        </div>
+                      </Grid>
+                    </ListItem>
+                  </List>
+                </Grid>
               </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+            </Paper>
+          </Grid>
+        }
         {/* <div>
           <Dialog
             open={openAttachment}
