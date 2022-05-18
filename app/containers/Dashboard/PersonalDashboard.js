@@ -829,7 +829,7 @@ function PersonalDashboard(props) {
               response.data.data.results.data.companies[0].companyId;
 
             // const subscriptionData = 
-            await getSubscriptions(response.data.data.results.data.companies[0].companyId)
+            getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
             companeyDetails.fkCompanyName =
               response.data.data.results.data.companies[0].companyName;
