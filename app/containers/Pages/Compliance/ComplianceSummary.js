@@ -212,6 +212,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ComplianceSummary(props) {
+  //states 
   const [compliance, setCompliance] = useState(true);
   const [complianceData, setComplianceData] = useState({});
   const [projectStructName, setProjectStructName] = useState([]);
@@ -226,56 +227,32 @@ function ComplianceSummary(props) {
   const [actionData, setActionData] = useState([]);
   const [colordata, setColorData] = useState([]);
   const [ratingData, setRatingData] = useState({});
-
   const [result, setResult] = useState({});
-
   const [expanded, setExpanded] = React.useState("panel1");
-
-  // const handleExpand = (panel) => (event, isExpanded) => {
-  //   setExpanded(isExpanded ? panel : false);
-  // };
-
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel3"
   );
+
+  // for handle the accordian expand
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
   const [expandedTabDetails, setExpandedTabDetails] = React.useState("panel6");
 
-  // const handleTBChange = (panel) => (event, isExpanded) => {
-  //   setExpandedTabDetails(isExpanded ? panel : false);
-  // };
-
+  // push the update compliance (update button)
   const handleNewComplianceUpdatePush = async (e) => {
-    // console.log(e.target.name);
     localStorage.setItem('compliance-navigation',e.target.name);
-    // history.push(
-    //   `/app/pages/compliance/compliance-details/${localStorage.getItem(
-    //     "fkComplianceId"
-    //   )}`
-    // );
   };
 
-  useEffect(() => {
-    console.log(result, 'result');
-  },[result])
-
-  // const handleComplianceCommentPush = async () => {
-  //   history.push("/app/pages/compliance-comment");
-  // };
-
-  // const handleComplianceActivityPush = async () => {
-  //   history.push("/app/pages/compliance-activity");
-  // };
-
+  //for checked and unchecked of groups & subgroups
   const [inputState, setInputState] = useState({
     checkedA: true,
     checkedB: true,
     checkedC: true,
     checkedD: true,
   });
+
 
   const handleChange = (name) => (event) => {
     setInputState({
@@ -285,36 +262,23 @@ function ComplianceSummary(props) {
   };
 
   const { checkedA, checkedB, checkedC, checkedD } = inputState;
-
   const classes = useStyles();
-
   const [myVideoOpen, setMyVideoOpen] = React.useState(false);
-
+  // for company id
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
-
+  // for project id
   const projectId =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
 
-
-  // const handleMyVideoClickOpen = () => {
-  //   setMyVideoOpen(true);
-  // };
-
   const handleMyVideoClose = () => {
     setMyVideoOpen(false);
   };
-
   const [myAudioOpen, setMyAudioOpen] = React.useState(false);
-
-  // const handleMyAudioClickOpen = () => {
-  //   setMyAudioOpen(true);
-  // };
-
   const handleMyAudioClose = () => {
     setMyAudioOpen(false);
   };
@@ -323,9 +287,9 @@ function ComplianceSummary(props) {
   const fetchCheklistData = async (id) => {
     const res = await api.get(
       `/api/v1/core/checklists/compliance-groups/${projectId}/`
-      // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${projectId}/compliance/`
     );
     const result = res.data.data.results;
+    // calling the fetched data of compliance
     await fetchComplianceData(result, id);
   };
 
@@ -336,10 +300,12 @@ function ComplianceSummary(props) {
       .then((response) => {
         let result = response.data.data.results;
         setResult(result);
+        // fetch the data of groups & subgroups comma seprated
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         let tempGroup = [];
         let tempSubGroup = [];
+        //  doing for each for selected groups & subgroups 
         for (let j = 0; j < data.length; j++) {
           for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
             if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
@@ -379,7 +345,7 @@ function ComplianceSummary(props) {
     console.log(quesData, 'questionData');
   }, [quesData])
 
-
+  // for fetching the work area 
   const handelWorkArea = async (complianceData) => {
     let structName = [];
     let projectStructId = complianceData.fkProjectStructureIds.split(":");
@@ -406,6 +372,7 @@ function ComplianceSummary(props) {
     setTeam(data);
   };
 
+  // get selected project name
   const handleProjectName = (projectId) => {
     const userName =
       JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -420,6 +387,7 @@ function ComplianceSummary(props) {
     return fetchProjectId[0].projectName;
   };
 
+  // here we manage the status (pending/done)
   const handleComplianceStatusChange = () => {
     if (complianceData.performanceSummary !== null) {
       setCompliance(true);
@@ -430,13 +398,11 @@ function ComplianceSummary(props) {
     }
   };
 
-
+  // fetching the notify name role wise
   const fetchNotificationSent = async (notifyTo, fkProjectStructure) => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
-    // let projectStr = JSON.parse(localStorage.getItem("commonObject")).audit.projectStruct;
-
     const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -469,6 +435,7 @@ function ComplianceSummary(props) {
     } catch (error) { }
   };
 
+  // get audit question on summary page
   const auditQueData = async (id) => {
     const res = await api.get(
       `/api/v1/audits/${id}/auditresponse/`
@@ -478,6 +445,7 @@ function ComplianceSummary(props) {
 
   };
 
+  // get created action on compliance module
   const handelActionTracker = async () => {
     if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
       let jhaId = localStorage.getItem("fkComplianceId");
@@ -489,34 +457,7 @@ function ComplianceSummary(props) {
     }
   };
 
-  // const calculate_rating = (index, v, id) => {
-  //   if (form.menuValue >= 0 && v >= 0) {
-  //     let ratingValue = (form.menuValue * v) / 5 * 100;
-  //     for (var i = 0; i < colordata.length; i++) {
-  //       if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
-  //         let clr_op = { ...ratingColor }
-  //         clr_op[index] = colordata[i].matrixConstantColor
-  //         setRatingColor(clr_op)
-  //         // console.log(ratingValue, 'ratingValue')
-  //         // console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
-  //         break; // stop the loop
-  //       }
-  //       else {
-  //         setRatingColor("#FFFFFF")
-  //       }
-  //     }
-  //     let arr_op = { ...ratingData };
-  //     arr_op[index] = ratingValue
-  //     setRatingData(arr_op)
-  //     let temp = [...checkData];
-  //     for (let i = 0; i < temp.length; i++) {
-  //       if (temp[i]["questionId"] == id) {
-  //         temp[i]["performance"] = ratingValue;
-  //       }
-  //     }
-  //   }
-  // };
-
+  // fetching all matrix color and value for matching with the created on compliance
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${projectId}&projectStructure=`)
     const result = res.data.data.results
@@ -524,6 +465,7 @@ function ComplianceSummary(props) {
   }
 
 
+  // use effect call
   useEffect(() => {
     if (id) {
       auditQueData(id)
@@ -533,6 +475,7 @@ function ComplianceSummary(props) {
     }
   }, []);
 
+  // created function for handle group name 
   function groupNamrHandler(val) {
     if (val.checkListValues.findIndex(ele => quesData.findIndex(qD => qD.subGroupId === ele.id) !== -1) !== -1) {
       return (

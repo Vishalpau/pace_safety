@@ -192,6 +192,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ComplianceDetails = () => {
   // class ObservationInitialNotification extends Component {
+    // states
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [levelLenght, setLevelLenght] = useState(0);
@@ -206,6 +207,7 @@ const ComplianceDetails = () => {
   const [team, setTeam] = useState([{ name: "" }]);
   const [departments, setDepartments] = useState([]);
 
+  // getting all the ids form local storage
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -253,30 +255,12 @@ const ComplianceDetails = () => {
     console.log(form);
   }, [form])
 
+  // constant value of audit type
   const auditType = [
     "Company/Contractor Inspection",
     "Area/Focussed Inspection",
     "General Inspection",
   ];
-
-  // const [state, setState] = React.useState({
-  //   checkedA: true,
-  //   checkedB: true,
-  //   checkedF: true,
-  //   checkedG: true,
-  // });
-
-  // const handleChange = (event) => {
-  //   setState({ ...state, [event.target.name]: event.target.checked });
-  // };
-
-  // const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  // const files = acceptedFiles.map((file) => (
-  //   <li key={file.path}>
-  //     {file.path} -{file.size} bytes
-  //   </li>
-  // ));
 
   //add a new team member
   const handelTeam = (e) => {
@@ -306,7 +290,6 @@ const ComplianceDetails = () => {
     }
   };
 
-  // const clientRep = ["Operation", "Functional", "Foundation", "Production"];
 
   //method to redirect to new page
   const handelNext = async () => {
@@ -317,6 +300,7 @@ const ComplianceDetails = () => {
     }
     setLoading(true);
     setSaveLoading(true);
+    // team name adding 
     let teamName = team.map((value) => value.name);
     for (let key in teamName) {
       if (teamName[key]["name"] !== "") {
@@ -329,6 +313,7 @@ const ComplianceDetails = () => {
         return depth;
       })
 
+    // posting the projectstr 
     form["fkProjectStructureIds"] = fkProjectStructureId.join(":");
     let projectStr = fkProjectStructureId[fkProjectStructureId.length - 1]
     let parentStr = fkProjectStructureId[fkProjectStructureId.length - 2]
@@ -340,10 +325,12 @@ const ComplianceDetails = () => {
       baseURL: SSO_URL,
       headers: HEADER_AUTH
     });
+    // posting the area as location 
     const workArea = await api_work_area.get(strUrl);
     let areaStr = workArea.data.data.results.filter(st => st.id == projectStr.split('L')[1])
     let area = (typeof areaStr[0] != 'undefined') ? areaStr[0].structureName : null
     form["area"] = area;
+    // updating the values[put]
     if (form.id) {
       form["updatedBy"] = userId;
       const res = await api
@@ -355,6 +342,7 @@ const ComplianceDetails = () => {
           console.log(error), setLoading(false), setSaveLoading(true);
         });
     }
+    // creating the values[post]
     else {
       const res = await api
         .post("/api/v1/audits/", form)
@@ -377,6 +365,7 @@ const ComplianceDetails = () => {
 
   const classes = useStyles();
 
+  // fecting the data for updating 
   const fetchComplianceData = async () => {
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
@@ -495,10 +484,12 @@ const ComplianceDetails = () => {
     }
     setIsLoading(true);
   };
+
   const contractor = useRef([]);
   const subContractor = useRef([]);
   let pickListValues = JSON.parse(localStorage.getItem("pickList"));
 
+  // calling picklist getting the contractor or subcontractor values
   const pickListValue = async () => {
     let contractorPickList = await pickListValues["2"];
     let subContractorPickList = await pickListValues["3"];
@@ -559,6 +550,7 @@ const ComplianceDetails = () => {
     }
   };
 
+  // get departments for calling the representative
   const getDepartments = async () => {
     const config = {
       method: 'get',
@@ -573,6 +565,7 @@ const ComplianceDetails = () => {
   useEffect(() => {
     pickListValue();
     getDepartments();
+    // getting the data as per the exiting ids
     if (id) {
       fetchComplianceData();
     } else {

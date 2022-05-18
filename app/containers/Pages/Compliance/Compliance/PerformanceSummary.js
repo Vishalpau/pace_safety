@@ -130,6 +130,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PerformanceSummary = (props) => {
+  //states
   const [form, setForm] = useState({});
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const history = useHistory();
@@ -142,6 +143,7 @@ const PerformanceSummary = (props) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
+  // for fecting all audits data
   const fetchComplianceData = async () => {
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
@@ -155,8 +157,10 @@ const PerformanceSummary = (props) => {
       .catch((error) => console.log(error));
   };
 
+  // for updating the data on performance summary
   const handelSubmit = async () => {
     let complianceId = localStorage.getItem("fkComplianceId");
+    // loading call
     setLoading(true);
     const res = await api
       .put(`/api/v1/audits/${complianceId}/`, form)
@@ -170,7 +174,9 @@ const PerformanceSummary = (props) => {
       });
   };
 
+  // for notification sent 
   const fetchNotificationSent = async () => {
+    // taking ids from local storage
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
     let projectStr = JSON.parse(localStorage.getItem("commonObject")).audit.projectStruct;
@@ -183,7 +189,7 @@ const PerformanceSummary = (props) => {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    console.log(fkProjectStructureIds,'fkProjectStructureIds')
+    // error handling   
     try {
       var config = {
         method: "get",
@@ -198,6 +204,7 @@ const PerformanceSummary = (props) => {
     } catch (error) { }
   };
 
+  // sent notify value to form data
   const handleNotification = (e, value) => {
     if (e.target.checked === true) {
       let temp = [];

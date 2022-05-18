@@ -1,9 +1,9 @@
 import validator from "validator";
-
+// for validations messages
 function ComplianceValidation(data, projecStructureLength) {
   let error = {};
   let isValid = true;
-
+// project str vaildations
   const breakdownValue = JSON.parse(localStorage.getItem("projectName"))
     .projectName.breakdown;
   for (let i = 0; i < breakdownValue.length; i++) {

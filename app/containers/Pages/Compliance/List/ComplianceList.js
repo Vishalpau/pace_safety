@@ -180,8 +180,10 @@ function Actions(props) {
 
   const classes = useStyles();
 
+  //method to fetch all compliance data filetrs
   const fetchAllComplianceData = async () => {
     await setPage(1);
+    // get all the ids (fkCompanyId,fkProjectId, selectBreakdown,fkProjectStructureIds, createdBy )
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -201,6 +203,7 @@ function Actions(props) {
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
         : null;
+    // for types filter
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
@@ -263,7 +266,8 @@ function Actions(props) {
 
     await setIsLoading(true);
   };
-
+  
+//method for  all the types filters
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
