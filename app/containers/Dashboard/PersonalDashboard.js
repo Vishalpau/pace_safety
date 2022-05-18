@@ -546,9 +546,35 @@ function PersonalDashboard(props) {
 
       try {
         let data = await api.get(`${SELF_API}${companyId}/`)
-          .then(function (res) {
+          .then(async function (res) {
             let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode == APPCODE)[0].roles[0].aclUrl
-            api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`).then(d => localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0])));
+            await api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`)
+              .then(d => localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0])))
+              .then(() => {
+                const subscriptionData = res.data.data.results.data.companies[0].subscriptions
+                setSubscriptions(subscriptionData)
+                const modules = subscriptionData.map(subscription => subscription.modules)
+                var modulesState = []
+                var temp = []
+                modules.map(module => {
+                  modulesState = [...modulesState]
+                  temp = [...temp]
+                  if (module.length > 0) {
+                    module.map(mod => {
+                      modulesState.push(mod)
+                      // this.setState({modules: module})
+                      if (mod.subscriptionStatus == 'active') {
+                        temp.push(mod.moduleCode)
+                        // this.setState({ codes: temp })
+                        return temp
+                      }
+                    }
+                    )
+                  }
+                })
+                setCode(temp)
+                getModules(apps)
+              })
 
             return res.data.data.results.data.companies[0].subscriptions;
 
@@ -557,35 +583,35 @@ function PersonalDashboard(props) {
             console.log(error);
           });
 
-
-        await setSubscriptions(data)
+        // setSubscriptions(data)
         // redirectionAccount()
 
-        const modules = data.map(subscription => subscription.modules)
-        var modulesState = []
-        var temp = []
-        modules.map(module => {
-          modulesState = [...modulesState]
-          temp = [...temp]
-          if (module.length > 0) {
-            module.map(mod => {
-              modulesState.push(mod)
-              // this.setState({modules: module})
-              if (mod.subscriptionStatus == 'active') {
-                temp.push(mod.moduleCode)
-                // this.setState({ codes: temp })
-                return temp
-              }
-            }
-            )
 
-            // this.setState({ codes: codes })
+        // const modules = data.map(subscription => subscription.modules)
+        // var modulesState = []
+        // var temp = []
+        // modules.map(module => {
+        //   modulesState = [...modulesState]
+        //   temp = [...temp]
+        //   if (module.length > 0) {
+        //     module.map(mod => {
+        //       modulesState.push(mod)
+        //       // this.setState({modules: module})
+        //       if (mod.subscriptionStatus == 'active') {
+        //         temp.push(mod.moduleCode)
+        //         // this.setState({ codes: temp })
+        //         return temp
+        //       }
+        //     }
+        //     )
 
-          }
-        })
+        //     // this.setState({ codes: codes })
+
+        //   }
+        // })
         let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
-        await setCode(temp)
-        await getModules(apps)
+        // await setCode(temp)
+        // await getModules(apps)
 
       } catch (error) { }
     }
@@ -803,7 +829,7 @@ function PersonalDashboard(props) {
               response.data.data.results.data.companies[0].companyId;
 
             // const subscriptionData = 
-            getSubscriptions(response.data.data.results.data.companies[0].companyId)
+            await getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
             companeyDetails.fkCompanyName =
               response.data.data.results.data.companies[0].companyName;
