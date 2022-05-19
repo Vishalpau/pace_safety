@@ -265,7 +265,6 @@ export default function Observations() {
                 className={classNames(classes.buttonsNew, classes.floatR)}
                 disableElevation
                 startIcon={<CloudUploadIcon />}
-                style={{ marginLeft: '10px' }}
                 onClick={() => handleBulkUploadfilePush()}
                 style={{
                   marginLeft: '10px',

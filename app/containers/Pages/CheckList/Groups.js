@@ -117,9 +117,9 @@ function Group() {
         });
         handelGroup();
       }
-
-      setShowNew(false);
       setViewUpdate(!viewUpdate);
+      setShowNew(false);
+      
     } else {
       setNewGroupError(true)
     }

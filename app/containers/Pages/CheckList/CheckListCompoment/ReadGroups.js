@@ -73,10 +73,14 @@ const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate, group 
             padding: theme.spacing(1),
         },
     }))(MuiDialogActions)
+
     const handleStatusChange = async (e, checkListId, checkListGroupId) => {
         let editForm = {}
-        editForm["status"] = e.target.checked == true ? "active" : "inactive"
+        editForm["status"] = e.target.checked == true ? "Active" : "Inactive"
+        editForm["fkCheckListId"] = checkListId
         editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
+
+        editForm["updatedBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
         const res = await api.put(`api/v1/core/checklists/${checkListId}/groups/${checkListGroupId}/`, editForm)
         if (res.status == 200) {
             setViewUpdate(!viewUpdate)
@@ -147,8 +151,8 @@ const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate, group 
                 </TableCell>
                 <TableCell className={classes.tabelBorder}>
                     <Switch
-                        checked={(value.status && value.status == "active") ? true : false}
-                        // onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.checklistgroupId)}
+                        defaultChecked={(value.checkListValues.map(i=> i.status) && value.checkListValues.map(i=> i.status) == "Active") ? true : false}
+                        onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.checklistgroupId)}
                         name="checkedA"
                         inputProps={{ 'aria-label': 'secondary checkbox' }}
                     />
