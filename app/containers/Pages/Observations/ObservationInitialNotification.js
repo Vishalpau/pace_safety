@@ -249,7 +249,6 @@ const ObservationInitialNotification = (props) => {
   const [prevStrIds, setPrevStrIds] = useState('');
 
 
-
   const radioType = ['Risk', 'Comments', 'Positive behavior'];
   const radioSituation = ['Yes', 'No'];
   const radioClassification = ['People', 'Property'];
@@ -404,6 +403,7 @@ const ObservationInitialNotification = (props) => {
     supervisorId: '',
     notifyTo: '',
     attachment: '',
+    files: '',
     status: 'Active',
     createdBy: parseInt(userId),
     updatedBy: 0,
@@ -495,6 +495,11 @@ const ObservationInitialNotification = (props) => {
     if (form.attachment !== null && typeof form.attachment !== 'string') {
       data.append('attachment', form.attachment);
     }
+    if (form.files !== null && typeof form.files !== 'string') {
+      form.files.map((file) => {
+        data.append('files', file);
+      });
+    }
     data.append('status', form.status),
     data.append('createdBy', form.createdBy),
     data.append('source', form.source),
@@ -523,6 +528,7 @@ const ObservationInitialNotification = (props) => {
                   'fkobservationId'
                 )}`
               );
+              console.log(response);
             }
           }).catch(err => {
             console.log(err);
@@ -580,14 +586,31 @@ const ObservationInitialNotification = (props) => {
   };
 
   const handleFile = async (e) => {
+    // Select multiple files
+
     const TempPpeData = { ...form };
-    if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
-      TempPpeData.attachment = e.target.files[0];
-      await setForm(TempPpeData);
-    } else {
-      document.getElementById('attachment').value = '';
-      await setOpen(true);
+    const filesArray = e.target.files;
+    const temparray = [];
+    for (let i = 0; i < filesArray.length; i++) {
+      if ((filesArray[i].size <= 1024 * 1024 * 25)) {
+        temparray.push(filesArray[i]);
+      } else {
+        document.getElementById('attachment').value = '';
+        await setOpen(true);
+      }
     }
+    TempPpeData.files = temparray;
+    await setForm(TempPpeData);
+
+    // Select single attachment
+
+    // if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
+    //   TempPpeData.attachment = e.target.files[0];
+    //   await setForm(TempPpeData);
+    // } else {
+    //   document.getElementById('attachment').value = '';
+    //   await setOpen(true);
+    // }
   };
 
   const handelAddressSituationYes = async (e) => {
@@ -632,18 +655,18 @@ const ObservationInitialNotification = (props) => {
     }
   };
 
-  const fetchNotificationSent = async () => { 
+  const fetchNotificationSent = async () => {
     const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
     const uniqueProjectStructure = [...new Set(selectDepthAndId)];
     const fkProjectStructureId = uniqueProjectStructure
       .map((depth) => depth)
       .join(':');
-    let fkProjectStructureIds = fkProjectStructureId;
-    if(fkProjectStructureIds != prevStrIds) {
-      console.log(fkProjectStructureIds, 'fkProjectStructureIds')
-      setPrevStrIds(fkProjectStructureIds)
-      try {      
+    const fkProjectStructureIds = fkProjectStructureId;
+    if (fkProjectStructureIds != prevStrIds) {
+      console.log(fkProjectStructureIds, 'fkProjectStructureIds');
+      setPrevStrIds(fkProjectStructureIds);
+      try {
         const config = {
           method: 'get',
           url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/?subentity=observations&roleType=custom&projectStructure=${fkProjectStructureIds}`,
@@ -656,7 +679,6 @@ const ObservationInitialNotification = (props) => {
         }
       } catch (error) { }
     }
-    
   };
 
   const fetchTags = async () => {
@@ -709,7 +731,7 @@ const ObservationInitialNotification = (props) => {
     const sliceData = dataDepthAndId.slice(0, index);
     const newdataDepthAndId = [...sliceData, `${index + 1}L${value}`];
     setSelectDepthAndId(newdataDepthAndId);
-    fetchNotificationSent()
+    fetchNotificationSent();
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
@@ -757,7 +779,6 @@ const ObservationInitialNotification = (props) => {
   };
 
   useEffect(() => {
-    
     handleIndiv();
     fetchTags();
     fetchDepartment();
@@ -783,7 +804,7 @@ const ObservationInitialNotification = (props) => {
                       <path id="generate-report" d="M28.937,25.517l.833.836a.557.557,0,0,1,0,.795l-.669.672a4.534,4.534,0,0,1,.416,1.112h.88a.563.563,0,0,1,.563.563v1.173a.566.566,0,0,1-.563.566h-.947a4.517,4.517,0,0,1-.49,1.076l.613.613a.566.566,0,0,1,0,.8l-.83.848a.566.566,0,0,1-.8,0l-.669-.669a4.658,4.658,0,0,1-1.126.416v.88a.566.566,0,0,1-.563.563H24.415a.566.566,0,0,1-.566-.563v-.947a4.494,4.494,0,0,1-1.079-.493l-.613.616a.566.566,0,0,1-.8,0l-.827-.848a.56.56,0,0,1,0-.795l.669-.672a4.658,4.658,0,0,1-.416-1.112H19.9a.566.566,0,0,1-.546-.563V29.21a.569.569,0,0,1,.563-.566h.933a4.526,4.526,0,0,1,.493-1.073l-.616-.613a.566.566,0,0,1,0-.8l.836-.833a.56.56,0,0,1,.795,0l.672.669a4.643,4.643,0,0,1,1.112-.416V24.7a.566.566,0,0,1,.563-.563h1.173a.566.566,0,0,1,.563.563v.947a4.4,4.4,0,0,1,1.076.493l.619-.622A.569.569,0,0,1,28.937,25.517Zm-11.263,8.8a.88.88,0,0,1,0,1.736H2.021A2.021,2.021,0,0,1,0,34.023V2.009A2,2,0,0,1,2.018,0H26.843a2.024,2.024,0,0,1,2.021,2.021V20.065a.88.88,0,0,1-1.742,0V2.021h0a.285.285,0,0,0-.282-.285H2.021a.276.276,0,0,0-.293.293V34.023h0a.285.285,0,0,0,.285.282H17.674ZM5.573,30.11V28.157h8.456V30.1H5.576Zm16.22-12.583V19.32H19.247V17.528ZM17.237,15.95v3.37H14.689V15.95Zm-4.555-4.828v8.213H10.134V11.122ZM8.124,7.746V19.32H5.573V7.746ZM20.238,8.6l3.845.015a3.854,3.854,0,0,1-1.147,2.725,3.974,3.974,0,0,1-.56.458Zm-.393-.763-.194-4.109a.15.15,0,0,1,.141-.155h.153a4.271,4.271,0,0,1,4.309,3.96.153.153,0,0,1-.138.158l-4.106.293a.144.144,0,0,1-.155-.135h0Zm.243-3.974.191,3.669,3.449-.311a3.426,3.426,0,0,0-1.173-2.305,3.268,3.268,0,0,0-2.44-1.05Zm-.7,4.558,2.053,3.57a4.121,4.121,0,1,1-2.651-7.646l.587,4.077ZM5.573,24.881V22.922H17.557v1.945Zm19.572,2.751a2.314,2.314,0,1,1-2.314,2.314,2.314,2.314,0,0,1,2.314-2.314Z" transform="translate(0 0)" fill="#06425c" />
                     </svg>
                     {' '}
-Project information
+                    Project information
                   </Typography>
                 </Grid>
 
@@ -828,7 +849,7 @@ Project information
                       </g>
                     </svg>
                     {' '}
-Observer and reporter details
+                    Observer and reporter details
                   </Typography>
                 </Grid>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1264,7 +1285,7 @@ Observer and reporter details
                       </g>
                     </svg>
                     {' '}
-iCare details
+                    iCare details
                   </Typography>
                 </Grid>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1381,7 +1402,7 @@ iCare details
                       </g>
                       <path id="enrollment" d="M14.947,31.057a.874.874,0,0,1,0,1.743H1.981A2.008,2.008,0,0,1,0,30.771V2.029A2.008,2.008,0,0,1,1.981,0H25.64a1.96,1.96,0,0,1,1.407.591,2.056,2.056,0,0,1,.585,1.437V16.443a2.91,2.91,0,0,1-.023.382H25.919V2.029a.288.288,0,0,0-.279-.286H1.981a.286.286,0,0,0-.2.083.305.305,0,0,0-.081.2v28.74a.27.27,0,0,0,.083.2.289.289,0,0,0,.2.085Zm9.137.035-4.272,1.495.034-4.871,4.246,3.377Zm-3.039-5.008,4.609-6.406a.411.411,0,0,1,.5-.149l3.775,2.893a.374.374,0,0,1,.039.55l-4.679,6.492ZM7.593,16.774a1.778,1.778,0,0,1-.052-.9c.12-.948.36-1.124,1.215-1.367a8.85,8.85,0,0,0,2.867-.873,2.936,2.936,0,0,0,.193-.382c.1-.227.185-.472.24-.641a8.154,8.154,0,0,1-.631-.921l-.639-1.041a1.941,1.941,0,0,1-.36-.95.777.777,0,0,1,.065-.342.613.613,0,0,1,.219-.267.5.5,0,0,1,.154-.08,17.114,17.114,0,0,1-.031-1.868,2.694,2.694,0,0,1,.078-.424,2.508,2.508,0,0,1,1.079-1.4,3.35,3.35,0,0,1,.9-.411c.2-.059-.175-.723.036-.745A5.144,5.144,0,0,1,16.295,5.79a2.561,2.561,0,0,1,.623,1.6l-.039,1.7h0a.46.46,0,0,1,.326.355,1.481,1.481,0,0,1-.175.892h0v.024l-.73,1.225a6.339,6.339,0,0,1-.891,1.26l.1.144a4.478,4.478,0,0,0,.464.625.043.043,0,0,1,.016.021,10.373,10.373,0,0,0,2.813.892c.782.211,1.069.267,1.243,1.142a1.937,1.937,0,0,1-.023,1.1Zm-.641,9.356a.885.885,0,0,1,0-1.764H18.508l-.016.024h0V24.4h0v.013h0v.408h0v.035h0v.021h0v.211h0v.032H18.38l-.018.013H18.33l-.016.016h-.029l-.016.013h-.016l-.016.016h-.013l-.016.016h0l-.016.016h0l-.016.016h0v.016h0v.029h0v.016h0l-.016.016v.016h-.013v.016h0v.016h0l-.013.016h0v.016h0v.035h0v.035h0l-.013.016v.016h0v.019h0v.019h0v.019h0v.037h0V25.6Zm.331-4.847a.847.847,0,0,1-.777-.421.891.891,0,0,1,0-.9.847.847,0,0,1,.777-.421H19.754a.847.847,0,0,1,.777.421.891.891,0,0,1,0,.9.847.847,0,0,1-.777.421Z" transform="translate(5.333 4.2)" fill="#06425c" />
                     </svg>
-iCare classification
+                    iCare classification
                   </Typography>
                 </Grid>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1533,7 +1554,7 @@ iCare classification
                       <path id="Path_2530" data-name="Path 2530" d="M16.815,3.254a.668.668,0,0,1-.217-.033.651.651,0,0,1-.65-.65V1.292h-6.3V2.571a.647.647,0,0,1-.583.64.732.732,0,0,1-.228.033H6.46V5.892H18.892V3.242h-2.1l.023.013ZM5.846,19.2a1.279,1.279,0,1,1-1.279,1.279A1.28,1.28,0,0,1,5.846,19.2ZM4.367,16.042a.575.575,0,0,1,.957-.64l.315.466,1.246-1.515a.576.576,0,1,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.113Zm0-4.431a.575.575,0,0,1,.957-.64l.315.466L6.885,9.919a.576.576,0,0,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.11ZM17.705,31.268a.671.671,0,0,1-.435.171.348.348,0,0,1-.1-.01H1.438a1.438,1.438,0,0,1-1.016-.422A1.422,1.422,0,0,1,0,29.989V5.079A1.441,1.441,0,0,1,1.438,3.641H5.181V2.932a.956.956,0,0,1,.287-.686.968.968,0,0,1,.686-.287H8.369V1.072A1.053,1.053,0,0,1,8.689.32,1.053,1.053,0,0,1,9.441,0h6.747a1.053,1.053,0,0,1,.752.32,1.058,1.058,0,0,1,.32.752v.89h2a1.011,1.011,0,0,1,.686.287.986.986,0,0,1,.287.686v.709h3.743a1.441,1.441,0,0,1,1.438,1.438V23.05a.656.656,0,0,1-.194.65l-7.433,7.522a.223.223,0,0,1-.056.046h-.023ZM16.62,30.137c0-8.6-1.085-7.581,7.476-7.581V5.079a.121.121,0,0,0-.046-.1.143.143,0,0,0-.1-.046H20.2v1.3a.956.956,0,0,1-.287.686.968.968,0,0,1-.686.287H6.141a.986.986,0,0,1-.686-.287c-.023-.023-.033-.046-.056-.069a.994.994,0,0,1-.228-.617V4.93H1.428a.121.121,0,0,0-.1.046.171.171,0,0,0-.046.1v24.91a.107.107,0,0,0,.046.1.143.143,0,0,0,.1.046H16.62Zm-6.071-9.208a.65.65,0,0,1,0-1.3h6.174a.65.65,0,0,1,0,1.3Zm0-9.282a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Zm0,4.641a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Z" fill="#06425c" />
                     </svg>
                     {' '}
-Confirmation and notification
+                    Confirmation and notification
                   </Typography>
                 </Grid>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1621,7 +1642,7 @@ Confirmation and notification
                           <Grid item md={12} xs={12} className={classes.formBox}>
                             <FormControl component="fieldset">
                               <FormLabel component="legend" className="checkRadioLabel">
-                              Confirm if the foreman was present at the time of your observation?
+                                Confirm if the foreman was present at the time of your observation?
                               </FormLabel>
                               <RadioGroup
                                 row
@@ -1679,7 +1700,7 @@ Confirmation and notification
                       <path id="Path_5091" data-name="Path 5091" d="M18.5,16H7A4,4,0,0,1,7,8H19.5a2.5,2.5,0,0,1,0,5H9a1,1,0,0,1,0-2h9.5V9.5H9a2.5,2.5,0,0,0,0,5H19.5a4,4,0,0,0,0-8H7a5.5,5.5,0,0,0,0,11H18.5Z" fill="#06425c" />
                     </svg>
                     {' '}
-Attachment
+                    Attachment
                   </Typography>
                 </Grid>
 
@@ -1703,7 +1724,7 @@ Attachment
 
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                   <Alert onClose={handleClose} severity="error">
-                    The file you are attaching is bigger than the 25mb.
+                    The file(s) you are attaching is bigger than the 25mb.
                   </Alert>
                 </Snackbar>
 
