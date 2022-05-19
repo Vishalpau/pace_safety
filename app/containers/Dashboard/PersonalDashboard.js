@@ -44,7 +44,7 @@ import React, { useEffect, useState } from "react";
 // redux
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { company, projectName, breakDownDetails } from "../../redux/actions/initialDetails";
+import { company, projectName, breakDownDetails, appAcl } from "../../redux/actions/initialDetails";
 import "../../styles/custom/hexagon.css";
 import api from "../../utils/axios";
 import {
@@ -543,43 +543,14 @@ function PersonalDashboard(props) {
       JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
 
     if (companyId) {
+
       try {
         let data = await api.get(`${SELF_API}${companyId}/`)
-          .then(async function (res) {
+          .then(function (res) {
             let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode == APPCODE)[0].roles[0].aclUrl
-            await api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`)
-              .then(d => {
-                localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0]))
-                console.log('local timeout run');
-              })
-              .then(() => {
-                console.log('set timeout run');
-                setTimeout(() => {
-                  const subscriptionData = res.data.data.results.data.companies[0].subscriptions
-                  setSubscriptions(subscriptionData)
-                  const modules = subscriptionData.map(subscription => subscription.modules)
-                  var modulesState = []
-                  var temp = []
-                  modules.map(module => {
-                    modulesState = [...modulesState]
-                    temp = [...temp]
-                    if (module.length > 0) {
-                      module.map(mod => {
-                        modulesState.push(mod)
-                        // this.setState({modules: module})
-                        if (mod.subscriptionStatus == 'active') {
-                          temp.push(mod.moduleCode)
-                          // this.setState({ codes: temp })
-                          return temp
-                        }
-                      }
-                      )
-                    }
-                  })
-                }, 1000)
-                setCode(temp)
-                getModules(apps)
-              })
+            api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`).then(d => {
+              localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0]))
+            });
 
             return res.data.data.results.data.companies[0].subscriptions;
 
@@ -588,45 +559,138 @@ function PersonalDashboard(props) {
             console.log(error);
           });
 
-        // setSubscriptions(data)
+
+        await setSubscriptions(data);
+
+        dispatch(appAcl(d.data.data.results.permissions[0]));
+
         // redirectionAccount()
 
+        const modules = data.map(subscription => subscription.modules)
+        var modulesState = []
+        var temp = []
+        modules.map(module => {
+          modulesState = [...modulesState]
+          temp = [...temp]
+          if (module.length > 0) {
+            module.map(mod => {
+              modulesState.push(mod)
+              // this.setState({modules: module})
+              if (mod.subscriptionStatus == 'active') {
+                temp.push(mod.moduleCode)
+                // this.setState({ codes: temp })
+                return temp
+              }
+            }
+            )
 
-        // const modules = data.map(subscription => subscription.modules)
-        // var modulesState = []
-        // var temp = []
-        // modules.map(module => {
-        //   modulesState = [...modulesState]
-        //   temp = [...temp]
-        //   if (module.length > 0) {
-        //     module.map(mod => {
-        //       modulesState.push(mod)
-        //       // this.setState({modules: module})
-        //       if (mod.subscriptionStatus == 'active') {
-        //         temp.push(mod.moduleCode)
-        //         // this.setState({ codes: temp })
-        //         return temp
-        //       }
-        //     }
-        //     )
+            // this.setState({ codes: codes })
 
-        //     // this.setState({ codes: codes })
-
-        //   }
-        // })
+          }
+        })
         let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
-        // await setCode(temp)
-        // await getModules(apps)
+        await setCode(temp)
+        await getModules(apps)
 
       } catch (error) { }
     }
     // getAllPickList()
   }
 
+  // const getSubscriptions = async (compId) => {
+  //   const companyId = compId ||
+  //     JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
+
+  //   if (companyId) {
+  //     try {
+  //       let data = await api.get(`${SELF_API}${companyId}/`)
+  //         .then(async function (res) {
+  //           let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode == APPCODE)[0].roles[0].aclUrl
+  //           await api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`)
+  //             .then(d => {
+  //               alert('hii 2')
+  //               localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0]))
+  //               dispatch(appAcl(d.data.data.results.permissions[0]));
+  //               console.log('local timeout run');
+  //             })
+  //             .then(() => {
+  //               alert('hiit');
+  //               console.log('set timeout run');
+  //               // setTimeout(() => {
+  //                 const subscriptionData = res.data.data.results.data.companies[0].subscriptions
+  //                 setSubscriptions(subscriptionData)
+  //                 const modules = subscriptionData.map(subscription => subscription.modules)
+  //                 var modulesState = []
+  //                 var temp = []
+  //                 modules.map(module => {
+  //                   modulesState = [...modulesState]
+  //                   temp = [...temp]
+  //                   if (module.length > 0) {
+  //                     module.map(mod => {
+  //                       modulesState.push(mod)
+  //                       // this.setState({modules: module})
+  //                       if (mod.subscriptionStatus == 'active') {
+  //                         temp.push(mod.moduleCode)
+  //                         // this.setState({ codes: temp })
+  //                         return temp
+  //                       }
+  //                     }
+  //                     )
+  //                   }
+  //                 })
+  //                 setCode(temp)
+  //                 getModules(apps)
+  //               }, 1000)
+  //             // })
+
+  //           return res.data.data.results.data.companies[0].subscriptions;
+
+  //         })
+  //         .catch(function (error) {
+  //           console.log(error);
+  //         });
+
+  //       // setSubscriptions(data)
+  //       // redirectionAccount()
+
+
+  //       // const modules = data.map(subscription => subscription.modules)
+  //       // var modulesState = []
+  //       // var temp = []
+  //       // modules.map(module => {
+  //       //   modulesState = [...modulesState]
+  //       //   temp = [...temp]
+  //       //   if (module.length > 0) {
+  //       //     module.map(mod => {
+  //       //       modulesState.push(mod)
+  //       //       // this.setState({modules: module})
+  //       //       if (mod.subscriptionStatus == 'active') {
+  //       //         temp.push(mod.moduleCode)
+  //       //         // this.setState({ codes: temp })
+  //       //         return temp
+  //       //       }
+  //       //     }
+  //       //     )
+
+  //       //     // this.setState({ codes: codes })
+
+  //       //   }
+  //       // })
+  //       let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
+  //       // await setCode(temp)
+  //       // await getModules(apps)
+
+  //     } catch (error) { }
+  //   }
+  //   // getAllPickList()
+  // }
+
   const redirectionAccount = () => {
+    console.log('rediction account chala')
     if (localStorage.getItem('lastState') != null && localStorage.getItem('projectName') != null) {
-      let laststate = localStorage.getItem('lastState')
-      localStorage.removeItem('lastState')
+      let laststate = localStorage.getItem('lastState');
+      console.log(laststate, 'lastState');
+      localStorage.removeItem('lastState');
       history.push(laststate)
     }
     if (localStorage.getItem('projectName') != null) {
@@ -635,6 +699,7 @@ function PersonalDashboard(props) {
   }
 
   const getModules = async (apps) => {
+    console.log('getmodules chala');
     let data = await api
       .post(`${ACCOUNT_API_URL}${API_VERSION}applications/modules/`, { "fkAppId": apps })
       .then(function (res) {
@@ -652,6 +717,8 @@ function PersonalDashboard(props) {
   }
 
   const handleClick = async (appCode) => {
+
+    console.log('handleclick chala');
 
     const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     const projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
@@ -708,6 +775,7 @@ function PersonalDashboard(props) {
 
   // compney name get
   const handleCompanyName = async (e, key, name) => {
+    console.log('handle company name chalaa');
     let hosting = companyListData.filter(company => company.companyId === e)[0]
       .subscriptions
       .filter(subscription => subscription.appCode == "safety")[0]
@@ -732,8 +800,6 @@ function PersonalDashboard(props) {
     //   let data = newData.projects[0];
     //   dispatch(projectName(data));
     //   localStorage.setItem("projectName", JSON.stringify(data));
-
-
     // }
     if (newData.projects.length > 0) {
       // setProjectListData(newData.projects);
@@ -789,7 +855,6 @@ function PersonalDashboard(props) {
     localStorage.setItem("projectName", JSON.stringify(data));
     setProjectOpen(false);
     redirectionAccount()
-
   };
 
   // fecthing project structure with name and label
@@ -798,7 +863,6 @@ function PersonalDashboard(props) {
     localStorage.setItem("selectBreakDown", JSON.stringify(breakDownData))
     dispatch(breakDownDetails(breakDownData))
     redirectionAccount()
-
   }
   // end fetching name and label
 
@@ -816,8 +880,6 @@ function PersonalDashboard(props) {
           if (comId != 0) {
             response.data.data.results.data.companies = response.data.data.results.data.companies.filter(comp => comp.companyId == comId)
           }
-
-
           if (response.data.data.results.data.companies.length === 1) {
             let hosting = response.data.data.results.data.companies.filter(company => company.companyId === response.data.data.results.data.companies[0].companyId)[0]
               .subscriptions
@@ -880,6 +942,7 @@ function PersonalDashboard(props) {
   };
   const fetchUserDetails = async (compId, proId, targetPage, tarProjectStruct, tarId) => {
     // window.location.href = `/${tagetPage}`
+    console.log('state null nhi hai');
     try {
       if (compId) {
         let config = {
@@ -889,7 +952,7 @@ function PersonalDashboard(props) {
         };
 
         await api(config)
-          .then(function (response) {
+          .then(async function (response) {
             if (response.status === 200) {
               // setIsLoading(true)
               let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
@@ -902,31 +965,33 @@ function PersonalDashboard(props) {
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
-              axios(data1).then((res) => {
+              axios(data1).then(async (res) => {
                 let responseData = JSON.stringify(response.data.data.results.data);
                 localStorage.setItem('userDetails', responseData)
 
                 if (compId) {
                   let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-
                   let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
                   localStorage.setItem('company', JSON.stringify(companeyData))
-
                   dispatch(company(companeyData))
                 }
+
                 if (proId) {
                   let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
                   let project = companies[0].projects.filter(item => item.projectId == proId)
-
                   localStorage.setItem("projectName", JSON.stringify(project[0]))
                   dispatch(projectName(project[0]))
                 }
 
                 // fetchPermissionData(); 
                 if (res.status === 200) {
-                  getSubscriptions()
-                  localStorage.removeItem("direct_loading")
-                  history.push('/app/' + targetPage + tarId)
+                  await getSubscriptions()
+                    .then(res => {
+                      setTimeout(() => {
+                        localStorage.removeItem("direct_loading");
+                        history.push('/app/' + targetPage + tarId)
+                      }, 1000)
+                    })
                 }
               })
             }
@@ -940,6 +1005,7 @@ function PersonalDashboard(props) {
   }
 
   const handelCallBack = async () => {
+    console.log('hhhhhhhhhhhhhandle cccccallll backk');
     let state = JSON.parse(localStorage.getItem('direct_loading'));
     let comId = 0
     let proId = 0
@@ -947,7 +1013,7 @@ function PersonalDashboard(props) {
     let tarPage = ''
     let tarId = 0
     if (state !== null) {
-
+      // console.log('null state nhi hai');
       await fetchUserDetails(state.comId, state.proId, state.tarPage, state.tarProjectStruct, state.tarId)
     } else {
 
@@ -963,6 +1029,7 @@ function PersonalDashboard(props) {
       setTimeout(() => history.push('app/icare'), 1000)
     }
   }, [props.initialValues.companyListData]);
+
   const [changeClass, setChangeClass] = React.useState(false);
   const [phaseSelect, setPhaseSelect] = React.useState([]);
   const [openPhase, setOpenPhase] = React.useState();
