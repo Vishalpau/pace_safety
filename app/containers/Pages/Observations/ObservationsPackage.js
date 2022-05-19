@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy } from "react";
+import React, { useEffect, useState, lazy } from 'react';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -21,22 +21,22 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Pagination from '@material-ui/lab/Pagination';
-import axios from "axios";
+import axios from 'axios';
 import completed_small from 'dan-images/completed-small.png';
 import in_progress_small from 'dan-images/in_progress_small.png';
 import preplanning from 'dan-images/preplanning.png';
 import Incidents from 'dan-styles/IncidentsList.scss';
-import moment from "moment";
+import moment from 'moment';
 import MUIDataTable from 'mui-datatables';
 // react-redux
-import { connect, useDispatch } from "react-redux";
-import { useHistory } from "react-router";
+import { connect, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import { company, projectName } from '../../../redux/actions/initialDetails';
-import "../../../styles/custom/customheader.css";
-import api from "../../../utils/axios";
+import '../../../styles/custom/customheader.css';
+import api from '../../../utils/axios';
 import { HEADER_AUTH, SELF_API } from '../../../utils/constants';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
-import { checkACL } from '../../../utils/helper'
+import { checkACL } from '../../../utils/helper';
 
 
 const UserDetailsView = lazy(() => import('../../UserDetails/UserDetail'));
@@ -44,9 +44,9 @@ const Loader = lazy(() => import('../Loader'));
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
-    padding: "0px 0px 20px 0px",
-    display: "flex",
-    justifyContent: "flex-end",
+    padding: '0px 0px 20px 0px',
+    display: 'flex',
+    justifyContent: 'flex-end',
     marginTop: '-10px',
   },
   root: {
@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: '5px',
     marginRight: '15px',
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       marginLeft: '3px',
       marginRight: '3px',
     },
@@ -207,7 +207,7 @@ const useStyles = makeStyles((theme) => ({
   marginTopBottom: {
     marginBottom: '16px',
     borderRadius: '8px',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       paddingTop: '55px',
     },
   },
@@ -242,14 +242,14 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     margin: '15px 15px 15px 8px',
     fontSize: '10px',
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       margin: '10px 5px 10px 5px',
     },
   },
   floatR: {
     float: 'right',
     textTransform: 'capitalize',
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       float: 'left',
     },
   },
@@ -283,7 +283,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textRight: {
     textAlign: 'right',
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       textAlign: 'left',
       padding: '0px 8px 15px 8px !important',
     },
@@ -309,14 +309,14 @@ const useStyles = makeStyles((theme) => ({
     padding: '14px',
     cursor: 'pointer',
     textDecoration: 'none !important',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       paddingTop: '85px',
     }
   },
   userPictureBox: {
     position: 'absolute',
     right: '0px',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       right: 'auto',
     }
   },
@@ -356,13 +356,13 @@ const useStyles = makeStyles((theme) => ({
   },
   cardBottomSection: {
     '& p': {
-      ['@media (max-width:480px)']: {
+      '@media (max-width:480px)': {
         fontSize: '12px !important',
       },
     },
   },
   cardActionBottomBox: {
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       padding: '8px !important',
     },
   },
@@ -402,8 +402,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Actions(props) {
-
-  const type = localStorage.getItem("type")
+  const type = localStorage.getItem('type');
 
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).name
@@ -411,15 +410,15 @@ function Actions(props) {
   const dispatch = useDispatch();
   const [listToggle, setListToggle] = useState(false);
   const [pageCount, setPageCount] = useState(0);
-  const [pageData, setPageData] = useState(0)
+  const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
-  const [page, setPage] = useState(1)
-  const [userInfo, setUserInfo] = useState({})
+  const [page, setPage] = useState(1);
+  const [userInfo, setUserInfo] = useState({});
   const history = useHistory();
   const [allInitialData, setAllInitialData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const searchIncident = props.searchIncident
-  const status = props.status;
+  const { searchIncident } = props;
+  const { status } = props;
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
@@ -457,201 +456,195 @@ function Actions(props) {
     : null;
 
   const handleSummaryPush = async (index) => {
-    const id = allInitialData[index].id;
-    localStorage.setItem("fkobservationId", id);
+    const { id } = allInitialData[index];
+    localStorage.setItem('fkobservationId', id);
     if (allInitialData[index].isCorrectiveActionTaken !== null) {
-      localStorage.setItem("action", "Done");
+      localStorage.setItem('action', 'Done');
     } else {
-      localStorage.removeItem("action");
+      localStorage.removeItem('action');
     }
     history.push(`/app/icare/details/${id}`);
   };
 
   const fetchInitialiObservation = async () => {
-    await setPage(1)
+    await setPage(1);
 
-    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId || props.projectName.projectId
+    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+    const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
+      .projectName.projectId || props.projectName.projectId;
     const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : JSON.parse(localStorage.getItem('selectBreakDown')) !== null
+        ? JSON.parse(localStorage.getItem('selectBreakDown'))
         : null;
-    let struct = "";
+    let struct = '';
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    if (props.type == "All" || props.type == "Type") {
+    if (props.type == 'All' || props.type == 'Type') {
       // await setAllInitialData(result)
-      if (props.observation == "My Observations") {
-        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
-        console.log(allLogInUserData)
-        const result = allLogInUserData.data.data.results.results
-        await setAllInitialData(result)
-        await setTotalData(allLogInUserData.data.data.results.count)
-        await setPageData(allLogInUserData.data.data.results.count / 25)
-        let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-        await setPageCount(pageCount)
+      if (props.observation == 'My Observations') {
+        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`);
+        console.log(allLogInUserData);
+        const result = allLogInUserData.data.data.results.results;
+        await setAllInitialData(result);
+        await setTotalData(allLogInUserData.data.data.results.count);
+        await setPageData(allLogInUserData.data.data.results.count / 25);
+        const pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25);
+        await setPageCount(pageCount);
       } else {
         const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
-        const result = res.data.data.results.results
-        await setAllInitialData(result)
-        await setTotalData(res.data.data.results.count)
-        await setPageData(res.data.data.results.count / 25)
-        let pageCount = Math.ceil(res.data.data.results.count / 25)
-        await setPageCount(pageCount)
+        const result = res.data.data.results.results;
+        await setAllInitialData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
+        const pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageCount(pageCount);
       }
     } else {
-      if (props.type == "Risk") {
-        if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(allLogInUserData.data.data.results.count)
-          await setPageData(allLogInUserData.data.data.results.count / 25)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-          await setPageCount(pageCount)
+      if (props.type == 'Risk') {
+        if (props.observation == 'My Observations') {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
+          const pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25);
+          await setPageCount(pageCount);
         } else {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(allLogInUserData.data.data.results.count)
-          await setPageData(allLogInUserData.data.data.results.count / 25)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-          await setPageCount(pageCount)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
+          const pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25);
+          await setPageCount(pageCount);
         }
       }
-      if (props.type == "Comments") {
-        if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(allLogInUserData.data.data.results.count)
-          await setPageData(allLogInUserData.data.data.results.count / 25)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-          await setPageCount(pageCount)
+      if (props.type == 'Comments') {
+        if (props.observation == 'My Observations') {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
+          const pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25);
+          await setPageCount(pageCount);
         } else {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(allLogInUserData.data.data.results.count)
-          await setPageData(allLogInUserData.data.data.results.count / 25)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-          await setPageCount(pageCount)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
+          const pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25);
+          await setPageCount(pageCount);
         }
       }
-      if (props.type == "Positive behavior") {
-
-        if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(allLogInUserData.data.data.results.count)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-          await setPageData(allLogInUserData.data.data.results.count / 25)
-          await setPageCount(pageCount)
+      if (props.type == 'Positive behavior') {
+        if (props.observation == 'My Observations') {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          const pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
+          await setPageCount(pageCount);
         } else {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(allLogInUserData.data.data.results.count)
-          await setPageData(allLogInUserData.data.data.results.count / 25)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-          await setPageCount(pageCount)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
+          const pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25);
+          await setPageCount(pageCount);
         }
       }
     }
-    await setIsLoading(true)
-  }
+    await setIsLoading(true);
+  };
 
   const handleChange = async (event, value) => {
-
-    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem('projectName'))
       .projectName.projectId;
     const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : JSON.parse(localStorage.getItem('selectBreakDown')) !== null
+        ? JSON.parse(localStorage.getItem('selectBreakDown'))
         : null;
-    let struct = "";
+    let struct = '';
 
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    if (props.type == "All" || props.type == "Type") {
-      if (props.observation == "My Observations") {
-        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`)
-        const result = allLogInUserData.data.data.results.results
-        await setAllInitialData(result)
-        await setPage(value)
+    if (props.type == 'All' || props.type == 'Type') {
+      if (props.observation == 'My Observations') {
+        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`);
+        const result = allLogInUserData.data.data.results.results;
+        await setAllInitialData(result);
+        await setPage(value);
       } else {
         const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&observationStage=${status}`);
-        const result = res.data.data.results.results
-        await setAllInitialData(result)
-        await setPage(value)
+        const result = res.data.data.results.results;
+        await setAllInitialData(result);
+        await setPage(value);
       }
     } else {
-      if (props.type == "Risk") {
-        if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setPage(value)
+      if (props.type == 'Risk') {
+        if (props.observation == 'My Observations') {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setPage(value);
         } else {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setPage(value)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setPage(value);
         }
       }
-      if (props.type == "Comments") {
-        if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setPage(value)
-
+      if (props.type == 'Comments') {
+        if (props.observation == 'My Observations') {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setPage(value);
         } else {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setPage(value)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setPage(value);
         }
       }
-      if (props.type == "Positive behavior") {
-        if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setPage(value)
+      if (props.type == 'Positive behavior') {
+        if (props.observation == 'My Observations') {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}&observationStage=${status}`);
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setPage(value);
         } else {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`);
 
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setPage(value)
-
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setPage(value);
         }
       }
-
     }
-
   };
 
   const [openAttachment, setopenAttachment] = React.useState(false);
-  const [openAtt, setopenAtt] = React.useState('')
+  const [openAtt, setopenAtt] = React.useState('');
 
   const handleClickOpenAttachment = (value) => {
-    setopenAtt(value)
+    setopenAtt(value);
     setopenAttachment(true);
   };
 
   const [attachOpen, setAttachOpen] = useState(false);
-  const [attachIndex, setAttachIndex] = useState("");
+  const [attachIndex, setAttachIndex] = useState('');
   const [hidden, setHidden] = useState(false);
 
 
@@ -667,7 +660,7 @@ function Actions(props) {
     setAttachOpen(false);
   };
 
-  //view comments
+  // view comments
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [hiddenn, setHiddenn] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
@@ -688,133 +681,141 @@ function Actions(props) {
   const userDetails = async (compId, proId) => {
     try {
       if (compId) {
-
-        let config = {
-          method: "get",
+        const config = {
+          method: 'get',
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
         await api(config)
-          .then(function (response) {
+          .then((response) => {
             if (response.status === 200) {
-              console.log(response)
-              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
-                .subscriptions.filter(subs => subs.appCode === "safety")[0]
-                .hostings[0].apiDomain
+              console.log(response);
+              const hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
+                .subscriptions.filter(subs => subs.appCode === 'safety')[0]
+                .hostings[0].apiDomain;
 
-              console.log(hosting)
-              let data1 = {
-                method: "get",
+              console.log(hosting);
+              const data1 = {
+                method: 'get',
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
-              console.log(data1)
+              console.log(data1);
               axios(data1).then((res) => {
-                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data));
 
                 if (compId) {
-                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  const companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
 
-                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
-                  localStorage.setItem('company', JSON.stringify(companeyData))
+                  const companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName };
+                  localStorage.setItem('company', JSON.stringify(companeyData));
 
-                  dispatch(company(companeyData))
+                  dispatch(company(companeyData));
                 }
                 if (proId) {
-                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-                  let project = companies[0].projects.filter(item => item.projectId == proId)
+                  const companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  const project = companies[0].projects.filter(item => item.projectId == proId);
 
-                  localStorage.setItem("projectName", JSON.stringify(project[0]))
-                  dispatch(projectName(project[0]))
+                  localStorage.setItem('projectName', JSON.stringify(project[0]));
+                  dispatch(projectName(project[0]));
                 }
                 // fetchPermissionData();
-                localStorage.removeItem("direct_loading")
-              })
-
-
+                localStorage.removeItem('direct_loading');
+              });
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
           });
       }
     } catch (error) {
     }
-  }
+  };
   const classes = useStyles();
 
   const handleDelete = async (item) => {
-    if(checkACL('safety-observations', 'delete_observations')) {
-      let data = item[1]
-      data.status = "Delete"
-      delete data.attachment
-      await setIsLoading(false)
-      const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))
+    if (checkACL('safety-observations', 'delete_observations')) {
+      const data = item[1];
+      data.status = 'Delete';
+      delete data.attachment;
+      await setIsLoading(false);
+      const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err));
     } else {
-      
-    }    
-  }
+
+    }
+  };
 
   useEffect(() => {
-    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    const state = JSON.parse(localStorage.getItem('direct_loading'));
     if (state !== null) {
-      userDetails(state.comId, state.proId)
+      userDetails(state.comId, state.proId);
     } else {
       fetchInitialiObservation();
     }
-    setCheckDeletePermission(checkACL('safety-observations', 'delete_observations'))
-    setTimeout(() => setCheckDeletePermission(checkACL('safety-observations', 'delete_observations')), 2500)
+    setCheckDeletePermission(checkACL('safety-observations', 'delete_observations'));
+    setTimeout(() => setCheckDeletePermission(checkACL('safety-observations', 'delete_observations')), 2500);
   }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status, checkDeletePermission]);
 
   return (
     <>
       <Box>
-        {isLoading ? (<>
-          <Grid className={classes.marginTopBottom}>
-            {listToggle == false ? (
-              <div>
-                <div className="gridView">
-                  {Object.keys(allInitialData).length > 0 ?
-                    Object.entries(allInitialData)
-                      .map((item, index) => (<>
-                        <Card variant="outlined" className={classes.card}>
-                          <CardContent>
-                            <Grid container spacing={3} className={classes.cardContentSection}>
-                              <Grid item md={2} sm={4} xs={12}
-                                className={classes.userPictureBox}
-                              >
-                                <Button className={classes.floatR}
-                                >
-                                  <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
-                                </Button>
-                              </Grid>
-                              <Link
-                                onClick={() => handleSummaryPush(index)}
-                                className={classes.cardLinkAction}
-                              >
-                                <Grid item xs={12} >
-                                  <Grid container spacing={3} alignItems="flex-start">
-                                    <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+        {isLoading ? (
+          <>
+            <Grid className={classes.marginTopBottom}>
+              {listToggle == false ? (
+                <div>
+                  <div className="gridView">
+                    {Object.keys(allInitialData).length > 0
+                      ? Object.entries(allInitialData)
+                        .map((item, index) => (
+                          <>
+                            <Card variant="outlined" className={classes.card}>
+                              <CardContent>
+                                <Grid container spacing={3} className={classes.cardContentSection}>
+                                  <Grid
+                                    item
+                                    md={2}
+                                    sm={4}
+                                    xs={12}
+                                    className={classes.userPictureBox}
+                                  >
+                                    <Button className={classes.floatR}>
+                                      <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} />
+                                      {' '}
+                                      {item[1].username ? item[1].username : 'Admin'}
+                                    </Button>
+                                  </Grid>
+                                  <Link
+                                    onClick={() => handleSummaryPush(index)}
+                                    className={classes.cardLinkAction}
+                                  >
+                                    <Grid item xs={12}>
                                       <Grid container spacing={3} alignItems="flex-start">
-                                        <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
-                                          <Typography
-                                            className={classes.title}
-                                            variant="h6"
-                                          >
-                                            {item[1]["observationDetails"]}
-                                          </Typography>
-                                          <Typography
-                                            display="inline"
-                                            className={classes.listingLabelName}
-                                          >
-                                            Number: <span><Link
-                                              onClick={() => handleSummaryPush(index)}
-                                              variant="h6"
-                                              className={classes.mLeftfont}
-                                            >
-                                              <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
-                                            </Link></span>
-                                          </Typography>
-                                          {/* <Typography
+                                        <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+                                          <Grid container spacing={3} alignItems="flex-start">
+                                            <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
+                                              <Typography
+                                                className={classes.title}
+                                                variant="h6"
+                                              >
+                                                {item[1].observationDetails}
+                                              </Typography>
+                                              <Typography
+                                                display="inline"
+                                                className={classes.listingLabelName}
+                                              >
+                                            Number:
+                                                {' '}
+                                                <span>
+                                                  <Link
+                                                    onClick={() => handleSummaryPush(index)}
+                                                    variant="h6"
+                                                    className={classes.mLeftfont}
+                                                  >
+                                                    <span className={classes.listingLabelValue}>{item[1].observationNumber}</span>
+                                                  </Link>
+                                                </span>
+                                              </Typography>
+                                              {/* <Typography
                                 variant="body1"
                                 gutterBottom
                                 display="inline"
@@ -823,111 +824,128 @@ function Actions(props) {
                               >
                                 Category: <span className={classes.listingLabelValue}>HSE incident Action</span>
                               </Typography> */}
-                                          <span item xs={1} className={classes.sepHeightOne}></span>
-                                          <Typography
-                                            variant="body1"
-                                            gutterBottom
-                                            display="inline"
-                                            color="textPrimary"
-                                            className={classes.listingLabelName}
-                                          >
-                                            Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
-                                            <span item xs={1} className={classes.sepHeightOne}></span>
-                                            Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} />}{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
-                                            <span item xs={1} className={classes.sepHeightOne}></span>
-                                            Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}</span>
-                                          </Typography>
+                                              <span item xs={1} className={classes.sepHeightOne} />
+                                              <Typography
+                                                variant="body1"
+                                                gutterBottom
+                                                display="inline"
+                                                color="textPrimary"
+                                                className={classes.listingLabelName}
+                                              >
+                                            Assignee:
+                                                {' '}
+                                                <span className={classes.listingLabelValue}>{item[1].assigneeName ? item[1].assigneeName : '-'}</span>
+                                                <span item xs={1} className={classes.sepHeightOne} />
+                                            Stage:
+                                                {' '}
+                                                <span className={classes.listingLabelValue}>
+                                                  {item[1].observationStage ? item[1].observationStage : '-'}
+                                                  {' '}
+                                                  {item[1].observationStage === 'Completed' && <img src={completed_small} className={classes.smallImage} />}
+                                                  {item[1].observationStage === 'Planned' && <img src={in_progress_small} className={classes.smallImage} />}
+                                                  {' '}
+                                                  {item[1].observationStage === 'Open' && <img src={preplanning} className={classes.smallImage} />}
+                                                  {' '}
+                                                </span>
+                                                <span item xs={1} className={classes.sepHeightOne} />
+                                            Status:
+                                                {' '}
+                                                <span className={classes.listingLabelValue}>{item[1].observationStatus ? item[1].observationStatus : '-'}</span>
+                                              </Typography>
 
-                                        </Grid>
+                                            </Grid>
 
 
-                                        {/* <Grid item md={2} sm={4} xs={12}>
+                                            {/* <Grid item md={2} sm={4} xs={12}>
                                         <Button className={classes.floatR}>
                                           <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
                                         </Button>
-                                     
+
                                       </Grid> */}
+                                          </Grid>
+                                        </Grid>
                                       </Grid>
                                     </Grid>
-                                  </Grid>
-                                </Grid>
-                                <Grid item sm={12} xs={12}>
-                                  <Grid container spacing={3}>
-                                    <Grid item md={3} sm={6} xs={12}>
-                                      <Typography
-                                        variant="body1"
-                                        gutterBottom
-                                        color="textPrimary"
-                                        className={classes.listingLabelName}
-                                      >
+                                    <Grid item sm={12} xs={12}>
+                                      <Grid container spacing={3}>
+                                        <Grid item md={3} sm={6} xs={12}>
+                                          <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                            color="textPrimary"
+                                            className={classes.listingLabelName}
+                                          >
                                         Type:
-                                      </Typography>
+                                          </Typography>
 
-                                      <Typography
-                                        gutterBottom
-                                        className={classes.listingLabelValue}
-                                      >
-                                        {/* {item[1]["incidentReportedByName"]} */}
-                                        {item[1]["observationType"]}
-                                      </Typography>
-                                    </Grid>
-                                    <Grid item md={3} sm={6} xs={12}>
-                                      <Typography
-                                        variant="body1"
-                                        color="textPrimary"
-                                        gutterBottom
-                                        className={classes.listingLabelName}
-                                      >
+                                          <Typography
+                                            gutterBottom
+                                            className={classes.listingLabelValue}
+                                          >
+                                            {/* {item[1]["incidentReportedByName"]} */}
+                                            {item[1].observationType}
+                                          </Typography>
+                                        </Grid>
+                                        <Grid item md={3} sm={6} xs={12}>
+                                          <Typography
+                                            variant="body1"
+                                            color="textPrimary"
+                                            gutterBottom
+                                            className={classes.listingLabelName}
+                                          >
                                         Location:
-                                      </Typography>
-                                      <Typography
+                                          </Typography>
+                                          <Typography
 
-                                        className={classes.listingLabelValue}
-                                      >
-                                        {item[1]["location"] ? item[1]["location"] : "-"}
-                                      </Typography>
-                                    </Grid>
+                                            className={classes.listingLabelValue}
+                                          >
+                                            {item[1].location ? item[1].location : '-'}
+                                          </Typography>
+                                        </Grid>
 
-                                    <Grid item md={3} sm={6} xs={12}>
-                                      <Typography
-                                        variant="body1"
-                                        color="textPrimary"
-                                        gutterBottom
-                                        className={classes.listingLabelName}
-                                      >
+                                        <Grid item md={3} sm={6} xs={12}>
+                                          <Typography
+                                            variant="body1"
+                                            color="textPrimary"
+                                            gutterBottom
+                                            className={classes.listingLabelName}
+                                          >
                                         Reported on:
-                                      </Typography>
+                                          </Typography>
 
-                                      <Typography
+                                          <Typography
 
-                                        className={classes.listingLabelValue}
-                                      >
-                                        {moment(item[1]["createdAt"]).format(
-                                          "Do MMMM YYYY, h:mm:ss a"
-                                        )}                      </Typography>
-                                    </Grid>
+                                            className={classes.listingLabelValue}
+                                          >
+                                            {moment(item[1].createdAt).format(
+                                              'Do MMMM YYYY, h:mm:ss a'
+                                            )}
+                                            {' '}
 
-                                    <Grid item md={3} sm={6} xs={12}>
-                                      <Typography
-                                        variant="body1"
-                                        color="textPrimary"
-                                        gutterBottom
-                                        className={classes.listingLabelName}
-                                      >
+                                          </Typography>
+                                        </Grid>
+
+                                        <Grid item md={3} sm={6} xs={12}>
+                                          <Typography
+                                            variant="body1"
+                                            color="textPrimary"
+                                            gutterBottom
+                                            className={classes.listingLabelName}
+                                          >
                                         Observed By:
-                                      </Typography>
+                                          </Typography>
 
-                                      <Typography
+                                          <Typography
 
-                                        className={classes.listingLabelValue}
-                                      >
-                                        {item[1]["reportedByName"] ? item[1]["reportedByName"] : "Admin"}
-                                      </Typography>
+                                            className={classes.listingLabelValue}
+                                          >
+                                            {item[1].reportedByName ? item[1].reportedByName : 'Admin'}
+                                          </Typography>
+                                        </Grid>
+                                      </Grid>
                                     </Grid>
-                                  </Grid>
-                                </Grid>
 
-                                {/* <Grid item sm={2} xs={12}>
+                                    {/* <Grid item sm={2} xs={12}>
                       <Typography
                         variant="h6"
                         color="textPrimary"
@@ -936,41 +954,58 @@ function Actions(props) {
                       </Typography>
 
                       <Typography
-                        
+
                         className={classes.listingLabelValue}
                       >
                         29 Dec 2020
                       </Typography>
                     </Grid> */}
-                              </Link>
-                            </Grid>
+                                  </Link>
+                                </Grid>
 
-                          </CardContent>
-                          <Divider />
-                          <CardActions className={Incidents.cardActions}>
-                            <Grid
-                              container
-                              spacing={2}
-                              justify="flex-end"
-                              alignItems="left"
-                            >
-                              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                                <Typography
-                                  variant="body1"
-                                  display="inline"
-                                  color="textPrimary"
-
+                              </CardContent>
+                              <Divider />
+                              <CardActions className={Incidents.cardActions}>
+                                <Grid
+                                  container
+                                  spacing={2}
+                                  justify="flex-end"
+                                  alignItems="left"
                                 >
-                                  <AttachmentIcon className={classes.mright5} />
+                                  <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                                    <Typography
+                                      variant="body1"
+                                      display="inline"
+                                      color="textPrimary"
+
+                                    >
+                                      <AttachmentIcon className={classes.mright5} />
                                   Attachments:
-                                </Typography>
-                                <Typography variant="body2" display="inline">
-                                  <Link color="secondary" className={classes.mLeftR5}
-                                  // onClick={() => handleVisibility(index)}
-                                  >
-                                    {item[1]['attachmentCount']}</Link>
-                                </Typography>
-                                {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                                    </Typography>
+                                    <Typography variant="body2" display="inline">
+
+                                      {
+                                        item[1].files !== null ? (
+                                          <Link
+                                            color="secondary"
+                                            className={classes.mLeftR5}
+                                          // onClick={() => handleVisibility(index)}
+                                          >
+                                            {item[1].files.length}
+                                          </Link>
+                                        ) : (
+                                          <Link
+                                            color="secondary"
+                                            className={classes.mLeftR5}
+                                          // onClick={() => handleVisibility(index)}
+                                          >
+                                        0
+                                          </Link>
+                                        )
+                                      }
+
+                                    </Typography>
+                                    {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                 <Typography
                                   variant="body1"
                                   display="inline"
@@ -983,174 +1018,183 @@ function Actions(props) {
                                 <Typography variant="body2" display="inline" className={classes.mLeft}>
                                   <Link color="secondary" className={classes.mLeft} onClick={() => handleVisibilityComments(item[1].id)}>{item[1]['commentsCount']}</Link>
                                 </Typography> */}
-                              </Grid>
+                                  </Grid>
 
-                              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                                <div className={classes.floatR}>
-                                  {/* <Typography variant="body1" display="inline">
+                                  <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
+                                    <div className={classes.floatR}>
+                                      {/* <Typography variant="body1" display="inline">
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                  {/* <Typography variant="body1" display="inline">
+                                      {/* <Typography variant="body1" display="inline">
                                    <Button onClick={() => handlePrintPush(index)} > <PrintOutlinedIcon  className={classes.iconColor} /></Button>  <Button onClick={() => handlePrintPush(index)} className={classes.mLeftR5}>Print</Button>
                                   </Typography> */}
-                                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                  {/* <Typography variant="body1" display="inline">
+                                      {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
+                                      {/* <Typography variant="body1" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                  {/* <Typography variant="body1" display="inline">
+                                      {/* <Typography variant="body1" display="inline">
                                     <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                                   </Typography> */}
-                                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                  <Typography variant="body1" display="inline">
+                                      {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
+                                      <Typography variant="body1" display="inline">
 
-                                    {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
-                                    {!checkDeletePermission ? 
-                                    <DeleteForeverOutlinedIcon 
-                                      className={classes.iconteal} 
-                                      style={{
-                                        color: '#c0c0c0', 
-                                        cursor: 'not-allowed'
-                                      }}
-                                    />
-                                    : (
-                                      <Link 
-                                        href="#" 
-                                        className={classes.mLeftR5} >
-                                          <DeleteForeverOutlinedIcon 
-                                            className={classes.iconteal} 
-                                            onClick={(e) => handleDelete(item)} />
-                                      </Link>
-                                    )}
-                                  </Typography>
-                                </div>
-                              </Grid>
-                            </Grid>
-                          </CardActions>
-                        </Card>
-                        {attachIndex === index && item[1]['attachmentCount'] !== 0 ?
-                          <Grid
-                            item
-                            md={12}
-                            sm={12}
-                            xs={12}
-                            hidden={!hidden}
-                            onBlur={handleAttachClose}
-                            onClick={handleAttachClick}
-                            onClose={handleAttachClose}
-                            onFocus={handleAttachOpen}
-                            onMouseEnter={handleAttachOpen}
-                            onMouseLeave={handleAttachClose}
-                            open={attachOpen}
-                            className="paddTBRemove attactmentShowSection"
-                          >
-                            <Paper elevation={1} className="paperSection">
-                              <Grid container spacing={3}>
-                                <Grid item md={12} sm={12} xs={12}>
-                                  <List>
-                                    <ListItem>
-                                      <img src={allInitialData[index].attachment} onClick={() => handleClickOpenAttachment(allInitialData[index].attachment)} className="hoverIcon" />
-                                    </ListItem>
-                                  </List>
+                                        {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
+                                        {!checkDeletePermission
+                                          ? (
+                                            <DeleteForeverOutlinedIcon
+                                              className={classes.iconteal}
+                                              style={{
+                                                color: '#c0c0c0',
+                                                cursor: 'not-allowed'
+                                              }}
+                                            />
+                                          )
+                                          : (
+                                            <Link
+                                              href="#"
+                                              className={classes.mLeftR5}
+                                            >
+                                              <DeleteForeverOutlinedIcon
+                                                className={classes.iconteal}
+                                                onClick={(e) => handleDelete(item)}
+                                              />
+                                            </Link>
+                                          )}
+                                      </Typography>
+                                    </div>
+                                  </Grid>
+                                </Grid>
+                              </CardActions>
+                            </Card>
+                            {attachIndex === index && item[1].attachmentCount !== 0
+                              ? (
+                                <Grid
+                                  item
+                                  md={12}
+                                  sm={12}
+                                  xs={12}
+                                  hidden={!hidden}
+                                  onBlur={handleAttachClose}
+                                  onClick={handleAttachClick}
+                                  onClose={handleAttachClose}
+                                  onFocus={handleAttachOpen}
+                                  onMouseEnter={handleAttachOpen}
+                                  onMouseLeave={handleAttachClose}
+                                  open={attachOpen}
+                                  className="paddTBRemove attactmentShowSection"
+                                >
+                                  <Paper elevation={1} className="paperSection">
+                                    <Grid container spacing={3}>
+                                      <Grid item md={12} sm={12} xs={12}>
+                                        <List>
+                                          <ListItem>
+                                            <img src={allInitialData[index].attachment} onClick={() => handleClickOpenAttachment(allInitialData[index].attachment)} className="hoverIcon" />
+                                          </ListItem>
+                                        </List>
+                                      </Grid>
+                                    </Grid>
+                                  </Paper>
+                                </Grid>
+                              ) : null}
+
+                          </>
+                        )) : (
+                        <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+                      Sorry, no matching records found
+                          </Typography>
+                      )}
+
+                  </div>
+                  <div>
+                    <Grid
+                      item
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      hidden={!hiddenn}
+                      onBlur={handleCommentsClose}
+                      onClick={handleCommentsClick}
+                      onClose={handleCommentsClose}
+                      onFocus={handleCommentsOpen}
+                      onMouseEnter={handleCommentsOpen}
+                      onMouseLeave={handleCommentsClose}
+                      open={commentsOpen}
+                      className="commentsShowSection"
+                    >
+                      <Paper elevation={1} className="paperSection">
+                        <Grid container spacing={3}>
+                          <Grid item md={12} xs={12}>
+                            <Box padding={3}>
+                              <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                  <TextField
+                                    multiline
+                                    variant="outlined"
+                                    rows="1"
+                                    id="JobTitle"
+                                    label="Add your comments here"
+                                    className="formControl"
+                                  />
+                                </Grid>
+                                <Grid item xs={3}>
+                                  <input type="file" />
+                                </Grid>
+                                <Grid item xs={9}>
+                                  <AddCircleOutlineIcon className={classes.plusIcon} />
+                                  <RemoveCircleOutlineIcon className={classes.minusIcon} />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="small"
+                                    className="spacerRight buttonStyle"
+                                    disableElevation
+
+                                  >
+                                  Respond
+                                  </Button>
+                                  <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    size="small"
+                                    className="custmCancelBtn buttonStyle"
+                                    disableElevation
+
+                                  >
+                                  Cancel
+                                  </Button>
                                 </Grid>
                               </Grid>
-                            </Paper>
-                          </Grid> : null}
-
-                      </>)) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
-                      Sorry, no matching records found
-                    </Typography>}
-
-                </div>
-                <div>
-                  <Grid
-                    item
-                    md={12}
-                    sm={12}
-                    xs={12}
-                    hidden={!hiddenn}
-                    onBlur={handleCommentsClose}
-                    onClick={handleCommentsClick}
-                    onClose={handleCommentsClose}
-                    onFocus={handleCommentsOpen}
-                    onMouseEnter={handleCommentsOpen}
-                    onMouseLeave={handleCommentsClose}
-                    open={commentsOpen}
-                    className="commentsShowSection"
-                  >
-                    <Paper elevation={1} className="paperSection">
-                      <Grid container spacing={3}>
-                        <Grid item md={12} xs={12}>
-                          <Box padding={3}>
-                            <Grid container spacing={2}>
-                              <Grid item xs={12}>
-                                <TextField
-                                  multiline
-                                  variant="outlined"
-                                  rows="1"
-                                  id="JobTitle"
-                                  label="Add your comments here"
-                                  className="formControl"
-                                />
-                              </Grid>
-                              <Grid item xs={3}>
-                                <input type="file" />
-                              </Grid>
-                              <Grid item xs={9}>
-                                <AddCircleOutlineIcon className={classes.plusIcon} />
-                                <RemoveCircleOutlineIcon className={classes.minusIcon} />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  size="small"
-                                  className="spacerRight buttonStyle"
-                                  disableElevation
-
-                                >
-                                  Respond
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  color="secondary"
-                                  size="small"
-                                  className="custmCancelBtn buttonStyle"
-                                  disableElevation
-
-                                >
-                                  Cancel
-                                </Button>
-                              </Grid>
-                            </Grid>
-                          </Box>
+                            </Box>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                </div>
-                <div>
+                      </Paper>
+                    </Grid>
+                  </div>
+                  <div>
 
-                  {/* {openAtt !== "" && <Attachment value={openAtt} /> } */}
+                    {/* {openAtt !== "" && <Attachment value={openAtt} /> } */}
 
-                  {/* <Dialog
+                    {/* <Dialog
                 open={openAttachment}
                 onClose={handleCloseAttachment}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 classNames={classes.viewAttachmentDialog}
               > */}
-                  {/* <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
+                    {/* <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
                 <DialogContent classNames={classes.imageSectionHeight}>
-                <Grid container spacing={3} classNames={classes.viewImageSection}>                                  
+                <Grid container spacing={3} classNames={classes.viewImageSection}>
                   <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
                     <ul classNames={classes.viewImageSection}>
                       <li className={classes.viewattch1}>View Attachment</li>
                       <li className={classes.viewattch2}>Download  444 Attachment</li>
-                    </ul>  
+                    </ul>
                   </Grid>
-                </Grid>  
+                </Grid>
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleCloseAttachment} color="primary" autoFocus>
@@ -1158,56 +1202,58 @@ function Actions(props) {
                   </Button>
                 </DialogActions> */}
 
-                  {/* </Dialog> */}
-                </div>
-                <div>
-                  <Dialog
-                    open={myUserPOpen}
-                    onClose={handleMyUserPClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    fullWidth={true}
-                    maxWidth={'sm'}
-                  >
+                    {/* </Dialog> */}
+                  </div>
+                  <div>
+                    <Dialog
+                      open={myUserPOpen}
+                      onClose={handleMyUserPClose}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                      fullWidth
+                      maxWidth="sm"
+                    >
 
-                    <UserDetailsView userName={userInfo.name} userIcon={userInfo.userIcon} />
+                      <UserDetailsView userName={userInfo.name} userIcon={userInfo.userIcon} />
 
-                    <DialogActions>
-                      <Button onClick={handleMyUserPClose} color="primary" variant="contained" autoFocus>
+                      <DialogActions>
+                        <Button onClick={handleMyUserPClose} color="primary" variant="contained" autoFocus>
                         Close
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </div>
+
+
                 </div>
-
-
-              </div>
               // listview end
 
-            ) : (
-              <TableContainer component={Paper}>
-                <Grid component={Paper}>
-                  <MUIDataTable
-                    title="Actions List"
-                    data={data}
-                    columns={columns}
-                    options={options}
-                    className="classes.dataTableNew"
-                  />
-                </Grid>
-              </TableContainer>
-            )}
-          </Grid>
+              ) : (
+                <TableContainer component={Paper}>
+                  <Grid component={Paper}>
+                    <MUIDataTable
+                      title="Actions List"
+                      data={data}
+                      columns={columns}
+                      options={options}
+                      className="classes.dataTableNew"
+                    />
+                  </Grid>
+                </TableContainer>
+              )}
+            </Grid>
 
-          {totalData != 0 ?
-            <div className={classes.pagination}>
+            {totalData != 0
+              ? (
+                <div className={classes.pagination}>
 
-              {Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}`}
-              <Pagination count={pageCount} page={page} onChange={handleChange} />
-            </div> : null}
-        </>)
-          :
-          <Loader />
+                  {Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}`}
+                  <Pagination count={pageCount} page={page} onChange={handleChange} />
+                </div>
+              ) : null}
+          </>
+        )
+          : <Loader />
         }
       </Box>
     </>
@@ -1215,12 +1261,10 @@ function Actions(props) {
 }
 
 // export default Actions;
-const mapStateToProps = state => {
-  return {
-    projectName: state.getIn(["InitialDetailsReducer"]),
-    todoIncomplete: state
+const mapStateToProps = state => ({
+  projectName: state.getIn(['InitialDetailsReducer']),
+  todoIncomplete: state
 
-  }
-}
+});
 
 export default connect(mapStateToProps, null)(Actions);

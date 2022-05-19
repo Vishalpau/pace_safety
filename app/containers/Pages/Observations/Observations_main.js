@@ -11,20 +11,22 @@ import AddIcon from '@material-ui/icons/Add';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ReorderIcon from '@material-ui/icons/Reorder';
-import classNames from "classnames";
+import classNames from 'classnames';
 import obsIcon from 'dan-images/obsIcon.png';
 import PropTypes from 'prop-types';
-import { useHistory } from "react-router";
-import "../../../styles/custom/customheader.css";
-import Acl from "../../../components/Error/acl"
-import { checkACL } from '../../../utils/helper'
-import allPickListDataValue from "../../../utils/Picklist/allPickList"
+import { useHistory } from 'react-router';
+import '../../../styles/custom/customheader.css';
+import Acl from '../../../components/Error/acl';
+import { checkACL } from '../../../utils/helper';
+import allPickListDataValue from '../../../utils/Picklist/allPickList';
 
 const ObservationSearchSection = lazy(() => import('./ObservationSearchSection'));
 const ObservationsBarCharts = lazy(() => import('./ObservationsBarCharts'));
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const {
+    children, value, index, ...other
+  } = props;
 
   return (
     <div
@@ -141,7 +143,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'orange',
   },
   listViewTab: {
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       padding: '12px 12px 0px 12px !important',
     },
   },
@@ -214,7 +216,7 @@ export default function Observations() {
   const [value, setValue] = useState(0);
   const history = useHistory();
   const [acls, setAcls] = useState('');
-  const [showHTML, setShowHTML] = useState(false)
+  const [showHTML, setShowHTML] = useState(false);
 
 
   const handleChange = (event, newValue) => {
@@ -225,104 +227,109 @@ export default function Observations() {
     history.push(
       '/app/icare-bulkupload'
     );
-  }
+  };
 
   const handleInitialNotificationPush = async () => {
-    localStorage.removeItem("action");
-    localStorage.removeItem("value")
-    history.push("/app/icare-initial-notification");
+    localStorage.removeItem('action');
+    localStorage.removeItem('value');
+    history.push('/app/icare-initial-notification');
   };
 
   useEffect(() => {
-    let int = setInterval(() => {
+    const int = setInterval(() => {
       if (localStorage.getItem('app_acl') != null) {
-        clearInterval(int)
-        setAcls(localStorage.getItem('app_acl'))
-        setShowHTML(true)
-        allPickListDataValue()
+        clearInterval(int);
+        setAcls(localStorage.getItem('app_acl'));
+        setShowHTML(true);
+        allPickListDataValue();
       }
-    }, 100)
-  }, [acls])
+    }, 100);
+  }, [acls]);
 
-  return (!showHTML ? '' : <Acl
-    module='safety-observations'
-    action='view_observations'
-    html={
-      <div className={classes.root}>
-        <Grid item sm={12} xs={12} className={classes.borderTop}>
-          <Grid container spacing={3}>
-            <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
-              <img src={obsIcon} className={classes.attachImg} alt="decoration" />
-              <Typography variant="h5"> iCare </Typography>
-            </Grid>
-            <Grid item sm={5} xs={12}>
+  return (!showHTML ? '' : (
+    <Acl
+      module="safety-observations"
+      action="view_observations"
+      html={(
+        <div className={classes.root}>
+          <Grid item sm={12} xs={12} className={classes.borderTop}>
+            <Grid container spacing={3}>
+              <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
+                <img src={obsIcon} className={classes.attachImg} alt="decoration" />
+                <Typography variant="h5"> iCare </Typography>
+              </Grid>
+              <Grid item sm={5} xs={12}>
 
 
-            {/* {false &&  */}
-              <Button
-                variant="contained"
-                size="small"
-                className={classNames(classes.buttonsNew, classes.floatR)}
-                disableElevation
-                startIcon={<CloudUploadIcon />}
-                onClick={() => handleBulkUploadfilePush()}
-                style={{
-                  marginLeft: '10px',
-                  background: checkACL('safety-observations', 'add_observations') ? '#06425c' : '#c0c0c0', 
-                  cursor: checkACL('safety-observations', 'add_observations') ? 'pointer' : 'not-allowed'
-                }}
-              >
-                Upload
-              </Button>
-            {/* } */}
-             {/* {!checkACL('safety', 'add_observations') ? '' : ( */}
-              <Button 
-                size="medium" 
-                variant="contained" 
-                className={classNames(classes.buttonsNew, classes.floatR)} 
-                color="primary" 
-                onClick={() => handleInitialNotificationPush()}
-                style={{
-                  background: checkACL('safety-observations', 'add_observations') ? '#06425c' : '#c0c0c0', 
-                  cursor: checkACL('safety-observations', 'add_observations') ? 'pointer' : 'not-allowed'
-                }}
+                {/* {false &&  */}
+                <Button
+                  variant="contained"
+                  size="small"
+                  className={classNames(classes.buttonsNew, classes.floatR)}
+                  disableElevation
+                  startIcon={<CloudUploadIcon />}
+                  // style={{ marginLeft: '10px' }}
+                  onClick={() => handleBulkUploadfilePush()}
+                  style={{
+                    marginLeft: '10px',
+                    background: checkACL('safety-observations', 'add_observations') ? '#06425c' : '#c0c0c0',
+                    cursor: checkACL('safety-observations', 'add_observations') ? 'pointer' : 'not-allowed'
+                  }}
                 >
-                <AddIcon className={classes.floatR} /> Add new
-              </Button>
-            {/* )} */}
+                  Upload
+                </Button>
+                {/* } */}
+                {/* {!checkACL('safety', 'add_observations') ? '' : ( */}
+                <Button
+                  size="medium"
+                  variant="contained"
+                  className={classNames(classes.buttonsNew, classes.floatR)}
+                  color="primary"
+                  onClick={() => handleInitialNotificationPush()}
+                  style={{
+                    background: checkACL('safety-observations', 'add_observations') ? '#06425c' : '#c0c0c0',
+                    cursor: checkACL('safety-observations', 'add_observations') ? 'pointer' : 'not-allowed'
+                  }}
+                >
+                  <AddIcon className={classes.floatR} />
+                  {' '}
+                  Add new
+                </Button>
+                {/* )} */}
+
+              </Grid>
 
             </Grid>
-
           </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item sm={8} xs={12} className={classes.listViewTab}>
-            <AppBar position="static" className={classes.navTabBack}>
-              <div className={classes.floatL}>
-                <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                  <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
-                  <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
-                </Tabs>
-              </div>
-            </AppBar>
-          </Grid>
-          <Grid item sm={4} xs={12}>
-            <Grid className={classes.Lheight}>
-              <div className={classes.floatR}>
-              </div>
+          <Grid container spacing={3}>
+            <Grid item sm={8} xs={12} className={classes.listViewTab}>
+              <AppBar position="static" className={classes.navTabBack}>
+                <div className={classes.floatL}>
+                  <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
+                    <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
+                    <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
+                  </Tabs>
+                </div>
+              </AppBar>
+            </Grid>
+            <Grid item sm={4} xs={12}>
+              <Grid className={classes.Lheight}>
+                <div className={classes.floatR} />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        <TabPanel value={value} index={0} className={classes.paddLRzero}>
-          <ObservationSearchSection value={value} />
-        </TabPanel>
-        <TabPanel value={value} index={1} className={classes.paddLRzero}>
-          <ObservationSearchSection value={value} />
-        </TabPanel>
-        <TabPanel value={value} index={2} className={classes.paddLRzero}>
-          <ObservationsBarCharts />
-        </TabPanel>
-      </div>} />
+          <TabPanel value={value} index={0} className={classes.paddLRzero}>
+            <ObservationSearchSection value={value} />
+          </TabPanel>
+          <TabPanel value={value} index={1} className={classes.paddLRzero}>
+            <ObservationSearchSection value={value} />
+          </TabPanel>
+          <TabPanel value={value} index={2} className={classes.paddLRzero}>
+            <ObservationsBarCharts />
+          </TabPanel>
+        </div>
+      )}
+    />
   )
-
+  );
 }
