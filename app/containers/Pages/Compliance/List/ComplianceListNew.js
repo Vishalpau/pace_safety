@@ -952,6 +952,28 @@ function ComplianceListNew(props) {
               alignItems="left"
               className={classes.cardBottomSection}
             >
+              <Typography
+                variant="body1"
+                display="inline"
+                color="textPrimary"
+              >
+                <AttachmentIcon className={classes.mright5} />
+                Attachments:
+              </Typography>
+              
+              <Typography variant="body2" display="inline">
+                <span>
+                  <Link
+                    // href="#"
+                    onClick={value.attachmentLinks.attachmentCount && handleVisibility}
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={classes.mLeftR5}
+                  >
+                    {value.attachmentLinks.attachmentCount}
+                  </Link>
+                </span>
+              </Typography>
               {/* <Grid item xs={12} sm={6} md={5}>
                 <Typography
                   variant="body1"
@@ -1110,9 +1132,13 @@ function ComplianceListNew(props) {
                         sm={12}
                         xs={12}
                       >
-                        <div className="attachFileThumb">
-                          <Attachment src={value.avatar} value={value.avatar} />
-                        </div>
+                        {value.attachmentLinks.links.map(a => {
+                          return (
+                            <div className="attachFileThumb">
+                              <Attachment src={a} value={a} />
+                            </div>
+                          )
+                        })}
                       </Grid>
                     </ListItem>
                   </List>
