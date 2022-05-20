@@ -3,7 +3,7 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import { makeStyles,withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Switch from '@material-ui/core/Switch';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewUpdate }) => {
     const [open, setOpen] = React.useState(false)
-    
+
     const handelParentShow = (value) => {
         if (value == 0) {
             return "Top"
@@ -96,7 +96,7 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewU
     const classes = useStyles();
     return (
         <>
-        <Dialog
+            <Dialog
                 className={classes.projectDialog}
                 open={open}
                 onClose={handleDeleteDialog}
@@ -106,7 +106,7 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewU
                         maxWidth: 400,
                     },
                 }}
-                >
+            >
                 <DialogTitle>
                     Confirmation
                 </DialogTitle>
@@ -142,36 +142,36 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewU
                     </Tooltip>
                 </DialogActions>
             </Dialog>
-       
-        <TableRow>
-            <TableCell key={value.isSystem}>
-                {value.inputLabel}
-            </TableCell>
-            <TableCell key={value.isSystem}>{value.inputValue.replace(" ", "-")}</TableCell>
-            {Object.keys(group).length > 0 ?
-                <TableCell key={group[value.fkGroupId]}>
-                    <p>{group[value.fkGroupId]}</p>
+
+            <TableRow>
+                <TableCell key={value.isSystem}>
+                    {value.inputLabel}
                 </TableCell>
-                : null}
-            <TableCell className={classes.tabelBorder}>
-                <Switch
-                    defaultChecked={value.status === "Active" ? true : false}
-                    onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.id)}
-                    name="checkedA"
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                />
-            </TableCell>
+                <TableCell key={value.isSystem}>{value.inputValue.replace(" ", "-")}</TableCell>
+                {Object.keys(group).length > 0 ?
+                    <TableCell key={group[value.fkGroupId]}>
+                        <p>{group[value.fkGroupId]}</p>
+                    </TableCell>
+                    : null}
+                <TableCell className={classes.tabelBorder}>
+                    <Switch
+                        defaultChecked={value.status === "Active" ? true : false}
+                        onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.id)}
+                        name="checkedA"
+                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                    />
+                </TableCell>
 
-            <TableCell>
-                <EditIcon onClick={(e) => handleEditClick(e, value)} />
-                <span style={{ marginLeft: "20px" }}>
-                    {/* <DeleteIcon onClick={(e) => handelDelete(value.fkCheckListId, value.checklistgroupId)} /> */}
-                    <DeleteIcon onClick={(e) => handleDeleteDialog()} />
-                </span>
+                <TableCell>
+                    <EditIcon onClick={(e) => handleEditClick(e, value)} />
+                    <span style={{ marginLeft: "20px" }}>
+                        {/* <DeleteIcon onClick={(e) => handelDelete(value.fkCheckListId, value.checklistgroupId)} /> */}
+                        <DeleteIcon onClick={(e) => handleDeleteDialog()} />
+                    </span>
 
-            </TableCell>
+                </TableCell>
 
-        </TableRow>
+            </TableRow>
         </>
     );
 };

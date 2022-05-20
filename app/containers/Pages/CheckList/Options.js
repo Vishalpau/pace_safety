@@ -109,9 +109,28 @@ function Option() {
         if (form.inputLabel.trim() && form.fkGroupId.trim()) {
             form["fkCheckListId"] = checkListId
             form["inputValue"] = form["inputLabel"] !== "" && form["inputLabel"].toLowerCase().replace(" ", "-")
-            // delete form["id"]
+            form['fkProjectId'] = projectId;
+            form['createdBy'] = userId;
+            form['fkCompanyId'] = fkCompanyId;
+            form['isSystem'] = 'No';
+            form['parentCheckListValue'] = 0;
+            form['updatedBy'] = 0;
             const res = await api.post(`api/v1/core/checklists/${checkListId}/options/`, form)
             if (res.status == 201) {
+                setForm({
+                    ...form,
+                    fkCompanyId: '',
+                    fkProjectId: '',
+                    parentCheckListValue: '',
+                    inputValue: '',
+                    inputLabel: '',
+                    isSystem: '',
+                    status: '',
+                    createdBy: '',
+                    updatedBy: '',
+                    fkCheckListId: '',
+                    fkGroupId: ''
+                })
                 handelGroup()
             }
 
@@ -120,6 +139,20 @@ function Option() {
             setNewOptionError(false)
         } else {
             setNewOptionError(true)
+        }
+    }
+
+    const handleStatusChange = () => {
+        if (form.status === 'Active') {
+            setForm({
+                ...form,
+                status: 'Inactive'
+            })
+        } else {
+            setForm({
+                ...form,
+                status: 'Active'
+            })
         }
     }
 
@@ -271,6 +304,7 @@ function Option() {
                                     variant="outlined"
                                     onChange={async (e) => setForm({ ...form, inputLabel: e.target.value })}
                                     error={newOptionError && !form.inputLabel.trim()}
+                                    value={form.inputLabel || ''}
                                 />
                             </TableCell>
 
@@ -279,6 +313,9 @@ function Option() {
                                     id="filled-basic"
                                     label="Option value"
                                     variant="outlined"
+                                    value={form.inputValue || ''}
+                                    onChange={async (e) => setForm({ ...form, inputValue: e.target.value })}
+                                    error={newOptionError && !form.inputValue.trim()}
 
                                 />
                             </TableCell>
@@ -295,6 +332,7 @@ function Option() {
                                             className="inputCell"
                                             labelId="Group name"
                                             error={newOptionError && !form.fkGroupId.trim()}
+                                            value={form.fkGroupId || ''}
                                         >
                                             {Object.entries(group).map(([key, value]) => (
                                                 <MenuItem
@@ -317,10 +355,12 @@ function Option() {
                             <TableCell className={classes.tabelBorder}>
                                 <Switch
                                     // checked={true}
-                                    onChange={(e) => e.target.checked ?
-                                        setForm({ ...form, status: "Active" }) :
-                                        setForm({ ...form, status: "inactive" }
-                                        )}
+                                    // onChange={(e) => e.target.checked ?
+                                    //     setForm({ ...form, status: "Active" }) :
+                                    //     setForm({ ...form, status: "inactive" }
+                                    //     )}
+                                    defaultChecked={form.status === 'Active' ? true : false}
+                                    onChange={() => handleStatusChange()}
                                     name="checkedA"
                                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                                 />

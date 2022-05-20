@@ -113,13 +113,13 @@ function Group() {
         setForm({
           ...form,
           checkListGroupName: '',
-          fkCheckListId: ''
+          fkCheckListId: '',
         });
         handelGroup();
       }
       setViewUpdate(!viewUpdate);
       setShowNew(false);
-      
+
     } else {
       setNewGroupError(true)
     }
@@ -133,15 +133,15 @@ function Group() {
   };
 
   const handleStatusChange = () => {
-    if (form.status === 'active') {
+    if (form.status === 'Active') {
       setForm({
         ...form,
-        status: 'inactive'
+        status: 'Inactive'
       })
     } else {
       setForm({
         ...form,
-        status: 'active'
+        status: 'Active'
       })
     }
   }
@@ -331,6 +331,7 @@ function Group() {
                 <TextField
                   id="add_groupname"
                   label="group name"
+                  value={form.checkListGroupName || ''}
                   variant="outlined"
                   onChange={async (e) => handelCheckList(e)}
                   error={newGroupError && !form.checkListGroupName}
@@ -364,9 +365,10 @@ function Group() {
               </TableCell>
               <TableCell className={classes.tabelBorder}>
                 <Switch
-                  checked={form.status === 'active' ? true : false}
+                  defaultChecked={form.status === 'Active' ? true : false}
                   onChange={() => handleStatusChange()}
                   name="checkedA"
+                  value={form.status || ''}
                   inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
               </TableCell>
