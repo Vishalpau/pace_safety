@@ -221,10 +221,6 @@ function JhaSummary(props) {
     await setLoader(false)
   }
 
-  useEffect(() => {
-    console.log(assessment);
-  }, [assessment])
-
   const handleClickSnackBar = () => {
     setOpenSnackBar(true);
   };

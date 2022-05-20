@@ -534,8 +534,6 @@ const AssessmentAndDocument = (props) => {
                 });
             }
 
-            console.log(data, ">>>>>>>>>>>>>>>>>>>>>>>>>>>");
-
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
         } else {
             delete formDocument.jhaAssessmentAttachment;
@@ -561,13 +559,9 @@ const AssessmentAndDocument = (props) => {
         await handelNextDocument()
     };
 
-    useEffect(() => {
-        console.log(additinalJobDetails);
-    }, [additinalJobDetails])
 
     return (
         <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
-            {/* {console.log(form.Assessment)} */}
             {loading === false
                 ? (
                     <Row>
