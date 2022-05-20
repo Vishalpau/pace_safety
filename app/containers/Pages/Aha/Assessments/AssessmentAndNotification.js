@@ -57,6 +57,7 @@ import {
 } from "../../../../utils/constants";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
+import MultiAttachment from "../../../MultiAttachment/MultiAttachment";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -458,6 +459,11 @@ const AssessmentAndNotification = (props) => {
       data.append("permitToPerahaform", ahaform.permitToPerahaform),
       data.append("permitNumber", ahaform.permitNumber),
       data.append("ahaNumber", ahaform.ahaNumber);
+      if (ahaform.files !== null && typeof ahaform.files !== 'string') {
+        ahaform.files.map((file) => {
+          data.append('files', file);
+        });
+      }
     if (
       ahaform.ahaAssessmentAttachment !== null &&
       typeof ahaform.ahaAssessmentAttachment !== "string"
@@ -561,43 +567,6 @@ const AssessmentAndNotification = (props) => {
 
   const fileTypeError = 'Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!';
   const fielSizeError = 'Size less than 25Mb allowed';
-  const handleFile = async (e) => {
-    const acceptFileTypes = [
-      'pdf',
-      'png',
-      'jpeg',
-      'jpg',
-      'xls',
-      'xlsx',
-      'doc',
-      'word',
-      'ppt',
-    ];
-    const file = e.target.files[0].name.split('.');
-
-    if (
-      acceptFileTypes.includes(file[file.length - 1])
-      && e.target.files[0].size < 25670647
-    ) {
-      const temp = { ...ahaform };
-      const filesAll = e.target.files[0];
-      temp.ahaAssessmentAttachment = filesAll;
-      await setAHAForm(temp);
-    } else {
-      ref.current.value = '';
-      !acceptFileTypes.includes(file[file.length - 1])
-        ? await setMessage(fileTypeError)
-        : await setMessage(`${fielSizeError}`);
-      await setMessageType('error');
-      await setOpen(true);
-    }
-  };
-
-  // const handleFile = (e) => {
-  //   let temp = { ...ahaform };
-  //   temp.ahaAssessmentAttachment = e.target.files[0];
-  //   setAHAForm(temp);
-  // };
 
   const fetchAhaData = async () => {
     const res = await api.get(
@@ -706,6 +675,10 @@ const AssessmentAndNotification = (props) => {
   useEffect(() => {
     handelCallBack();
   }, []);
+
+  useEffect(() => {
+    console.log(ahaform.files, typeof ahaform.files);
+  }, [ahaform])
 
   const classes = useStyles();
   return (
@@ -1201,35 +1174,7 @@ const AssessmentAndNotification = (props) => {
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
-                      <Grid item md={8} xs={12} className={classes.formBox}>
-                        <Grid
-                          item
-                          md={12}
-                          xs={12}
-                          className={classes.fileUploadFileDetails}
-                        >
-                          {/* <DeleteIcon /> */}
-                          <Typography
-                            title={handelFileName(
-                              ahaform.jhaAssessmentAttachment
-                            )}
-                          >
-                            {ahaform.ahaAssessmentAttachment != "" &&
-                              typeof ahaform.ahaAssessmentAttachment ==
-                              "string" ? (
-                              <Attachment
-                                value={ahaform.ahaAssessmentAttachment}
-                              />
-                            ) : (
-                              <p />
-                            )}
-                          </Typography>
-                          <input type="file"
-                            ref={ref}
-                            accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
-                            onChange={(e) => handleFile(e)} />
-                        </Grid>
-                      </Grid>
+                      <MultiAttachment attachmentHandler={(files) => setAHAForm({ ...ahaform, files: files })} />
                       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                         <Alert onClose={handleClose} severity="error">
                           {message}

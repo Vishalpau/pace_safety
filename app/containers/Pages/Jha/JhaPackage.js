@@ -467,7 +467,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px 0px 20px 0px",
     display: "flex",
     justifyContent: "flex-end",
-    marginTop : '-10px',
+    marginTop: '-10px',
   },
 }));
 
@@ -510,26 +510,26 @@ function JhaPackage(props) {
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
     const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-        ? JSON.parse(localStorage.getItem('userDetails')).id
-        : null;
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    if(props.assessment === "My Assessments"){
+    if (props.assessment === "My Assessments") {
       const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`);
-  
+
       const result = res.data.data.results.results
       await setAllJHAData(result)
       await setTotalData(res.data.data.results.count)
       await setPageData(res.data.data.results.count / 25)
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
-    }else{
+    } else {
       const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`);
-  
+
       const result = res.data.data.results.results
       await setAllJHAData(result)
       await setTotalData(res.data.data.results.count)
@@ -557,13 +557,13 @@ function JhaPackage(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
-    if(props.observation === "My Assessments"){
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+    if (props.observation === "My Assessments") {
       const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`);
-        await setAllJHAData(res.data.data.results.results);
-        await setPage(value)
-    }else{
+      await setAllJHAData(res.data.data.results.results);
+      await setPage(value)
+    } else {
       const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`);
       await setAllJHAData(res.data.data.results.results);
       await setPage(value)
@@ -677,179 +677,188 @@ function JhaPackage(props) {
   useEffect(() => {
     fetchData()
     setCheckDeletePermission(checkACL('safety-jha', 'delete_jha'));
-  }, [props.projectName.breakDown,props.search,props.assessment,props.status])
+  }, [props.projectName.breakDown, props.search, props.assessment, props.status])
 
   return (
     <>
-    {isLoading ? 
-      <Box>
-      
-       { allJHAData.length > 0 ? allJHAData.map((value) => (
-          <Grid className={classes.marginTopBottom}>
+      {isLoading ?
+        <Box>
 
-            <div className="gridView">
-              <Card variant="outlined" className={classes.card}>
-                <CardContent>
-                  <Grid container spacing={3} className={classes.cardContentSection}>
-                    <Grid item md={2} sm={4} xs={12}
-                      className={classes.userPictureBox}
-                    >
-                      <Button className={classNames(classes.floatR)}
-                      //  onClick={(e) => handleMyUserPClickOpen(e)}
+          {allJHAData.length > 0 ? allJHAData.map((value) => (
+            <Grid className={classes.marginTopBottom}>
+
+              <div className="gridView">
+                <Card variant="outlined" className={classes.card}>
+                  <CardContent>
+                    <Grid container spacing={3} className={classes.cardContentSection}>
+                      <Grid item md={2} sm={4} xs={12}
+                        className={classes.userPictureBox}
+                      >
+                        <Button className={classNames(classes.floatR)}
+                        //  onClick={(e) => handleMyUserPClickOpen(e)}
                         >
-                        <img src={value["avatar"]} className={classes.userImage} /> {value["username"]}
-                      </Button>
-                    </Grid>
-                    <Link
-                      onClick={() => handleSummaryPush(value)}
-                      className={classes.cardLinkAction}
-                    >
+                          <img src={value["avatar"]} className={classes.userImage} /> {value["username"]}
+                        </Button>
+                      </Grid>
+                      <Link
+                        onClick={() => handleSummaryPush(value)}
+                        className={classes.cardLinkAction}
+                      >
 
-                      <Grid item xs={12}>
-                        <Grid container spacing={3} alignItems="flex-start">
-                          <Grid item sm={12} xs={12} className={classes.listHeadColor}>
-                            <Grid container spacing={3} alignItems="flex-start">
-                              <Grid item md={10} sm={12} xs={12} className={classes.pr0}>
-                                <Typography
-                                  className={classes.title}
-                                  variant="h6"
-                                >
-                                  {value["description"]}
-                                </Typography>
-                                <Typography
-                                  display="inline"
-                                  className={classes.listingLabelName}
-                                >
-                                  Number: <span>
-                                    <Link
-                                      onClick={() => handleSummaryPush()}
-                                      variant="h6"
-                                      className={classes.mLeftfont}
-                                    >
-                                      <span className={classes.listingLabelValue}>{value["jhaNumber"]}</span>
-                                    </Link></span>
-                                </Typography>
-                                <span item xs={1} className={classes.sepHeightOne}></span>
-                                <Typography
-                                  variant="body1"
-                                  gutterBottom
-                                  display="inline"
-                                  color="textPrimary"
-                                  className={classes.listingLabelName}
-                                >
-                                  Category: <span className={classes.listingLabelValue}>{value["jhaNumber"].split("-")[0]}</span>
-                                </Typography>
-                                <span item xs={1} className={classes.sepHeightOne}></span>
-                                <Typography
-                                  variant="body1"
-                                  gutterBottom
-                                  display="inline"
-                                  color="textPrimary"
-                                  className={classes.listingLabelName}
-                                >
-                                  Stage: <span className={classes.listingLabelValue}>{value["jhaStage"]}<img src={in_progress_small} className={classes.smallImage} /></span>
+                        <Grid item xs={12}>
+                          <Grid container spacing={3} alignItems="flex-start">
+                            <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+                              <Grid container spacing={3} alignItems="flex-start">
+                                <Grid item md={10} sm={12} xs={12} className={classes.pr0}>
+                                  <Typography
+                                    className={classes.title}
+                                    variant="h6"
+                                  >
+                                    {value["description"]}
+                                  </Typography>
+                                  <Typography
+                                    display="inline"
+                                    className={classes.listingLabelName}
+                                  >
+                                    Number: <span>
+                                      <Link
+                                        onClick={() => handleSummaryPush()}
+                                        variant="h6"
+                                        className={classes.mLeftfont}
+                                      >
+                                        <span className={classes.listingLabelValue}>{value["jhaNumber"]}</span>
+                                      </Link></span>
+                                  </Typography>
                                   <span item xs={1} className={classes.sepHeightOne}></span>
-                                  Status: <span className="listingLabelValue statusColor_complete">{value["jhaStatus"]}</span>
-                                </Typography>
+                                  <Typography
+                                    variant="body1"
+                                    gutterBottom
+                                    display="inline"
+                                    color="textPrimary"
+                                    className={classes.listingLabelName}
+                                  >
+                                    Category: <span className={classes.listingLabelValue}>{value["jhaNumber"].split("-")[0]}</span>
+                                  </Typography>
+                                  <span item xs={1} className={classes.sepHeightOne}></span>
+                                  <Typography
+                                    variant="body1"
+                                    gutterBottom
+                                    display="inline"
+                                    color="textPrimary"
+                                    className={classes.listingLabelName}
+                                  >
+                                    Stage: <span className={classes.listingLabelValue}>{value["jhaStage"]}<img src={in_progress_small} className={classes.smallImage} /></span>
+                                    <span item xs={1} className={classes.sepHeightOne}></span>
+                                    Status: <span className="listingLabelValue statusColor_complete">{value["jhaStatus"]}</span>
+                                  </Typography>
+
+                                </Grid>
 
                               </Grid>
-
                             </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
 
-                      <Grid item sm={12} xs={12}>
-                        <Grid container spacing={3}>
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Location:
-                            </Typography>
-                            <Typography
+                        <Grid item sm={12} xs={12}>
+                          <Grid container spacing={3}>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                variant="body1"
+                                color="textPrimary"
+                                gutterBottom
+                                className={classes.listingLabelName}
+                              >
+                                Location:
+                              </Typography>
+                              <Typography
 
-                              className={classes.listingLabelValue}
-                            >
-                              {value["location"]}
-                            </Typography>
-                          </Grid>
+                                className={classes.listingLabelValue}
+                              >
+                                {value["location"]}
+                              </Typography>
+                            </Grid>
 
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Created on:
-                            </Typography>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                variant="body1"
+                                color="textPrimary"
+                                gutterBottom
+                                className={classes.listingLabelName}
+                              >
+                                Created on:
+                              </Typography>
 
-                            <Typography
+                              <Typography
 
-                              className={classes.listingLabelValue}
-                            >
-                              {value["jhaAssessmentDate"]}
-                            </Typography>
-                          </Grid>
+                                className={classes.listingLabelValue}
+                              >
+                                {value["jhaAssessmentDate"]}
+                              </Typography>
+                            </Grid>
 
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Created by:
-                            </Typography>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                variant="body1"
+                                color="textPrimary"
+                                gutterBottom
+                                className={classes.listingLabelName}
+                              >
+                                Created by:
+                              </Typography>
 
-                            <Typography
+                              <Typography
 
-                              className={classes.listingLabelValue}
-                            >
-                              {value["createdByName"]}
-                            </Typography>
+                                className={classes.listingLabelValue}
+                              >
+                                {value["createdByName"]}
+                              </Typography>
+                            </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    </Link>
+                      </Link>
 
-                  </Grid>
-                </CardContent>
-                <Divider />
-                <CardActions className={Incidents.cardActions}>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="flex-end"
-                    alignItems="left"
-                  >
-                    <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                      <Typography
-                        variant="body1"
-                        display="inline"
-                        color="textPrimary"
+                    </Grid>
+                  </CardContent>
+                  <Divider />
+                  <CardActions className={Incidents.cardActions}>
+                    <Grid
+                      container
+                      spacing={2}
+                      justify="flex-end"
+                      alignItems="left"
+                    >
+                      <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                        <Typography
+                          variant="body1"
+                          display="inline"
+                          color="textPrimary"
 
-                      >
-                        <AttachmentIcon className={classes.mright5} />
-                        Attachments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <span>
-                          <Link href="#"
-                            // onClick={handleVisibility}
-                            color="secondary"
-                            aria-haspopup="true"
-                            className={classes.mLeft}>
-                            {value["attachmentCount"]}
-                          </Link>
-                        </span>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      {/* <Typography
+                        >
+                          <AttachmentIcon className={classes.mright5} />
+                          Attachments:
+                        </Typography>
+                        <Typography variant="body2" display="inline">
+                          <span>
+                            <Link href="#"
+                              // onClick={handleVisibility}
+                              color="secondary"
+                              aria-haspopup="true"
+                              className={classes.mLeft}>
+                              {value["attachmentCount"]}
+                              {
+                                value.files !== null ? (
+                                  <>
+                                    {value.files.length}
+                                  </>
+                                ) : (
+                                  0
+                                )
+                              }
+                            </Link>
+                          </span>
+                        </Typography>
+                        <span item xs={1} className={classes.sepHeightTen}></span>
+                        {/* <Typography
                         variant="body1"
                         display="inline"
                         color="textPrimary"
@@ -873,294 +882,294 @@ function JhaPackage(props) {
                           </Link>
                         </span>
                       </Typography> */}
-                    </Grid>
+                      </Grid>
 
-                    <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
-                      <div className={classes.floatR}>
-                        {/* <Typography variant="body1" display="inline">
+                      <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
+                        <div className={classes.floatR}>
+                          {/* <Typography variant="body1" display="inline">
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                        {/* <Typography variant="body1" display="inline">
+                          {/* <Typography variant="body1" display="inline">
                           <PrintOutlinedIcon className={classes.iconColor} /> <Link href="/app/pages/general-observation-prints" className={classes.mLeftR5}>Print</Link>
                         </Typography>
                         <span item xs={1} className={classes.sepHeightTen}></span>
                         <Typography variant="body1" display="inline"><Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                         </Typography> */}
-                        <span item xs={1} className={classes.sepHeightTen}></span>
-                        <Typography variant="body1" display="inline">
+                          <span item xs={1} className={classes.sepHeightTen}></span>
+                          <Typography variant="body1" display="inline">
                             {!checkDeletePermission
-                            ? (
-                              <DeleteForeverOutlinedIcon
-                                className={classes.iconteal}
-                                style={{
-                                  color: '#c0c0c0',
-                                  cursor: 'not-allowed'
-                                }}
-                              />
-                            )
-                            : (
-                              <Link
-                                href="#"
-                                className={classes.mLeftR5}
-                              >
+                              ? (
                                 <DeleteForeverOutlinedIcon
                                   className={classes.iconteal}
-                                  onClick={(e) => handleDelete(value)}
+                                  style={{
+                                    color: '#c0c0c0',
+                                    cursor: 'not-allowed'
+                                  }}
                                 />
-                              </Link>
-                          )}
-                          {/* <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(value)} /></Link> */}
-                        </Typography>
-                      </div>
+                              )
+                              : (
+                                <Link
+                                  href="#"
+                                  className={classes.mLeftR5}
+                                >
+                                  <DeleteForeverOutlinedIcon
+                                    className={classes.iconteal}
+                                    onClick={(e) => handleDelete(value)}
+                                  />
+                                </Link>
+                              )}
+                            {/* <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(value)} /></Link> */}
+                          </Typography>
+                        </div>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </CardActions>
-              </Card>
-              <Grid
-                item
-                md={12}
-                sm={12}
-                xs={12}
-                hidden={!hidden}
-                onBlur={handleAttachClose}
-                onClick={handleAttachClick}
-                onClose={handleAttachClose}
-                onFocus={handleAttachOpen}
-                onMouseEnter={handleAttachOpen}
-                onMouseLeave={handleAttachClose}
-                open={attachOpen}
-                className="paddTBRemove attactmentShowSection"
-              >
-                <Paper elevation={1} className="paperSection">
-                  <Grid container spacing={3}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <List>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                      </List>
+                  </CardActions>
+                </Card>
+                <Grid
+                  item
+                  md={12}
+                  sm={12}
+                  xs={12}
+                  hidden={!hidden}
+                  onBlur={handleAttachClose}
+                  onClick={handleAttachClick}
+                  onClose={handleAttachClose}
+                  onFocus={handleAttachOpen}
+                  onMouseEnter={handleAttachOpen}
+                  onMouseLeave={handleAttachClose}
+                  open={attachOpen}
+                  className="paddTBRemove attactmentShowSection"
+                >
+                  <Paper elevation={1} className="paperSection">
+                    <Grid container spacing={3}>
+                      <Grid item md={12} sm={12} xs={12}>
+                        <List>
+                          <ListItem>
+                            <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                          </ListItem>
+                          <ListItem>
+                            <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                          </ListItem>
+                          <ListItem>
+                            <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                          </ListItem>
+                          <ListItem>
+                            <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                          </ListItem>
+                          <ListItem>
+                            <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                          </ListItem>
+                          <ListItem>
+                            <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                          </ListItem>
+                          <ListItem>
+                            <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                          </ListItem>
+                        </List>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-            </div>
-            <div>
-              <Grid
-                item
-                md={12}
-                sm={12}
-                xs={12}
-                hidden={!hiddenn}
-                onBlur={handleCommentsClose}
-                onClick={handleCommentsClick}
-                onClose={handleCommentsClose}
-                onFocus={handleCommentsOpen}
-                onMouseEnter={handleCommentsOpen}
-                onMouseLeave={handleCommentsClose}
-                open={commentsOpen}
-                className="commentsShowSection"
-              >
-                <Paper elevation={1} className="paperSection">
-                  <Grid container spacing={3}>
-                    <Grid item md={12} xs={12}>
-                      <Box padding={3}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={12}>
-                            <TextField
-                              multiline
-                              variant="outlined"
-                              rows="1"
-                              id="JobTitle"
-                              label="Add your comments here"
-                              className="formControl"
-                            />
-                          </Grid>
-                          <Grid item xs={3}>
-                            <input type="file" />
-                          </Grid>
-                          <Grid item xs={9}>
-                            <AddCircleOutlineIcon className={classes.plusIcon} />
-                            <RemoveCircleOutlineIcon className={classes.minusIcon} />
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              size="small"
-                              className="spacerRight buttonStyle"
-                              disableElevation
-                            >
-                              Respond
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              size="small"
-                              className="buttonStyle custmCancelBtn"
-                              disableElevation
+                  </Paper>
+                </Grid>
+              </div>
+              <div>
+                <Grid
+                  item
+                  md={12}
+                  sm={12}
+                  xs={12}
+                  hidden={!hiddenn}
+                  onBlur={handleCommentsClose}
+                  onClick={handleCommentsClick}
+                  onClose={handleCommentsClose}
+                  onFocus={handleCommentsOpen}
+                  onMouseEnter={handleCommentsOpen}
+                  onMouseLeave={handleCommentsClose}
+                  open={commentsOpen}
+                  className="commentsShowSection"
+                >
+                  <Paper elevation={1} className="paperSection">
+                    <Grid container spacing={3}>
+                      <Grid item md={12} xs={12}>
+                        <Box padding={3}>
+                          <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                              <TextField
+                                multiline
+                                variant="outlined"
+                                rows="1"
+                                id="JobTitle"
+                                label="Add your comments here"
+                                className="formControl"
+                              />
+                            </Grid>
+                            <Grid item xs={3}>
+                              <input type="file" />
+                            </Grid>
+                            <Grid item xs={9}>
+                              <AddCircleOutlineIcon className={classes.plusIcon} />
+                              <RemoveCircleOutlineIcon className={classes.minusIcon} />
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                className="spacerRight buttonStyle"
+                                disableElevation
+                              >
+                                Respond
+                              </Button>
+                              <Button
+                                variant="contained"
+                                color="secondary"
+                                size="small"
+                                className="buttonStyle custmCancelBtn"
+                                disableElevation
 
-                            >
-                              Cancel
-                            </Button>
+                              >
+                                Cancel
+                              </Button>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      </Box>
+                        </Box>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-            </div>
-            <div>
+                  </Paper>
+                </Grid>
+              </div>
+              <div>
+                <Dialog
+                  open={openAttachment}
+                  onClose={handleCloseAttachment}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  classNames={classes.viewAttachmentDialog}
+                >
+                  <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
+                  <DialogContent classNames={classes.imageSectionHeight}>
+                    <Grid container spacing={3} classNames={classes.viewImageSection}>
+                      <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
+                        <ul classNames={classes.viewImageSection}>
+                          <li className={classes.viewattch1}>View Attachment</li>
+                          <li className={classes.viewattch2}>Download Attachment</li>
+                        </ul>
+                      </Grid>
+                    </Grid>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseAttachment} color="primary" autoFocus>
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
               <Dialog
-                open={openAttachment}
-                onClose={handleCloseAttachment}
+                open={myUserPOpen}
+                onClose={handleMyUserPClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                classNames={classes.viewAttachmentDialog}
+                fullWidth={true}
+                maxWidth={'sm'}
               >
-                <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
-                <DialogContent classNames={classes.imageSectionHeight}>
-                  <Grid container spacing={3} classNames={classes.viewImageSection}>
-                    <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
-                      <ul classNames={classes.viewImageSection}>
-                        <li className={classes.viewattch1}>View Attachment</li>
-                        <li className={classes.viewattch2}>Download Attachment</li>
-                      </ul>
+                <DialogTitle classNames={classes.mb10} id="alert-dialog-title"><img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    <Grid
+                      item md={12} sm={12} xs={12}
+                      className={classes.usrProfileListBox}
+                    >
+                      <h6>Change ownership</h6>
+                      <FormControl variant="outlined" className={classes.formControlOwnership}>
+                        <InputLabel id="demo-simple-select-outlined-label">Ownership</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-outlined-label"
+                          id="demo-simple-select-outlined"
+                          value="Ashutosh"
+                          onChange={handleChangeOne}
+                          label="Ownership"
+                        >
+                          <MenuItem value={10}>Self</MenuItem>
+                          <MenuItem value={10}>Prakash</MenuItem>
+                          <MenuItem value={20}>Ashutosh</MenuItem>
+                          <MenuItem value={30}>Saddam</MenuItem>
+                          <MenuItem value={30}>Sunil</MenuItem>
+                        </Select>
+                      </FormControl>
                     </Grid>
-                  </Grid>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseAttachment} color="primary" autoFocus>
-                    Close
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </div>
-            <Dialog
-              open={myUserPOpen}
-              onClose={handleMyUserPClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-              fullWidth={true}
-              maxWidth={'sm'}
-            >
-              <DialogTitle classNames={classes.mb10} id="alert-dialog-title"><img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  <Grid
-                    item md={12} sm={12} xs={12}
-                    className={classes.usrProfileListBox}
-                  >
-                    <h6>Change ownership</h6>
-                    <FormControl variant="outlined" className={classes.formControlOwnership}>
-                      <InputLabel id="demo-simple-select-outlined-label">Ownership</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value="Ashutosh"
-                        onChange={handleChangeOne}
-                        label="Ownership"
-                      >
-                        <MenuItem value={10}>Self</MenuItem>
-                        <MenuItem value={10}>Prakash</MenuItem>
-                        <MenuItem value={20}>Ashutosh</MenuItem>
-                        <MenuItem value={30}>Saddam</MenuItem>
-                        <MenuItem value={30}>Sunil</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid
-                    item md={12} sm={12} xs={12}
-                    className={classes.usrProfileListBox}
-                  >
-                    <h3>Basic information</h3>
-                    <List>
-                      <ListItem>
-                        {/* <ListItemAvatar>
+                    <Grid
+                      item md={12} sm={12} xs={12}
+                      className={classes.usrProfileListBox}
+                    >
+                      <h3>Basic information</h3>
+                      <List>
+                        <ListItem>
+                          {/* <ListItemAvatar>
                             <Avatar>
                               <ImageIcon />
                             </Avatar>
                           </ListItemAvatar> */}
-                        <ListItemText primary="Full Name:" secondary="Prakash" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Organization Role:" secondary="N/A" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Role Title:" secondary="N/A" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
-                      </ListItem>
-                    </List>
-                  </Grid>
+                          <ListItemText primary="Full Name:" secondary="Prakash" />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText primary="Organization Role:" secondary="N/A" />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText primary="Role Title:" secondary="N/A" />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
+                        </ListItem>
+                      </List>
+                    </Grid>
 
-                  <Grid
-                    item md={12} sm={12} xs={12}
-                    className={classes.usrProfileListBox}
-                  >
-                    <h3>Company information</h3>
-                    <List>
-                      <ListItem>
-                        <ListItemText primary="Company Name:" secondary="JWIL" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Location:" secondary="Italy" />
-                      </ListItem>
-                    </List>
-                  </Grid>
-                </DialogContentText>
-              </DialogContent>
-              <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
-                <DialogActions align="left" className="marginB10">
-                  <Button onClick={handleMyUserPClose} color="secondary" variant="contained" className="buttonStyle custmCancelBtn">
-                    Close
-                  </Button>
-                </DialogActions>
-              </Grid>
+                    <Grid
+                      item md={12} sm={12} xs={12}
+                      className={classes.usrProfileListBox}
+                    >
+                      <h3>Company information</h3>
+                      <List>
+                        <ListItem>
+                          <ListItemText primary="Company Name:" secondary="JWIL" />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText primary="Location:" secondary="Italy" />
+                        </ListItem>
+                      </List>
+                    </Grid>
+                  </DialogContentText>
+                </DialogContent>
+                <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+                  <DialogActions align="left" className="marginB10">
+                    <Button onClick={handleMyUserPClose} color="secondary" variant="contained" className="buttonStyle custmCancelBtn">
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Grid>
 
-              {/* <DialogActions>
+                {/* <DialogActions>
                   <Button onClick={handleMyUserPClose} className="custmCancelBtn" variant="contained" autoFocus>
                     Close
                   </Button>
                 </DialogActions> */}
-            </Dialog>
+              </Dialog>
 
-            
-          </Grid>
-        )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
-                      Sorry, no matching records found
-                    </Typography>}
 
-        <div className={classes.pagination}>
-          {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
-                <Pagination count={pageCount} page={page} onChange={handleChange} />
-              </div> 
+            </Grid>
+          )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+            Sorry, no matching records found
+          </Typography>}
 
-      </Box>
-      : <Loader/>}
+          <div className={classes.pagination}>
+            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
+
+        </Box>
+        : <Loader />}
     </>
   );
 }
