@@ -952,29 +952,7 @@ function ComplianceListNew(props) {
               alignItems="left"
               className={classes.cardBottomSection}
             >
-              <Typography
-                variant="body1"
-                display="inline"
-                color="textPrimary"
-              >
-                <AttachmentIcon className={classes.mright5} />
-                Attachments:
-              </Typography>
-              
-              <Typography variant="body2" display="inline">
-                <span>
-                  <Link
-                    // href="#"
-                    onClick={value.attachmentLinks.attachmentCount && handleVisibility}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={classes.mLeftR5}
-                  >
-                    {value.attachmentLinks.attachmentCount}
-                  </Link>
-                </span>
-              </Typography>
-              {/* <Grid item xs={12} sm={6} md={5}>
+              <Grid item xs={12} sm={6} md={5}>
                 <Typography
                   variant="body1"
                   display="inline"
@@ -983,20 +961,26 @@ function ComplianceListNew(props) {
                   <AttachmentIcon className={classes.mright5} />
                   Attachments:
                 </Typography>
+
+
                 <Typography variant="body2" display="inline">
                   <span>
                     <Link
                       // href="#"
-                      onClick={value['attachmentCount'] && handleVisibility}
+                      onClick={value.attachmentLinks.attachmentCount && handleVisibility}
                       color="secondary"
                       aria-haspopup="true"
                       className={classes.mLeftR5}
                     >
-                      {`${value['attachmentCount'] ? value['attachmentCount'] : '0'}`}
+                      {value.attachmentLinks.attachmentCount}
                     </Link>
                   </span>
-                </Typography> */}
-              {/* <span
+                </Typography>
+              </Grid>
+
+              {/* <Grid item xs={12} sm={6} md={5}>
+                
+                {/* <span
                   item
                   xs={1}
                   className={classes.sepHeightTen}
