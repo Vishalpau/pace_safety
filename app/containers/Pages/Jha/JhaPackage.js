@@ -835,7 +835,7 @@ function JhaPackage(props) {
 
                         >
                           <AttachmentIcon className={classes.mright5} />
-                          Attachments:
+                          Attachments: {" "}
                         </Typography>
                         <Typography variant="body2" display="inline">
                           <span>
@@ -844,7 +844,6 @@ function JhaPackage(props) {
                               color="secondary"
                               aria-haspopup="true"
                               className={classes.mLeft}>
-                              {value["attachmentCount"]}
                               {
                                 value.files !== null ? (
                                   <>
