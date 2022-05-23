@@ -152,7 +152,6 @@ function Pickvalues(props) {
   const save = (text, column, id) => {
     // Update
     const val = {};
-
     if (column == 'value') {
       val.inputValue = text;
     }
@@ -185,6 +184,8 @@ function Pickvalues(props) {
       document.getElementById('add_inputLabel').value = '';
       document.getElementById('add_inputValue').value = '';
       document.getElementById('add_groupInputBy').value = '';
+      document.getElementById('add_isSelected').value = '';
+
     });
   };
 

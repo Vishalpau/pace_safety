@@ -190,7 +190,7 @@ const Categories = () => {
 
   useEffect(() => {
     console.log(checkGroups, 'checkGroups');
-  },[checkGroups])
+  }, [checkGroups])
 
   const classes = useStyles();
 
@@ -213,7 +213,6 @@ const Categories = () => {
 
   //method to initially get the data
   const fetchComplianceData = async (data) => {
-    console.log(data, 'dataaaaaaaaaaa');
     const checkListGroupData = [...data];
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
@@ -227,7 +226,6 @@ const Categories = () => {
         setSubGroupId(subGroupIds);
         setComplianceData(result)
         let tempGroup = [];
-        console.log(data, 'dddddddddddddd');
         for (let j = 0; j < checkListGroupData.length; j++) {
           for (let i = 0; i < checkListGroupData[j]['checklistGroups'].length; i++) {
             if (groupIds.includes(checkListGroupData[j]['checklistGroups'][i]["checklistgroupId"])) {
@@ -240,7 +238,7 @@ const Categories = () => {
             console.log(groupIds);
             console.log(checkListGroupData[j]['checklistGroups'][i]['checkListValues'].length)
             for (let k = 0; k < checkListGroupData[j]['checklistGroups'][i]['checkListValues'].length; k++) {
-              if (subGroupIds.includes(checkListGroupData[j]['checklistGroups'][i]['checkListValues'][k]['id'])){
+              if (subGroupIds.includes(checkListGroupData[j]['checklistGroups'][i]['checkListValues'][k]['id'])) {
                 console.log('sfkskhfk');
                 checkListGroupData[j]['checklistGroups'][i]['checkListValues'][k]['disabled'] = true;
               }
@@ -251,52 +249,6 @@ const Categories = () => {
           }
         }
 
-        // const datasss = data.map(dt => {
-        //   return (
-        //     dt.checklistGroups.map(CL => {
-        //       if (groupIds.includes(CL.checklistgroupId)) {
-        //         tempGroup.push(CL);
-        //       }
-        //       return (
-        //         CL.checkListValues.map(CCL => {
-        //           if (subGroupIds.includes(CCL.id)) {
-        //             return {
-        //               ...CCL,
-        //               disabled: true
-        //             }
-        //           }
-        //           else {
-        //             return {
-        //               CCL
-        //             }
-        //           }
-        //         })
-        //       )
-        //     })
-        //   )
-        // })
-
-        // console.log(datasss, 'data');
-
-        // console.log(tempGroup);
-
-        // checkListGroupData[0].checklistGroups = checkListGroupData[0].checklistGroups.map(a => {
-        //   if (groupIds.includes(a.checklistgroupId)) {
-        //     return {
-        //       ...a,
-        //       disabled: true
-        //     }
-        //   }
-        //   else {
-        //     return {
-        //       ...a,
-        //       disabled: false
-        //     }
-        //   }
-        // })
-        console.log(tempGroup, 'tempGroup');
-
-        // console.log(tempData);
         setCheckListGroups([...checkListGroupData])
         setCheckData(tempGroup);
         setForm(result);

@@ -128,7 +128,7 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
             </TableCell>
             <TableCell className={classes.tabelBorder}>
                 <Switch
-                    checked={(editForm.status || editForm.status == "Active") ? true : false}
+                    defaultChecked={(editForm.status || editForm.status == "Active") ? true : false}
                     onChange={handleStatusChange}
                     name="checkedA"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}

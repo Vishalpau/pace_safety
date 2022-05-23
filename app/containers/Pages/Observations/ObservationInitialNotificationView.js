@@ -146,7 +146,7 @@ const ObservationInitialNotificationView = () => {
       history.push('/app/error/');
     } else {
       const result = res.data.data.results;
-      console.log(res.data.data.results, 'result')
+      console.log(res.data.data.results, 'result');
       setInitialData(result);
       if (result.fkProjectStructureIds != 'Not Mentioned') {
         await handelWorkArea(result);
@@ -634,13 +634,25 @@ const ObservationInitialNotificationView = () => {
                   {/* <Typography variant="h6" gutterBottom className={classes.labelName}>
               Attachments
             </Typography> */}
-                  {initialData.attachment ? (
-                    <Typography className="viewLabelValue">
+                  {initialData.files ? (
+                    <Typography style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }} className="viewLabelValue">
+                      {typeof initialData.files === 'object' ? (
+                        <>
+                          <Typography style={{ width: '100%', marginLeft: '10px' }}>
+                            {initialData.files.length}
+                            {' '}
+                            Attachment
+                            {initialData.files.length > 1 ? 's' : ''}
+                          </Typography>
 
-                      {initialData.attachment
-                        === null ? null : typeof initialData.attachment
-                          === 'string' ? (
-                        <Attachment value={initialData.attachment} />
+                          {/* Mapping the files */}
+
+                          {
+                            initialData.files.map((file) => (
+                              <Attachment value={file.fileName} type={file.fileType} />
+                            ))
+                          }
+                        </>
                       ) : null}
                     </Typography>
                   ) : ('-')}
