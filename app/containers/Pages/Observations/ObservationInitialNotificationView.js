@@ -649,7 +649,7 @@ const ObservationInitialNotificationView = () => {
 
                           {
                             initialData.files.map((file) => (
-                              <Attachment value={file.fileName} type={file.fileType} />
+                              <Attachment key={file.id} value={file.fileName} type={file.fileType} />
                             ))
                           }
                         </>
