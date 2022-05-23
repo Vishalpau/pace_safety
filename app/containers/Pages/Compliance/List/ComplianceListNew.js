@@ -1071,7 +1071,7 @@ function ComplianceListNew(props) {
             </Grid>
           </CardActions>
         </Card>
-        {value.attachmentLinks.attachmentCount &&
+        {value.attachmentLinks.attachmentCount ?
           <Grid
             item
             md={12}
@@ -1112,6 +1112,7 @@ function ComplianceListNew(props) {
               </Grid>
             </Paper>
           </Grid>
+          : ""
         }
         {/* <div>
           <Dialog

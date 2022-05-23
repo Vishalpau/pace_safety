@@ -80,6 +80,7 @@ import Loader from "../Loader"
 import { checkValue } from "../Jha/Utils/checkValue";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import { checkACL } from '../../../utils/helper';
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -629,7 +630,7 @@ function AhaSummary(props) {
                             >
                               Assessments
                             </Button>
-                            {console.log(ahaData,'ahaData.notifyTo')}
+                            {console.log(ahaData, 'ahaData.notifyTo')}
                             <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
                               {ahaData.notifyTo != 'null' ? "Done" : "Pending"}{ahaData.notifyTo != 'null' ? <CheckCircle /> : <AccessTime />}
                             </Typography>
@@ -897,14 +898,16 @@ function AhaSummary(props) {
                                                     : "-"}
                                                 </Typography>
                                               </Grid>
-                                              {item.action !== undefined && item.action.map((valueAction) => (
-                                                <ActionShow
-                                                  action={valueAction}
-                                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                                  handelShowData={handelShowData}
-                                                />
-                                              ))}
+                                              {checkACL('action_tracker-actions', 'view_actions') &&
+                                                item.action !== undefined && item.action.map((valueAction) => (
+                                                  <ActionShow
+                                                    action={valueAction}
+                                                    companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                                    projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                                    handelShowData={handelShowData}
+                                                  />
+                                                ))
+                                              }
                                             </Grid>
                                           </AccordionDetails>
                                         </Accordion>

@@ -57,6 +57,7 @@ import {
 } from "../../../../utils/constants";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
+import { checkACL } from "../../../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -1109,13 +1110,16 @@ const AssessmentAndNotification = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                   </Grid>
-                                  <Grid
-                                    item
-                                    xs={6}
-                                    className={classes.createHazardbox}
-                                  >
-                                    {handelActionShow(value.id)}
-                                  </Grid>
+                                  {checkACL('action_tracker-actions', 'view_actions') &&
+                                    <Grid
+                                      item
+                                      xs={6}
+                                      className={classes.createHazardbox}
+                                      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                                    >
+                                      {handelActionShow(value.id)}
+                                    </Grid>
+                                  }
                                 </Grid>
                               </AccordionDetails>
                             </Accordion>
