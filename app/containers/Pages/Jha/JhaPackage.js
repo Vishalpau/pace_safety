@@ -7,35 +7,24 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
-import Share from '@material-ui/icons/Share';
 import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
-import TableContainer from '@material-ui/core/TableContainer';
 import { makeStyles } from '@material-ui/core/styles';
 import Incidents from 'dan-styles/IncidentsList.scss';
-import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
-import MUIDataTable from 'mui-datatables';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
+import FormLabel from '@material-ui/core/FormLabel';
 
 import MenuItem from '@material-ui/core/MenuItem';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
-import completed_small from 'dan-images/completed-small.png';
-import projectpj from 'dan-images/projectpj.png';
 import in_progress_small from 'dan-images/in_progress_small.png';
 import "../../../styles/custom/customheader.css";
-import StarsIcon from '@material-ui/icons/Stars';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
-import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
 import { useHistory, useParams } from 'react-router';
 
 import List from '@material-ui/core/List';
@@ -45,13 +34,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
 import TextField from '@material-ui/core/TextField';
-import Menu from '@material-ui/core/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Pagination from '@material-ui/lab/Pagination';
@@ -60,6 +45,7 @@ import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
 import Loader from "../Loader";
 import { checkACL } from '../../../utils/helper';
+import Attachment from '../../Attachment/Attachment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -142,6 +128,9 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: '2px',
+    '&:hover': {
+      cursor: 'pointer'
+    },
   },
   mLeftR5: {
     marginLeft: '5px',
@@ -467,7 +456,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px 0px 20px 0px",
     display: "flex",
     justifyContent: "flex-end",
-    marginTop : '-10px',
+    marginTop: '-10px',
   },
 }));
 
@@ -483,18 +472,19 @@ function JhaPackage(props) {
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1)
-  const [openAttachment, setopenAttachment] = React.useState(false);
-  const [attachOpen, setAttachOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+  const [deleteValue, setDeleteValue] = useState("")
+  const [deleteQ, setDeleteQ] = useState(false);
 
-
-  const handleClickOpenAttachment = () => {
-    setopenAttachment(true);
+  const handleClickDeleteAlert = (value) => {
+    setDeleteQ(true);
+    setDeleteValue(value);
+    // handleDelete(value);
   };
 
-  const handleCloseAttachment = () => {
-    setopenAttachment(false);
+  const handleCloseDeleteAlert = () => {
+    setDeleteQ(false);
+    setDeleteValue("");
   };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -510,26 +500,26 @@ function JhaPackage(props) {
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
     const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-        ? JSON.parse(localStorage.getItem('userDetails')).id
-        : null;
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    if(props.assessment === "My Assessments"){
+    if (props.assessment === "My Assessments") {
       const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`);
-  
+
       const result = res.data.data.results.results
       await setAllJHAData(result)
       await setTotalData(res.data.data.results.count)
       await setPageData(res.data.data.results.count / 25)
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
-    }else{
+    } else {
       const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`);
-  
+
       const result = res.data.data.results.results
       await setAllJHAData(result)
       await setTotalData(res.data.data.results.count)
@@ -557,36 +547,36 @@ function JhaPackage(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
-    if(props.observation === "My Assessments"){
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+    if (props.observation === "My Assessments") {
       const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`);
-        await setAllJHAData(res.data.data.results.results);
-        await setPage(value)
-    }else{
+      await setAllJHAData(res.data.data.results.results);
+      await setPage(value)
+    } else {
       const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`);
       await setAllJHAData(res.data.data.results.results);
       await setPage(value)
     }
   };
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
-  const [incidents] = useState([]);
-  const [listToggle, setListToggle] = useState(false);
+  // const [incidents] = useState([]);
+  // const [listToggle, setListToggle] = useState(false);
 
-  const handelView = (e) => {
-    setListToggle(false);
-  };
-  const handelViewTabel = (e) => {
-    setListToggle(true);
-  };
+  // const handelView = (e) => {
+  //   setListToggle(false);
+  // };
+  // const handelViewTabel = (e) => {
+  //   setListToggle(true);
+  // };
 
   const [value, setValue] = React.useState(2);
 
@@ -595,21 +585,21 @@ function JhaPackage(props) {
   };
 
   //dialog
-  const [MyFavopen, setMyFavOpen] = React.useState(false);
+  // const [MyFavopen, setMyFavOpen] = React.useState(false);
 
-  const handleMyFavClickOpen = () => {
-    setMyFavOpen(true);
-  };
+  // const handleMyFavClickOpen = () => {
+  //   setMyFavOpen(true);
+  // };
 
-  const handleMyFavClose = () => {
-    setMyFavOpen(false);
-  };
+  // const handleMyFavClose = () => {
+  //   setMyFavOpen(false);
+  // };
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
+  // const handleMyUserPClickOpen = () => {
+  //   setMyUserPOpen(true);
+  // };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
@@ -617,41 +607,31 @@ function JhaPackage(props) {
 
   const classes = useStyles();
 
-  const handleVisibility = () => {
-    setAttachOpen(true);
-    setHidden(!hidden);
-  };
-  const handleAttachClick = () => {
-    setAttachOpen(!open);
-  };
-  const handleAttachOpen = () => {
-    if (!hidden) {
-      setAttachOpen(true);
-    }
-  };
-  const handleAttachClose = () => {
-    setAttachOpen(false);
-  };
+  // const handleVisibility = () => {
+  //   setAttachOpen(true);
+  //   setHidden(!hidden);
+  // };
+  // const handleAttachClick = () => {
+  //   setAttachOpen(!open);
+  // };
+  // const handleAttachOpen = () => {
+  //   if (!hidden) {
+  //     setAttachOpen(true);
+  //   }
+  // };
+  // const handleAttachClose = () => {
+  //   setAttachOpen(false);
+  // };
 
   //view comments
-  const [commentsOpen, setCommentsOpen] = useState(false);
-  const [hiddenn, setHiddenn] = useState(false);
+  // const [commentsOpen, setCommentsOpen] = useState(false);
+  // const [hiddenn, setHiddenn] = useState(false);
 
-  const handleVisibilityComments = () => {
-    setCommentsOpen(true);
-    setHiddenn(!hiddenn);
-  };
-  const handleCommentsClick = () => {
-    setCommentsOpen(!open);
-  };
-  const handleCommentsOpen = () => {
-    if (!hiddenn) {
-      setCommentsOpen(true);
-    }
-  };
-  const handleCommentsClose = () => {
-    setCommentsOpen(false);
-  };
+  // const handleVisibilityComments = () => {
+  //   setCommentsOpen(true);
+  //   setHiddenn(!hiddenn);
+  // };
+
 
   const handleSummaryPush = async (selectedJha) => {
 
@@ -665,502 +645,576 @@ function JhaPackage(props) {
     history.push(`/app/pages/jha/jha-summary/${jha.id}`);
   };
 
-  const handleDelete = async (item) => {
-    let data = item
-    // let id = item[1].id
-    data.status = "Delete"
-    delete data.jhaAssessmentAttachment
-    await setIsLoading(false)
-    const res1 = await api.put(`/api/v1/jhas/${data.id}/`, data).then(response => fetchData()).catch(err => console.log(err))
-  }
+  // const handleDelete = async () => {
+  //   let data = { ...deleteValue }
+  //   data.status = "Delete"
+  //   const res1 = await api.put(`/api/v1/jhas/${data.id}/`, data)
+  //   .then(response => fetchData())
+  //   .catch(err => console.log(err))
+  // }
+
+  const handleDelete = async () => {
+    let temp = { ...deleteValue }
+    temp.status = "Delete";
+    let id = deleteValue.id;
+    setIsLoading(false);
+    const res = await api.put(`/api/v1/jhas/${temp.id}/`, temp)
+      .then((response) => {
+        fetchData();
+        handleCloseDeleteAlert()
+        // setIsLoading(true);
+      })
+      .catch((error) => console.log(error));
+  };
 
   useEffect(() => {
     fetchData()
     setCheckDeletePermission(checkACL('safety-jha', 'delete_jha'));
-  }, [props.projectName.breakDown,props.search,props.assessment,props.status])
+  }, [props.projectName.breakDown, props.search, props.assessment, props.status])
+
+  const AllCardData = (item) => {
+
+    console.log(item, 'item');
+    const [showGrid, setShowGrid] = useState(false);
+    const [hidden, setHidden] = useState(false);
+
+    const [commentsOpen, setCommentsOpen] = useState(false);
+    const [hiddenn, setHiddenn] = useState(false);
+
+    const handleVisibility = () => {
+      setShowGrid(true);
+      setHidden(!hidden);
+    };
+
+    const handleAttachClose = () => {
+      setShowGrid(false);
+    };
+
+    const handleAttachClick = () => {
+      setShowGrid(!open);
+    };
+
+    const handleAttachOpen = () => {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    }
+
+    const handleCommentVisibility = () => {
+      setCommentsOpen(true);
+      setHidden(!hidden);
+    }
+
+    const handleCommentsClick = () => {
+      setCommentsOpen(!open);
+    };
+
+    const handleCommentsOpen = () => {
+      if (!hiddenn) {
+        setCommentsOpen(true);
+      }
+    };
+
+    const handleCommentsClose = () => {
+      setCommentsOpen(false);
+
+    };
+
+    return (
+      <Grid className={classes.marginTopBottom}>
+
+        <div className="gridView">
+          <Card variant="outlined" className={classes.card}>
+            <CardContent>
+              <Grid container spacing={3} className={classes.cardContentSection}>
+                <Grid item md={2} sm={4} xs={12}
+                  className={classes.userPictureBox}
+                >
+                  <Button className={classNames(classes.floatR)}
+                  //  onClick={(e) => handleMyUserPClickOpen(e)}
+                  >
+                    <img src={item.item.avatar} className={classes.userImage} /> {item.item.username}
+                  </Button>
+                </Grid>
+                <Link
+                  onClick={() => handleSummaryPush(item.item)}
+                  className={classes.cardLinkAction}
+                >
+                  <Grid item xs={12}>
+                    <Grid container spacing={3} alignItems="flex-start">
+                      <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+                        <Grid container spacing={3} alignItems="flex-start">
+                          <Grid item md={10} sm={12} xs={12} className={classes.pr0}>
+                            <Typography
+                              className={classes.title}
+                              variant="h6"
+                            >
+                              {item.item.description}
+                            </Typography>
+                            <Typography
+                              display="inline"
+                              className={classes.listingLabelName}
+                            >
+                              Number: <span>
+                                <Link
+                                  onClick={() => handleSummaryPush()}
+                                  variant="h6"
+                                  className={classes.mLeftfont}
+                                >
+                                  <span className={classes.listingLabelValue}>{item.item.jhaNumber}</span>
+                                </Link></span>
+                            </Typography>
+                            <span item xs={1} className={classes.sepHeightOne}></span>
+                            <Typography
+                              variant="body1"
+                              gutterBottom
+                              display="inline"
+                              color="textPrimary"
+                              className={classes.listingLabelName}
+                            >
+                              Category: <span className={classes.listingLabelValue}>{item.item.jhaNumber.split("-")[0]}</span>
+                            </Typography>
+                            <span item xs={1} className={classes.sepHeightOne}></span>
+                            <Typography
+                              variant="body1"
+                              gutterBottom
+                              display="inline"
+                              color="textPrimary"
+                              className={classes.listingLabelName}
+                            >
+                              Stage: <span className={classes.listingLabelValue}>{item.item.jhaStage}<img src={in_progress_small} className={classes.smallImage} /></span>
+                              <span item xs={1} className={classes.sepHeightOne}></span>
+                              Status: <span className="listingLabelValue statusColor_complete">{item.item.jhaStatus}</span>
+                            </Typography>
+
+                          </Grid>
+
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+                  <Grid item sm={12} xs={12}>
+                    <Grid container spacing={3}>
+                      <Grid item md={3} sm={6} xs={12}>
+                        <Typography
+                          variant="body1"
+                          color="textPrimary"
+                          gutterBottom
+                          className={classes.listingLabelName}
+                        >
+                          Location:
+                        </Typography>
+                        <Typography
+
+                          className={classes.listingLabelValue}
+                        >
+                          {item.item.location}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item md={3} sm={6} xs={12}>
+                        <Typography
+                          variant="body1"
+                          color="textPrimary"
+                          gutterBottom
+                          className={classes.listingLabelName}
+                        >
+                          Created on:
+                        </Typography>
+
+                        <Typography
+
+                          className={classes.listingLabelValue}
+                        >
+                          {item.item.jhaAssessmentDate}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item md={3} sm={6} xs={12}>
+                        <Typography
+                          variant="body1"
+                          color="textPrimary"
+                          gutterBottom
+                          className={classes.listingLabelName}
+                        >
+                          Created by:
+                        </Typography>
+
+                        <Typography
+
+                          className={classes.listingLabelValue}
+                        >
+                          {item.item.createdByName}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Link>
+
+              </Grid>
+            </CardContent>
+            <Divider />
+            <CardActions className={Incidents.cardActions}>
+              <Grid
+                container
+                spacing={2}
+                justify="flex-end"
+                alignItems="left"
+              >
+                <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
+
+                  >
+                    <AttachmentIcon className={classes.mright5} />
+                    Attachments:
+                  </Typography>
+                  <Typography variant="body2" display="inline">
+                    <span>
+                      <Link
+                        // href="#"
+                        onClick={item.item.attachmentCount && handleVisibility}
+                        color="secondary"
+                        aria-haspopup="true"
+                        className={classes.mLeft}>
+                        {item.item.attachmentCount}
+                      </Link>
+                    </span>
+                  </Typography>
+                  <span item xs={1} className={classes.sepHeightTen}></span>
+                  {/* <Typography
+            variant="body1"
+            display="inline"
+            color="textPrimary"
+            className={classes.mLeft}
+          >
+            <InsertCommentOutlinedIcon className={classes.mright5} />
+            <Link href="#"
+              onClick={handleVisibilityComments}
+              aria-haspopup="true">
+              Comments:
+            </Link>
+
+          </Typography>
+          <Typography variant="body2" display="inline" className={classes.mLeft}>
+            <span>
+              <Link href="#"
+                color="secondary"
+                aria-haspopup="true"
+                className={classes.mLeft}>
+                {value["commentsCount"]}
+              </Link>
+            </span>
+          </Typography> */}
+                </Grid>
+
+                <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
+                  <div className={classes.floatR}>
+                    {/* <Typography variant="body1" display="inline">
+          <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
+          </Typography>
+          <span item xs={1} className={classes.sepHeightTen}></span> */}
+                    {/* <Typography variant="body1" display="inline">
+              <PrintOutlinedIcon className={classes.iconColor} /> <Link href="/app/pages/general-observation-prints" className={classes.mLeftR5}>Print</Link>
+            </Typography>
+            <span item xs={1} className={classes.sepHeightTen}></span>
+            <Typography variant="body1" display="inline"><Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
+            </Typography> */}
+                    <span item xs={1} className={classes.sepHeightTen}></span>
+                    <Typography variant="body1" display="inline">
+                      <Link href="#" className={classes.mLeftR5}>
+                        {!checkDeletePermission
+                          ? (
+                            <DeleteForeverOutlinedIcon
+                              className={classes.iconteal}
+                              style={{
+                                color: '#c0c0c0',
+                                cursor: 'not-allowed'
+                              }}
+                            />
+                          )
+                          : (
+                            <Link
+                              href="#"
+                              className={classes.mLeftR5}
+                            >
+                              <DeleteForeverOutlinedIcon
+                                className={classes.iconteal}
+                                // onClick={() => handleDelete(value)}
+                                onClick={() => handleClickDeleteAlert(item.item)}
+                              />
+                            </Link>
+                          )}
+                        {/* <IconButton onClick={() => handleDelete(value)}>
+                      <DeleteForeverOutlinedIcon
+                        className={classes.iconteal}
+                      />
+                    </IconButton> */}
+                      </Link>
+                    </Typography>
+                  </div>
+                </Grid>
+              </Grid>
+            </CardActions>
+          </Card>
+          {item.item.attachmentCount ?
+            <Grid
+              item
+              md={12}
+              sm={12}
+              xs={12}
+              hidden={!hidden}
+              onBlur={handleAttachClose}
+              onClick={handleAttachClick}
+              onClose={handleAttachClose}
+              onFocus={handleAttachOpen}
+              onMouseEnter={handleAttachOpen}
+              onMouseLeave={handleAttachClose}
+              open={showGrid}
+              className="paddTBRemove attactmentShowSection"
+            >
+              <Paper elevation={1} className="cardSectionBottom">
+                <Grid container spacing={3}>
+                  <Grid item md={12} sm={12} xs={12}>
+                    <List>
+                      <ListItem>
+                        <Grid
+                          item
+                          md={12}
+                          sm={12}
+                          xs={12}
+                        >
+                          <div className="attachFileThumb">
+                            <Attachment src={item.item.jhaAssessmentAttachment} value={item.item.jhaAssessmentAttachment} />
+                          </div>
+                        </Grid>
+                      </ListItem>
+                    </List>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+            : ""
+          }
+        </div>
+        <div>
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            hidden={!hiddenn}
+            onBlur={handleCommentsClose}
+            onClick={handleCommentsClick}
+            onClose={handleCommentsClose}
+            onFocus={handleCommentsOpen}
+            onMouseEnter={handleCommentsOpen}
+            onMouseLeave={handleCommentsClose}
+            open={commentsOpen}
+            className="commentsShowSection"
+          >
+            <Paper elevation={1} className="paperSection">
+              <Grid container spacing={3}>
+                <Grid item md={12} xs={12}>
+                  <Box padding={3}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <TextField
+                          multiline
+                          variant="outlined"
+                          rows="1"
+                          id="JobTitle"
+                          label="Add your comments here"
+                          className="formControl"
+                        />
+                      </Grid>
+                      <Grid item xs={3}>
+                        <input type="file" />
+                      </Grid>
+                      <Grid item xs={9}>
+                        <AddCircleOutlineIcon className={classes.plusIcon} />
+                        <RemoveCircleOutlineIcon className={classes.minusIcon} />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          className="spacerRight buttonStyle"
+                          disableElevation
+                        >
+                          Respond
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          size="small"
+                          className="buttonStyle custmCancelBtn"
+                          disableElevation
+
+                        >
+                          Cancel
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+        </div>
+
+
+      </Grid>
+    )
+  }
 
   return (
     <>
-    {isLoading ? 
-      <Box>
-      
-       { allJHAData.length > 0 ? allJHAData.map((value) => (
-          <Grid className={classes.marginTopBottom}>
+      {isLoading ?
+        <Box>
 
-            <div className="gridView">
-              <Card variant="outlined" className={classes.card}>
-                <CardContent>
-                  <Grid container spacing={3} className={classes.cardContentSection}>
-                    <Grid item md={2} sm={4} xs={12}
-                      className={classes.userPictureBox}
+          {allJHAData.length > 0 ? allJHAData.map((value) => (
+            <AllCardData item={value} />
+          )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+            Sorry, no matching records found
+          </Typography>}
+
+          <div className={classes.pagination}>
+            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
+
+          <Dialog
+            open={myUserPOpen}
+            onClose={handleMyUserPClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            fullWidth={true}
+            maxWidth={'sm'}
+          >
+            <DialogTitle classNames={classes.mb10} id="alert-dialog-title"><img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                <Grid
+                  item md={12} sm={12} xs={12}
+                  className={classes.usrProfileListBox}
+                >
+                  <h6>Change ownership</h6>
+                  <FormControl variant="outlined" className={classes.formControlOwnership}>
+                    <InputLabel id="demo-simple-select-outlined-label">Ownership</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-outlined-label"
+                      id="demo-simple-select-outlined"
+                      value="Ashutosh"
+                      onChange={handleChangeOne}
+                      label="Ownership"
                     >
-                      <Button className={classNames(classes.floatR)}
-                      //  onClick={(e) => handleMyUserPClickOpen(e)}
-                        >
-                        <img src={value["avatar"]} className={classes.userImage} /> {value["username"]}
-                      </Button>
-                    </Grid>
-                    <Link
-                      onClick={() => handleSummaryPush(value)}
-                      className={classes.cardLinkAction}
-                    >
+                      <MenuItem value={10}>Self</MenuItem>
+                      <MenuItem value={10}>Prakash</MenuItem>
+                      <MenuItem value={20}>Ashutosh</MenuItem>
+                      <MenuItem value={30}>Saddam</MenuItem>
+                      <MenuItem value={30}>Sunil</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid
+                  item md={12} sm={12} xs={12}
+                  className={classes.usrProfileListBox}
+                >
+                  <h3>Basic information</h3>
+                  <List>
+                    <ListItem>
+                      {/* <ListItemAvatar>
+                <Avatar>
+                  <ImageIcon />
+                </Avatar>
+              </ListItemAvatar> */}
+                      <ListItemText primary="Full Name:" secondary="Prakash" />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText primary="Organization Role:" secondary="N/A" />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText primary="Role Title:" secondary="N/A" />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
+                    </ListItem>
+                  </List>
+                </Grid>
 
-                      <Grid item xs={12}>
-                        <Grid container spacing={3} alignItems="flex-start">
-                          <Grid item sm={12} xs={12} className={classes.listHeadColor}>
-                            <Grid container spacing={3} alignItems="flex-start">
-                              <Grid item md={10} sm={12} xs={12} className={classes.pr0}>
-                                <Typography
-                                  className={classes.title}
-                                  variant="h6"
-                                >
-                                  {value["description"]}
-                                </Typography>
-                                <Typography
-                                  display="inline"
-                                  className={classes.listingLabelName}
-                                >
-                                  Number: <span>
-                                    <Link
-                                      onClick={() => handleSummaryPush()}
-                                      variant="h6"
-                                      className={classes.mLeftfont}
-                                    >
-                                      <span className={classes.listingLabelValue}>{value["jhaNumber"]}</span>
-                                    </Link></span>
-                                </Typography>
-                                <span item xs={1} className={classes.sepHeightOne}></span>
-                                <Typography
-                                  variant="body1"
-                                  gutterBottom
-                                  display="inline"
-                                  color="textPrimary"
-                                  className={classes.listingLabelName}
-                                >
-                                  Category: <span className={classes.listingLabelValue}>{value["jhaNumber"].split("-")[0]}</span>
-                                </Typography>
-                                <span item xs={1} className={classes.sepHeightOne}></span>
-                                <Typography
-                                  variant="body1"
-                                  gutterBottom
-                                  display="inline"
-                                  color="textPrimary"
-                                  className={classes.listingLabelName}
-                                >
-                                  Stage: <span className={classes.listingLabelValue}>{value["jhaStage"]}<img src={in_progress_small} className={classes.smallImage} /></span>
-                                  <span item xs={1} className={classes.sepHeightOne}></span>
-                                  Status: <span className="listingLabelValue statusColor_complete">{value["jhaStatus"]}</span>
-                                </Typography>
+                <Grid
+                  item md={12} sm={12} xs={12}
+                  className={classes.usrProfileListBox}
+                >
+                  <h3>Company information</h3>
+                  <List>
+                    <ListItem>
+                      <ListItemText primary="Company Name:" secondary="JWIL" />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText primary="Location:" secondary="Italy" />
+                    </ListItem>
+                  </List>
+                </Grid>
+              </DialogContentText>
+            </DialogContent>
+            <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+              <DialogActions align="left" className="marginB10">
+                <Button onClick={handleMyUserPClose} color="secondary" variant="contained" className="buttonStyle custmCancelBtn">
+                  Close
+                </Button>
+              </DialogActions>
+            </Grid>
 
-                              </Grid>
+            {/* <DialogActions>
+      <Button onClick={handleMyUserPClose} className="custmCancelBtn" variant="contained" autoFocus>
+        Close
+      </Button>
+    </DialogActions> */}
+          </Dialog>
 
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-
-                      <Grid item sm={12} xs={12}>
-                        <Grid container spacing={3}>
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Location:
-                            </Typography>
-                            <Typography
-
-                              className={classes.listingLabelValue}
-                            >
-                              {value["location"]}
-                            </Typography>
-                          </Grid>
-
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Created on:
-                            </Typography>
-
-                            <Typography
-
-                              className={classes.listingLabelValue}
-                            >
-                              {value["jhaAssessmentDate"]}
-                            </Typography>
-                          </Grid>
-
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Created by:
-                            </Typography>
-
-                            <Typography
-
-                              className={classes.listingLabelValue}
-                            >
-                              {value["createdByName"]}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Link>
-
-                  </Grid>
-                </CardContent>
-                <Divider />
-                <CardActions className={Incidents.cardActions}>
+          <Dialog
+            open={deleteQ}
+            onClose={handleCloseDeleteAlert}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                <Grid container spacing={3}>
                   <Grid
-                    container
-                    spacing={2}
-                    justify="flex-end"
-                    alignItems="left"
+                    item
+                    md={12}
+                    xs={12}
                   >
-                    <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                      <Typography
-                        variant="body1"
-                        display="inline"
-                        color="textPrimary"
-
-                      >
-                        <AttachmentIcon className={classes.mright5} />
-                        Attachments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <span>
-                          <Link href="#"
-                            // onClick={handleVisibility}
-                            color="secondary"
-                            aria-haspopup="true"
-                            className={classes.mLeft}>
-                            {value["attachmentCount"]}
-                          </Link>
-                        </span>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      {/* <Typography
-                        variant="body1"
-                        display="inline"
-                        color="textPrimary"
-                        className={classes.mLeft}
-                      >
-                        <InsertCommentOutlinedIcon className={classes.mright5} />
-                        <Link href="#"
-                          onClick={handleVisibilityComments}
-                          aria-haspopup="true">
-                          Comments:
-                        </Link>
-
-                      </Typography>
-                      <Typography variant="body2" display="inline" className={classes.mLeft}>
-                        <span>
-                          <Link href="#"
-                            color="secondary"
-                            aria-haspopup="true"
-                            className={classes.mLeft}>
-                            {value["commentsCount"]}
-                          </Link>
-                        </span>
-                      </Typography> */}
-                    </Grid>
-
-                    <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
-                      <div className={classes.floatR}>
-                        {/* <Typography variant="body1" display="inline">
-                      <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span> */}
-                        {/* <Typography variant="body1" display="inline">
-                          <PrintOutlinedIcon className={classes.iconColor} /> <Link href="/app/pages/general-observation-prints" className={classes.mLeftR5}>Print</Link>
-                        </Typography>
-                        <span item xs={1} className={classes.sepHeightTen}></span>
-                        <Typography variant="body1" display="inline"><Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                        </Typography> */}
-                        <span item xs={1} className={classes.sepHeightTen}></span>
-                        <Typography variant="body1" display="inline">
-                            {!checkDeletePermission
-                            ? (
-                              <DeleteForeverOutlinedIcon
-                                className={classes.iconteal}
-                                style={{
-                                  color: '#c0c0c0',
-                                  cursor: 'not-allowed'
-                                }}
-                              />
-                            )
-                            : (
-                              <Link
-                                href="#"
-                                className={classes.mLeftR5}
-                              >
-                                <DeleteForeverOutlinedIcon
-                                  className={classes.iconteal}
-                                  onClick={(e) => handleDelete(value)}
-                                />
-                              </Link>
-                          )}
-                          {/* <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(value)} /></Link> */}
-                        </Typography>
-                      </div>
-                    </Grid>
-                  </Grid>
-                </CardActions>
-              </Card>
-              <Grid
-                item
-                md={12}
-                sm={12}
-                xs={12}
-                hidden={!hidden}
-                onBlur={handleAttachClose}
-                onClick={handleAttachClick}
-                onClose={handleAttachClose}
-                onFocus={handleAttachOpen}
-                onMouseEnter={handleAttachOpen}
-                onMouseLeave={handleAttachClose}
-                open={attachOpen}
-                className="paddTBRemove attactmentShowSection"
-              >
-                <Paper elevation={1} className="paperSection">
-                  <Grid container spacing={3}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <List>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                        <ListItem>
-                          <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                        </ListItem>
-                      </List>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-            </div>
-            <div>
-              <Grid
-                item
-                md={12}
-                sm={12}
-                xs={12}
-                hidden={!hiddenn}
-                onBlur={handleCommentsClose}
-                onClick={handleCommentsClick}
-                onClose={handleCommentsClose}
-                onFocus={handleCommentsOpen}
-                onMouseEnter={handleCommentsOpen}
-                onMouseLeave={handleCommentsClose}
-                open={commentsOpen}
-                className="commentsShowSection"
-              >
-                <Paper elevation={1} className="paperSection">
-                  <Grid container spacing={3}>
-                    <Grid item md={12} xs={12}>
-                      <Box padding={3}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={12}>
-                            <TextField
-                              multiline
-                              variant="outlined"
-                              rows="1"
-                              id="JobTitle"
-                              label="Add your comments here"
-                              className="formControl"
-                            />
-                          </Grid>
-                          <Grid item xs={3}>
-                            <input type="file" />
-                          </Grid>
-                          <Grid item xs={9}>
-                            <AddCircleOutlineIcon className={classes.plusIcon} />
-                            <RemoveCircleOutlineIcon className={classes.minusIcon} />
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              size="small"
-                              className="spacerRight buttonStyle"
-                              disableElevation
-                            >
-                              Respond
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              size="small"
-                              className="buttonStyle custmCancelBtn"
-                              disableElevation
-
-                            >
-                              Cancel
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-            </div>
-            <div>
-              <Dialog
-                open={openAttachment}
-                onClose={handleCloseAttachment}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                classNames={classes.viewAttachmentDialog}
-              >
-                <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
-                <DialogContent classNames={classes.imageSectionHeight}>
-                  <Grid container spacing={3} classNames={classes.viewImageSection}>
-                    <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
-                      <ul classNames={classes.viewImageSection}>
-                        <li className={classes.viewattch1}>View Attachment</li>
-                        <li className={classes.viewattch2}>Download Attachment</li>
-                      </ul>
-                    </Grid>
-                  </Grid>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseAttachment} color="primary" autoFocus>
-                    Close
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </div>
-            <Dialog
-              open={myUserPOpen}
-              onClose={handleMyUserPClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-              fullWidth={true}
-              maxWidth={'sm'}
-            >
-              <DialogTitle classNames={classes.mb10} id="alert-dialog-title"><img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  <Grid
-                    item md={12} sm={12} xs={12}
-                    className={classes.usrProfileListBox}
-                  >
-                    <h6>Change ownership</h6>
-                    <FormControl variant="outlined" className={classes.formControlOwnership}>
-                      <InputLabel id="demo-simple-select-outlined-label">Ownership</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value="Ashutosh"
-                        onChange={handleChangeOne}
-                        label="Ownership"
-                      >
-                        <MenuItem value={10}>Self</MenuItem>
-                        <MenuItem value={10}>Prakash</MenuItem>
-                        <MenuItem value={20}>Ashutosh</MenuItem>
-                        <MenuItem value={30}>Saddam</MenuItem>
-                        <MenuItem value={30}>Sunil</MenuItem>
-                      </Select>
+                    <FormControl component="fieldset">
+                      <FormLabel component="legend" className="checkRadioLabel">Are you sure you want to delete this question?</FormLabel>
                     </FormControl>
                   </Grid>
-                  <Grid
-                    item md={12} sm={12} xs={12}
-                    className={classes.usrProfileListBox}
-                  >
-                    <h3>Basic information</h3>
-                    <List>
-                      <ListItem>
-                        {/* <ListItemAvatar>
-                            <Avatar>
-                              <ImageIcon />
-                            </Avatar>
-                          </ListItemAvatar> */}
-                        <ListItemText primary="Full Name:" secondary="Prakash" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Organization Role:" secondary="N/A" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Role Title:" secondary="N/A" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
-                      </ListItem>
-                    </List>
+                  <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+                    <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={() => handleDelete()}>
+                      Yes
+                    </Button>
+                    <Button color="secondary" variant="contained" className="buttonStyle custmCancelBtn" onClick={() => handleCloseDeleteAlert()}>
+                      No
+                    </Button>
                   </Grid>
+                </Grid>
+              </DialogContentText>
+            </DialogContent>
+          </Dialog>
 
-                  <Grid
-                    item md={12} sm={12} xs={12}
-                    className={classes.usrProfileListBox}
-                  >
-                    <h3>Company information</h3>
-                    <List>
-                      <ListItem>
-                        <ListItemText primary="Company Name:" secondary="JWIL" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Location:" secondary="Italy" />
-                      </ListItem>
-                    </List>
-                  </Grid>
-                </DialogContentText>
-              </DialogContent>
-              <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
-                <DialogActions align="left" className="marginB10">
-                  <Button onClick={handleMyUserPClose} color="secondary" variant="contained" className="buttonStyle custmCancelBtn">
-                    Close
-                  </Button>
-                </DialogActions>
-              </Grid>
+        </Box>
+        : <Loader />}
 
-              {/* <DialogActions>
-                  <Button onClick={handleMyUserPClose} className="custmCancelBtn" variant="contained" autoFocus>
-                    Close
-                  </Button>
-                </DialogActions> */}
-            </Dialog>
-
-            
-          </Grid>
-        )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
-                      Sorry, no matching records found
-                    </Typography>}
-
-        <div className={classes.pagination}>
-          {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
-                <Pagination count={pageCount} page={page} onChange={handleChange} />
-              </div> 
-
-      </Box>
-      : <Loader/>}
     </>
   );
 }

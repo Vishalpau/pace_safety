@@ -7,33 +7,20 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
-import Share from "@material-ui/icons/Share";
 import Divider from "@material-ui/core/Divider";
 import Link from "@material-ui/core/Link";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import Box from "@material-ui/core/Box";
-import Chip from "@material-ui/core/Chip";
-import Avatar from "@material-ui/core/Avatar";
-import TableContainer from "@material-ui/core/TableContainer";
 import { makeStyles } from "@material-ui/core/styles";
 import Incidents from "dan-styles/IncidentsList.scss";
-import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-import MUIDataTable from "mui-datatables";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import { useHistory, useParams } from "react-router";
-//import "../../../styles/custom/customheader.css";
-import StarsIcon from "@material-ui/icons/Stars";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
 import FormLabel from '@material-ui/core/FormLabel';
 
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -44,11 +31,6 @@ import Dialog from "@material-ui/core/Dialog";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import projectpj from "dan-images/projectpj.png";
-import TextField from "@material-ui/core/TextField";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import IconButton from "@material-ui/core/IconButton";
 import api from "../../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
@@ -1089,7 +1071,7 @@ function ComplianceListNew(props) {
             </Grid>
           </CardActions>
         </Card>
-        {value.avatar &&
+        {value.attachmentLinks.attachmentCount &&
           <Grid
             item
             md={12}
@@ -1185,26 +1167,26 @@ function ComplianceListNew(props) {
     <>
       <Box>
         <Grid className={classes.marginTopBottom}>
-          <div>
-            <div className="gridView">
-              {isLoading ? (
-                allComplianceData.length > 0 ? (
-                  allComplianceData.map((value, index) => <AllCardData value={value} />)
-                ) : (
-                  <Typography
-                    className={classes.sorryTitle}
-                    variant="h6"
-                    color="primary"
-                    noWrap
-                  >
-                    Sorry, no matching records found
-                  </Typography>
-                )
+          {/* <div> */}
+          <div className="gridView">
+            {isLoading ? (
+              allComplianceData.length > 0 ? (
+                allComplianceData.map((value, index) => <AllCardData value={value} />)
               ) : (
-                <Loader />
-              )}
+                <Typography
+                  className={classes.sorryTitle}
+                  variant="h6"
+                  color="primary"
+                  noWrap
+                >
+                  Sorry, no matching records found
+                </Typography>
+              )
+            ) : (
+              <Loader />
+            )}
 
-              {/* <Grid
+            {/* <Grid
                 item
                 md={12}
                 sm={12}
@@ -1277,7 +1259,7 @@ function ComplianceListNew(props) {
                   </Grid>
                 </Paper>
               </Grid> */}
-              {/* <div>
+            {/* <div>
                 <Grid
                   item
                   md={12}
@@ -1347,170 +1329,170 @@ function ComplianceListNew(props) {
                 </Grid>
               </div> */}
 
-              <div>
-                <Dialog
-                  open={myUserPOpen}
-                  onClose={handleMyUserPClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                  fullWidth={true}
-                  maxWidth={"sm"}
+            <div>
+              <Dialog
+                open={myUserPOpen}
+                onClose={handleMyUserPClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth={true}
+                maxWidth={"sm"}
+              >
+                {/* <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle> */}
+                <DialogTitle
+                  classNames={classes.mb10}
+                  id="alert-dialog-title"
                 >
-                  {/* <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle> */}
-                  <DialogTitle
-                    classNames={classes.mb10}
-                    id="alert-dialog-title"
-                  >
-                    <img src={paceLogoSymbol} className={classes.userImage} />{" "}
-                    {"Admin"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
+                  <img src={paceLogoSymbol} className={classes.userImage} />{" "}
+                  {"Admin"}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    <Grid
+                      item
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      className={classes.usrProfileListBox}
+                    >
+                      <h6>Change ownership</h6>
+                      <FormControl
+                        variant="outlined"
+                        className={classes.formControlOwnership}
                       >
-                        <h6>Change ownership</h6>
-                        <FormControl
-                          variant="outlined"
-                          className={classes.formControlOwnership}
+                        <InputLabel id="demo-simple-select-outlined-label">
+                          Ownership
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-outlined-label"
+                          id="demo-simple-select-outlined"
+                          //value="Ashutosh"
+                          onChange={handleChangeOne}
+                          label="Ownership"
+                          className="formControl"
+                          fullWidth
                         >
-                          <InputLabel id="demo-simple-select-outlined-label">
-                            Ownership
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            //value="Ashutosh"
-                            onChange={handleChangeOne}
-                            label="Ownership"
-                            className="formControl"
-                            fullWidth
-                          >
-                            <MenuItem value={10}>Self</MenuItem>
-                            <MenuItem value={10}>Prakash</MenuItem>
-                            <MenuItem value={20}>Ashutosh</MenuItem>
-                            <MenuItem value={30}>Saddam</MenuItem>
-                            <MenuItem value={30}>Sunil</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Basic information</h3>
-                        <List>
-                          <ListItem>
-                            {/* <ListItemAvatar>
+                          <MenuItem value={10}>Self</MenuItem>
+                          <MenuItem value={10}>Prakash</MenuItem>
+                          <MenuItem value={20}>Ashutosh</MenuItem>
+                          <MenuItem value={30}>Saddam</MenuItem>
+                          <MenuItem value={30}>Sunil</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid
+                      item
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      className={classes.usrProfileListBox}
+                    >
+                      <h3>Basic information</h3>
+                      <List>
+                        <ListItem>
+                          {/* <ListItemAvatar>
                                 <Avatar>
                                   <ImageIcon />
                                 </Avatar>
                               </ListItemAvatar> */}
-                            <ListItemText
-                              primary="Full Name:"
-                              secondary="Prakash"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Organization Type:"
-                              secondary="Epc ORGANIZATION"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Organization Role:"
-                              secondary="N/A"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Role Title:"
-                              secondary="N/A"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Current Location:"
-                              secondary="Delhi » NCT » India"
-                            />
-                          </ListItem>
-                        </List>
-                      </Grid>
+                          <ListItemText
+                            primary="Full Name:"
+                            secondary="Prakash"
+                          />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText
+                            primary="Organization Type:"
+                            secondary="Epc ORGANIZATION"
+                          />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText
+                            primary="Organization Role:"
+                            secondary="N/A"
+                          />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText
+                            primary="Role Title:"
+                            secondary="N/A"
+                          />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText
+                            primary="Current Location:"
+                            secondary="Delhi » NCT » India"
+                          />
+                        </ListItem>
+                      </List>
+                    </Grid>
 
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Company information</h3>
-                        <List>
-                          <ListItem>
-                            <ListItemText
-                              primary="Company Name:"
-                              secondary="JWIL"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Location:"
-                              secondary="Italy"
-                            />
-                          </ListItem>
-                        </List>
-                      </Grid>
-                    </DialogContentText>
-                  </DialogContent>
-                  <Grid
-                    item
-                    md={12}
-                    sm={12}
-                    xs={12}
-                    className={classes.popUpButton}
-                  >
-                    <DialogActions align="left" className="marginB10">
-                      <Button
-                        onClick={handleMyUserPClose}
-                        color="secondary"
-                        variant="contained"
-                        className="buttonStyle custmCancelBtn"
-                      >
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Grid>
-                  {/* <DialogActions>
+                    <Grid
+                      item
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      className={classes.usrProfileListBox}
+                    >
+                      <h3>Company information</h3>
+                      <List>
+                        <ListItem>
+                          <ListItemText
+                            primary="Company Name:"
+                            secondary="JWIL"
+                          />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText
+                            primary="Location:"
+                            secondary="Italy"
+                          />
+                        </ListItem>
+                      </List>
+                    </Grid>
+                  </DialogContentText>
+                </DialogContent>
+                <Grid
+                  item
+                  md={12}
+                  sm={12}
+                  xs={12}
+                  className={classes.popUpButton}
+                >
+                  <DialogActions align="left" className="marginB10">
+                    <Button
+                      onClick={handleMyUserPClose}
+                      color="secondary"
+                      variant="contained"
+                      className="buttonStyle custmCancelBtn"
+                    >
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Grid>
+                {/* <DialogActions>
                             <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
                               Close
                             </Button>
                           </DialogActions> */}
-                </Dialog>
-                <div className={classes.pagination}>
-                  {totalData != 0
-                    ? Number.isInteger(pageData) !== true
-                      ? totalData < 25 * page
-                        ? `${page * 25 - 24} - ${totalData} of ${totalData}`
-                        : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+              </Dialog>
+              <div className={classes.pagination}>
+                {totalData != 0
+                  ? Number.isInteger(pageData) !== true
+                    ? totalData < 25 * page
+                      ? `${page * 25 - 24} - ${totalData} of ${totalData}`
                       : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                    : null}
-                  <Pagination
-                    count={pageCount}
-                    page={page}
-                    onChange={handleChange}
-                  />
-                </div>
+                    : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                  : null}
+                <Pagination
+                  count={pageCount}
+                  page={page}
+                  onChange={handleChange}
+                />
               </div>
             </div>
           </div>
+          {/* </div> */}
         </Grid>
       </Box>
       <Dialog

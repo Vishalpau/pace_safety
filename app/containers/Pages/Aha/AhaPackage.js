@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
@@ -53,6 +53,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import { handelCommonObject } from "../../../utils/CheckerValue"
 import Loader from "../Loader"
 import { checkACL } from '../../../utils/helper';
+import Attachment from '../../Attachment/Attachment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,16 +66,16 @@ const useStyles = makeStyles((theme) => ({
   },
   viewImageSection: {
     textAlign: 'center',
-  '& MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-1': {
-    textAlign: 'center',
-    minHeight: '100px',
-  },
+    '& MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-1': {
+      textAlign: 'center',
+      minHeight: '100px',
+    },
   },
   rightSide: {
     flexGrow: 8,
     textAlign: 'right',
   },
-  mb10: {marginBottom: '10px !important'},
+  mb10: { marginBottom: '10px !important' },
   newIncidentButton: {
     backgroundColor: theme.palette.primary.dark,
   },
@@ -139,9 +140,12 @@ const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: '5px',
     marginRight: '15px',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       marginLeft: '3px',
       marginRight: '3px',
+    },
+    '&:hover': {
+      cursor: 'pointer'
     },
   },
   pLeft5: {
@@ -153,7 +157,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     color: 'rgba(0, 0, 0, 0.87) !important',
     fontWeight: '500',
-    '&:hover':{
+    '&:hover': {
       textDecoration: 'none',
     },
   },
@@ -196,8 +200,8 @@ const useStyles = makeStyles((theme) => ({
   dataTableNew: {
     minWidth: '1360px !important',
   },
-  
-  title:  {
+
+  title: {
     fontSize: '1.25rem',
     fontFamily: 'Montserrat-Regular',
     color: 'rgba(0, 0, 0, 0.87)',
@@ -206,14 +210,14 @@ const useStyles = makeStyles((theme) => ({
   },
   pt30: {
     paddingTop: '30px',
-  
+
   },
-  
+
   mTopThirtybtten: {
     marginTop: '0rem',
     float: 'right',
   },
-  
+
   TableToolbar: {
     display: 'none',
   },
@@ -232,7 +236,7 @@ const useStyles = makeStyles((theme) => ({
   marginTopBottom: {
     marginBottom: '16px',
     borderRadius: '8px',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       paddingTop: '55px',
     },
   },
@@ -267,14 +271,14 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     margin: '15px 15px 15px 8px',
     fontSize: '10px',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       margin: '10px 5px 10px 5px',
     },
   },
   floatR: {
     float: 'right',
     textTransform: 'capitalize',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       float: 'left',
     },
   },
@@ -312,7 +316,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textRight: {
     textAlign: 'right',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       textAlign: 'left',
       padding: '0px 8px 15px 8px !important',
     },
@@ -331,21 +335,21 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
     marginBottom: '30px',
   },
-  
+
   cardLinkAction: {
     width: '100%',
     float: 'left',
     padding: '14px',
     cursor: 'pointer',
     textDecoration: 'none !important',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       paddingTop: '85px',
     }
   },
   userPictureBox: {
     position: 'absolute',
     right: '0px',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       right: 'auto',
     },
   },
@@ -362,7 +366,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardBottomSection: {
     '& p': {
-      ['@media (max-width:480px)']: { 
+      ['@media (max-width:480px)']: {
         fontSize: '12px !important',
       },
     },
@@ -373,15 +377,15 @@ const useStyles = makeStyles((theme) => ({
     // },
   },
   formControlOwnership: {
-  width: '100%',
-  marginBottom: '30px',
+    width: '100%',
+    marginBottom: '30px',
   },
   cardActionBottomBox: {
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       padding: '8px !important',
     },
   },
-  
+
   fullWidth: {
     width: '100%',
     margin: '.5rem 0',
@@ -410,19 +414,19 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  
+
   viewAttachmentDialog: {
     '& .MuiDialogContent-root': {
       overflowY: 'hidden !important',
       height: '90px !important',
-  
-  },
+
+    },
   },
   imageSectionHeight: {
-    '& .MuiDialogContent-root':  {
+    '& .MuiDialogContent-root': {
       height: '90px !important',
       minHeight: '90px !important',
-  },
+    },
   },
   viewattch1: {
     padding: '12px 30px',
@@ -452,15 +456,15 @@ const useStyles = makeStyles((theme) => ({
   popUpButton: {
     paddingRight: "5px",
     marginLeft: "12px",
-    '& .MuiDialogActions-root, img':{
+    '& .MuiDialogActions-root, img': {
       justifyContent: 'flex-start',
-    },    
+    },
   },
   pagination: {
     padding: "0px 0px 20px 0px",
     display: "flex",
     justifyContent: "flex-end",
-    marginTop : '-10px',
+    marginTop: '-10px',
   },
 }));
 
@@ -469,12 +473,12 @@ function AhaPackage(props) {
   const history = useHistory();
   const [cardView, setCardView] = useState(true);
   const [tableView, setTableView] = useState(false);
-  const [allAHAData , setAllAHAData] = useState([])
+  const [allAHAData, setAllAHAData] = useState([])
   const [data, setData] = useState([])
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
-  const [page , setPage] = useState(1)
+  const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
 
@@ -483,6 +487,10 @@ function AhaPackage(props) {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  useEffect(() => {
+    console.log(allAHAData, 'allAHahData');
+  }, [allAHAData]);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -500,220 +508,245 @@ function AhaPackage(props) {
 
   const [value, setValue] = React.useState(2);
 
-  
-//dialog
-const [MyFavopen, setMyFavOpen] = React.useState(false);
-const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-const handleMyUserPClickOpen = () => {
-  setMyUserPOpen(true);
-};
-const handleMyUserPClose = () => {
-  setMyUserPOpen(false);
-};
+  //dialog
+  const [MyFavopen, setMyFavOpen] = React.useState(false);
+  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-// const handleSummaryPush = async () => {
-//   history.push(
-//     "/app/pages/aha/aha-summary/"
-//   );
-// };
+  const handleMyUserPClickOpen = () => {
+    setMyUserPOpen(true);
+  };
+  const handleMyUserPClose = () => {
+    setMyUserPOpen(false);
+  };
 
-const handleSummaryPush = async (index) => {
-  const id = allAHAData[index].id
-  const fkProjectStructureIds = allAHAData[index].fkProjectStructureIds
+  // const handleSummaryPush = async () => {
+  //   history.push(
+  //     "/app/pages/aha/aha-summary/"
+  //   );
+  // };
+
+  const handleSummaryPush = async (index) => {
+    console.log(index, 'index');
+    const id = allAHAData[index].id;
+    console.log(id, 'id');
+    const fkProjectStructureIds = allAHAData[index].fkProjectStructureIds
     localStorage.setItem('fkAHAId', id)
     handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
     localStorage.removeItem('Assessments')
     localStorage.removeItem('Approval')
     localStorage.removeItem('lessonsLearned')
-  history.push(
-    `/app/pages/aha/aha-summary/${id}`
-  );
-};
+    history.push(
+      `/app/pages/aha/aha-summary/${id}`
+    );
+  };
 
-const handleNewAhaPush = async () => {
-  localStorage.removeItem('fkAHAId')
-  history.push(
-    "/app/pages/aha/assessments/project-details"
-  );
-};
+  const handleNewAhaPush = async () => {
+    localStorage.removeItem('fkAHAId')
+    history.push(
+      "/app/pages/aha/assessments/project-details"
+    );
+  };
 
-// const fetchAllAHAData = async () => {
-//   const res = await api.get("/api/v1/ahas/")
-//   const result = res.data.data.results.results
-  
-//   await setAllAHAData(result)
-//   // await handelTableView(result)
-// }
+  // const fetchAllAHAData = async () => {
+  //   const res = await api.get("/api/v1/ahas/")
+  //   const result = res.data.data.results.results
+
+  //   await setAllAHAData(result)
+  //   // await handelTableView(result)
+  // }
 
 
-const fetchAllAHAData = async () => {
-  await setPage(1)
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-    .projectName.projectId;
- const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-  :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
-let struct = "";
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
-  if(props.assessments === "My Assessments"){
-    const res = await api.get(`api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`);
-    const result = res.data.data.results.results
-    await setAllAHAData(result)
-    await setTotalData(res.data.data.results.count)
-    await setPageData(res.data.data.results.count / 25)
-    let pageCount = Math.ceil(res.data.data.results.count / 25)
-    await setPageCount(pageCount)
-  }else{
-    const res = await api.get(`api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`);
-    const result = res.data.data.results.results
-    await setAllAHAData(result)
-    await setTotalData(res.data.data.results.count)
-    await setPageData(res.data.data.results.count / 25)
-    let pageCount = Math.ceil(res.data.data.results.count / 25)
-    await setPageCount(pageCount)
+  const fetchAllAHAData = async () => {
+    await setPage(1)
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    if (props.assessments === "My Assessments") {
+      const res = await api.get(`api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`);
+      const result = res.data.data.results.results
+      await setAllAHAData(result)
+      await setTotalData(res.data.data.results.count)
+      await setPageData(res.data.data.results.count / 25)
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageCount(pageCount)
+    } else {
+      const res = await api.get(`api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`);
+      const result = res.data.data.results.results
+      await setAllAHAData(result)
+      await setTotalData(res.data.data.results.count)
+      await setPageData(res.data.data.results.count / 25)
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageCount(pageCount)
+    }
+
+
+    await setIsLoading(true)
+  };
+
+  const handleChange = async (event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    if (props.assessments === "My Assessments") {
+      const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`);
+      setAllAHAData(res.data.data.results.results);
+      setPage(value)
+    } else {
+      const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`);
+      setAllAHAData(res.data.data.results.results);
+      setPage(value)
+    }
+
+  };
+
+  const handleDelete = async (item) => {
+    console.log(item[1].id)
+    let data = item[1]
+    // let id = item[1].id
+    data.status = "Delete"
+    delete data.ahaAssessmentAttachment
+    console.log(data, "!!!!!!!!!")
+    await setIsLoading(false)
+    const res1 = await api.put(`/api/v1/ahas/${data.id}/`, data).then(response => fetchAllAHAData()).catch(err => console.log(err))
   }
-  
-
-  await setIsLoading(true)
-};
-
-const handleChange = async(event, value) => {
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-    .projectName.projectId;
- const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-  :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-  ? JSON.parse(localStorage.getItem('userDetails')).id
-  : null;
-let struct = "";
-
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
-if(props.assessments === "My Assessments"){
-  const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`);
-    await setAllAHAData(res.data.data.results.results);
-    await setPage(value)
-}else{
-  const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`);
-  await setAllAHAData(res.data.data.results.results);
-  await setPage(value)
-}
-
-};
-
-const handleDelete = async (item) => {
-  console.log(item[1].id)
-  let data = item[1]
-  // let id = item[1].id
-  data.status = "Delete"
-  delete data.ahaAssessmentAttachment
-  console.log(data, "!!!!!!!!!")
-  await setIsLoading(false)
-  const res1 = await api.put(`/api/v1/ahas/${data.id}/`, data).then(response => fetchAllAHAData()).catch(err => console.log(err))
-}
 
 
 
-//   Assigning 'classes' to useStyles()
-const classes = useStyles();
+  //   Assigning 'classes' to useStyles()
+  const classes = useStyles();
 
-useEffect(() => {
-  fetchAllAHAData()
-  setCheckDeletePermission(checkACL('safety-aha', 'delete_aha'));
-  // handleProjectList()
-},[props.projectName.breakDown,props.search,props.assessments,props.status])
+  useEffect(() => {
+    fetchAllAHAData()
+    setCheckDeletePermission(checkACL('safety-aha', 'delete_aha'));
+    // handleProjectList()
+  }, [props.projectName.breakDown, props.search, props.assessments, props.status])
 
 
-  return (
-    <>
-      <Box>
-      {isLoading ? 
-        <Grid className={classes.marginTopBottom}>
-          <div>
-            <div className="gridView">
-            
-        {allAHAData.length > 0  ? Object.entries(allAHAData).map((item, index) => (
-              <Card variant="outlined" className={classes.card}>
-                <CardContent>
-                  <Grid container spacing={3} className={classes.cardContentSection}>
-                    <Grid item md={2} sm={4} xs={12} 
-                      className={classes.userPictureBox}
-                    >
-                      <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(e)} >
-                        <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} /> {item[1].username}
-                      </Button>
-                    </Grid>
-                    <Link
-                      onClick={(e) => handleSummaryPush(index)}
-                      className={classes.cardLinkAction}
-                    >
-                    <Grid item xs={12}>
+  const AllCardData = (item, index) => {
+    console.log(item, 'itemmmmm');
+    const [showGrid, setShowGrid] = useState(false);
+    const [hidden, setHidden] = useState(false);
+    // const [hiddenn, setHiddenn] = useState(false);
+    // const [openAttachment, setopenAttachment] = React.useState(false);
+
+    function handleVisibility() {
+      setShowGrid(true);
+      setHidden(!hidden);
+    };
+
+    // function handleVisibilityComments() {
+    //   setCommentsOpen(true);
+    //   setHiddenn(!hiddenn);
+    // };
+
+    function handleAttachClose() {
+      setShowGrid(false);
+    };
+
+    function handleAttachClick() {
+      setShowGrid(!open);
+    };
+
+    function handleAttachOpen() {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    }
+    return (
+      <>
+        <Card variant="outlined" className={classes.card}>
+          <CardContent>
+            <Grid container spacing={3} className={classes.cardContentSection}>
+              <Grid item md={2} sm={4} xs={12}
+                className={classes.userPictureBox}
+              >
+                <Button className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(e)} >
+                  <img src={item.item.avatar !== null ? item.item.avatar : paceLogoSymbol} className={classes.userImage} /> {item.item.username}
+                </Button>
+              </Grid>
+              <Link
+                onClick={(e) => handleSummaryPush(item.index)}
+                className={classes.cardLinkAction}
+              >
+                <Grid item xs={12}>
+                  <Grid container spacing={3} alignItems="flex-start">
+                    <Grid item sm={12} xs={12} className={classes.listHeadColor}>
                       <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item sm={12} xs={12} className={classes.listHeadColor}>
-                          <Grid container spacing={3} alignItems="flex-start">
-                            <Grid item md={10} sm={12} xs={12}>
-                              <Typography
-                                 className={classes.title}
-                                 variant="h6"
-                              >
-                      {item[1]["description"]}
-                              </Typography>
-                              <Typography
-                                display="inline"
-                                className={classes.listingLabelName}
-                              >
-                                Number: <span><Link
-                                  onClick={(e) => handleSummaryPush(index)}
-                                  variant="h6"
-                                  className={classes.mLeftfont}
-                                >
-                                <span className={classes.listingLabelValue}>{item[1]["ahaNumber"]}</span>
-                                </Link></span>
-                              </Typography>
-                              <span item xs={1} className={classes.sepHeightOne}></span>
-                              <Typography
-                                variant="body1"
-                                gutterBottom
-                                display="inline"
-                                color="textPrimary"
-                                className={classes.listingLabelName}
-                              >
-                                Category: <span className={classes.listingLabelValue}>AHA</span>
-                              </Typography>
-                              <span item xs={1} className={classes.sepHeightOne}></span>
-                              <Typography
-                                variant="body1"
-                                gutterBottom
-                                display="inline"
-                                color="textPrimary"
-                                className={classes.listingLabelName}
-                              >
-                                Stage: <span className={classes.listingLabelValue}>{item[1].ahaStage} <img src={item[1].ahaStage === "Open" ? preplanning : completed_small} className={classes.smallImage} /></span>
-                                <span item xs={1} className={classes.sepHeightOne}></span>
-                                Status: <span className={classes.listingLabelValue}>{item[1].ahaStatus} <img src={item[1].ahaStatus === "Open" ? preplanning : completed_small} className={classes.smallImage} /></span>
-                              </Typography>
-                            
-                            </Grid>
-                          </Grid>
+                        <Grid item md={10} sm={12} xs={12}>
+                          <Typography
+                            className={classes.title}
+                            variant="h6"
+                          >
+                            {item.item.description}
+                          </Typography>
+                          <Typography
+                            display="inline"
+                            className={classes.listingLabelName}
+                          >
+                            Number: <span><Link
+                              onClick={(e) => handleSummaryPush(item.index)}
+                              variant="h6"
+                              className={classes.mLeftfont}
+                            >
+                              <span className={classes.listingLabelValue}>{item.item.ahaNumber}</span>
+                            </Link></span>
+                          </Typography>
+                          <span item xs={1} className={classes.sepHeightOne}></span>
+                          <Typography
+                            variant="body1"
+                            gutterBottom
+                            display="inline"
+                            color="textPrimary"
+                            className={classes.listingLabelName}
+                          >
+                            Category: <span className={classes.listingLabelValue}>AHA</span>
+                          </Typography>
+                          <span item xs={1} className={classes.sepHeightOne}></span>
+                          <Typography
+                            variant="body1"
+                            gutterBottom
+                            display="inline"
+                            color="textPrimary"
+                            className={classes.listingLabelName}
+                          >
+                            Stage: <span className={classes.listingLabelValue}>{item.item.ahaStage} <img src={item.ahaStage === "Open" ? preplanning : completed_small} className={classes.smallImage} /></span>
+                            <span item xs={1} className={classes.sepHeightOne}></span>
+                            Status: <span className={classes.listingLabelValue}>{item.item.ahaStatus} <img src={item.ahaStatus === "Open" ? preplanning : completed_small} className={classes.smallImage} /></span>
+                          </Typography>
+
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item sm={12} xs={12}>
-                    <Grid container spacing={3}>  
+                  </Grid>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Grid container spacing={3}>
                     <Grid item md={3} sm={6} xs={12}>
                       <Typography
                         variant="body1"
@@ -721,7 +754,7 @@ useEffect(() => {
                         color="textPrimary"
                         className={classes.listingLabelName}
                       >
-                        Work area: 
+                        Work area:
                       </Typography>
 
                       <Typography
@@ -729,7 +762,7 @@ useEffect(() => {
                         className={classes.listingLabelValue}
                       >
                         {/* {item[1]["incidentReportedByName"]} */}
-                        {item[1].workArea}
+                        {item.workArea}
                       </Typography>
                     </Grid>
                     <Grid item md={3} sm={6} xs={12}>
@@ -742,10 +775,10 @@ useEffect(() => {
                         Location:
                       </Typography>
                       <Typography
-                        
+
                         className={classes.listingLabelValue}
                       >
-                      {item[1].location}
+                        {item.item.location}
                       </Typography>
                     </Grid>
 
@@ -762,9 +795,9 @@ useEffect(() => {
                       <Typography
                         className={classes.listingLabelValue}
                       >
-                      {moment(item[1]["createdAt"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                )}                     
+                        {moment(item.item.createdAt).format(
+                          "Do MMMM YYYY, h:mm:ss a"
+                        )}
                       </Typography>
                     </Grid>
 
@@ -779,16 +812,16 @@ useEffect(() => {
                       </Typography>
 
                       <Typography
-                        
+
                         className={classes.listingLabelValue}
                       >
-                       {item[1]["createdByName"]}
+                        {item.item.createdByName}
                       </Typography>
                     </Grid>
-                    </Grid>
-                    </Grid>
+                  </Grid>
+                </Grid>
 
-                    {/* <Grid item sm={2} xs={12}>
+                {/* <Grid item sm={2} xs={12}>
                       <Typography
                         variant="h6"
                         color="textPrimary"
@@ -803,33 +836,41 @@ useEffect(() => {
                         29 Dec 2020
                       </Typography>
                     </Grid> */}
-                    </Link>
-                  </Grid>
-                </CardContent>
-                <Divider />
-                <CardActions className={Incidents.cardActions}>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="flex-end"
-                    alignItems="left"
-                  >
-                    <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                    <Typography
-                        variant="body1"
-                        display="inline"
-                        color="textPrimary"
+              </Link>
+            </Grid>
+          </CardContent>
+          <Divider />
+          <CardActions className={Incidents.cardActions}>
+            <Grid
+              container
+              spacing={2}
+              justify="flex-end"
+              alignItems="left"
+            >
+              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                <Typography
+                  variant="body1"
+                  display="inline"
+                  color="textPrimary"
+                >
+                  <AttachmentIcon className={classes.mright5} />
+                  Attachments:
+                </Typography>
 
-                      >
-                        <AttachmentIcon className={classes.mright5} />
-                          Attachments: {" "}
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        {/* <Link href="#" color="secondary" className={classes.mLeftR5}> */}
-                        {item[1].attachmentCount}
-                        {/* </Link> */}
-                      </Typography>
-                      {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                <Typography variant="body2" display="inline">
+                  <span>
+                    <Link
+                      // href="#"
+                      onClick={item.item.attachmentCount && handleVisibility}
+                      color="secondary"
+                      aria-haspopup="true"
+                      className={classes.mLeftR5}
+                    >
+                      {item.item.attachmentCount}
+                    </Link>
+                  </span>
+                </Typography>
+                {/* <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography
                         variant="body1"
                         display="inline"
@@ -842,136 +883,193 @@ useEffect(() => {
                       <Typography variant="body2" display="inline" className={classes.mLeft}>
                         <Link href="#" color="secondary" className={classes.mLeft}>{item[1].commentsCount}</Link>
                       </Typography> */}
-                    </Grid>
+              </Grid>
 
-                    <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
-                      <div className={classes.floatR}>
-                      {/* <Typography variant="body1" display="inline">
+              <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
+                <div className={classes.floatR}>
+                  {/* <Typography variant="body1" display="inline">
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network view</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body1" display="inline">
                         <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
                       </Typography> */}
-                      {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body1" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography> */}
-                      {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body1" display="inline">
                       <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                       </Typography> */}
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
+                  <span item xs={1} className={classes.sepHeightTen}></span>
+                  <Typography variant="body1" display="inline">
 
-                      {!checkDeletePermission
-                        ? (
+                    {!checkDeletePermission
+                      ? (
+                        <DeleteForeverOutlinedIcon
+                          className={classes.iconteal}
+                          style={{
+                            color: '#c0c0c0',
+                            cursor: 'not-allowed'
+                          }}
+                        />
+                      )
+                      : (
+                        <Link
+                          href="#"
+                          className={classes.mLeftR5}
+                        >
                           <DeleteForeverOutlinedIcon
                             className={classes.iconteal}
-                            style={{
-                              color: '#c0c0c0',
-                              cursor: 'not-allowed'
-                            }}
+                            onClick={(e) => handleDelete(item.item)}
                           />
-                        )
-                        : (
-                          <Link
-                            href="#"
-                            className={classes.mLeftR5}
-                          >
-                            <DeleteForeverOutlinedIcon
-                              className={classes.iconteal}
-                              onClick={(e) => handleDelete(item)}
-                            />
-                          </Link>
+                        </Link>
                       )}
-                        {/* <Link href="#" className={classes.mLeftR5}>
+                    {/* <Link href="#" className={classes.mLeftR5}>
                           <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
                         </Link> */}
-                      </Typography>
-                      </div>
-                    </Grid>
-                  </Grid>
-                </CardActions>
-              </Card>)) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
-                      Sorry, no matching records found
-              </Typography>}
+                  </Typography>
+                </div>
+              </Grid>
+            </Grid>
+          </CardActions>
+        </Card>
 
-              <div>
-                <Dialog
-                  open={myUserPOpen}
-                  onClose={handleMyUserPClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                  fullWidth={true}
-                  maxWidth={'sm'}
-                >
-                  <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
+        {item.item.attachmentCount ?
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            hidden={!hidden}
+            onBlur={handleAttachClose}
+            onClick={handleAttachClick}
+            onClose={handleAttachClose}
+            onFocus={handleAttachOpen}
+            onMouseEnter={handleAttachOpen}
+            onMouseLeave={handleAttachClose}
+            open={showGrid}
+            className="paddTBRemove attactmentShowSection"
+          >
+            <Paper elevation={1} className="cardSectionBottom">
+              <Grid container spacing={3}>
+                <Grid item md={12} sm={12} xs={12}>
+                  <List>
+                    <ListItem>
                       <Grid
-                        item md={12} sm={12} xs={12}
-                        className={classes.usrProfileListBox}
+                        item
+                        md={12}
+                        sm={12}
+                        xs={12}
                       >
-                        <h3>Basic Information</h3>
-                        <List>
-                          <ListItem>
-                            {/* <ListItemAvatar>
+                        <div className="attachFileThumb">
+                          <Attachment src={item.item.ahaAssessmentAttachment} value={item.item.ahaAssessmentAttachment} />
+                        </div>
+                      </Grid>
+                    </ListItem>
+                  </List>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+          : ''
+        }
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Box>
+        {isLoading ?
+          <Grid className={classes.marginTopBottom}>
+            <div>
+              <div className="gridView">
+                {allAHAData.length > 0 ? allAHAData.map((item, index) => {
+                  // console.log(item);
+                  return (
+                    <AllCardData item={item} index={index} />
+                  )
+                })
+                  : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+                    Sorry, no matching records found
+                  </Typography>}
+
+                <div>
+                  <Dialog
+                    open={myUserPOpen}
+                    onClose={handleMyUserPClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    fullWidth={true}
+                    maxWidth={'sm'}
+                  >
+                    <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        <Grid
+                          item md={12} sm={12} xs={12}
+                          className={classes.usrProfileListBox}
+                        >
+                          <h3>Basic Information</h3>
+                          <List>
+                            <ListItem>
+                              {/* <ListItemAvatar>
                               <Avatar>
                                 <ImageIcon />
                               </Avatar>
                             </ListItemAvatar> */}
-                            <ListItemText primary="Full Name:" secondary="Prakash" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Organization Role:" secondary="N/A" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Role Title:" secondary="N/A" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
-                          </ListItem>
-                        </List>
-                      </Grid>
+                              <ListItemText primary="Full Name:" secondary="Prakash" />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary="Organization Role:" secondary="N/A" />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary="Role Title:" secondary="N/A" />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
+                            </ListItem>
+                          </List>
+                        </Grid>
 
-                      <Grid
-                        item md={12} sm={12} xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Company Information</h3>
-                        <List>
-                          <ListItem>
-                            <ListItemText primary="Company Name:" secondary="JWIL" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Location:" secondary="Italy" />
-                          </ListItem>
-                        </List>
-                      </Grid>
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                        <Grid
+                          item md={12} sm={12} xs={12}
+                          className={classes.usrProfileListBox}
+                        >
+                          <h3>Company Information</h3>
+                          <List>
+                            <ListItem>
+                              <ListItemText primary="Company Name:" secondary="JWIL" />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary="Location:" secondary="Italy" />
+                            </ListItem>
+                          </List>
+                        </Grid>
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleMyUserPClose} color="primary" variant="contained" autoFocus>
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
+
               </div>
-
             </div>
-          </div>
-          <div className={classes.pagination}>
-      {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
-            <Pagination count={pageCount} page={page} onChange={handleChange} />
-          </div>
-
-        </Grid>  
-        : 
-        <Loader/>
+            <div className={classes.pagination}>
+              {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+              <Pagination count={pageCount} page={page} onChange={handleChange} />
+            </div>
+          </Grid>
+          :
+          <Loader />
         }
       </Box>
     </>
