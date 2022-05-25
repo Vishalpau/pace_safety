@@ -110,8 +110,8 @@ function ObservationBulkupload() {
   const [messageShow, setMessageShow] = useState('')
   const [uploadBtn, setUploadBtn] = useState(false)
   const handleUpload = (e) => {
-    let fileNameExt = e.currentTarget.files[0].name.split(".").pop();
-    if (fileNameExt == "pdf") {
+    let fileNameExt = e.currentTarget.files[0];
+    if (fileNameExt) {
       let temp = { ...uploadFrom }
       temp.filename = e.currentTarget.files[0];
       setUploadForm(temp)
@@ -119,7 +119,7 @@ function ObservationBulkupload() {
       setUploadBtn(true)
     } else {
       setUploadBtn(false)
-      setFileError("Please choose .pdf file")
+      setFileError("Please choose a file")
     }
   }
 
@@ -219,7 +219,7 @@ function ObservationBulkupload() {
                         <input
                           type="file"
                           id="attachment"
-                          accept=".pdf"
+                          accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                           onChange={(e) => {
                             handleUpload(e);
                           }} />
