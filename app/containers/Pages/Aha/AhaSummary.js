@@ -936,15 +936,22 @@ function AhaSummary(props) {
                                       <FormLabel className="checkRadioLabel" component="legend">Attachment</FormLabel>
                                       <Grid item md={12} sm={12} xs={12}>
                                         <div className="attachFileThumb">
-                                          {ahaData.ahaAssessmentAttachment ===
-                                            null ? "-" : typeof ahaData.ahaAssessmentAttachment ===
-                                              "string" ? (
-                                            <Attachment
-                                              value={
-                                                ahaData.ahaAssessmentAttachment
-                                              }
-                                            />
-                                          ) : "-"}
+                                          {ahaData.files ? (
+                                            <Typography style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }} className="viewLabelValue">
+                                              {typeof ahaData.files === 'object' ? (
+                                                <>
+
+                                                  {/* Mapping the files */}
+
+                                                  {
+                                                    ahaData.files.map((file) => (
+                                                      <Attachment key={file.id} value={file.fileName} type={file.fileType} />
+                                                    ))
+                                                  }
+                                                </>
+                                              ) : null}
+                                            </Typography>
+                                          ) : ('-')}
                                         </div>
                                       </Grid>
                                     </Grid>

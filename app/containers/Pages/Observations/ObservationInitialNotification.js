@@ -11,7 +11,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
@@ -47,6 +46,7 @@ import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
 import InitialNotificationValidator from '../../Validator/Observation/InitialNotificationValidation';
 import Loader from '../Loader';
 import Acl from '../../../components/Error/acl';
+import MultiAttachment from '../../MultiAttachment/MultiAttachment';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -211,7 +211,6 @@ const ObservationInitialNotification = (props) => {
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const [error, setError] = useState({});
   const [addressSituation, setAddressSituation] = useState(true);
   const [tagData, setTagData] = useState([]);
@@ -448,36 +447,36 @@ const ObservationInitialNotification = (props) => {
     // we are convert form into FormData
     const data = new FormData();
     data.append('fkCompanyId', form.fkCompanyId),
-    data.append('fkProjectId', form.fkProjectId),
-    data.append('fkProjectStructureIds', form.fkProjectStructureIds),
-    data.append('observationType', form.observationType),
-    data.append('observationClassification', form.observationClassification),
-    data.append('stopWork', form.stopWork),
-    data.append('nearMiss', form.nearMiss),
-    data.append('acceptAndPledge', form.acceptAndPledge),
-    data.append('personRecognition', form.personRecognition),
-    data.append('observationTitle', form.observationTitle),
-    data.append('observationDetails', form.observationDetails),
-    data.append('isSituationAddressed', form.isSituationAddressed),
-    data.append('actionTaken', form.actionTaken),
-    data.append('location', form.location),
-    data.append('observedAt', handelTime(form.observedAt)),
-    data.append('isNotifiedToSupervisor', form.isNotifiedToSupervisor),
-    data.append('isSupervisorPresent', form.isSupervisorPresent),
-    data.append('assigneeName', form.assigneeName),
-    data.append('assigneeId', form.assigneeId),
-    data.append('shift', form.shift),
-    data.append('departmentName', form.departmentName),
-    data.append('departmentId', form.departmentId),
-    data.append('reportedById', ((form.reportedById && (form.reportedById != undefined)) ? form.reportedById : 0)),
-    data.append('reportedByName', form.reportedByName),
-    data.append('reportedByDepartment', form.reportedByDepartment),
-    data.append('reportedDate', handelTime(form.reportedDate)),
-    data.append('reportedByBadgeId', form.reportedByBadgeId),
-    data.append('closedById', form.closedById),
-    data.append('closedByName', form.closedByName),
-    data.append('notifyToOther', form.notifyToOther),
-    data.append('closedByDepartment', form.closedByDepartment);
+      data.append('fkProjectId', form.fkProjectId),
+      data.append('fkProjectStructureIds', form.fkProjectStructureIds),
+      data.append('observationType', form.observationType),
+      data.append('observationClassification', form.observationClassification),
+      data.append('stopWork', form.stopWork),
+      data.append('nearMiss', form.nearMiss),
+      data.append('acceptAndPledge', form.acceptAndPledge),
+      data.append('personRecognition', form.personRecognition),
+      data.append('observationTitle', form.observationTitle),
+      data.append('observationDetails', form.observationDetails),
+      data.append('isSituationAddressed', form.isSituationAddressed),
+      data.append('actionTaken', form.actionTaken),
+      data.append('location', form.location),
+      data.append('observedAt', handelTime(form.observedAt)),
+      data.append('isNotifiedToSupervisor', form.isNotifiedToSupervisor),
+      data.append('isSupervisorPresent', form.isSupervisorPresent),
+      data.append('assigneeName', form.assigneeName),
+      data.append('assigneeId', form.assigneeId),
+      data.append('shift', form.shift),
+      data.append('departmentName', form.departmentName),
+      data.append('departmentId', form.departmentId),
+      data.append('reportedById', ((form.reportedById && (form.reportedById != undefined)) ? form.reportedById : 0)),
+      data.append('reportedByName', form.reportedByName),
+      data.append('reportedByDepartment', form.reportedByDepartment),
+      data.append('reportedDate', handelTime(form.reportedDate)),
+      data.append('reportedByBadgeId', form.reportedByBadgeId),
+      data.append('closedById', form.closedById),
+      data.append('closedByName', form.closedByName),
+      data.append('notifyToOther', form.notifyToOther),
+      data.append('closedByDepartment', form.closedByDepartment);
     if (form.closedDate !== null && typeof form.closedDate !== 'string') {
       data.append('closedDate', null);
     }
@@ -488,10 +487,10 @@ const ObservationInitialNotification = (props) => {
       data.append('closedoutAttachment', form.closedoutAttachment);
     }
     data.append('supervisorByBadgeId', form.supervisorByBadgeId),
-    data.append('supervisorName', form.supervisorName),
-    data.append('supervisorId', form.supervisorId),
-    data.append('notifyTo', form.notifyTo),
-    data.append('supervisorDepartment', form.supervisorDepartment);
+      data.append('supervisorName', form.supervisorName),
+      data.append('supervisorId', form.supervisorId),
+      data.append('notifyTo', form.notifyTo),
+      data.append('supervisorDepartment', form.supervisorDepartment);
     if (form.attachment !== null && typeof form.attachment !== 'string') {
       data.append('attachment', form.attachment);
     }
@@ -501,10 +500,10 @@ const ObservationInitialNotification = (props) => {
       });
     }
     data.append('status', form.status),
-    data.append('createdBy', form.createdBy),
-    data.append('source', form.source),
-    data.append('vendor', form.vendor),
-    data.append('vendorReferenceId', form.vendorReferenceId);
+      data.append('createdBy', form.createdBy),
+      data.append('source', form.source),
+      data.append('vendor', form.vendor),
+      data.append('vendorReferenceId', form.vendorReferenceId);
     const res = await api.post('/api/v1/observations/', data).then(res => {
       if (res.status === 201 || res.status === 200) {
         const id = res.data.data.results;
@@ -578,40 +577,11 @@ const ObservationInitialNotification = (props) => {
     setCatagory(temp);
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
-  };
+  // Multi select files getter from component
 
-  const handleFile = async (e) => {
-    // Select multiple files
-
-    const TempPpeData = { ...form };
-    const filesArray = e.target.files;
-    const temparray = [];
-    for (let i = 0; i < filesArray.length; i++) {
-      if ((filesArray[i].size <= 1024 * 1024 * 25)) {
-        temparray.push(filesArray[i]);
-      } else {
-        document.getElementById('attachment').value = '';
-        await setOpen(true);
-      }
-    }
-    TempPpeData.files = temparray;
-    await setForm(TempPpeData);
-
-    // Select single attachment
-
-    // if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
-    //   TempPpeData.attachment = e.target.files[0];
-    //   await setForm(TempPpeData);
-    // } else {
-    //   document.getElementById('attachment').value = '';
-    //   await setOpen(true);
-    // }
-  };
+  // const attachmentHandler = (files) => {
+  //   setForm({ ...form, files: files })
+  // }
 
   const handelAddressSituationYes = async (e) => {
     const tempData = { ...form };
@@ -1693,40 +1663,7 @@ const ObservationInitialNotification = (props) => {
                   </Paper>
                 </Grid>
 
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Typography variant="h6" className="sectionHeading">
-                    <svg id="twotone-closed_caption-24px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                      <path id="Path_5090" data-name="Path 5090" d="M0,0H24V24H0Z" fill="none" />
-                      <path id="Path_5091" data-name="Path 5091" d="M18.5,16H7A4,4,0,0,1,7,8H19.5a2.5,2.5,0,0,1,0,5H9a1,1,0,0,1,0-2h9.5V9.5H9a2.5,2.5,0,0,0,0,5H19.5a4,4,0,0,0,0-8H7a5.5,5.5,0,0,0,0,11H18.5Z" fill="#06425c" />
-                    </svg>
-                    {' '}
-                    Attachment
-                  </Typography>
-                </Grid>
-
-                {/* <Grid item md={12} xs={12} className={classes.formBox}> */}
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Paper elevation={1} className="paperSection">
-                    <Grid container spacing={3}>
-                      <input
-                        type="file"
-                        multiple
-                        name="file"
-                        id="attachment"
-                        accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                        onChange={(e) => {
-                          handleFile(e);
-                        }}
-                      />
-                    </Grid>
-                  </Paper>
-                </Grid>
-
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                  <Alert onClose={handleClose} severity="error">
-                    The file(s) you are attaching is bigger than the 25mb.
-                  </Alert>
-                </Snackbar>
+                <MultiAttachment attachmentHandler={(files)=>{setForm({ ...form, files: files })}} />
 
                 <Grid item md={12} xs={12} className="paddBRemove">
                   <FormGroup className={classes.customCheckBoxListCondition}>

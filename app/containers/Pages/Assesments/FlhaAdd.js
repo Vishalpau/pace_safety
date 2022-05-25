@@ -58,6 +58,7 @@ import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
 import validate from '../../Validator/jobFormValidation';
 import Acl from '../../../components/Error/acl';
 import { connect } from "react-redux";
+import MultiAttachment from '../../MultiAttachment/MultiAttachment';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -493,7 +494,8 @@ const FlhaDetails = (props) => {
     source: 'Web',
     vendor: '',
     vendorReferenceId: '',
-    Checked: false
+    Checked: false,
+    files: ''
   };
   const [jobForm, setJobForm] = useState(jobsDefault);
 
@@ -671,6 +673,11 @@ const FlhaDetails = (props) => {
     formDataPost.append('dateTimeFlha', jobForm.dateTimeFlha);
     if (jobForm.attachment != null) {
       formDataPost.append('attachment', jobForm.attachment);
+    }
+    if (jobForm.files !== null && typeof jobForm.files !== 'string') {
+      jobForm.files.map((file) => {
+        formDataPost.append('files', file);
+      });
     }
     formDataPost.append('notifyTo', jobForm.notifyTo);
     formDataPost.append('evacuationPoint', jobForm.evacuationPoint);
@@ -1442,7 +1449,7 @@ const FlhaDetails = (props) => {
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Paper elevation={1} className="paperSection">
                   <Grid container spacing={3}>
-                    <Grid item md={6} sm={6} xs={12}>
+                    {/* <Grid item md={6} sm={6} xs={12}>
                       <FormLabel className="checkRadioLabel" component="legend">Attach files </FormLabel>
                       <Typography className="viewLabelValue">
                         <input
@@ -1454,8 +1461,9 @@ const FlhaDetails = (props) => {
                           }}
                         />
                       </Typography>
-                    </Grid>
+                    </Grid> */}
 
+                    <MultiAttachment attachmentHandler={(files) => { setJobForm({ ...jobForm, files: files }) }} />
 
                     <Grid item md={6} sm={6} xs={6}>
                       <MuiPickersUtilsProvider

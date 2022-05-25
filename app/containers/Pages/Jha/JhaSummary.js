@@ -970,14 +970,30 @@ function JhaSummary(props) {
                                     >
                                       Risk assessment supporting documents
                                     </Typography>
-                                    <Typography title={handelFileName(assessment.jhaAssessmentAttachment)}>
+                                    {/* <Typography title={handelFileName(assessment.jhaAssessmentAttachment)}>
                                       {assessment.jhaAssessmentAttachment != "" &&
                                         typeof assessment.jhaAssessmentAttachment == "string" ? (
                                         <Attachment value={assessment.jhaAssessmentAttachment} />
                                       ) :
                                         "-"
                                       }
-                                    </Typography>
+                                    </Typography> */}
+                                    {assessment.files ? (
+                                      <Typography style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }} className="viewLabelValue">
+                                        {typeof assessment.files === 'object' ? (
+                                          <>
+
+                                            {/* Mapping the files */}
+
+                                            {
+                                              assessment.files.map((file) => (
+                                                <Attachment key={file.id} value={file.fileName} type={file.fileType} />
+                                              ))
+                                            }
+                                          </>
+                                        ) : null}
+                                      </Typography>
+                                    ) : ('-')}
                                   </Grid>
                                   <Grid item xs={12} md={12}>
                                     <Typography

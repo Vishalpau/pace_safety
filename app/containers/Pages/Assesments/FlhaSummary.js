@@ -177,7 +177,7 @@ class SimpleTabs extends React.Component {
     const res = await api.get('api/v1/flhas/' + flhaNumber + '/');
     await this.handelWorkArea1(res.data.data.results )
     await this.setState({ flha: res.data.data.results });
-     
+    console.log(res); 
   }
 
   handelVersion = async () => {
