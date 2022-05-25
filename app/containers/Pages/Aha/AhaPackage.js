@@ -43,6 +43,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 
 import Fonts from 'dan-styles/Fonts.scss';
 import moment from 'moment';
@@ -481,33 +483,45 @@ function AhaPackage(props) {
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+  const [deleteQ, setDeleteQ] = useState(false);
+  const [deleteValue, setDeleteValue] = useState("")
 
   const search = props.search
   const status = props.status
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+
+  const handleClickDeleteAlert = (value) => {
+    setDeleteQ(true);
+    setDeleteValue(value);
+    // handleDelete(value);
+  };
+
+  const handleCloseDeleteAlert = () => {
+    setDeleteQ(false);
+    setDeleteValue("");
   };
 
   useEffect(() => {
     console.log(allAHAData, 'allAHahData');
   }, [allAHAData]);
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
-  const [incidents] = useState([]);
-  const [listToggle, setListToggle] = useState(false);
+  // const [incidents] = useState([]);
+  // const [listToggle, setListToggle] = useState(false);
 
-  const handelView = (e) => {
-    setListToggle(false);
-  };
-  const handelViewTabel = (e) => {
-    setListToggle(true);
-  };
+  // const handelView = (e) => {
+  //   setListToggle(false);
+  // };
+  // const handelViewTabel = (e) => {
+  //   setListToggle(true);
+  // };
 
   const [value, setValue] = React.useState(2);
-
 
   //dialog
   const [MyFavopen, setMyFavOpen] = React.useState(false);
@@ -622,21 +636,21 @@ function AhaPackage(props) {
       setAllAHAData(res.data.data.results.results);
       setPage(value)
     }
-
   };
 
-  const handleDelete = async (item) => {
-    console.log(item[1].id)
-    let data = item[1]
-    // let id = item[1].id
-    data.status = "Delete"
-    delete data.ahaAssessmentAttachment
-    console.log(data, "!!!!!!!!!")
-    await setIsLoading(false)
-    const res1 = await api.put(`/api/v1/ahas/${data.id}/`, data).then(response => fetchAllAHAData()).catch(err => console.log(err))
-  }
-
-
+  const handleDelete = async () => {
+    console.log('hiiiiiiiiiiiiii');
+    let temp = { ...deleteValue }
+    temp.status = "Delete";
+    let id = deleteValue.id;
+    setIsLoading(false);
+    const res = await api.put(`/api/v1/ahas/${id}/`, temp)
+      .then((response) => {
+        fetchAllAHAData();
+        handleCloseDeleteAlert()
+      })
+      .catch((error) => console.log(error));
+  };
 
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
@@ -922,7 +936,7 @@ function AhaPackage(props) {
                         >
                           <DeleteForeverOutlinedIcon
                             className={classes.iconteal}
-                            onClick={(e) => handleDelete(item.item)}
+                            onClick={(e) => handleClickDeleteAlert(item.item)}
                           />
                         </Link>
                       )}
@@ -996,70 +1010,101 @@ function AhaPackage(props) {
                     Sorry, no matching records found
                   </Typography>}
 
-                <div>
-                  <Dialog
-                    open={myUserPOpen}
-                    onClose={handleMyUserPClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    fullWidth={true}
-                    maxWidth={'sm'}
-                  >
-                    <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        <Grid
-                          item md={12} sm={12} xs={12}
-                          className={classes.usrProfileListBox}
-                        >
-                          <h3>Basic Information</h3>
-                          <List>
-                            <ListItem>
-                              {/* <ListItemAvatar>
+                {/* <div> */}
+                <Dialog
+                  open={myUserPOpen}
+                  onClose={handleMyUserPClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  fullWidth={true}
+                  maxWidth={'sm'}
+                >
+                  <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Grid
+                        item md={12} sm={12} xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Basic Information</h3>
+                        <List>
+                          <ListItem>
+                            {/* <ListItemAvatar>
                               <Avatar>
                                 <ImageIcon />
                               </Avatar>
                             </ListItemAvatar> */}
-                              <ListItemText primary="Full Name:" secondary="Prakash" />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Organization Role:" secondary="N/A" />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Role Title:" secondary="N/A" />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
-                            </ListItem>
-                          </List>
-                        </Grid>
+                            <ListItemText primary="Full Name:" secondary="Prakash" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Organization Role:" secondary="N/A" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Role Title:" secondary="N/A" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
+                          </ListItem>
+                        </List>
+                      </Grid>
 
+                      <Grid
+                        item md={12} sm={12} xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Company Information</h3>
+                        <List>
+                          <ListItem>
+                            <ListItemText primary="Company Name:" secondary="JWIL" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Location:" secondary="Italy" />
+                          </ListItem>
+                        </List>
+                      </Grid>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleMyUserPClose} color="primary" variant="contained" autoFocus>
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                {/* </div> */}
+
+                <Dialog
+                  open={deleteQ}
+                  onClose={handleCloseDeleteAlert}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Grid container spacing={3}>
                         <Grid
-                          item md={12} sm={12} xs={12}
-                          className={classes.usrProfileListBox}
+                          item
+                          md={12}
+                          xs={12}
                         >
-                          <h3>Company Information</h3>
-                          <List>
-                            <ListItem>
-                              <ListItemText primary="Company Name:" secondary="JWIL" />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Location:" secondary="Italy" />
-                            </ListItem>
-                          </List>
+                          <FormControl component="fieldset">
+                            <FormLabel component="legend" className="checkRadioLabel">Are you sure you want to delete this question?</FormLabel>
+                          </FormControl>
                         </Grid>
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleMyUserPClose} color="primary" variant="contained" autoFocus>
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </div>
+                        <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+                          <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={() => handleDelete()}>
+                            Yes
+                          </Button>
+                          <Button color="secondary" variant="contained" className="buttonStyle custmCancelBtn" onClick={() => handleCloseDeleteAlert()}>
+                            No
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </DialogContentText>
+                  </DialogContent>
+                </Dialog>
 
               </div>
             </div>
@@ -1070,6 +1115,7 @@ function AhaPackage(props) {
           </Grid>
           :
           <Loader />
+
         }
       </Box>
     </>

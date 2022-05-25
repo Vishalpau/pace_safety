@@ -28,6 +28,7 @@ import {
 import ActionTracker from '../../Forms/ActionTracker';
 import ActionShow from '../../Forms/ActionShow';
 import Acl from '../../../components/Error/acl';
+import { checkACL } from '../../../utils/helper';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -522,7 +523,9 @@ Audit check
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                       handelShowData={setActions}
                                     />
-                                    {idd1.map(i1 => (
+                                    {
+                                    checkACL('action_tracker-actions', 'view_actions') &&
+                                    idd1.map(i1 => (
                                       <Typography className={classes.labelValueName}>
                                         <ActionShow
                                           action={{ id: i1.id, number: i1.actionNumber }}
