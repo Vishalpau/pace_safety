@@ -353,15 +353,15 @@ const Checks = (props) => {
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
-    console.log('result', result);
+    // console.log('result', result);
     const a = result.filter(a => a.status !== 'Inactive');
-    console.log(a, 'aaaaaaaaaaaaa');
+    // console.log(a, 'aaaaaaaaaaaaa');
     setColorData(a)
   }
 
-  useEffect(() => {
-    console.log(colordata, 'colordata');
-  }, [colordata])
+  // useEffect(() => {
+  //   console.log(colordata, 'colordata');
+  // }, [colordata])
 
   const radioDecide = ["Yes", "No", "N/A"];
 

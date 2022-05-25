@@ -640,9 +640,23 @@ function AhaPackage(props) {
 
   const handleDelete = async () => {
     console.log('hiiiiiiiiiiiiii');
-    let temp = { ...deleteValue }
-    temp.status = "Delete";
+    // let temp = { ...deleteValue }
+    let temp = {
+      fkCompanyId: deleteValue.fkCompanyId,
+      fkProjectId: deleteValue.fkProjectId,
+      fkProjectStructureIds: deleteValue.fkProjectStructureIds,
+      location: deleteValue.location,
+      assessmentDate: deleteValue.assessmentDate,
+      permitToPerform: deleteValue.permitToPerform,
+      description: deleteValue.description,
+      classification: deleteValue.classification,
+      status: deleteValue.status,
+      createdBy: deleteValue.createdBy,
+      status: deleteValue.status 
+    }
+    // temp.status = "Delete";
     let id = deleteValue.id;
+    console.log(temp);
     setIsLoading(false);
     const res = await api.put(`/api/v1/ahas/${id}/`, temp)
       .then((response) => {
@@ -663,7 +677,6 @@ function AhaPackage(props) {
 
 
   const AllCardData = (item, index) => {
-    console.log(item, 'itemmmmm');
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     // const [hiddenn, setHiddenn] = useState(false);
