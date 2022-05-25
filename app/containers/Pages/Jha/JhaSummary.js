@@ -58,6 +58,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Loader from "../Loader";
 import { connect } from "react-redux";
+import { checkACL } from '../../../utils/helper';
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -1090,7 +1091,8 @@ function JhaSummary(props) {
                                     </Typography>
 
                                   </Grid>
-                                  {approvalActionData.length > 0 ?
+                                  {checkACL('action_tracker-actions', 'view_actions') &&
+                                    approvalActionData.length > 0 ?
                                     <Grid item md={12} xs={12}>
                                       <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
                                       <Table component={Paper}>
@@ -1121,8 +1123,8 @@ function JhaSummary(props) {
                                         </TableBody>
                                       </Table>
                                     </Grid>
-                                    : null}
-
+                                    : null
+                                  }
                                 </Grid>
                               </Paper>
                             </Grid>

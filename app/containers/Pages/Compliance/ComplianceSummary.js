@@ -242,7 +242,7 @@ function ComplianceSummary(props) {
 
   // push the update compliance (update button)
   const handleNewComplianceUpdatePush = async (e) => {
-    localStorage.setItem('compliance-navigation',e.target.name);
+    localStorage.setItem('compliance-navigation', e.target.name);
   };
 
   //for checked and unchecked of groups & subgroups
@@ -442,7 +442,6 @@ function ComplianceSummary(props) {
     );
     const result = res.data.data.results;
     setQueData(result)
-
   };
 
   // get created action on compliance module
@@ -463,7 +462,6 @@ function ComplianceSummary(props) {
     const result = res.data.data.results
     setColorData(result)
   }
-
 
   // use effect call
   useEffect(() => {
@@ -1031,17 +1029,11 @@ function ComplianceSummary(props) {
                                                         }
                                                       })
                                                     }
-
-                                                    {/* )
-                                                    }
-                                                    )} */}
                                                   </FormGroup>
                                                 </Grid>
                                               )
                                             }
                                           )}
-
-
                                         </Grid>
                                       </Grid>
                                     </Grid>
@@ -1152,8 +1144,6 @@ function ComplianceSummary(props) {
                                             {
                                               groupNamrHandler(val)
                                             }
-
-
                                             {val.checkListValues.map((subGrpData, index) => {
                                               // console.log(subGrpData, 'subjiii');
                                               return (
@@ -1280,7 +1270,8 @@ function ComplianceSummary(props) {
                                                                 </Grid>
                                                               }
 
-                                                              {actionData.filter(val => val.id == value.questionId)[0] && actionData.filter(val => val.id == value.questionId)[0].action.length ?
+                                                              {checkACL('action_tracker-actions', 'view_actions') &&
+                                                                actionData.filter(val => val.id == value.questionId)[0] && actionData.filter(val => val.id == value.questionId)[0].action.length ?
                                                                 <Grid
                                                                   item
                                                                   md={12}
@@ -1363,8 +1354,9 @@ function ComplianceSummary(props) {
                                                                     </>
                                                                   ))}
                                                                 </Grid>
-                                                                : ''}
-
+                                                                : ''
+                                                              }
+                                                              
                                                               {value.attachment &&
                                                                 <Grid
                                                                   item
@@ -1654,7 +1646,7 @@ function ComplianceSummary(props) {
                       )}
                     </ListItemIcon>
                     <NavLink
-                      style={{textDecoration: 'none', color: 'white', fontSize: '14px',fontFamily: 'Montserrat-Regular', lineHeight: '18px', margin: '4px 0'}}
+                      style={{ textDecoration: 'none', color: 'white', fontSize: '14px', fontFamily: 'Montserrat-Regular', lineHeight: '18px', margin: '4px 0' }}
                       onClick={(e) => handleNewComplianceUpdatePush(e)}
                       to={`/app/pages/compliance/compliance-details/${localStorage.getItem(
                         "fkComplianceId"

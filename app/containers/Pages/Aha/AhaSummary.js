@@ -1054,8 +1054,8 @@ function AhaSummary(props) {
                                         </Grid>
                                       </Grid>
                                     </Grid>
-
-                                    {approvalActionData.length > 0 ?
+                                    {checkACL('action_tracker-actions', 'view_actions') &&
+                                      approvalActionData.length > 0 ?
                                       <Grid item md={12} xs={12}>
                                         <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
                                         <Table component={Paper}>
@@ -1083,9 +1083,8 @@ function AhaSummary(props) {
                                             }
                                           </TableBody>
                                         </Table>
-                                      </Grid> : null}
-
-
+                                      </Grid> : null
+                                    }
                                   </Grid>
                                 </Paper>
                               </Grid>

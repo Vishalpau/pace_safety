@@ -93,6 +93,7 @@ import {
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
 import { connect } from "react-redux";
 import Attachment from "../../../../containers/Attachment/Attachment";
+import { checkACL } from "../../../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -360,7 +361,7 @@ const Checks = (props) => {
 
   useEffect(() => {
     console.log(colordata, 'colordata');
-  },[colordata])
+  }, [colordata])
 
   const radioDecide = ["Yes", "No", "N/A"];
 
@@ -1111,137 +1112,140 @@ const Checks = (props) => {
                                                         }
                                                       />
                                                     </Grid>}
-                                                  <Grid item md={12} xs={12}>
-                                                    <FormLabel
-                                                      className="checkRadioLabel"
-                                                      component="legend"
-                                                    >
-                                                      Create Action{" "}
-                                                    </FormLabel>
-                                                    <Grid
-                                                      item
-                                                      xs={6}
-                                                      className={classes.createHazardbox}
-                                                    >
-                                                      <ActionTracker
-                                                        actionContext="audit:question"
-                                                        enitityReferenceId={`${localStorage.getItem(
-                                                          "fkComplianceId"
-                                                        )}:${value.id}`}
-                                                        setUpdatePage={setUpdatePage}
-                                                        fkCompanyId={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "company"
-                                                            )
-                                                          ).fkCompanyId
-                                                        }
-                                                        fkProjectId={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "projectName"
-                                                            )
-                                                          ).projectName.projectId
-                                                        }
-                                                        fkProjectStructureIds={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "commonObject"
-                                                            )
-                                                          )["audit"]["projectStruct"]
-                                                        }
-                                                        createdBy={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "userDetails"
-                                                            )
-                                                          ).id
-                                                        }
-                                                        updatePage={updatePage}
-                                                        handelShowData={
-                                                          handelActionTracker
-                                                        }
-                                                      />
+                                                  {checkACL('action_tracker-actions', 'add_actions') &&
+                                                    <Grid item md={12} xs={12}>
+                                                      <FormLabel
+                                                        className="checkRadioLabel"
+                                                        component="legend"
+                                                      >
+                                                        Create Action{" "}
+                                                      </FormLabel>
+                                                      <Grid
+                                                        item
+                                                        xs={6}
+                                                        className={classes.createHazardbox}
+                                                      >
+                                                        <ActionTracker
+                                                          actionContext="audit:question"
+                                                          enitityReferenceId={`${localStorage.getItem(
+                                                            "fkComplianceId"
+                                                          )}:${value.id}`}
+                                                          setUpdatePage={setUpdatePage}
+                                                          fkCompanyId={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "company"
+                                                              )
+                                                            ).fkCompanyId
+                                                          }
+                                                          fkProjectId={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "projectName"
+                                                              )
+                                                            ).projectName.projectId
+                                                          }
+                                                          fkProjectStructureIds={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "commonObject"
+                                                              )
+                                                            )["audit"]["projectStruct"]
+                                                          }
+                                                          createdBy={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "userDetails"
+                                                              )
+                                                            ).id
+                                                          }
+                                                          updatePage={updatePage}
+                                                          handelShowData={
+                                                            handelActionTracker
+                                                          }
+                                                        />
+                                                      </Grid>
                                                     </Grid>
-                                                  </Grid>
-                                                  <Grid item md={12} xs={12}>
-                                                    <Table
-                                                      component={Paper}
-                                                      className="simpleTableSection"
-                                                    >
-                                                      {/* {actionData.filter(val => val.id==value.id).length} */}
-                                                      {actionData.filter(val => val.id == value.id)[0] && actionData.filter(val => val.id == value.id)[0].action.length ?
-                                                        <TableHead>
-                                                          <TableRow>
-                                                            <TableCell className="tableHeadCellFirst">
-                                                              Action number
-                                                            </TableCell>
-                                                            <TableCell className="tableHeadCellSecond">
-                                                              Action title
-                                                            </TableCell>
-                                                          </TableRow>
-                                                        </TableHead>
-                                                        : ''}
-                                                      <TableBody>
-                                                        {actionData.map((val) => (
-                                                          <>
-
-                                                            {val.id == value.id ? (
-                                                              <>
-                                                                {val.action.length > 0 &&
-                                                                  val.action.map(
-                                                                    (valueAction) => (
-                                                                      <TableRow>
-                                                                        <TableCell align="left">
-                                                                          <Link
-                                                                            className={
-                                                                              classes.actionLinkAudit
-                                                                            }
-                                                                            display="block"
-                                                                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                              localStorage.getItem(
-                                                                                "BaseUrl"
-                                                                              )
-                                                                            )[
-                                                                              "actionClientID"
-                                                                            ]
-                                                                              }&response_type=code&companyId=${JSON.parse(
+                                                  }
+                                                  {checkACL('action_tracker-actions', 'view_actions') &&
+                                                    <Grid item md={12} xs={12}>
+                                                      <Table
+                                                        component={Paper}
+                                                        className="simpleTableSection"
+                                                      >
+                                                        {/* {actionData.filter(val => val.id==value.id).length} */}
+                                                        {actionData.filter(val => val.id == value.id)[0] && actionData.filter(val => val.id == value.id)[0].action.length ?
+                                                          <TableHead>
+                                                            <TableRow>
+                                                              <TableCell className="tableHeadCellFirst">
+                                                                Action number
+                                                              </TableCell>
+                                                              <TableCell className="tableHeadCellSecond">
+                                                                Action title
+                                                              </TableCell>
+                                                            </TableRow>
+                                                          </TableHead>
+                                                          : ''}
+                                                        <TableBody>
+                                                          {actionData.map((val) => (
+                                                            <>
+                                                              {val.id == value.id ? (
+                                                                <>
+                                                                  {val.action.length > 0 &&
+                                                                    val.action.map(
+                                                                      (valueAction) => (
+                                                                        <TableRow>
+                                                                          <TableCell align="left">
+                                                                            <Link
+                                                                              className={
+                                                                                classes.actionLinkAudit
+                                                                              }
+                                                                              display="block"
+                                                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
                                                                                 localStorage.getItem(
-                                                                                  "company"
+                                                                                  "BaseUrl"
                                                                                 )
-                                                                              )
-                                                                                .fkCompanyId
-                                                                              }&projectId=${JSON.parse(
-                                                                                localStorage.getItem(
-                                                                                  "projectName"
+                                                                              )[
+                                                                                "actionClientID"
+                                                                              ]
+                                                                                }&response_type=code&companyId=${JSON.parse(
+                                                                                  localStorage.getItem(
+                                                                                    "company"
+                                                                                  )
                                                                                 )
-                                                                              )
-                                                                                .projectName
-                                                                                .projectId
-                                                                              }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                              }`}
-                                                                            target="_blank"
-                                                                          >
+                                                                                  .fkCompanyId
+                                                                                }&projectId=${JSON.parse(
+                                                                                  localStorage.getItem(
+                                                                                    "projectName"
+                                                                                  )
+                                                                                )
+                                                                                  .projectName
+                                                                                  .projectId
+                                                                                }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                }`}
+                                                                              target="_blank"
+                                                                            >
+                                                                              {
+                                                                                valueAction.number
+                                                                              }
+                                                                            </Link>
+                                                                          </TableCell>
+                                                                          <TableCell>
                                                                             {
-                                                                              valueAction.number
+                                                                              valueAction.title
                                                                             }
-                                                                          </Link>
-                                                                        </TableCell>
-                                                                        <TableCell>
-                                                                          {
-                                                                            valueAction.title
-                                                                          }
-                                                                        </TableCell>
-                                                                      </TableRow>
-                                                                    )
-                                                                  )}
-                                                              </>
-                                                            ) : null}
-                                                          </>
-                                                        ))}
-                                                      </TableBody>
-                                                    </Table>
-                                                  </Grid>
+                                                                          </TableCell>
+                                                                        </TableRow>
+                                                                      )
+                                                                    )}
+                                                                </>
+                                                              ) : null}
+                                                            </>
+                                                          ))}
+                                                        </TableBody>
+                                                      </Table>
+                                                    </Grid>
+                                                  }
                                                   {(value.attachment === "Yes") &&
                                                     <Grid
                                                       item

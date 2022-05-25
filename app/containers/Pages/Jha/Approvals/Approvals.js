@@ -55,6 +55,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../../utils/constants";
+import { checkACL } from '../../../../utils/helper';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -169,7 +170,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     width: "100%",
-},
+  },
 }));
 
 const Approvals = () => {
@@ -278,9 +279,9 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
-    const { error, isValid} = ApprovalValidator(form , actionData)
+    const { error, isValid } = ApprovalValidator(form, actionData)
     await setError(error)
-    if(!isValid) {
+    if (!isValid) {
       return "data not valid"
     }
     if (form.notifyTo === null) {
@@ -291,15 +292,15 @@ const Approvals = () => {
       let name = user.name;
       let id = user.id;
       form['closedById'] = id
-      form['closedByName']  = name
+      form['closedByName'] = name
       form['closedDate'] = new Date()
       form["jhaStage"] = "Closed"
       form["jhaStatus"] = "Closed"
-      localStorage.setItem("JSAApproval" , "Done")
+      localStorage.setItem("JSAApproval", "Done")
     }
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
-    form["qrCodeUrl"] = undefined 
+    form["qrCodeUrl"] = undefined
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
     history.push(SUMMARY_FORM["Summary"])
     setSubmitLoader(false)
@@ -318,24 +319,24 @@ const Approvals = () => {
   const fetchUserList = async () => {
     let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
     var config = {
-        method: 'get',
-        url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/users/`,
-        headers: {
-            Authorization: `Bearer ${access_token}`,
-        },
+      method: 'get',
+      url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/users/`,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
     };
 
     axios(config)
-        .then(function (response) {
-            if (response.status === 200) {
-                const result = response.data.data.results.users
-                setUserList(result)
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
+      .then(function (response) {
+        if (response.status === 200) {
+          const result = response.data.data.results.users
+          setUserList(result)
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   const handleClose = () => {
     setOpen(false)
@@ -380,75 +381,75 @@ const Approvals = () => {
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
 
-                    <Grid
-                      item
-                      md={8}
-                      xs={12}
-                      className="formFieldBTNSection"
+                      <Grid
+                        item
+                        md={8}
+                        xs={12}
+                        className="formFieldBTNSection"
                       >
-                      <Typography variant="h6" gutterBottom className={classes.labelName}>
-                        Competent Person (CP)
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        color={check.wrp ? "secondary" : "primary"}
-                        className="marginT0"
-                        onClick={(e) => setOpen(true)}
-                        disabled={check.wrp || form.wrpApprovalUser !== null}
-                      >
-                        {check.wrp ? "Approved" : "Approve Now"}
-                      </Button>
-                      {/* Approved by userName on Date "date" (edited)  */}
-                     
-                    </Grid>
+                        <Typography variant="h6" gutterBottom className={classes.labelName}>
+                          Competent Person (CP)
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          color={check.wrp ? "secondary" : "primary"}
+                          className="marginT0"
+                          onClick={(e) => setOpen(true)}
+                          disabled={check.wrp || form.wrpApprovalUser !== null}
+                        >
+                          {check.wrp ? "Approved" : "Approve Now"}
+                        </Button>
+                        {/* Approved by userName on Date "date" (edited)  */}
 
-                    {form.wrpApprovalDateTime !== undefined
-                      &&
-                      form.wrpApprovalDateTime !== null ?
+                      </Grid>
+
+                      {form.wrpApprovalDateTime !== undefined
+                        &&
+                        form.wrpApprovalDateTime !== null ?
                         <Grid item xs={12} md={6}>
                           <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
                           <Typography className="viewLabelValue">
-                          {`${form.wrpApprovalUser} , ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}          
+                            {`${form.wrpApprovalUser} , ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}
                           </Typography>
                         </Grid>
-                     : null}
+                        : null}
 
 
-                    <Grid
-                      item
-                      md={8}
-                      xs={12}
-                      className="formFieldBTNSection"
+                      <Grid
+                        item
+                        md={8}
+                        xs={12}
+                        className="formFieldBTNSection"
                       >
-                      <Typography variant="h6" gutterBottom className={classes.labelName}>
-                        Senior Authorized Person (SAP)
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        color={check.sap ? "secondary" : "primary"}
-                        className="marginT0"
-                        disabled={check.pic || form.sapApprovalUser !== null}
-                        onClick={(e) => setOpenSeniorAuthorized(true)}
-                      >
-                        {check.sap ? "Approved" : "Approve Now"}
-                      </Button>
-                    </Grid>
-
-                    {form.sapApprovalUser !== undefined
-                      &&
-                      form.sapApprovalUser !== null ?
-                      <Grid item xs={12} md={6}>
-                        <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
-                        <Typography className="viewLabelValue">
-                        {`${form.sapApprovalUser} , ${moment(form.sapApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}          
+                        <Typography variant="h6" gutterBottom className={classes.labelName}>
+                          Senior Authorized Person (SAP)
                         </Typography>
-                      </Grid> : null}
+                        <Button
+                          variant="contained"
+                          color={check.sap ? "secondary" : "primary"}
+                          className="marginT0"
+                          disabled={check.pic || form.sapApprovalUser !== null}
+                          onClick={(e) => setOpenSeniorAuthorized(true)}
+                        >
+                          {check.sap ? "Approved" : "Approve Now"}
+                        </Button>
+                      </Grid>
+
+                      {form.sapApprovalUser !== undefined
+                        &&
+                        form.sapApprovalUser !== null ?
+                        <Grid item xs={12} md={6}>
+                          <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
+                          <Typography className="viewLabelValue">
+                            {`${form.sapApprovalUser} , ${moment(form.sapApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}
+                          </Typography>
+                        </Grid> : null}
 
                       {actionData.length == 0 ?
                         <Grid item md={8}>
                           <p style={{ color: "red" }}>{error.action}</p>
                         </Grid>
-                      : null}
+                        : null}
 
                       <Dialog
                         className={classes.projectDialog}
@@ -565,7 +566,8 @@ const Approvals = () => {
                           />
                         </Typography>
                       </Grid>
-                      {actionData.length > 0 ? 
+                      {checkACL('action_tracker-actions', 'view_actions') &&
+                        actionData.length > 0 ?
                         <Grid item md={12} xs={12}>
                           <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
                           <Table component={Paper}>
@@ -577,27 +579,28 @@ const Approvals = () => {
                             </TableHead>
                             {/* Action show */}
                             <TableBody>
-                            {actionData.map((action, index) => (
-                              <>
-                                <TableRow>
-                                  <TableCell style={{ width: 50 }}>
-                                    <a
-                                      href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
-                                      target="_blank"
-                                    >{action.actionNumber}</a>
-                                  </TableCell>
-                                  <TableCell style={{ width: 50 }}>
-                                    {action.actionTitle}
-                                  </TableCell>
-                                </TableRow>
-                              </>
-                            ))
-                          }
-                          
-                          </TableBody>
+                              {actionData.map((action, index) => (
+                                <>
+                                  <TableRow>
+                                    <TableCell style={{ width: 50 }}>
+                                      <a
+                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                        target="_blank"
+                                      >{action.actionNumber}</a>
+                                    </TableCell>
+                                    <TableCell style={{ width: 50 }}>
+                                      {action.actionTitle}
+                                    </TableCell>
+                                  </TableRow>
+                                </>
+                              ))
+                              }
+
+                            </TableBody>
                           </Table>
                         </Grid>
-                       : null}
+                        : null
+                      }
                     </Grid>
                   </Paper>
                 </Grid>
@@ -644,7 +647,7 @@ const Approvals = () => {
               />
             </Col>
           </Row>
-          : <Loader/>}
+          : <Loader />}
       </CustomPapperBlock>
     </>
   );
