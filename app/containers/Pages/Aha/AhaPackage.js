@@ -639,7 +639,6 @@ function AhaPackage(props) {
   };
 
   const handleDelete = async () => {
-    console.log('hiiiiiiiiiiiiii');
     // let temp = { ...deleteValue }
     let temp = {
       fkCompanyId: deleteValue.fkCompanyId,
@@ -650,9 +649,8 @@ function AhaPackage(props) {
       permitToPerform: deleteValue.permitToPerform,
       description: deleteValue.description,
       classification: deleteValue.classification,
-      status: deleteValue.status,
       createdBy: deleteValue.createdBy,
-      status: deleteValue.status 
+      status: "Delete"
     }
     // temp.status = "Delete";
     let id = deleteValue.id;

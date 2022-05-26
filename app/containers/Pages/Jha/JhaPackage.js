@@ -654,14 +654,25 @@ function JhaPackage(props) {
   // }
 
   const handleDelete = async () => {
-    let temp = { ...deleteValue }
-    temp.status = "Delete";
+    let temp = {
+      fkCompanyId: deleteValue.fkCompanyId,
+      fkProjectId: deleteValue.fkProjectId,
+      fkProjectStructureIds: deleteValue.fkProjectStructureIds,
+      location: deleteValue.location,
+      jhaAssessmentDate: deleteValue.jhaAssessmentDate,
+      permitToPerform: deleteValue.permitToPerform,
+      jobTitle: deleteValue.jobTitle,
+      description: deleteValue.description,
+      classification: deleteValue.classification,
+      createdBy: deleteValue.createdBy,
+      status: "Delete"
+    }
     let id = deleteValue.id;
     setIsLoading(false);
-    const res = await api.put(`/api/v1/jhas/${temp.id}/`, temp)
+    const res = await api.put(`/api/v1/jhas/${id}/`, temp)
       .then((response) => {
         fetchData();
-        handleCloseDeleteAlert()
+        handleCloseDeleteAlert();
         // setIsLoading(true);
       })
       .catch((error) => console.log(error));

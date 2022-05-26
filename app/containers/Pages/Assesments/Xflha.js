@@ -989,9 +989,9 @@ function xflha(props) {
     await setPage(value);
   };
 
-  const handleDelete = async (item) => {
+  const handleDelete = async () => {
     // console.log(item);
-    if (checkACL('safety-flha', 'delete_flha')) {
+    // if (checkACL('safety-flha', 'delete_flha')) {
       // const data = {
       //   fkCompanyId: item[1].fkCompanyId,
       //   fkProjectId: item[1].fkProjectId,
@@ -1001,9 +1001,19 @@ function xflha(props) {
       // };
       setIsLoading(true);
 
-      let temp = { ...deleteValue }
-      temp.status = "Delete";
-      console.log(temp, 'temppppp');
+      let temp = {
+        fkCompanyId: deleteValue.fkCompanyId,
+        fkProjectId: deleteValue.fkProjectId,
+        fkProjectStructureIds: deleteValue.fkProjectStructureIds,
+        location: deleteValue.location,
+        dateTimeFlha: deleteValue.dateTimeFlha,
+        permitToWork: deleteValue.permitToWork,
+        jobTitle: deleteValue.jobTitle,
+        description: deleteValue.description,
+        classification: deleteValue.classification,
+        createdBy: deleteValue.createdBy,
+        status: "Delete"
+      }
       let id = deleteValue.id;
       const res = await api
         .put(`api/v1/audits/${id}/`, temp)
@@ -1026,7 +1036,7 @@ function xflha(props) {
       //     fetchData();
       //   })
       //   .catch(err => console.log(err));
-    }
+    // }
   };
 
   useEffect(() => {
