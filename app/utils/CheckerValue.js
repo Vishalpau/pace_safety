@@ -176,16 +176,17 @@ export const handelDateTime = (value, showTime = true) => {
     if (value == null) {
         return
     }
-    let observedDateAndTime = value.split("T")
-    let observedDate = moment(value.split("T")[0]).format('MMMM Do YYYY')
-    let observedTime = observedDateAndTime[1].replace("Z", "")
+    let observedLocalTime = new Date(value).toLocaleTimeString(undefined, {timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit'});
+    let observedDateAndTime = value.split("T");
+    let observedDate = moment(value.split("T")[0]).format('MMMM Do YYYY');
+    let observedTime = observedDateAndTime[1].replace("Z", "");
     var timeString = observedTime;
     var H = +timeString.substr(0, 2);
     var h = H % 12 || 12;
     var ampm = (H < 12 || H === 24) ? " AM" : " PM";
     timeString = h + timeString.substr(2, 3) + ampm;
 
-    return showTime ? `${observedDate} ${timeString}` : observedDate
+    return showTime ? `${observedDate} ${observedLocalTime}` : observedDate
 
 }
 

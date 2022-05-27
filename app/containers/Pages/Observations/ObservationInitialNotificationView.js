@@ -422,8 +422,8 @@ const ObservationInitialNotificationView = () => {
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {moment(initialData.observedAt).format(
-                      'Do MMMM YYYY, h:mm:ss a'
-                    )}
+                      'Do MMMM YYYY'
+                    )} {" "} {new Date(initialData.observedAt).toLocaleTimeString(undefined, {timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit'})}
                     {/* {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"} */}
                   </Typography>
                 </Grid>

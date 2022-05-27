@@ -198,6 +198,7 @@ function JhaSummary(props) {
     else {
       await setAssessmentsView(true)
     }
+    console.log(result, "resultssss");
     await fetchNotificationSent(result.notifyTo)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const resultTeam = resTeam.data.data.results
@@ -207,7 +208,7 @@ function JhaSummary(props) {
     let resAction = await handelActionDataAssessment(jhaId, resultHazard, "all", "jha:hazard")
     await setHazard(resAction);
     await handelActionTracker(resultHazard)
-    let assessmentDecider = result.link !== null
+    let assessmentDecider = result.jhaStage === "Open" || result.jhaStage === "Closed";
     let approvalDecider = result.wrpApprovalUser !== null && result.sapApprovalUser !== null
     let lessionDecider = result.anyLessonsLearnt !== null
     let closeOutDecider = result.closedById !== null
