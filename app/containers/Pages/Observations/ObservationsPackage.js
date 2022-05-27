@@ -763,9 +763,10 @@ function Actions(props) {
     data.status = 'Delete';
     setIsLoading(false);
     await api.put(`/api/v1/observations/${data.id}/`, data)
-      .then(response =>
-        fetchInitialiObservation())
-    handleCloseDeleteAlert()
+      .then(response => {
+        fetchInitialiObservation()
+        handleCloseDeleteAlert()
+      })
       .catch(err => console.log(err));
   };
 
