@@ -6,11 +6,15 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogContent from '@material-ui/core/DialogContent';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -37,6 +41,7 @@ import api from '../../../utils/axios';
 import { HEADER_AUTH, SELF_API } from '../../../utils/constants';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 import { checkACL } from '../../../utils/helper';
+import Attachment from '../../Attachment/Attachment';
 
 
 const UserDetailsView = lazy(() => import('../../UserDetails/UserDetail'));
@@ -121,6 +126,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: '2px',
+    cursor: 'pointer'
   },
   mLeftR5: {
     marginLeft: '5px',
@@ -420,10 +426,27 @@ function Actions(props) {
   const { searchIncident } = props;
   const { status } = props;
 
+  const [deleteValue, setDeleteValue] = useState("")
+  const [deleteQ, setDeleteQ] = useState(false);
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+
+  const handleMyUserPClickOpen = () => {
+    setMyUserPOpen(true);
+  };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
+  };
+
+  const handleClickDeleteAlert = (value) => {
+    setDeleteQ(true);
+    setDeleteValue(value);
+    // handleDelete(value);
+  };
+
+  const handleCloseDeleteAlert = () => {
+    setDeleteQ(false);
+    setDeleteValue("");
   };
 
   const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Date submitted', 'Date approved', 'Approved by'];
@@ -635,30 +658,30 @@ function Actions(props) {
     }
   };
 
-  const [openAttachment, setopenAttachment] = React.useState(false);
-  const [openAtt, setopenAtt] = React.useState('');
+  // const [openAttachment, setopenAttachment] = React.useState(false);
+  // const [openAtt, setopenAtt] = React.useState('');
 
-  const handleClickOpenAttachment = (value) => {
-    setopenAtt(value);
-    setopenAttachment(true);
-  };
+  // const handleClickOpenAttachment = (value) => {
+  //   setopenAtt(value);
+  //   setopenAttachment(true);
+  // };
 
-  const [attachOpen, setAttachOpen] = useState(false);
-  const [attachIndex, setAttachIndex] = useState('');
-  const [hidden, setHidden] = useState(false);
+  // const [attachOpen, setAttachOpen] = useState(false);
+  // const [attachIndex, setAttachIndex] = useState('');
+  // const [hidden, setHidden] = useState(false);
 
 
-  const handleAttachClick = () => {
-    setAttachOpen(!open);
-  };
-  const handleAttachOpen = () => {
-    if (!hidden) {
-      setAttachOpen(true);
-    }
-  };
-  const handleAttachClose = () => {
-    setAttachOpen(false);
-  };
+  // const handleAttachClick = () => {
+  //   setAttachOpen(!open);
+  // };
+  // const handleAttachOpen = () => {
+  //   if (!hidden) {
+  //     setAttachOpen(true);
+  //   }
+  // };
+  // const handleAttachClose = () => {
+  //   setAttachOpen(false);
+  // };
 
   // view comments
   const [commentsOpen, setCommentsOpen] = useState(false);
@@ -755,67 +778,86 @@ function Actions(props) {
     setTimeout(() => setCheckDeletePermission(checkACL('safety-observations', 'delete_observations')), 2500);
   }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status, checkDeletePermission]);
 
-  return (
-    <>
-      <Box>
-        {isLoading ? (
-          <>
-            <Grid className={classes.marginTopBottom}>
-              {listToggle == false ? (
-                <div>
-                  <div className="gridView">
-                    {Object.keys(allInitialData).length > 0
-                      ? Object.entries(allInitialData)
-                        .map((item, index) => (
-                          <>
-                            <Card variant="outlined" className={classes.card}>
-                              <CardContent>
-                                <Grid container spacing={3} className={classes.cardContentSection}>
-                                  <Grid
-                                    item
-                                    md={2}
-                                    sm={4}
-                                    xs={12}
-                                    className={classes.userPictureBox}
-                                  >
-                                    <Button className={classes.floatR}>
-                                      <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} />
-                                      {' '}
-                                      {item[1].username ? item[1].username : 'Admin'}
-                                    </Button>
-                                  </Grid>
-                                  <Link
-                                    onClick={() => handleSummaryPush(index)}
-                                    className={classes.cardLinkAction}
-                                  >
-                                    <Grid item xs={12}>
-                                      <Grid container spacing={3} alignItems="flex-start">
-                                        <Grid item sm={12} xs={12} className={classes.listHeadColor}>
-                                          <Grid container spacing={3} alignItems="flex-start">
-                                            <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
-                                              <Typography
-                                                className={classes.title}
-                                                variant="h6"
-                                              >
-                                                {item[1].observationDetails}
-                                              </Typography>
-                                              <Typography
-                                                display="inline"
-                                                className={classes.listingLabelName}
-                                              >
-                                            Number:
-                                                {' '}
-                                                <span>
-                                                  <Link
-                                                    onClick={() => handleSummaryPush(index)}
-                                                    variant="h6"
-                                                    className={classes.mLeftfont}
-                                                  >
-                                                    <span className={classes.listingLabelValue}>{item[1].observationNumber}</span>
-                                                  </Link>
-                                                </span>
-                                              </Typography>
-                                              {/* <Typography
+
+
+
+
+  const AllCardData = (item, index) => {
+
+    console.log(item, 'iiteeeeeem');
+
+    const [showGrid, setShowGrid] = useState(false);
+    const [hidden, setHidden] = useState(false);
+
+    const handleVisibility = () => {
+      setShowGrid(true);
+      setHidden(!hidden);
+    };
+
+    const handleAttachClose = () => {
+      setShowGrid(false);
+    };
+
+    const handleAttachClick = () => {
+      setShowGrid(!open);
+    };
+
+    const handleAttachOpen = () => {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    }
+
+    return (
+      <>
+        <Card variant="outlined" className={classes.card}>
+          <CardContent>
+            <Grid container spacing={3} className={classes.cardContentSection}>
+              <Grid
+                item
+                md={2}
+                sm={4}
+                xs={12}
+                className={classes.userPictureBox}
+              >
+                <Button className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(e)}>
+                  <img src={item.item[1].avatar !== null ? item.item[1].avatar : paceLogoSymbol} className={classes.userImage} />
+                  {' '}
+                  {item.item[1].username ? item.item[1].username : 'Admin'}
+                </Button>
+              </Grid>
+              <Link
+                onClick={() => handleSummaryPush(index)}
+                className={classes.cardLinkAction}
+              >
+                <Grid item xs={12}>
+                  <Grid container spacing={3} alignItems="flex-start">
+                    <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+                      <Grid container spacing={3} alignItems="flex-start">
+                        <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
+                          <Typography
+                            className={classes.title}
+                            variant="h6"
+                          >
+                            {item.item[1].observationDetails}
+                          </Typography>
+                          <Typography
+                            display="inline"
+                            className={classes.listingLabelName}
+                          >
+                            Number:
+                            {' '}
+                            <span>
+                              <Link
+                                onClick={() => handleSummaryPush(index)}
+                                variant="h6"
+                                className={classes.mLeftfont}
+                              >
+                                <span className={classes.listingLabelValue}>{item.item[1].observationNumber}</span>
+                              </Link>
+                            </span>
+                          </Typography>
+                          {/* <Typography
                                 variant="body1"
                                 gutterBottom
                                 display="inline"
@@ -824,128 +866,128 @@ function Actions(props) {
                               >
                                 Category: <span className={classes.listingLabelValue}>HSE incident Action</span>
                               </Typography> */}
-                                              <span item xs={1} className={classes.sepHeightOne} />
-                                              <Typography
-                                                variant="body1"
-                                                gutterBottom
-                                                display="inline"
-                                                color="textPrimary"
-                                                className={classes.listingLabelName}
-                                              >
-                                            Assignee:
-                                                {' '}
-                                                <span className={classes.listingLabelValue}>{item[1].assigneeName ? item[1].assigneeName : '-'}</span>
-                                                <span item xs={1} className={classes.sepHeightOne} />
-                                            Stage:
-                                                {' '}
-                                                <span className={classes.listingLabelValue}>
-                                                  {item[1].observationStage ? item[1].observationStage : '-'}
-                                                  {' '}
-                                                  {item[1].observationStage === 'Completed' && <img src={completed_small} className={classes.smallImage} />}
-                                                  {item[1].observationStage === 'Planned' && <img src={in_progress_small} className={classes.smallImage} />}
-                                                  {' '}
-                                                  {item[1].observationStage === 'Open' && <img src={preplanning} className={classes.smallImage} />}
-                                                  {' '}
-                                                </span>
-                                                <span item xs={1} className={classes.sepHeightOne} />
-                                            Status:
-                                                {' '}
-                                                <span className={classes.listingLabelValue}>{item[1].observationStatus ? item[1].observationStatus : '-'}</span>
-                                              </Typography>
+                          <span item xs={1} className={classes.sepHeightOne} />
+                          <Typography
+                            variant="body1"
+                            gutterBottom
+                            display="inline"
+                            color="textPrimary"
+                            className={classes.listingLabelName}
+                          >
+                            Assignee:
+                            {' '}
+                            <span className={classes.listingLabelValue}>{item.item[1].assigneeName ? item.item[1].assigneeName : '-'}</span>
+                            <span item xs={1} className={classes.sepHeightOne} />
+                            Stage:
+                            {' '}
+                            <span className={classes.listingLabelValue}>
+                              {item.item[1].observationStage ? item.item[1].observationStage : '-'}
+                              {' '}
+                              {item.item[1].observationStage === 'Completed' && <img src={completed_small} className={classes.smallImage} />}
+                              {item.item[1].observationStage === 'Planned' && <img src={in_progress_small} className={classes.smallImage} />}
+                              {' '}
+                              {item.item[1].observationStage === 'Open' && <img src={preplanning} className={classes.smallImage} />}
+                              {' '}
+                            </span>
+                            <span item xs={1} className={classes.sepHeightOne} />
+                            Status:
+                            {' '}
+                            <span className={classes.listingLabelValue}>{item.item[1].observationStatus ? item.item[1].observationStatus : '-'}</span>
+                          </Typography>
 
-                                            </Grid>
+                        </Grid>
 
 
-                                            {/* <Grid item md={2} sm={4} xs={12}>
+                        {/* <Grid item md={2} sm={4} xs={12}>
                                         <Button className={classes.floatR}>
                                           <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
                                         </Button>
 
                                       </Grid> */}
-                                          </Grid>
-                                        </Grid>
-                                      </Grid>
-                                    </Grid>
-                                    <Grid item sm={12} xs={12}>
-                                      <Grid container spacing={3}>
-                                        <Grid item md={3} sm={6} xs={12}>
-                                          <Typography
-                                            variant="body1"
-                                            gutterBottom
-                                            color="textPrimary"
-                                            className={classes.listingLabelName}
-                                          >
-                                        Type:
-                                          </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Grid container spacing={3}>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        gutterBottom
+                        color="textPrimary"
+                        className={classes.listingLabelName}
+                      >
+                        Type:
+                      </Typography>
 
-                                          <Typography
-                                            gutterBottom
-                                            className={classes.listingLabelValue}
-                                          >
-                                            {/* {item[1]["incidentReportedByName"]} */}
-                                            {item[1].observationType}
-                                          </Typography>
-                                        </Grid>
-                                        <Grid item md={3} sm={6} xs={12}>
-                                          <Typography
-                                            variant="body1"
-                                            color="textPrimary"
-                                            gutterBottom
-                                            className={classes.listingLabelName}
-                                          >
-                                        Location:
-                                          </Typography>
-                                          <Typography
+                      <Typography
+                        gutterBottom
+                        className={classes.listingLabelValue}
+                      >
+                        {/* {item[1]["incidentReportedByName"]} */}
+                        {item.item[1].observationType}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Location:
+                      </Typography>
+                      <Typography
 
-                                            className={classes.listingLabelValue}
-                                          >
-                                            {item[1].location ? item[1].location : '-'}
-                                          </Typography>
-                                        </Grid>
+                        className={classes.listingLabelValue}
+                      >
+                        {item.item[1].location ? item.item[1].location : '-'}
+                      </Typography>
+                    </Grid>
 
-                                        <Grid item md={3} sm={6} xs={12}>
-                                          <Typography
-                                            variant="body1"
-                                            color="textPrimary"
-                                            gutterBottom
-                                            className={classes.listingLabelName}
-                                          >
-                                        Reported on:
-                                          </Typography>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Reported on:
+                      </Typography>
 
-                                          <Typography
+                      <Typography
 
-                                            className={classes.listingLabelValue}
-                                          >
-                                            {moment(item[1].createdAt).format(
-                                              'Do MMMM YYYY, h:mm:ss a'
-                                            )}
-                                            {' '}
+                        className={classes.listingLabelValue}
+                      >
+                        {moment(item.item[1].createdAt).format(
+                          'Do MMMM YYYY, h:mm:ss a'
+                        )}
+                        {' '}
 
-                                          </Typography>
-                                        </Grid>
+                      </Typography>
+                    </Grid>
 
-                                        <Grid item md={3} sm={6} xs={12}>
-                                          <Typography
-                                            variant="body1"
-                                            color="textPrimary"
-                                            gutterBottom
-                                            className={classes.listingLabelName}
-                                          >
-                                        Observed By:
-                                          </Typography>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Observed By:
+                      </Typography>
 
-                                          <Typography
+                      <Typography
 
-                                            className={classes.listingLabelValue}
-                                          >
-                                            {item[1].reportedByName ? item[1].reportedByName : 'Admin'}
-                                          </Typography>
-                                        </Grid>
-                                      </Grid>
-                                    </Grid>
+                        className={classes.listingLabelValue}
+                      >
+                        {item.item[1].reportedByName ? item.item[1].reportedByName : 'Admin'}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
 
-                                    {/* <Grid item sm={2} xs={12}>
+                {/* <Grid item sm={2} xs={12}>
                       <Typography
                         variant="h6"
                         color="textPrimary"
@@ -960,52 +1002,42 @@ function Actions(props) {
                         29 Dec 2020
                       </Typography>
                     </Grid> */}
-                                  </Link>
-                                </Grid>
+              </Link>
+            </Grid>
 
-                              </CardContent>
-                              <Divider />
-                              <CardActions className={Incidents.cardActions}>
-                                <Grid
-                                  container
-                                  spacing={2}
-                                  justify="flex-end"
-                                  alignItems="left"
-                                >
-                                  <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                                    <Typography
-                                      variant="body1"
-                                      display="inline"
-                                      color="textPrimary"
+          </CardContent>
+          <Divider />
+          <CardActions className={Incidents.cardActions}>
+            <Grid
+              container
+              spacing={2}
+              justify="flex-end"
+              alignItems="left"
+            >
+              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                <Typography
+                  variant="body1"
+                  display="inline"
+                  color="textPrimary"
 
-                                    >
-                                      <AttachmentIcon className={classes.mright5} />
-                                  Attachments:
-                                    </Typography>
-                                    <Typography variant="body2" display="inline">
+                >
+                  <AttachmentIcon className={classes.mright5} />
+                  Attachments:
+                </Typography>
+                <Typography variant="body2" display="inline">
+                  <span>
+                    <Link
+                      // href="#"
+                      onClick={item.item[1].attachmentCount && handleVisibility}
+                      color="secondary"
+                      aria-haspopup="true"
+                      className={classes.mLeft}>
+                      {item.item[1].attachmentCount}
+                    </Link>
+                  </span>
 
-                                      {
-                                        item[1].files !== null ? (
-                                          <Link
-                                            color="secondary"
-                                            className={classes.mLeftR5}
-                                          // onClick={() => handleVisibility(index)}
-                                          >
-                                            {item[1].files.length}
-                                          </Link>
-                                        ) : (
-                                          <Link
-                                            color="secondary"
-                                            className={classes.mLeftR5}
-                                          // onClick={() => handleVisibility(index)}
-                                          >
-                                        0
-                                          </Link>
-                                        )
-                                      }
-
-                                    </Typography>
-                                    {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                </Typography>
+                {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                 <Typography
                                   variant="body1"
                                   display="inline"
@@ -1018,92 +1050,118 @@ function Actions(props) {
                                 <Typography variant="body2" display="inline" className={classes.mLeft}>
                                   <Link color="secondary" className={classes.mLeft} onClick={() => handleVisibilityComments(item[1].id)}>{item[1]['commentsCount']}</Link>
                                 </Typography> */}
-                                  </Grid>
+              </Grid>
 
-                                  <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                                    <div className={classes.floatR}>
-                                      {/* <Typography variant="body1" display="inline">
+              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
+                <div className={classes.floatR}>
+                  {/* <Typography variant="body1" display="inline">
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                      {/* <Typography variant="body1" display="inline">
+                  {/* <Typography variant="body1" display="inline">
                                    <Button onClick={() => handlePrintPush(index)} > <PrintOutlinedIcon  className={classes.iconColor} /></Button>  <Button onClick={() => handlePrintPush(index)} className={classes.mLeftR5}>Print</Button>
                                   </Typography> */}
-                                      {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                      {/* <Typography variant="body1" display="inline">
+                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
+                  {/* <Typography variant="body1" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                      {/* <Typography variant="body1" display="inline">
+                  {/* <Typography variant="body1" display="inline">
                                     <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                                   </Typography> */}
-                                      {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                      <Typography variant="body1" display="inline">
+                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
+                  <Typography variant="body1" display="inline">
 
-                                        {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
-                                        {!checkDeletePermission
-                                          ? (
-                                            <DeleteForeverOutlinedIcon
-                                              className={classes.iconteal}
-                                              style={{
-                                                color: '#c0c0c0',
-                                                cursor: 'not-allowed'
-                                              }}
-                                            />
-                                          )
-                                          : (
-                                            <Link
-                                              href="#"
-                                              className={classes.mLeftR5}
-                                            >
-                                              <DeleteForeverOutlinedIcon
-                                                className={classes.iconteal}
-                                                onClick={(e) => handleDelete(item)}
-                                              />
-                                            </Link>
-                                          )}
-                                      </Typography>
-                                    </div>
-                                  </Grid>
-                                </Grid>
-                              </CardActions>
-                            </Card>
-                            {attachIndex === index && item[1].attachmentCount !== 0
-                              ? (
-                                <Grid
-                                  item
-                                  md={12}
-                                  sm={12}
-                                  xs={12}
-                                  hidden={!hidden}
-                                  onBlur={handleAttachClose}
-                                  onClick={handleAttachClick}
-                                  onClose={handleAttachClose}
-                                  onFocus={handleAttachOpen}
-                                  onMouseEnter={handleAttachOpen}
-                                  onMouseLeave={handleAttachClose}
-                                  open={attachOpen}
-                                  className="paddTBRemove attactmentShowSection"
-                                >
-                                  <Paper elevation={1} className="paperSection">
-                                    <Grid container spacing={3}>
-                                      <Grid item md={12} sm={12} xs={12}>
-                                        <List>
-                                          <ListItem>
-                                            <img src={allInitialData[index].attachment} onClick={() => handleClickOpenAttachment(allInitialData[index].attachment)} className="hoverIcon" />
-                                          </ListItem>
-                                        </List>
-                                      </Grid>
-                                    </Grid>
-                                  </Paper>
-                                </Grid>
-                              ) : null}
+                    {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
+                    {!checkDeletePermission
+                      ? (
+                        <DeleteForeverOutlinedIcon
+                          className={classes.iconteal}
+                          style={{
+                            color: '#c0c0c0',
+                            cursor: 'not-allowed'
+                          }}
+                        />
+                      )
+                      : (
+                        <Link
+                          href="#"
+                          className={classes.mLeftR5}
+                        >
+                          <DeleteForeverOutlinedIcon
+                            className={classes.iconteal}
+                            // onClick={(e) => handleDelete(item)}
 
-                          </>
+                            onClick={() => handleClickDeleteAlert(item.item)}
+                          />
+                        </Link>
+                      )}
+                  </Typography>
+                </div>
+              </Grid>
+            </Grid>
+          </CardActions>
+        </Card>
+        {item.item[1].attachmentCount ?
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            hidden={!hidden}
+            onBlur={handleAttachClose}
+            onClick={handleAttachClick}
+            onClose={handleAttachClose}
+            onFocus={handleAttachOpen}
+            onMouseEnter={handleAttachOpen}
+            onMouseLeave={handleAttachClose}
+            open={showGrid}
+            className="paddTBRemove attactmentShowSection"
+          >
+            <Paper elevation={1} className="cardSectionBottom">
+              <Grid container spacing={3}>
+                <Grid item md={12} sm={12} xs={12}>
+                  <List>
+                    <ListItem>
+                      <Grid
+                        item
+                        md={12}
+                        sm={12}
+                        xs={12}
+                      >
+                        <div className="attachFileThumb">
+                          <Attachment src={item.item[1].attachment} value={item.item[1].attachment} />
+                        </div>
+                      </Grid>
+                    </ListItem>
+                  </List>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+          : ''
+        }
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Box>
+        {isLoading ? (
+          <>
+            <Grid className={classes.marginTopBottom}>
+              {listToggle == false ? (
+                <div>
+                  <div className="gridView">
+                    {Object.keys(allInitialData).length > 0
+                      ? Object.entries(allInitialData)
+                        .map((item, index) => (
+                          <AllCardData item={item} index={index} />
                         )) : (
                         <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
-                      Sorry, no matching records found
-                          </Typography>
+                          Sorry, no matching records found
+                        </Typography>
                       )}
 
                   </div>
@@ -1154,7 +1212,7 @@ function Actions(props) {
                                     disableElevation
 
                                   >
-                                  Respond
+                                    Respond
                                   </Button>
                                   <Button
                                     variant="contained"
@@ -1164,7 +1222,7 @@ function Actions(props) {
                                     disableElevation
 
                                   >
-                                  Cancel
+                                    Cancel
                                   </Button>
                                 </Grid>
                               </Grid>
@@ -1213,20 +1271,49 @@ function Actions(props) {
                       fullWidth
                       maxWidth="sm"
                     >
-
                       <UserDetailsView userName={userInfo.name} userIcon={userInfo.userIcon} />
-
                       <DialogActions>
                         <Button onClick={handleMyUserPClose} color="primary" variant="contained" autoFocus>
-                        Close
+                          Close
                         </Button>
                       </DialogActions>
                     </Dialog>
                   </div>
 
+                  <Dialog
+                    open={deleteQ}
+                    onClose={handleCloseDeleteAlert}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        <Grid container spacing={3}>
+                          <Grid
+                            item
+                            md={12}
+                            xs={12}
+                          >
+                            <FormControl component="fieldset">
+                              <FormLabel component="legend" className="checkRadioLabel">Are you sure you want to delete this question?</FormLabel>
+                            </FormControl>
+                          </Grid>
+                          <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+                            <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={() => handleDelete()}>
+                              Yes
+                            </Button>
+                            <Button color="secondary" variant="contained" className="buttonStyle custmCancelBtn" onClick={() => handleCloseDeleteAlert()}>
+                              No
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </DialogContentText>
+                    </DialogContent>
+                  </Dialog>
+
 
                 </div>
-              // listview end
+                // listview end
 
               ) : (
                 <TableContainer component={Paper}>
@@ -1242,6 +1329,7 @@ function Actions(props) {
                 </TableContainer>
               )}
             </Grid>
+
 
             {totalData != 0
               ? (

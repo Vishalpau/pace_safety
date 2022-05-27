@@ -521,7 +521,7 @@ function AhaPackage(props) {
   //   setListToggle(true);
   // };
 
-  const [value, setValue] = React.useState(2);
+  // const [value, setValue] = React.useState(2);
 
   //dialog
   const [MyFavopen, setMyFavOpen] = React.useState(false);
@@ -664,7 +664,7 @@ function AhaPackage(props) {
       .catch((error) => console.log(error));
   };
 
-  //   Assigning 'classes' to useStyles()
+  //Assigning 'classes' to useStyles()
   const classes = useStyles();
 
   useEffect(() => {

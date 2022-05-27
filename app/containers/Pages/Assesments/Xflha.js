@@ -717,6 +717,8 @@ function xflha(props) {
   const [value, setValue] = React.useState(2);
   const [assessments, setAssessments] = useState('My Assessments');
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+  const [deleteValue, setDeleteValue] = useState("")
+  const [deleteQ, setDeleteQ] = useState(false);
 
   const handleClickDeleteAlert = (value) => {
     setDeleteQ(true);
@@ -728,9 +730,6 @@ function xflha(props) {
     setDeleteQ(false);
     setDeleteValue("");
   };
-
-  const [deleteValue, setDeleteValue] = useState("")
-  const [deleteQ, setDeleteQ] = useState(false);
 
   const dispatch = useDispatch();
 

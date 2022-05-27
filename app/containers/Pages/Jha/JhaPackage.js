@@ -461,12 +461,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JhaPackage(props) {
-  const [cardView, setCardView] = useState(true);
+  const classes = useStyles();
+
+  // const [cardView, setCardView] = useState(true);
+  // const [data, setData] = useState([]);
   const [allJHAData, setAllJHAData] = useState([])
   const search = props.search
   const status = props.status
   const history = useHistory();
-  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
@@ -578,12 +580,6 @@ function JhaPackage(props) {
   //   setListToggle(true);
   // };
 
-  const [value, setValue] = React.useState(2);
-
-  const handleChangeOne = (event, newValue) => {
-    setValue(newValue);
-  };
-
   //dialog
   // const [MyFavopen, setMyFavOpen] = React.useState(false);
 
@@ -595,17 +591,6 @@ function JhaPackage(props) {
   //   setMyFavOpen(false);
   // };
 
-  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-
-  // const handleMyUserPClickOpen = () => {
-  //   setMyUserPOpen(true);
-  // };
-
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
-
-  const classes = useStyles();
 
   // const handleVisibility = () => {
   //   setAttachOpen(true);
@@ -689,8 +674,15 @@ function JhaPackage(props) {
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
 
+    const [value, setValue] = React.useState(2);
+
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
+    const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+
+    const handleChangeOne = (event, newValue) => {
+      setValue(newValue);
+    };
 
     const handleVisibility = () => {
       setShowGrid(true);
@@ -728,7 +720,14 @@ function JhaPackage(props) {
 
     const handleCommentsClose = () => {
       setCommentsOpen(false);
+    };
 
+    const handleMyUserPClickOpen = () => {
+      setMyUserPOpen(true);
+    };
+
+    const handleMyUserPClose = () => {
+      setMyUserPOpen(false);
     };
 
     return (
@@ -741,9 +740,7 @@ function JhaPackage(props) {
                 <Grid item md={2} sm={4} xs={12}
                   className={classes.userPictureBox}
                 >
-                  <Button className={classNames(classes.floatR)}
-                  //  onClick={(e) => handleMyUserPClickOpen(e)}
-                  >
+                  <Button className={classNames(classes.floatR)} onClick={(e) => handleMyUserPClickOpen(e)}>
                     <img src={item.item.avatar} className={classes.userImage} /> {item.item.username}
                   </Button>
                 </Grid>
@@ -1078,6 +1075,98 @@ function JhaPackage(props) {
           </Grid>
         </div>
 
+        <Dialog
+          open={myUserPOpen}
+          onClose={handleMyUserPClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          fullWidth={true}
+          maxWidth={'sm'}
+        >
+          <DialogTitle classNames={classes.mb10} id="alert-dialog-title"><img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <Grid
+                item md={12} sm={12} xs={12}
+                className={classes.usrProfileListBox}
+              >
+                <h6>Change ownership</h6>
+                <FormControl variant="outlined" className={classes.formControlOwnership}>
+                  <InputLabel id="demo-simple-select-outlined-label">Ownership</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value="Ashutosh"
+                    onChange={handleChangeOne}
+                    label="Ownership"
+                  >
+                    <MenuItem value={10}>Self</MenuItem>
+                    <MenuItem value={10}>Prakash</MenuItem>
+                    <MenuItem value={20}>Ashutosh</MenuItem>
+                    <MenuItem value={30}>Saddam</MenuItem>
+                    <MenuItem value={30}>Sunil</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                item md={12} sm={12} xs={12}
+                className={classes.usrProfileListBox}
+              >
+                <h3>Basic information</h3>
+                <List>
+                  <ListItem>
+                    {/* <ListItemAvatar>
+                <Avatar>
+                  <ImageIcon />
+                </Avatar>
+              </ListItemAvatar> */}
+                    <ListItemText primary="Full Name:" secondary="Prakash" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Organization Role:" secondary="N/A" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Role Title:" secondary="N/A" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
+                  </ListItem>
+                </List>
+              </Grid>
+
+              <Grid
+                item md={12} sm={12} xs={12}
+                className={classes.usrProfileListBox}
+              >
+                <h3>Company information</h3>
+                <List>
+                  <ListItem>
+                    <ListItemText primary="Company Name:" secondary="JWIL" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Location:" secondary="Italy" />
+                  </ListItem>
+                </List>
+              </Grid>
+            </DialogContentText>
+          </DialogContent>
+          <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+            <DialogActions align="left" className="marginB10">
+              <Button onClick={handleMyUserPClose} color="secondary" variant="contained" className="buttonStyle custmCancelBtn">
+                Close
+              </Button>
+            </DialogActions>
+          </Grid>
+
+          {/* <DialogActions>
+      <Button onClick={handleMyUserPClose} className="custmCancelBtn" variant="contained" autoFocus>
+        Close
+      </Button>
+    </DialogActions> */}
+        </Dialog>
 
       </Grid>
     )
@@ -1098,99 +1187,6 @@ function JhaPackage(props) {
             {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
-
-          <Dialog
-            open={myUserPOpen}
-            onClose={handleMyUserPClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            fullWidth={true}
-            maxWidth={'sm'}
-          >
-            <DialogTitle classNames={classes.mb10} id="alert-dialog-title"><img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                <Grid
-                  item md={12} sm={12} xs={12}
-                  className={classes.usrProfileListBox}
-                >
-                  <h6>Change ownership</h6>
-                  <FormControl variant="outlined" className={classes.formControlOwnership}>
-                    <InputLabel id="demo-simple-select-outlined-label">Ownership</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value="Ashutosh"
-                      onChange={handleChangeOne}
-                      label="Ownership"
-                    >
-                      <MenuItem value={10}>Self</MenuItem>
-                      <MenuItem value={10}>Prakash</MenuItem>
-                      <MenuItem value={20}>Ashutosh</MenuItem>
-                      <MenuItem value={30}>Saddam</MenuItem>
-                      <MenuItem value={30}>Sunil</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid
-                  item md={12} sm={12} xs={12}
-                  className={classes.usrProfileListBox}
-                >
-                  <h3>Basic information</h3>
-                  <List>
-                    <ListItem>
-                      {/* <ListItemAvatar>
-                <Avatar>
-                  <ImageIcon />
-                </Avatar>
-              </ListItemAvatar> */}
-                      <ListItemText primary="Full Name:" secondary="Prakash" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText primary="Organization Role:" secondary="N/A" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText primary="Role Title:" secondary="N/A" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
-                    </ListItem>
-                  </List>
-                </Grid>
-
-                <Grid
-                  item md={12} sm={12} xs={12}
-                  className={classes.usrProfileListBox}
-                >
-                  <h3>Company information</h3>
-                  <List>
-                    <ListItem>
-                      <ListItemText primary="Company Name:" secondary="JWIL" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText primary="Location:" secondary="Italy" />
-                    </ListItem>
-                  </List>
-                </Grid>
-              </DialogContentText>
-            </DialogContent>
-            <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
-              <DialogActions align="left" className="marginB10">
-                <Button onClick={handleMyUserPClose} color="secondary" variant="contained" className="buttonStyle custmCancelBtn">
-                  Close
-                </Button>
-              </DialogActions>
-            </Grid>
-
-            {/* <DialogActions>
-      <Button onClick={handleMyUserPClose} className="custmCancelBtn" variant="contained" autoFocus>
-        Close
-      </Button>
-    </DialogActions> */}
-          </Dialog>
 
           <Dialog
             open={deleteQ}
