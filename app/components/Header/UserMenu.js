@@ -573,6 +573,7 @@ function UserMenu(props) {
             component={Link}
             className="userText"
             onClick={handleCompanyDialog}
+            disabled={localStorage.getItem('companiesCount') > 1 ? false : true}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <g id="switch-compnay-24" transform="translate(-96.011 -108.003)">

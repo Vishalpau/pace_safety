@@ -875,6 +875,8 @@ function PersonalDashboard(props) {
     };
     await axios(config)
       .then(function (response) {
+        console.log('responseeeeeee', response);
+        localStorage.setItem('companiesCount', response.data.data.results.data.companies.length)
         // setIsLoading(true)
         if (response.status === 200) {
           if (comId != 0) {
@@ -942,7 +944,6 @@ function PersonalDashboard(props) {
   };
   const fetchUserDetails = async (compId, proId, targetPage, tarProjectStruct, tarId) => {
     // window.location.href = `/${tagetPage}`
-    console.log('state null nhi hai');
     try {
       if (compId) {
         let config = {
@@ -954,6 +955,8 @@ function PersonalDashboard(props) {
         await api(config)
           .then(async function (response) {
             if (response.status === 200) {
+
+              // localStorage.setItem('companiesCount', response.data.data.results.data.companies.length);
               // setIsLoading(true)
               let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
                 .subscriptions.filter(subs => subs.appCode === "safety")[0]
@@ -1005,7 +1008,6 @@ function PersonalDashboard(props) {
   }
 
   const handelCallBack = async () => {
-    console.log('hhhhhhhhhhhhhandle cccccallll backk');
     let state = JSON.parse(localStorage.getItem('direct_loading'));
     let comId = 0
     let proId = 0
@@ -1321,13 +1323,7 @@ function PersonalDashboard(props) {
                           </div>
                         </div>
 
-
-
-
                       </div>
-
-
-
 
                       <div className="ibws-fix hexagon_row1">
                         <div className="hexagon hide_responsiv">
@@ -1487,7 +1483,7 @@ function PersonalDashboard(props) {
                   open={projectOpen}
                   onClose={handleProjectClose}
                 >
-                  <DialogTitle onClose={handleProjectClose} className={classesm.projecDialogHeadTitle}>
+                  <DialogTitle className={classesm.projecDialogHeadTitle}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
                       <g id="Select-Project-40" transform="translate(-0.985)">
                         <g id="Layer_1_22_" transform="translate(0.985)">
