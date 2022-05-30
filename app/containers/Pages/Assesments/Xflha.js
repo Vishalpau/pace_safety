@@ -1011,11 +1011,12 @@ function xflha(props) {
         description: deleteValue.description,
         classification: deleteValue.classification,
         createdBy: deleteValue.createdBy,
+        jobDetails: deleteValue.jobDetails,
         status: "Delete"
       }
       let id = deleteValue.id;
       const res = await api
-        .put(`api/v1/audits/${id}/`, temp)
+        .put(`/api/v1/flhas/${id}/`, temp)
         .then((response) => {
           setIsLoading(false);
           fetchData();
