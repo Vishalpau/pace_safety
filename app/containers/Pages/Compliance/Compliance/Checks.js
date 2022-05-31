@@ -1548,11 +1548,11 @@ const Checks = (props) => {
                                                       </FormLabel>
                                                       <TextField
                                                         label="Percentage"
+                                                        type="number"
                                                         name="performancerating"
                                                         id="performancerating"
-                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('%')[0] : ""}
                                                         fullWidth
-                                                        // type="number"
                                                         variant="outlined"
                                                         className="formControl"
                                                         onChange={(e) =>
