@@ -703,7 +703,15 @@ const Checks = (props) => {
             value = starvar
           }
           else if (type === '%') {
-            value = value + "%"
+            let pattern = /^[0-9]*$/;
+            if (pattern.test(value)) {
+              if (value <= 100) {
+                value = value + "%";
+              }
+            }
+            else {
+              value = "";
+            }
           }
           else if (type === '1-10') {
             value = value
@@ -1548,10 +1556,14 @@ const Checks = (props) => {
                                                       </FormLabel>
                                                       <TextField
                                                         label="Percentage"
-                                                        type="number"
+                                                        type="text"
+                                                        inputProps={
+                                                          { maxLength: 3 }
+                                                        }
+                                                        value={checkData.filter(cd => cd.question === value.question[0].score !== "") ? checkData.filter(cd => cd.question == value.question)[0].score.split('%')[0] : ""}
                                                         name="performancerating"
                                                         id="performancerating"
-                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('%')[0] : ""}
+                                                        // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('%')[0] : ""}
                                                         fullWidth
                                                         variant="outlined"
                                                         className="formControl"
