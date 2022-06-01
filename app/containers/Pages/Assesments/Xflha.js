@@ -582,21 +582,6 @@ const useStyles = makeStyles((theme) => ({
       marginRight: '5px',
     },
   },
-
-  hoverB: {
-    '&:hover': {
-      backgroundColor: '#f47607 !important',
-      opacity: '0.9',
-    },
-  },
-  hoverA: {
-    backgroundColor: '#f47607 !important',
-    opacity: '0.9',
-    '&:hover': {
-      backgroundColor: '#f47607 !important',
-      opacity: '0.9',
-    },
-  },
   buckmarkIcon: {
     height: '35px',
     width: '35px',
@@ -712,7 +697,8 @@ function xflha(props) {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-  const [value, setValue] = React.useState(2);
+  const [value, setValue] = React.useState(0);
+  const [valueTwo, setValueTwo] = React.useState(0);
   const [assessments, setAssessments] = useState('My Assessments');
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
 
@@ -796,7 +782,7 @@ function xflha(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     if (assessments === 'My Assessments') {
-      const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}&createdBy=${createdBy}`);
+      const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}&createdBy=${createdBy}`);
       const result = res.data.data.results.results;
       await setFlhas(result);
 
@@ -805,7 +791,7 @@ function xflha(props) {
       const pageCount = Math.ceil(res.data.data.results.count / 25);
       await setPageCount(pageCount);
     } else {
-      const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}`);
+      const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}`);
       const result = res.data.data.results.results;
       await setFlhas(result);
       await setTotalData(res.data.data.results.count);
@@ -860,7 +846,7 @@ function xflha(props) {
     }
   };
   const handleAssment = (event, newValue) => {
-    setValue(newValue);
+    setValueTwo(newValue);
     if (newValue === 0) {
       setAssessments('My Assessments');
       setStatus('');
@@ -1009,6 +995,16 @@ function xflha(props) {
     allPickListDataValue();
   }, []);
 
+  useEffect(()=>{
+    console.log(status, "statussss");
+    fetchData();
+  }, [status])
+
+  const handleChange22 = (event, newValue) => {
+    setValue(newValue);
+    fetchData();
+  };
+
   return (
     <Acl
       module="safety-flha"
@@ -1048,7 +1044,7 @@ function xflha(props) {
               <Grid item sm={6} xs={12} className={classes.listViewTab}>
                 <AppBar position="static" className={classes.topNavTabBack}>
                   <div className={classes.floatLTabs}>
-                    <Tabs className={classes.minwdTab} value={value} onChange={fetchData} aria-label="Tabs" indicatorColor="none">
+                    <Tabs className={classes.minwdTab} value={value} onChange={handleChange22} aria-label="Tabs" indicatorColor="none">
                       <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} onClick={(e) => handelView(e)} />
                       <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} onClick={(e) => handelViewTabel(e)} />
                       {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
@@ -1087,7 +1083,7 @@ function xflha(props) {
                 <Grid item md={7} sm={12} xs={12}>
                   <AppBar position="static" className={classes.navTabBack}>
                     <div className={classes.floatL}>
-                      <Tabs className={classes.minwdTab} value={value} onChange={handleAssment} aria-label="Tabs" indicatorColor="none">
+                      <Tabs className={classes.minwdTab} value={valueTwo} onChange={handleAssment} aria-label="Tabs" indicatorColor="none">
                         <Tab label="My Assessments" {...a11yProps(3)} className={classes.hoverA} />
                         {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
                         <Tab label="Big Picture" {...a11yProps(4)} className={classes.hoverB} />
@@ -1116,8 +1112,8 @@ function xflha(props) {
                 </Grid>
                 <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
                   <span className={classes.mR10}>
-                    <img src={preplanning} onClick={() => setStatus('Open')} />
-                    <img src={completed} onClick={() => setStatus('Closed')} />
+                    <img src={preplanning} onClick={() => setStatus("Open")} />
+                    <img src={completed} onClick={() => setStatus("Close")} />
                   </span>
                 </Grid>
               </Grid>
