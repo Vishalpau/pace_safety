@@ -666,7 +666,12 @@ function ComplianceListNew(props) {
     props.search,
     props.status,
     props.type,
+    props.blank
   ]);
+
+  useEffect(()=>{
+    console.log(props.blank, "setSearchlankornot");
+  }, [props.blank])
 
   // separate card component
   const AllCardData = ({ value, index }) => {

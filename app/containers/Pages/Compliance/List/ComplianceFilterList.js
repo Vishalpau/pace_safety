@@ -492,6 +492,7 @@ class ComplianceFilterList extends React.Component {
               compliance={this.props.compliance}
               search={this.props.search}
               type={this.state.type}
+              blank={this.props.blank}
             />
           </main>
           {after}

@@ -534,6 +534,11 @@ const AssessmentAndDocument = (props) => {
             data.append("createdBy", formDocument.createdBy);
             data.append("updatedBy", formDocument.updatedBy);
             // data.append('qrCodeUrl', null);
+            if (additinalJobDetails.files && typeof additinalJobDetails.files !== 'string') {
+                additinalJobDetails.files.map((file) => {
+                    data.append('files', file);
+                });
+            }
 
             data.append('jhaAssessmentAttachment', formDocument.jhaAssessmentAttachment);
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
