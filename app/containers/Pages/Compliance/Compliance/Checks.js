@@ -983,7 +983,7 @@ const Checks = (props) => {
                                                         row
                                                         aria-label="select-typeof-compliance"
                                                         name="select-typeof-compliance"
-                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].defaultResponse : ""}
+                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : ""}
                                                       >
                                                         {radioDecide.map((option) => (
                                                           <FormControlLabel
