@@ -381,7 +381,7 @@ const Checks = (props) => {
       const temp = [...checkData]
 
       temp.forEach(a => {
-        if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+        if (a.criticality !== "") {
           setErrorBoundary('');
           a.check = true;
         }
@@ -394,7 +394,7 @@ const Checks = (props) => {
     if (expandedTableDetail !== `panel6 ${valueId}`) {
       const temp = [...checkData]
       temp.forEach(a => {
-        if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+        if (a.criticality !== "" ) {
           setErrorBoundary('');
           a.check = true;
         }
@@ -724,6 +724,7 @@ const Checks = (props) => {
         temp[i][field] = value;
       }
     }
+    console.log(temp, 'tempppppppppppp');
     setCheckData(temp);
   };
 

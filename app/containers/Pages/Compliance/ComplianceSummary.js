@@ -530,16 +530,8 @@ function ComplianceSummary(props) {
                         <ul className="SummaryTabList">
                           <li>
                             <Button
-                              color={
-                                complianceData.performanceSummary !== null
-                                  ? "secondary"
-                                  : "primary"
-                              }
-                              variant={
-                                complianceData.performanceSummary !== null
-                                  ? "contained"
-                                  : "outlined"
-                              }
+                              color={"secondary"}
+                              variant={"contained"}
                               size="small"
                               //endIcon={<CheckCircle />}
                               className={classes.statusButton}
@@ -559,14 +551,8 @@ function ComplianceSummary(props) {
                               display="block"
                               align="center"
                             >
-                              {complianceData.performanceSummary !== null
-                                ? "Done"
-                                : "Pending"}
-                              {complianceData.performanceSummary !== null ? (
-                                <CheckCircle />
-                              ) : (
-                                <AccessTime />
-                              )}
+                              Done
+                              <CheckCircle />
                             </Typography>
                           </li>
                         </ul>
@@ -1357,7 +1343,7 @@ function ComplianceSummary(props) {
                                                                 </Grid>
                                                                 : ''
                                                               }
-                                                              
+
                                                               {value.attachment &&
                                                                 <Grid
                                                                   item
