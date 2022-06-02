@@ -526,7 +526,6 @@ function ComplianceListNew(props) {
           `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
-        console.log(result, 'resssssssssssssssuuult');
         const result = res.data.data.results.results;
         await setAllComplianceData(result);
         await setTotalData(res.data.data.results.count);
@@ -657,6 +656,10 @@ function ComplianceListNew(props) {
       .catch((error) => console.log(error));
   };
 
+  useEffect(()=>{
+    fetchAllComplianceData();
+  }, [])
+
   useEffect(() => {
     fetchAllComplianceData();
     setCheckDeletePermission(checkACL('safety-compliance', 'delete_compliance'));
@@ -668,10 +671,6 @@ function ComplianceListNew(props) {
     props.type,
     props.blank
   ]);
-
-  useEffect(()=>{
-    console.log(props.blank, "setSearchlankornot");
-  }, [props.blank])
 
   // separate card component
   const AllCardData = ({ value, index }) => {

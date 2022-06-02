@@ -655,6 +655,8 @@ const ObservationInitialNotificationView = () => {
                         </>
                       ) : null}
                     </Typography>
+                  ) : initialData.attachment ? (
+                    <Attachment value={initialData.attachment} />
                   ) : ('-')}
                 </Grid>
               </Grid>
