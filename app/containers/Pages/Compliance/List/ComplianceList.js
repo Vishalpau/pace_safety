@@ -334,7 +334,6 @@ function Actions(props) {
   };
 
   useEffect(() => {
-    console.log("run");
     fetchAllComplianceData();
   }, [
     props.projectName.breakDown,
@@ -344,10 +343,6 @@ function Actions(props) {
     props.type,
     props.blank
   ]);
-
-  useEffect(()=>{
-    console.log(props.blank, "setSearchlankornot");
-  }, [props.blank])
 
   return (
     <>

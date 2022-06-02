@@ -27,8 +27,8 @@ function InitialNotificationValidator(data, projectStructure) {
     isValid = false;
   }
 
-  if (data.observationType == null || data.observationType == "") {
-    error.observationType = "Choose any one iCare type";
+  if ((data.reportedByName == parseInt(data.reportedByName, 10)) === true) {
+    error.reportedByName = "Only numbers are not allowed.";
     isValid = false;
   }
 
