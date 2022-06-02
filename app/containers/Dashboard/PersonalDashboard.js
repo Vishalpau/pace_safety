@@ -519,6 +519,13 @@ function PersonalDashboard(props) {
   const [currentCompany, setCurrentCompany] = useState({});
   const [currentProjectId, setCurrentProjectId] = useState(null);
 
+  const [changeClass, setChangeClass] = React.useState(false);
+  const [phaseSelect, setPhaseSelect] = React.useState([]);
+  const [openPhase, setOpenPhase] = React.useState();
+  const [secondBreakdown, setSecondBreakdown] = React.useState(null);
+  const [thirdBreakdown, setThirdBreakdown] = React.useState(null);
+  const [fourthBreakdown, setFourthBreakdown] = React.useState(null);
+  const [openSubUnit, setOpenSubUnit] = React.useState();
 
   const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
@@ -543,7 +550,6 @@ function PersonalDashboard(props) {
       JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
 
     if (companyId) {
-
       try {
         let data = await api.get(`${SELF_API}${companyId}/`)
           .then(function (res) {
@@ -551,16 +557,14 @@ function PersonalDashboard(props) {
             api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`).then(d => {
               localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0]))
             });
-
             return res.data.data.results.data.companies[0].subscriptions;
-
           })
+
           .catch(function (error) {
             console.log(error);
           });
 
-
-        await setSubscriptions(data);
+        setSubscriptions(data);
 
         dispatch(appAcl(d.data.data.results.permissions[0]));
 
@@ -583,13 +587,11 @@ function PersonalDashboard(props) {
               }
             }
             )
-
             // this.setState({ codes: codes })
-
           }
         })
-        let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
-        await setCode(temp)
+        // let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
+        setCode(temp)
         await getModules(apps)
 
       } catch (error) { }
@@ -597,99 +599,9 @@ function PersonalDashboard(props) {
     // getAllPickList()
   }
 
-  // const getSubscriptions = async (compId) => {
-  //   const companyId = compId ||
-  //     JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
-
-  //   if (companyId) {
-  //     try {
-  //       let data = await api.get(`${SELF_API}${companyId}/`)
-  //         .then(async function (res) {
-  //           let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode == APPCODE)[0].roles[0].aclUrl
-  //           await api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`)
-  //             .then(d => {
-  //               alert('hii 2')
-  //               localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0]))
-  //               dispatch(appAcl(d.data.data.results.permissions[0]));
-  //               console.log('local timeout run');
-  //             })
-  //             .then(() => {
-  //               alert('hiit');
-  //               console.log('set timeout run');
-  //               // setTimeout(() => {
-  //                 const subscriptionData = res.data.data.results.data.companies[0].subscriptions
-  //                 setSubscriptions(subscriptionData)
-  //                 const modules = subscriptionData.map(subscription => subscription.modules)
-  //                 var modulesState = []
-  //                 var temp = []
-  //                 modules.map(module => {
-  //                   modulesState = [...modulesState]
-  //                   temp = [...temp]
-  //                   if (module.length > 0) {
-  //                     module.map(mod => {
-  //                       modulesState.push(mod)
-  //                       // this.setState({modules: module})
-  //                       if (mod.subscriptionStatus == 'active') {
-  //                         temp.push(mod.moduleCode)
-  //                         // this.setState({ codes: temp })
-  //                         return temp
-  //                       }
-  //                     }
-  //                     )
-  //                   }
-  //                 })
-  //                 setCode(temp)
-  //                 getModules(apps)
-  //               }, 1000)
-  //             // })
-
-  //           return res.data.data.results.data.companies[0].subscriptions;
-
-  //         })
-  //         .catch(function (error) {
-  //           console.log(error);
-  //         });
-
-  //       // setSubscriptions(data)
-  //       // redirectionAccount()
-
-
-  //       // const modules = data.map(subscription => subscription.modules)
-  //       // var modulesState = []
-  //       // var temp = []
-  //       // modules.map(module => {
-  //       //   modulesState = [...modulesState]
-  //       //   temp = [...temp]
-  //       //   if (module.length > 0) {
-  //       //     module.map(mod => {
-  //       //       modulesState.push(mod)
-  //       //       // this.setState({modules: module})
-  //       //       if (mod.subscriptionStatus == 'active') {
-  //       //         temp.push(mod.moduleCode)
-  //       //         // this.setState({ codes: temp })
-  //       //         return temp
-  //       //       }
-  //       //     }
-  //       //     )
-
-  //       //     // this.setState({ codes: codes })
-
-  //       //   }
-  //       // })
-  //       let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
-  //       // await setCode(temp)
-  //       // await getModules(apps)
-
-  //     } catch (error) { }
-  //   }
-  //   // getAllPickList()
-  // }
-
   const redirectionAccount = () => {
-    console.log('rediction account chala')
     if (localStorage.getItem('lastState') != null && localStorage.getItem('projectName') != null) {
       let laststate = localStorage.getItem('lastState');
-      console.log(laststate, 'lastState');
       localStorage.removeItem('lastState');
       history.push(laststate)
     }
@@ -699,7 +611,6 @@ function PersonalDashboard(props) {
   }
 
   const getModules = async (apps) => {
-    console.log('getmodules chala');
     let data = await api
       .post(`${ACCOUNT_API_URL}${API_VERSION}applications/modules/`, { "fkAppId": apps })
       .then(function (res) {
@@ -717,16 +628,12 @@ function PersonalDashboard(props) {
   }
 
   const handleClick = async (appCode) => {
-
-    console.log('handleclick chala');
-
     const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     const projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
 
     let data = await api
       .get(ACCOUNT_API_URL + API_VERSION + 'applications/modules/' + appCode + '/' + companyId + '/')
       .then(function (res) {
-
         return res.data.data.results;
       })
       .catch(function (error) {
@@ -737,45 +644,39 @@ function PersonalDashboard(props) {
       const targetPage = (data.modules ? data.modules.targetPage : "")
       // alert(localStorage.getItem('companyId'))
       const clientId = data.hostings.clientId
-
       window.open(ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + companyId + '&projectId=' + projectId,
       ) // <- This is what makes it open in a new window.
-
     }
-
   }
 
-  const handleDisableModule = (appcode) => {
+  // const handleDisableModule = (appcode) => {
+  //   let moduleDisable = modules.map(module => {
+  //     if (module.moduleCode == appCode) {
+  //       return false;
+  //     }
+  //     else {
+  //       return true
+  //     }
+  //   })[0]
+  // }
 
-    let moduleDisable = modules.map(module => {
-      if (module.moduleCode == appCode) {
-        return false;
-      }
-      else {
-        return true
-      }
-    })[0]
-
-
-  }
   const dispatch = useDispatch();
 
   const handleClose = () => {
     setOpen(false);
   };
   // multi tenant architecture, fetch company
-  const fetchCompany = async (url) => {
-    let config = {
-      method: 'get',
-      url: url,
-      headers: HEADER_AUTH,
-    }
-    await (config)
-  }
+  // const fetchCompany = async (url) => {
+  //   let config = {
+  //     method: 'get',
+  //     url: url,
+  //     headers: HEADER_AUTH,
+  //   }
+  //   await (config)
+  // }
 
   // compney name get
   const handleCompanyName = async (e, key, name) => {
-    console.log('handle company name chalaa');
     let hosting = companyListData.filter(company => company.companyId === e)[0]
       .subscriptions
       .filter(subscription => subscription.appCode == "safety")[0]
@@ -809,8 +710,8 @@ function PersonalDashboard(props) {
     else {
       setOpen(false);
     }
-
   };
+
   const fetchPhaseData = async (projects) => {
     const data = []
     for (let i = 0; i < projects.length; i++) {
@@ -848,6 +749,7 @@ function PersonalDashboard(props) {
   const handleProjectClose = () => {
     setProjectOpen(false);
   };
+
   // handle project Name
   const handleProjectName = async (key) => {
     let data = projectListData[key];
@@ -875,7 +777,6 @@ function PersonalDashboard(props) {
     };
     await axios(config)
       .then(function (response) {
-        console.log('responseeeeeee', response);
         localStorage.setItem('companiesCount', response.data.data.results.data.companies.length)
         // setIsLoading(true)
         if (response.status === 200) {
@@ -922,7 +823,6 @@ function PersonalDashboard(props) {
                   setProjectListData(newData.projects);
                   setProjectOpen(true);
                 }
-
                 // setOpen(true);
               }
             }
@@ -938,10 +838,8 @@ function PersonalDashboard(props) {
           setUserData(response.data.data.results);
         }
       })
-      .catch(function (error) {
-
-      });
   };
+
   const fetchUserDetails = async (compId, proId, targetPage, tarProjectStruct, tarId) => {
     // window.location.href = `/${tagetPage}`
     try {
@@ -955,7 +853,6 @@ function PersonalDashboard(props) {
         await api(config)
           .then(async function (response) {
             if (response.status === 200) {
-
               // localStorage.setItem('companiesCount', response.data.data.results.data.companies.length);
               // setIsLoading(true)
               let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
@@ -991,7 +888,7 @@ function PersonalDashboard(props) {
                   await getSubscriptions()
                     .then(res => {
                       setTimeout(() => {
-                        localStorage.removeItem("direct_loading");
+                        // localStorage.removeItem("direct_loading");
                         history.push('/app/' + targetPage + tarId)
                       }, 1000)
                     })
@@ -999,8 +896,6 @@ function PersonalDashboard(props) {
               })
             }
           })
-          .catch(function (error) {
-          });
       }
     } catch (error) {
     }
@@ -1015,10 +910,8 @@ function PersonalDashboard(props) {
     let tarPage = ''
     let tarId = 0
     if (state !== null) {
-      // console.log('null state nhi hai');
       await fetchUserDetails(state.comId, state.proId, state.tarPage, state.tarProjectStruct, state.tarId)
     } else {
-
       await userDetails(comId, proId, redback, tarPage, tarId);
     }
     await getSubscriptions();
@@ -1031,15 +924,6 @@ function PersonalDashboard(props) {
       setTimeout(() => history.push('app/icare'), 1000)
     }
   }, [props.initialValues.companyListData]);
-
-  const [changeClass, setChangeClass] = React.useState(false);
-  const [phaseSelect, setPhaseSelect] = React.useState([]);
-  const [openPhase, setOpenPhase] = React.useState();
-  const [secondBreakdown, setSecondBreakdown] = React.useState(null);
-  const [thirdBreakdown, setThirdBreakdown] = React.useState(null);
-  const [fourthBreakdown, setFourthBreakdown] = React.useState(null);
-  const [openSubUnit, setOpenSubUnit] = React.useState();
-
 
   const handlePhaseChange = (panel, phases, index, id) => async (event, isExpanded) => {
     if (openPhase !== panel && projectListData[index].breakdown && projectListData[index].breakdown.length > 1 && projectListData[index].breakdown[1].structure && projectListData[index].breakdown[1].structure[0].url) {
@@ -1057,8 +941,6 @@ function PersonalDashboard(props) {
     }
     setChangeClass(isExpanded ? true : false);
     setPhaseSelect([phases]);
-    // console.log('isExpanded', isExpanded);
-    // console.log('changeClass', changeClass);
     setOpenPhase(isExpanded ? panel : false);
   };
 
@@ -1186,7 +1068,6 @@ function PersonalDashboard(props) {
         selectValue: ""
       })
     }
-
 
     localStorage.setItem('selectBreakDown', JSON.stringify(data));
     localStorage.setItem('projectName', JSON.stringify(projectListData[index]))

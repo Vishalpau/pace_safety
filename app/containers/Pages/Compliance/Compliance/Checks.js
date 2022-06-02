@@ -359,9 +359,9 @@ const Checks = (props) => {
     setColorData(a)
   }
 
-  // useEffect(() => {
-  //   console.log(colordata, 'colordata');
-  // }, [colordata])
+  useEffect(() => {
+    console.log(showCheckData, 'showCheckData');
+  }, [showCheckData])
 
   const radioDecide = ["Yes", "No", "N/A"];
 
@@ -381,7 +381,7 @@ const Checks = (props) => {
       const temp = [...checkData]
 
       temp.forEach(a => {
-        if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+        if (a.criticality !== "") {
           setErrorBoundary('');
           a.check = true;
         }
@@ -394,7 +394,7 @@ const Checks = (props) => {
     if (expandedTableDetail !== `panel6 ${valueId}`) {
       const temp = [...checkData]
       temp.forEach(a => {
-        if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+        if (a.criticality !== "" ) {
           setErrorBoundary('');
           a.check = true;
         }
@@ -597,7 +597,7 @@ const Checks = (props) => {
     //here we are getting the data
     let fd = await fetchData();
 
-    console.log(temp);
+    console.log(fd, 'ffffffdddddddddd');
 
     //here we are making a separate array according to the key
     temp.map((tempvalue, i) => {
@@ -613,6 +613,9 @@ const Checks = (props) => {
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
             question: value.question,
+            // criticality: fd.filter(f => f.question == value.question).length ?
+            //   fd.filter(f => f.question == value.question)[0].criticality ||
+            //   fd.filter(f => f.question == value.question)[0].defaultResponse : "",
             criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
             auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
             performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
@@ -721,8 +724,13 @@ const Checks = (props) => {
         temp[i][field] = value;
       }
     }
+    console.log(temp, 'tempppppppppppp');
     setCheckData(temp);
   };
+
+  useEffect(() => {
+    console.log(checkData, 'checkDataaaaaaaaaaa');
+  }, [checkData])
 
   // for get action tracker & showing
   const handelActionTracker = async () => {
@@ -935,6 +943,7 @@ const Checks = (props) => {
                           {
                             Categor.length > 0 ?
                               Categor.map((value, index) => {
+                                console.log('vaaaaaaa', value);
                                 return (
                                   <>
                                     <Grid container item xs={12}>
@@ -975,17 +984,18 @@ const Checks = (props) => {
                                                         row
                                                         aria-label="select-typeof-compliance"
                                                         name="select-typeof-compliance"
-                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].defaultResponse : ""}
+                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : ""}
                                                       >
                                                         {radioDecide.map((option) => (
                                                           <FormControlLabel
                                                             value={option}
                                                             className="selectLabel"
+
                                                             control={<Radio />}
                                                             onChange={(e) =>
                                                               handleChangeData(
                                                                 e.target.value,
-                                                                "defaultResponse",
+                                                                "criticality",
                                                                 index,
                                                                 value.id
                                                               )
@@ -1031,7 +1041,6 @@ const Checks = (props) => {
                                                           defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                           onChange={(event, newValue) => {
                                                             if (newValue !== null) {
-
                                                               handleChangeData(
                                                                 newValue,
                                                                 "score",
@@ -1476,7 +1485,6 @@ const Checks = (props) => {
                                                           defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                           onChange={(event, newValue) => {
                                                             if (newValue != null) {
-
                                                               handleChangeData(
                                                                 newValue,
                                                                 "score",
