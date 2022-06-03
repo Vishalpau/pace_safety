@@ -417,9 +417,11 @@ export default function SimpleTabs() {
     }
   }, []);
 
+  let timer;
   let debounce = (v, d) => {
     return function() {
-      setSearch(v);
+      clearTimeout(timer);
+      timer = setTimeout(() => setSearch(v), d);
     };
   };
 
@@ -479,7 +481,7 @@ export default function SimpleTabs() {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
-                value={search}
+                // value={search}
                 inputProps={{ "aria-label": "search" }}
                 onChange={(e) => handleSearch(e)}
               />

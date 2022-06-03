@@ -34,7 +34,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
-import FormLabel from '@material-ui/core/FormLabel';
+import FormLabel from "@material-ui/core/FormLabel";
 
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
@@ -452,15 +452,14 @@ function ComplianceListNew(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [allComplianceData, setAllComplianceData] = useState([]);
   const [attachOpen, setAttachOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  const [deleteValue, setDeleteValue] = useState("")
+  const [deleteValue, setDeleteValue] = useState("");
   const [deleteQ, setDeleteQ] = useState(false);
-
 
   const handleChangeOne = (event, newValue) => {
     setValue(newValue);
@@ -526,8 +525,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -541,7 +540,8 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -550,10 +550,10 @@ function ComplianceListNew(props) {
         await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
-      }
-      else {
+      } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -563,12 +563,13 @@ function ComplianceListNew(props) {
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
       }
-    }
-    else {
+    } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -577,11 +578,12 @@ function ComplianceListNew(props) {
         await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
-      }
-      else {
+      } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
+            props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -592,8 +594,13 @@ function ComplianceListNew(props) {
         await setPageCount(pageCount);
       }
     }
-    await setIsLoading(true);
   };
+
+  useEffect(()=>{
+    if (allComplianceData.length > 0) {
+      setIsLoading(false); 
+    }
+  }, [allComplianceData])
 
   //method for  all the filters
   const handleChange = async (event, value) => {
@@ -605,8 +612,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -621,34 +628,38 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       }
-    }
-    else {
+    } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
-      }
-      else {
+      } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -659,35 +670,37 @@ function ComplianceListNew(props) {
 
   //method to delete a compliance
   const handleDelete = async () => {
-    let temp = { ...deleteValue }
+    let temp = { ...deleteValue };
     // let temp = { ...item };
     temp.status = "Delete";
     let id = deleteValue.id;
-    setIsLoading(false);
+    setIsLoading(true);
     const res = await api
       .put(`api/v1/audits/${id}/`, temp)
       .then((response) => {
         fetchAllComplianceData();
-        handleCloseDeleteAlert()
+        handleCloseDeleteAlert();
         // setIsLoading(true);
       })
       .catch((error) => console.log(error));
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchAllComplianceData();
-  }, [])
+  }, []);
 
   useEffect(() => {
     fetchAllComplianceData();
-    setCheckDeletePermission(checkACL('safety-compliance', 'delete_compliance'));
+    setCheckDeletePermission(
+      checkACL("safety-compliance", "delete_compliance")
+    );
   }, [
     props.projectName.breakDown,
     props.compliance,
     props.search,
     props.status,
     props.type,
-    props.blank
+    props.blank,
   ]);
 
   // separate card component
@@ -701,7 +714,7 @@ function ComplianceListNew(props) {
     function handleVisibility() {
       setShowGrid(true);
       setHidden(!hidden);
-    };
+    }
 
     // function handleVisibilityComments() {
     //   setCommentsOpen(true);
@@ -710,17 +723,17 @@ function ComplianceListNew(props) {
 
     function handleAttachClose() {
       setShowGrid(false);
-    };
+    }
 
     function handleAttachClick() {
       setShowGrid(!open);
-    };
+    }
 
     function handleAttachOpen() {
       if (!hidden) {
         setShowGrid(true);
       }
-    };
+    }
 
     // function handleCommentsOpen() {
     //   if (!hiddenn) {
@@ -736,7 +749,6 @@ function ComplianceListNew(props) {
     //   setCommentsOpen(!open);
     // };
 
-
     // function handleClickOpenAttachment() {
     //   setopenAttachment(true);
     // };
@@ -751,11 +763,7 @@ function ComplianceListNew(props) {
       <>
         <Card variant="outlined" className={classes.card}>
           <CardContent>
-            <Grid
-              container
-              spacing={3}
-              className={classes.cardContentSection}
-            >
+            <Grid container spacing={3} className={classes.cardContentSection}>
               <Grid
                 item
                 md={2}
@@ -783,27 +791,16 @@ function ComplianceListNew(props) {
                 className={classes.cardLinkAction}
               >
                 <Grid item xs={12}>
-                  <Grid
-                    container
-                    spacing={3}
-                    alignItems="flex-start"
-                  >
+                  <Grid container spacing={3} alignItems="flex-start">
                     <Grid
                       item
                       sm={12}
                       xs={12}
                       className={classes.listHeadColor}
                     >
-                      <Grid
-                        container
-                        spacing={3}
-                        alignItems="flex-start"
-                      >
+                      <Grid container spacing={3} alignItems="flex-start">
                         <Grid item md={10} sm={12} xs={12}>
-                          <Typography
-                            className={classes.title}
-                            variant="h6"
-                          >
+                          <Typography className={classes.title} variant="h6">
                             {value["auditType"] !== null
                               ? value["auditType"]
                               : "-"}
@@ -820,11 +817,7 @@ function ComplianceListNew(props) {
                                 variant="h6"
                                 className={classes.mLeftfont}
                               >
-                                <span
-                                  className={
-                                    classes.listingLabelValue
-                                  }
-                                >
+                                <span className={classes.listingLabelValue}>
                                   {value["auditNumber"] !== null
                                     ? value["auditNumber"]
                                     : "-"}
@@ -832,11 +825,7 @@ function ComplianceListNew(props) {
                               </Link>
                             </span>
                           </Typography>
-                          <span
-                            item
-                            xs={1}
-                            className={classes.sepHeightOne}
-                          />
+                          <span item xs={1} className={classes.sepHeightOne} />
                           <Typography
                             variant="body1"
                             gutterBottom
@@ -845,10 +834,12 @@ function ComplianceListNew(props) {
                             className={classes.listingLabelName}
                           >
                             Group name:{" "}
-                            <span
-                              className={classes.listingLabelValue}
-                            >
-                              {value['groups'].length > 0 ? value['groups'].map((data) => data.checkListGroupName).join(', ') : "-"}
+                            <span className={classes.listingLabelValue}>
+                              {value["groups"].length > 0
+                                ? value["groups"]
+                                    .map((data) => data.checkListGroupName)
+                                    .join(", ")
+                                : "-"}
                             </span>
                           </Typography>
                           {/* <span
@@ -891,12 +882,8 @@ function ComplianceListNew(props) {
                       >
                         Location:
                       </Typography>
-                      <Typography
-                        className={classes.listingLabelValue}
-                      >
-                        {value["area"] !== null
-                          ? value["area"]
-                          : "-"}
+                      <Typography className={classes.listingLabelValue}>
+                        {value["area"] !== null ? value["area"] : "-"}
                       </Typography>
                     </Grid>
 
@@ -910,12 +897,8 @@ function ComplianceListNew(props) {
                         Audited on:
                       </Typography>
 
-                      <Typography
-                        className={classes.listingLabelValue}
-                      >
-                        {moment(value["createdAt"]).format(
-                          "Do MMMM YYYY"
-                        )}
+                      <Typography className={classes.listingLabelValue}>
+                        {moment(value["createdAt"]).format("Do MMMM YYYY")}
                       </Typography>
                     </Grid>
 
@@ -929,9 +912,7 @@ function ComplianceListNew(props) {
                         Audited by:
                       </Typography>
 
-                      <Typography
-                        className={classes.listingLabelValue}
-                      >
+                      <Typography className={classes.listingLabelValue}>
                         {value["createdByName"] !== null
                           ? value["createdByName"]
                           : "-"}
@@ -1018,13 +999,7 @@ function ComplianceListNew(props) {
                 </Typography> */}
               {/* </Grid> */}
 
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={7}
-                className={classes.textRight}
-              >
+              <Grid item xs={12} sm={6} md={7} className={classes.textRight}>
                 {/* <Typography variant="body1" display="inline">
                 <IconButton>
                   <PrintOutlinedIcon className={classes.iconteal} />
@@ -1046,36 +1021,27 @@ function ComplianceListNew(props) {
                   </IconButton>
                 </Link>
               </Typography> */}
-                <span
-                  item
-                  xs={1}
-                  className={classes.sepHeightTen}
-                />
+                <span item xs={1} className={classes.sepHeightTen} />
 
                 <Typography variant="body1" display="inline">
                   <Link href="#" className={classes.mLeftR5}>
-                    {!checkDeletePermission
-                      ? (
+                    {!checkDeletePermission ? (
+                      <DeleteForeverOutlinedIcon
+                        className={classes.iconteal}
+                        style={{
+                          color: "#c0c0c0",
+                          cursor: "not-allowed",
+                        }}
+                      />
+                    ) : (
+                      <Link href="#" className={classes.mLeftR5}>
                         <DeleteForeverOutlinedIcon
                           className={classes.iconteal}
-                          style={{
-                            color: '#c0c0c0',
-                            cursor: 'not-allowed'
-                          }}
+                          // onClick={() => handleDelete(value)}
+                          onClick={() => handleClickDeleteAlert(value)}
                         />
-                      )
-                      : (
-                        <Link
-                          href="#"
-                          className={classes.mLeftR5}
-                        >
-                          <DeleteForeverOutlinedIcon
-                            className={classes.iconteal}
-                            // onClick={() => handleDelete(value)}
-                            onClick={() => handleClickDeleteAlert(value)}
-                          />
-                        </Link>
-                      )}
+                      </Link>
+                    )}
                     {/* <IconButton onClick={() => handleDelete(value)}>
                       <DeleteForeverOutlinedIcon
                         className={classes.iconteal}
@@ -1087,7 +1053,7 @@ function ComplianceListNew(props) {
             </Grid>
           </CardActions>
         </Card>
-        {value.avatar &&
+        {value.avatar && (
           <Grid
             item
             md={12}
@@ -1108,12 +1074,7 @@ function ComplianceListNew(props) {
                 <Grid item md={12} sm={12} xs={12}>
                   <List>
                     <ListItem>
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                      >
+                      <Grid item md={12} sm={12} xs={12}>
                         <div className="attachFileThumb">
                           <Attachment src={value.avatar} value={value.avatar} />
                         </div>
@@ -1124,7 +1085,7 @@ function ComplianceListNew(props) {
               </Grid>
             </Paper>
           </Grid>
-        }
+        )}
         {/* <div>
           <Dialog
             open={openAttachment}
@@ -1172,8 +1133,8 @@ function ComplianceListNew(props) {
           </Dialog>
         </div> */}
       </>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -1181,7 +1142,7 @@ function ComplianceListNew(props) {
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
-              {isLoading ? (
+              {/* {isLoading ? (
                 allComplianceData.length > 0 ? (
                   allComplianceData.map((value, index) => <AllCardData value={value} />)
                 ) : (
@@ -1196,150 +1157,23 @@ function ComplianceListNew(props) {
                 )
               ) : (
                 <Loader />
-              )}
-
-              {/* <Grid
-                item
-                md={12}
-                sm={12}
-                xs={12}
-                // hidden={!hidden}
-                onBlur={handleAttachClose}
-                onClick={handleAttachClick}
-                onClose={handleAttachClose}
-                onFocus={handleAttachOpen}
-                onMouseEnter={handleAttachOpen}
-                onMouseLeave={handleAttachClose}
-                open={attachOpen}
-                className="paddTBRemove attactmentShowSection"
-              >
-                <Paper elevation={1} className="cardSectionBottom">
-                  <Grid container spacing={3}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <List>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                      </List>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid> */}
-              {/* <div>
-                <Grid
-                  item
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  hidden={!hiddenn}
-                  onBlur={handleCommentsClose}
-                  onClick={handleCommentsClick}
-                  onClose={handleCommentsClose}
-                  onFocus={handleCommentsOpen}
-                  onMouseEnter={handleCommentsOpen}
-                  onMouseLeave={handleCommentsClose}
-                  open={commentsOpen}
-                  className="commentsShowSection"
+              )} */}
+              {isLoading ? (
+                <Loader />
+              ) : allComplianceData.length > 0 ? (
+                allComplianceData.map((value, index) => (
+                  <AllCardData value={value} />
+                ))
+              ) : (
+                <Typography
+                  className={classes.sorryTitle}
+                  variant="h6"
+                  color="primary"
+                  noWrap
                 >
-                  <Paper elevation={1} className="cardSectionBottom">
-                    <Grid container spacing={3}>
-                      <Grid item md={12} xs={12}>
-                        <Box padding={3}>
-                          <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                              <TextField
-                                multiline
-                                variant="outlined"
-                                rows="1"
-                                id="JobTitle"
-                                label="Add your comments here"
-                                className="formControl"
-                              />
-                            </Grid>
-                            <Grid item xs={3}>
-                              <input type="file" />
-                            </Grid>
-                            <Grid item xs={9}>
-                              <AddCircleOutlineIcon
-                                className={classes.plusIcon}
-                              />
-                              <RemoveCircleOutlineIcon
-                                className={classes.minusIcon}
-                              />
-                            </Grid>
-                            <Grid item xs={12}>
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                                className="spacerRight buttonStyle"
-                                disableElevation
-                              >
-                                Respond
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="secondary"
-                                size="small"
-                                className="custmCancelBtn buttonStyle"
-                                disableElevation
-                              >
-                                Cancel
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
-              </div> */}
+                  Sorry, no matching records found
+                </Typography>
+              )}
 
               <div>
                 <Dialog
@@ -1516,20 +1350,34 @@ function ComplianceListNew(props) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" className="checkRadioLabel">
+                    Are you sure you want to delete this question?
+                  </FormLabel>
+                </FormControl>
+              </Grid>
               <Grid
                 item
                 md={12}
+                sm={12}
                 xs={12}
+                className={classes.popUpButton}
               >
-                <FormControl component="fieldset">
-                  <FormLabel component="legend" className="checkRadioLabel">Are you sure you want to delete this question?</FormLabel>
-                </FormControl>
-              </Grid>
-              <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
-                <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={() => handleDelete()}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  className="spacerRight buttonStyle"
+                  onClick={() => handleDelete()}
+                >
                   Yes
                 </Button>
-                <Button color="secondary" variant="contained" className="buttonStyle custmCancelBtn" onClick={() => handleCloseDeleteAlert()}>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  className="buttonStyle custmCancelBtn"
+                  onClick={() => handleCloseDeleteAlert()}
+                >
                   No
                 </Button>
               </Grid>
