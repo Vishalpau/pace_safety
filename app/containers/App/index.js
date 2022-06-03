@@ -46,7 +46,6 @@ function App() {
         };
         axios(config)
           .then(function (response) {
-
             localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
             setStatus(response.status)
             if (response.status !== 200) {
@@ -62,15 +61,14 @@ function App() {
       }
     } catch (error) {
     }
-
   }
+
   useEffect(() => {
     userLogin();
   }, [status])
+
   const getToken = async () => {
     const url = window.location
-
-
     let comId = 0
     let proId = 0
     let redback = ''
@@ -78,16 +76,15 @@ function App() {
     let tarId = 0
     let jsonCode = ""
     let tarProjectStruct;
-   
+
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code") || jsonCode;
-    const tagetPage = searchParams.get("targetPage") || tarPage;
-    // const targetId = searchParams.get("targetId");
-    const companyId = searchParams.get("companyId") || comId;
-    const projectId = searchParams.get('projectId') || proId
-
+    
+    // const tagetPage = searchParams.get("targetPage") || tarPage;
+    // // const targetId = searchParams.get("targetId");
+    // const companyId = searchParams.get("companyId") || comId;
+    // const projectId = searchParams.get('projectId') || proId
     let data = {}
-    console.log(code)
     if (code) {
       localStorage.clear()
       if (window.location.search !== "") {
@@ -96,6 +93,7 @@ function App() {
         let json = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
         let state = json.state
         if (state) {
+          console.log(state, 'stateeeeeeeeeee');
           jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
           let newArr = (0, eval)('(' + jsonCode + ')')
           state = newArr;
@@ -105,8 +103,9 @@ function App() {
           tarPage = state.targetPage.trim();
           tarId = state.targetId;
           tarProjectStruct = state.projectStructure
+          console.log(tarProjectStruct, 'tarProjectStruct');
           if (comId !== "") {
-            localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarId:tarId, tarPage: tarPage, tarProjectStruct: tarProjectStruct }))
+            localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarId: tarId, tarPage: tarPage, tarProjectStruct: tarProjectStruct }))
           }
         }
       }
@@ -117,9 +116,8 @@ function App() {
           client_secret: `${LOCAL_SSO_CLIENT_SECRET}`,
           code: code,
         });
-
-      } else {
-
+      }
+      else {
         data = JSON.stringify({
           grant_type: "authorization_code",
           client_id:
@@ -139,7 +137,7 @@ function App() {
         data: data,
       };
 
-      await axios(config)
+      axios(config)
         .then(function (response) {
           if (response.status === 200) {
             localStorage.setItem("access_token", response.data.access_token);
@@ -150,11 +148,11 @@ function App() {
           console.log(error)
         });
     }
+
     else {
       if (localStorage.getItem('access_token') === null) {
         let laststate = window.location.href.replace(window.location.protocol + '//' + window.location.host, '')
         if (laststate != '')
-          localStorage.setItem('lastState', laststate)
         if (window.location.hostname === 'localhost') {
           window.location.href = `${LOCAL_LOGIN_URL}`;
         } else {
@@ -166,7 +164,6 @@ function App() {
 
   useEffect(() => {
     getToken();
-
   }, []);
 
   return (<Suspense fallback={<Loading />}>
