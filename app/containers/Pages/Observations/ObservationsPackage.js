@@ -484,6 +484,7 @@ function Actions(props) {
     : null;
 
   const handleSummaryPush = async (index) => {
+    console.log(allInitialData, 'allInitialData');
     const { id } = allInitialData[index];
     localStorage.setItem('fkobservationId', id);
     if (allInitialData[index].isCorrectiveActionTaken !== null) {
@@ -514,7 +515,6 @@ function Actions(props) {
       // await setAllInitialData(result)
       if (props.observation == 'My Observations') {
         const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`);
-        console.log(allLogInUserData);
         const result = allLogInUserData.data.data.results.results;
         setAllInitialData(result);
         setTotalData(allLogInUserData.data.data.results.count);
@@ -784,8 +784,6 @@ function Actions(props) {
 
   const AllCardData = (item, index) => {
 
-    console.log(item, 'iiteeeeeem');
-
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
 
@@ -827,7 +825,7 @@ function Actions(props) {
                 </Button>
               </Grid>
               <Link
-                onClick={() => handleSummaryPush(index)}
+                onClick={() => handleSummaryPush(item.index)}
                 className={classes.cardLinkAction}
               >
                 <Grid item xs={12}>

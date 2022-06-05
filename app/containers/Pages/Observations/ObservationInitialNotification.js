@@ -438,11 +438,12 @@ const ObservationInitialNotification = (props) => {
       form,
       selectDepthAndId
     );
-    await setError(error);
+    console.log(error);
+    setError(error);
     if (!isValid) {
       return 'Data is not valid';
     }
-    await setLoading(true);
+    // setLoading(true);
 
     // we are convert form into FormData
     const data = new FormData();
@@ -504,48 +505,49 @@ const ObservationInitialNotification = (props) => {
       data.append('source', form.source),
       data.append('vendor', form.vendor),
       data.append('vendorReferenceId', form.vendorReferenceId);
-    const res = await api.post('/api/v1/observations/', data).then(res => {
-      if (res.status === 201 || res.status === 200) {
-        const id = res.data.data.results;
-        const fkObservatioId = id.id;
-        localStorage.setItem('fkobservationId', fkObservatioId);
+    const res = await api.post('/api/v1/observations/', data)
+      .then(res => {
+        if (res.status === 201 || res.status === 200) {
+          const id = res.data.data.results;
+          const fkObservatioId = id.id;
+          localStorage.setItem('fkobservationId', fkObservatioId);
 
-        if (catagory.length > 0) {
-          for (let i = 0; i < catagory.length; i++) {
-            catagory[i].fkObservationId = localStorage.getItem(
-              'fkobservationId'
+          if (catagory.length > 0) {
+            for (let i = 0; i < catagory.length; i++) {
+              catagory[i].fkObservationId = localStorage.getItem(
+                'fkobservationId'
+              );
+            }
+            const response = api.post(`/api/v1/observations/${localStorage.getItem('fkobservationId')}/observationtags/`,
+              catagory
+            ).then(res => {
+              if (res.status === 200 || res.status === 201) {
+                const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem('fkobservationId')}/sentnotification/`);
+                setLoading(false);
+                history.push(
+                  `/app/icare/details/${localStorage.getItem(
+                    'fkobservationId'
+                  )}`
+                );
+                console.log(response);
+              }
+            }).catch(err => {
+              console.log(err);
+              setLoading(false);
+            });
+          } else {
+            const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem('fkobservationId')}/sentnotification/`);
+
+            history.push(
+              `/app/icare/details/${localStorage.getItem(
+                'fkobservationId'
+              )}`
             );
           }
-          const response = api.post(`/api/v1/observations/${localStorage.getItem('fkobservationId')}/observationtags/`,
-            catagory
-          ).then(res => {
-            if (res.status === 200 || res.status === 201) {
-              const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem('fkobservationId')}/sentnotification/`);
-              setLoading(false);
-              history.push(
-                `/app/icare/details/${localStorage.getItem(
-                  'fkobservationId'
-                )}`
-              );
-              console.log(response);
-            }
-          }).catch(err => {
-            console.log(err);
-            setLoading(false);
-          });
-        } else {
-          const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem('fkobservationId')}/sentnotification/`);
-
-          history.push(
-            `/app/icare/details/${localStorage.getItem(
-              'fkobservationId'
-            )}`
-          );
         }
-      }
-    }).catch(err => {
-      setLoading(false);
-    });
+      }).catch(err => {
+        setLoading(false);
+      });
   };
 
   const handelClose = () => {
@@ -1663,7 +1665,7 @@ const ObservationInitialNotification = (props) => {
                   </Paper>
                 </Grid>
 
-                <MultiAttachment attachmentHandler={(files)=>{setForm({ ...form, files: files })}} />
+                <MultiAttachment attachmentHandler={(files) => { setForm({ ...form, files: files }) }} />
 
                 <Grid item md={12} xs={12} className="paddBRemove">
                   <FormGroup className={classes.customCheckBoxListCondition}>
