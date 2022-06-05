@@ -410,6 +410,10 @@ const useStyles = makeStyles((theme) => ({
 function Actions(props) {
   const type = localStorage.getItem('type');
 
+  useEffect(() => {
+    console.log('checking')
+  },[])
+
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).name
     : null;
