@@ -391,6 +391,7 @@ export default function ComplianceSearchSectionCard() {
   const [value, setValue] = React.useState(0);
   const [compliance, setCompliancesetValue] = React.useState("My Inspections");
   const [search, setSearch] = React.useState("");
+  const [dummySearch, setDummySearch] = React.useState("");
   const [blank, setBlank] = React.useState(true);
   const [status, setStatus] = React.useState("");
 
@@ -405,27 +406,38 @@ export default function ComplianceSearchSectionCard() {
   };
 
   useEffect(() => {
+    // localStorage.setItem("SearchedText", JSON.stringify(search))
     if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
       const retreiveSearchText = JSON.parse(
         localStorage.getItem("SearchedText")
       );
       setSearch(retreiveSearchText);
+      setDummySearch(retreiveSearchText);
     }
   }, []);
 
-  let timer;
-  let debounce = (v, d) => {
-    return function() {
-      clearTimeout(timer);
-      timer = setTimeout(() => setSearch(v), d);
-    };
-  };
+  // const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 500)();
 
-  const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 500)();
+  const handleSearch = (e) => {
+    setDummySearch(e.target.value.toLowerCase());
+    // document.addEventListener('keyup', function (e) {
+    //   if (e.code === 'Enter') {
+    //     setSearch(e.target.value.toLowerCase())
+    //   }
+    // })
+  }
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearch(dummySearch)
+    }, 1000)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [dummySearch])
+
 
   useEffect(() => {
     localStorage.setItem("SearchedText", JSON.stringify(search));
-    console.log(search);
   }, [search]);
 
   useEffect(() => {
@@ -482,10 +494,11 @@ export default function ComplianceSearchSectionCard() {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
-                // value={search}
+                value={dummySearch}
                 onChange={(e) => handleSearch(e)}
                 inputProps={{ "aria-label": "search" }}
               />
+              <Typography style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", fontSize: 12 }}>Enter</Typography>
             </Paper>
           </Grid>
 
@@ -507,9 +520,9 @@ export default function ComplianceSearchSectionCard() {
             <ComplianceFilterCard
               compliance={compliance}
               search={
-                search !== ""
+                search !== ''
                   ? search
-                  : JSON.parse(localStorage.getItem("SearchedText"))
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
               }
               status={status}
               blank={blank}
@@ -519,9 +532,9 @@ export default function ComplianceSearchSectionCard() {
             <ComplianceFilterCard
               compliance={compliance}
               search={
-                search !== ""
+                search !== ''
                   ? search
-                  : JSON.parse(localStorage.getItem("SearchedText"))
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
               }
               status={status}
               blank={blank}
@@ -531,9 +544,9 @@ export default function ComplianceSearchSectionCard() {
             <ComplianceFilterCard
               compliance={compliance}
               search={
-                search !== ""
+                search !== ''
                   ? search
-                  : JSON.parse(localStorage.getItem("SearchedText"))
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
               }
               status={status}
               blank={blank}
@@ -543,7 +556,9 @@ export default function ComplianceSearchSectionCard() {
             <ComplianceFilterCard
               compliance={compliance}
               search={
-                JSON.parse(localStorage.getItem("SearchedText")) || search
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
               }
               status={status}
               blank={blank}
