@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
 function Actions(props) {
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [allComplianceData, setAllComplianceData] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
@@ -264,8 +264,13 @@ function Actions(props) {
       }
     }
 
-    await setIsLoading(true);
   };
+
+  useEffect(()=>{
+    if (allComplianceData.length > 0) {
+      setIsLoading(false); 
+    }
+  }, [allComplianceData])
   
 //method for  all the types filters
   const handleChange = async (event, value) => {
@@ -335,6 +340,10 @@ function Actions(props) {
 
   useEffect(() => {
     fetchAllComplianceData();
+  }, []);
+
+  useEffect(() => {
+    fetchAllComplianceData();
   }, [
     props.projectName.breakDown,
     props.compliance,
@@ -347,7 +356,7 @@ function Actions(props) {
   return (
     <>
       <Box>
-        {isLoading ? (
+        {isLoading === false ? (
           <>
             <TableContainer component={Paper}>
               <Grid component={Paper}>

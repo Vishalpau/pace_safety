@@ -7,21 +7,34 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
+import Share from "@material-ui/icons/Share";
 import Divider from "@material-ui/core/Divider";
 import Link from "@material-ui/core/Link";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import Box from "@material-ui/core/Box";
+import Chip from "@material-ui/core/Chip";
+import Avatar from "@material-ui/core/Avatar";
+import TableContainer from "@material-ui/core/TableContainer";
 import { makeStyles } from "@material-ui/core/styles";
 import Incidents from "dan-styles/IncidentsList.scss";
+import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
+import MUIDataTable from "mui-datatables";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import { useHistory, useParams } from "react-router";
+//import "../../../styles/custom/customheader.css";
+import StarsIcon from "@material-ui/icons/Stars";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import FormLabel from '@material-ui/core/FormLabel';
+import ListSubheader from "@material-ui/core/ListSubheader";
+import FormLabel from "@material-ui/core/FormLabel";
 
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
@@ -31,6 +44,11 @@ import Dialog from "@material-ui/core/Dialog";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
+import projectpj from "dan-images/projectpj.png";
+import TextField from "@material-ui/core/TextField";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
+import IconButton from "@material-ui/core/IconButton";
 import api from "../../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
@@ -434,15 +452,14 @@ function ComplianceListNew(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [allComplianceData, setAllComplianceData] = useState([]);
   const [attachOpen, setAttachOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  const [deleteValue, setDeleteValue] = useState("")
+  const [deleteValue, setDeleteValue] = useState("");
   const [deleteQ, setDeleteQ] = useState(false);
-
 
   const handleChangeOne = (event, newValue) => {
     setValue(newValue);
@@ -532,8 +549,7 @@ function ComplianceListNew(props) {
         await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
-      }
-      else {
+      } else {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
@@ -545,8 +561,7 @@ function ComplianceListNew(props) {
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
       }
-    }
-    else {
+    } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
@@ -559,8 +574,7 @@ function ComplianceListNew(props) {
         await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
-      }
-      else {
+      } else {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
@@ -574,8 +588,13 @@ function ComplianceListNew(props) {
         await setPageCount(pageCount);
       }
     }
-    await setIsLoading(true);
   };
+
+  useEffect(() => {
+    if (allComplianceData.length > 0) {
+      setIsLoading(false);
+    }
+  }, [allComplianceData])
 
   //method for  all the filters
   const handleChange = async (event, value) => {
@@ -616,8 +635,7 @@ function ComplianceListNew(props) {
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       }
-    }
-    else {
+    } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
@@ -626,8 +644,7 @@ function ComplianceListNew(props) {
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
-      }
-      else {
+      } else {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
@@ -641,35 +658,37 @@ function ComplianceListNew(props) {
 
   //method to delete a compliance
   const handleDelete = async () => {
-    let temp = { ...deleteValue }
+    let temp = { ...deleteValue };
     // let temp = { ...item };
     temp.status = "Delete";
     let id = deleteValue.id;
-    setIsLoading(false);
+    setIsLoading(true);
     const res = await api
       .put(`api/v1/audits/${id}/`, temp)
       .then((response) => {
         fetchAllComplianceData();
-        handleCloseDeleteAlert()
+        handleCloseDeleteAlert();
         // setIsLoading(true);
       })
       .catch((error) => console.log(error));
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchAllComplianceData();
-  }, [])
+  }, []);
 
   useEffect(() => {
     fetchAllComplianceData();
-    setCheckDeletePermission(checkACL('safety-compliance', 'delete_compliance'));
+    setCheckDeletePermission(
+      checkACL("safety-compliance", "delete_compliance")
+    );
   }, [
     props.projectName.breakDown,
     props.compliance,
     props.search,
     props.status,
     props.type,
-    props.blank
+    props.blank,
   ]);
 
   // separate card component
@@ -683,7 +702,7 @@ function ComplianceListNew(props) {
     function handleVisibility() {
       setShowGrid(true);
       setHidden(!hidden);
-    };
+    }
 
     // function handleVisibilityComments() {
     //   setCommentsOpen(true);
@@ -692,17 +711,17 @@ function ComplianceListNew(props) {
 
     function handleAttachClose() {
       setShowGrid(false);
-    };
+    }
 
     function handleAttachClick() {
       setShowGrid(!open);
-    };
+    }
 
     function handleAttachOpen() {
       if (!hidden) {
         setShowGrid(true);
       }
-    };
+    }
 
     // function handleCommentsOpen() {
     //   if (!hiddenn) {
@@ -718,7 +737,6 @@ function ComplianceListNew(props) {
     //   setCommentsOpen(!open);
     // };
 
-
     // function handleClickOpenAttachment() {
     //   setopenAttachment(true);
     // };
@@ -733,11 +751,7 @@ function ComplianceListNew(props) {
       <>
         <Card variant="outlined" className={classes.card}>
           <CardContent>
-            <Grid
-              container
-              spacing={3}
-              className={classes.cardContentSection}
-            >
+            <Grid container spacing={3} className={classes.cardContentSection}>
               <Grid
                 item
                 md={2}
@@ -765,27 +779,16 @@ function ComplianceListNew(props) {
                 className={classes.cardLinkAction}
               >
                 <Grid item xs={12}>
-                  <Grid
-                    container
-                    spacing={3}
-                    alignItems="flex-start"
-                  >
+                  <Grid container spacing={3} alignItems="flex-start">
                     <Grid
                       item
                       sm={12}
                       xs={12}
                       className={classes.listHeadColor}
                     >
-                      <Grid
-                        container
-                        spacing={3}
-                        alignItems="flex-start"
-                      >
+                      <Grid container spacing={3} alignItems="flex-start">
                         <Grid item md={10} sm={12} xs={12}>
-                          <Typography
-                            className={classes.title}
-                            variant="h6"
-                          >
+                          <Typography className={classes.title} variant="h6">
                             {value["auditType"] !== null
                               ? value["auditType"]
                               : "-"}
@@ -802,11 +805,7 @@ function ComplianceListNew(props) {
                                 variant="h6"
                                 className={classes.mLeftfont}
                               >
-                                <span
-                                  className={
-                                    classes.listingLabelValue
-                                  }
-                                >
+                                <span className={classes.listingLabelValue}>
                                   {value["auditNumber"] !== null
                                     ? value["auditNumber"]
                                     : "-"}
@@ -814,11 +813,7 @@ function ComplianceListNew(props) {
                               </Link>
                             </span>
                           </Typography>
-                          <span
-                            item
-                            xs={1}
-                            className={classes.sepHeightOne}
-                          />
+                          <span item xs={1} className={classes.sepHeightOne} />
                           <Typography
                             variant="body1"
                             gutterBottom
@@ -827,10 +822,12 @@ function ComplianceListNew(props) {
                             className={classes.listingLabelName}
                           >
                             Group name:{" "}
-                            <span
-                              className={classes.listingLabelValue}
-                            >
-                              {value['groups'].length > 0 ? value['groups'].map((data) => data.checkListGroupName).join(', ') : "-"}
+                            <span className={classes.listingLabelValue}>
+                              {value["groups"].length > 0
+                                ? value["groups"]
+                                  .map((data) => data.checkListGroupName)
+                                  .join(", ")
+                                : "-"}
                             </span>
                           </Typography>
                           {/* <span
@@ -873,12 +870,8 @@ function ComplianceListNew(props) {
                       >
                         Location:
                       </Typography>
-                      <Typography
-                        className={classes.listingLabelValue}
-                      >
-                        {value["area"] !== null
-                          ? value["area"]
-                          : "-"}
+                      <Typography className={classes.listingLabelValue}>
+                        {value["area"] !== null ? value["area"] : "-"}
                       </Typography>
                     </Grid>
 
@@ -892,12 +885,8 @@ function ComplianceListNew(props) {
                         Audited on:
                       </Typography>
 
-                      <Typography
-                        className={classes.listingLabelValue}
-                      >
-                        {moment(value["createdAt"]).format(
-                          "Do MMMM YYYY"
-                        )}
+                      <Typography className={classes.listingLabelValue}>
+                        {moment(value["createdAt"]).format("Do MMMM YYYY")}
                       </Typography>
                     </Grid>
 
@@ -911,9 +900,7 @@ function ComplianceListNew(props) {
                         Audited by:
                       </Typography>
 
-                      <Typography
-                        className={classes.listingLabelValue}
-                      >
+                      <Typography className={classes.listingLabelValue}>
                         {value["createdByName"] !== null
                           ? value["createdByName"]
                           : "-"}
@@ -938,7 +925,7 @@ function ComplianceListNew(props) {
               alignItems="left"
               className={classes.cardBottomSection}
             >
-              <Grid item xs={12} sm={6} md={5}>
+              {/* <Grid item xs={12} sm={6} md={5}>
                 <Typography
                   variant="body1"
                   display="inline"
@@ -947,26 +934,20 @@ function ComplianceListNew(props) {
                   <AttachmentIcon className={classes.mright5} />
                   Attachments:
                 </Typography>
-
-
                 <Typography variant="body2" display="inline">
                   <span>
                     <Link
                       // href="#"
-                      onClick={value.attachmentLinks.attachmentCount && handleVisibility}
+                      onClick={value['attachmentCount'] && handleVisibility}
                       color="secondary"
                       aria-haspopup="true"
                       className={classes.mLeftR5}
                     >
-                      {value.attachmentLinks.attachmentCount}
+                      {`${value['attachmentCount'] ? value['attachmentCount'] : '0'}`}
                     </Link>
                   </span>
-                </Typography>
-              </Grid>
-
-              {/* <Grid item xs={12} sm={6} md={5}>
-                
-                {/* <span
+                </Typography> */}
+              {/* <span
                   item
                   xs={1}
                   className={classes.sepHeightTen}
@@ -1006,13 +987,7 @@ function ComplianceListNew(props) {
                 </Typography> */}
               {/* </Grid> */}
 
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={7}
-                className={classes.textRight}
-              >
+              <Grid item xs={12} sm={6} md={7} className={classes.textRight}>
                 {/* <Typography variant="body1" display="inline">
                 <IconButton>
                   <PrintOutlinedIcon className={classes.iconteal} />
@@ -1034,36 +1009,27 @@ function ComplianceListNew(props) {
                   </IconButton>
                 </Link>
               </Typography> */}
-                <span
-                  item
-                  xs={1}
-                  className={classes.sepHeightTen}
-                />
+                <span item xs={1} className={classes.sepHeightTen} />
 
                 <Typography variant="body1" display="inline">
                   <Link href="#" className={classes.mLeftR5}>
-                    {!checkDeletePermission
-                      ? (
+                    {!checkDeletePermission ? (
+                      <DeleteForeverOutlinedIcon
+                        className={classes.iconteal}
+                        style={{
+                          color: "#c0c0c0",
+                          cursor: "not-allowed",
+                        }}
+                      />
+                    ) : (
+                      <Link href="#" className={classes.mLeftR5}>
                         <DeleteForeverOutlinedIcon
                           className={classes.iconteal}
-                          style={{
-                            color: '#c0c0c0',
-                            cursor: 'not-allowed'
-                          }}
+                          // onClick={() => handleDelete(value)}
+                          onClick={() => handleClickDeleteAlert(value)}
                         />
-                      )
-                      : (
-                        <Link
-                          href="#"
-                          className={classes.mLeftR5}
-                        >
-                          <DeleteForeverOutlinedIcon
-                            className={classes.iconteal}
-                            // onClick={() => handleDelete(value)}
-                            onClick={() => handleClickDeleteAlert(value)}
-                          />
-                        </Link>
-                      )}
+                      </Link>
+                    )}
                     {/* <IconButton onClick={() => handleDelete(value)}>
                       <DeleteForeverOutlinedIcon
                         className={classes.iconteal}
@@ -1075,7 +1041,7 @@ function ComplianceListNew(props) {
             </Grid>
           </CardActions>
         </Card>
-        {value.attachmentLinks.attachmentCount ?
+        {value.avatar && (
           <Grid
             item
             md={12}
@@ -1096,19 +1062,10 @@ function ComplianceListNew(props) {
                 <Grid item md={12} sm={12} xs={12}>
                   <List>
                     <ListItem>
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                      >
-                        {value.attachmentLinks.links.map(a => {
-                          return (
-                            <div className="attachFileThumb">
-                              <Attachment src={a} value={a} />
-                            </div>
-                          )
-                        })}
+                      <Grid item md={12} sm={12} xs={12}>
+                        <div className="attachFileThumb">
+                          <Attachment src={value.avatar} value={value.avatar} />
+                        </div>
                       </Grid>
                     </ListItem>
                   </List>
@@ -1116,8 +1073,7 @@ function ComplianceListNew(props) {
               </Grid>
             </Paper>
           </Grid>
-          : ""
-        }
+        )}
         {/* <div>
           <Dialog
             open={openAttachment}
@@ -1165,18 +1121,37 @@ function ComplianceListNew(props) {
           </Dialog>
         </div> */}
       </>
-    )
-  }
+    );
+  };
 
   return (
     <>
       <Box>
         <Grid className={classes.marginTopBottom}>
-          {/* <div> */}
-          <div className="gridView">
-            {isLoading ? (
-              allComplianceData.length > 0 ? (
-                allComplianceData.map((value, index) => <AllCardData value={value} />)
+          <div>
+            <div className="gridView">
+              {/* {isLoading ? (
+                allComplianceData.length > 0 ? (
+                  allComplianceData.map((value, index) => <AllCardData value={value} />)
+                ) : (
+                  <Typography
+                    className={classes.sorryTitle}
+                    variant="h6"
+                    color="primary"
+                    noWrap
+                  >
+                    Sorry, no matching records found
+                  </Typography>
+                )
+              ) : (
+                <Loader />
+              )} */}
+              {isLoading ? (
+                <Loader />
+              ) : allComplianceData.length > 0 ? (
+                allComplianceData.map((value, index) => (
+                  <AllCardData value={value} />
+                ))
               ) : (
                 <Typography
                   className={classes.sorryTitle}
@@ -1186,318 +1161,172 @@ function ComplianceListNew(props) {
                 >
                   Sorry, no matching records found
                 </Typography>
-              )
-            ) : (
-              <Loader />
-            )}
+              )}
 
-            {/* <Grid
-                item
-                md={12}
-                sm={12}
-                xs={12}
-                // hidden={!hidden}
-                onBlur={handleAttachClose}
-                onClick={handleAttachClick}
-                onClose={handleAttachClose}
-                onFocus={handleAttachOpen}
-                onMouseEnter={handleAttachOpen}
-                onMouseLeave={handleAttachClose}
-                open={attachOpen}
-                className="paddTBRemove attactmentShowSection"
-              >
-                <Paper elevation={1} className="cardSectionBottom">
-                  <Grid container spacing={3}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <List>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <img
-                            src={projectpj}
-                            onClick={handleClickOpenAttachment}
-                            className="hoverIcon"
-                          />
-                        </ListItem>
-                      </List>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid> */}
-            {/* <div>
-                <Grid
-                  item
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  hidden={!hiddenn}
-                  onBlur={handleCommentsClose}
-                  onClick={handleCommentsClick}
-                  onClose={handleCommentsClose}
-                  onFocus={handleCommentsOpen}
-                  onMouseEnter={handleCommentsOpen}
-                  onMouseLeave={handleCommentsClose}
-                  open={commentsOpen}
-                  className="commentsShowSection"
+              <div>
+                <Dialog
+                  open={myUserPOpen}
+                  onClose={handleMyUserPClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  fullWidth={true}
+                  maxWidth={"sm"}
                 >
-                  <Paper elevation={1} className="cardSectionBottom">
-                    <Grid container spacing={3}>
-                      <Grid item md={12} xs={12}>
-                        <Box padding={3}>
-                          <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                              <TextField
-                                multiline
-                                variant="outlined"
-                                rows="1"
-                                id="JobTitle"
-                                label="Add your comments here"
-                                className="formControl"
-                              />
-                            </Grid>
-                            <Grid item xs={3}>
-                              <input type="file" />
-                            </Grid>
-                            <Grid item xs={9}>
-                              <AddCircleOutlineIcon
-                                className={classes.plusIcon}
-                              />
-                              <RemoveCircleOutlineIcon
-                                className={classes.minusIcon}
-                              />
-                            </Grid>
-                            <Grid item xs={12}>
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                                className="spacerRight buttonStyle"
-                                disableElevation
-                              >
-                                Respond
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="secondary"
-                                size="small"
-                                className="custmCancelBtn buttonStyle"
-                                disableElevation
-                              >
-                                Cancel
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
-              </div> */}
-
-            <div>
-              <Dialog
-                open={myUserPOpen}
-                onClose={handleMyUserPClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                fullWidth={true}
-                maxWidth={"sm"}
-              >
-                {/* <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle> */}
-                <DialogTitle
-                  classNames={classes.mb10}
-                  id="alert-dialog-title"
-                >
-                  <img src={paceLogoSymbol} className={classes.userImage} />{" "}
-                  {"Admin"}
-                </DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    <Grid
-                      item
-                      md={12}
-                      sm={12}
-                      xs={12}
-                      className={classes.usrProfileListBox}
-                    >
-                      <h6>Change ownership</h6>
-                      <FormControl
-                        variant="outlined"
-                        className={classes.formControlOwnership}
+                  {/* <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle> */}
+                  <DialogTitle
+                    classNames={classes.mb10}
+                    id="alert-dialog-title"
+                  >
+                    <img src={paceLogoSymbol} className={classes.userImage} />{" "}
+                    {"Admin"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Grid
+                        item
+                        md={12}
+                        sm={12}
+                        xs={12}
+                        className={classes.usrProfileListBox}
                       >
-                        <InputLabel id="demo-simple-select-outlined-label">
-                          Ownership
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-outlined-label"
-                          id="demo-simple-select-outlined"
-                          //value="Ashutosh"
-                          onChange={handleChangeOne}
-                          label="Ownership"
-                          className="formControl"
-                          fullWidth
+                        <h6>Change ownership</h6>
+                        <FormControl
+                          variant="outlined"
+                          className={classes.formControlOwnership}
                         >
-                          <MenuItem value={10}>Self</MenuItem>
-                          <MenuItem value={10}>Prakash</MenuItem>
-                          <MenuItem value={20}>Ashutosh</MenuItem>
-                          <MenuItem value={30}>Saddam</MenuItem>
-                          <MenuItem value={30}>Sunil</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid
-                      item
-                      md={12}
-                      sm={12}
-                      xs={12}
-                      className={classes.usrProfileListBox}
-                    >
-                      <h3>Basic information</h3>
-                      <List>
-                        <ListItem>
-                          {/* <ListItemAvatar>
+                          <InputLabel id="demo-simple-select-outlined-label">
+                            Ownership
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            //value="Ashutosh"
+                            onChange={handleChangeOne}
+                            label="Ownership"
+                            className="formControl"
+                            fullWidth
+                          >
+                            <MenuItem value={10}>Self</MenuItem>
+                            <MenuItem value={10}>Prakash</MenuItem>
+                            <MenuItem value={20}>Ashutosh</MenuItem>
+                            <MenuItem value={30}>Saddam</MenuItem>
+                            <MenuItem value={30}>Sunil</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid
+                        item
+                        md={12}
+                        sm={12}
+                        xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Basic information</h3>
+                        <List>
+                          <ListItem>
+                            {/* <ListItemAvatar>
                                 <Avatar>
                                   <ImageIcon />
                                 </Avatar>
                               </ListItemAvatar> */}
-                          <ListItemText
-                            primary="Full Name:"
-                            secondary="Prakash"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <ListItemText
-                            primary="Organization Type:"
-                            secondary="Epc ORGANIZATION"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <ListItemText
-                            primary="Organization Role:"
-                            secondary="N/A"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <ListItemText
-                            primary="Role Title:"
-                            secondary="N/A"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <ListItemText
-                            primary="Current Location:"
-                            secondary="Delhi » NCT » India"
-                          />
-                        </ListItem>
-                      </List>
-                    </Grid>
+                            <ListItemText
+                              primary="Full Name:"
+                              secondary="Prakash"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Organization Type:"
+                              secondary="Epc ORGANIZATION"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Organization Role:"
+                              secondary="N/A"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Role Title:"
+                              secondary="N/A"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Current Location:"
+                              secondary="Delhi » NCT » India"
+                            />
+                          </ListItem>
+                        </List>
+                      </Grid>
 
-                    <Grid
-                      item
-                      md={12}
-                      sm={12}
-                      xs={12}
-                      className={classes.usrProfileListBox}
-                    >
-                      <h3>Company information</h3>
-                      <List>
-                        <ListItem>
-                          <ListItemText
-                            primary="Company Name:"
-                            secondary="JWIL"
-                          />
-                        </ListItem>
-                        <ListItem>
-                          <ListItemText
-                            primary="Location:"
-                            secondary="Italy"
-                          />
-                        </ListItem>
-                      </List>
-                    </Grid>
-                  </DialogContentText>
-                </DialogContent>
-                <Grid
-                  item
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  className={classes.popUpButton}
-                >
-                  <DialogActions align="left" className="marginB10">
-                    <Button
-                      onClick={handleMyUserPClose}
-                      color="secondary"
-                      variant="contained"
-                      className="buttonStyle custmCancelBtn"
-                    >
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Grid>
-                {/* <DialogActions>
+                      <Grid
+                        item
+                        md={12}
+                        sm={12}
+                        xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Company information</h3>
+                        <List>
+                          <ListItem>
+                            <ListItemText
+                              primary="Company Name:"
+                              secondary="JWIL"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Location:"
+                              secondary="Italy"
+                            />
+                          </ListItem>
+                        </List>
+                      </Grid>
+                    </DialogContentText>
+                  </DialogContent>
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    className={classes.popUpButton}
+                  >
+                    <DialogActions align="left" className="marginB10">
+                      <Button
+                        onClick={handleMyUserPClose}
+                        color="secondary"
+                        variant="contained"
+                        className="buttonStyle custmCancelBtn"
+                      >
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Grid>
+                  {/* <DialogActions>
                             <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
                               Close
                             </Button>
                           </DialogActions> */}
-              </Dialog>
-              <div className={classes.pagination}>
-                {totalData != 0
-                  ? Number.isInteger(pageData) !== true
-                    ? totalData < 25 * page
-                      ? `${page * 25 - 24} - ${totalData} of ${totalData}`
+                </Dialog>
+                <div className={classes.pagination}>
+                  {totalData != 0
+                    ? Number.isInteger(pageData) !== true
+                      ? totalData < 25 * page
+                        ? `${page * 25 - 24} - ${totalData} of ${totalData}`
+                        : `${page * 25 - 24} - ${25 * page} of ${totalData}`
                       : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                    : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                  : null}
-                <Pagination
-                  count={pageCount}
-                  page={page}
-                  onChange={handleChange}
-                />
+                    : null}
+                  <Pagination
+                    count={pageCount}
+                    page={page}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
             </div>
           </div>
-          {/* </div> */}
         </Grid>
       </Box>
       <Dialog
@@ -1509,20 +1338,34 @@ function ComplianceListNew(props) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" className="checkRadioLabel">
+                    Are you sure you want to delete this question?
+                  </FormLabel>
+                </FormControl>
+              </Grid>
               <Grid
                 item
                 md={12}
+                sm={12}
                 xs={12}
+                className={classes.popUpButton}
               >
-                <FormControl component="fieldset">
-                  <FormLabel component="legend" className="checkRadioLabel">Are you sure you want to delete this question?</FormLabel>
-                </FormControl>
-              </Grid>
-              <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
-                <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={() => handleDelete()}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  className="spacerRight buttonStyle"
+                  onClick={() => handleDelete()}
+                >
                   Yes
                 </Button>
-                <Button color="secondary" variant="contained" className="buttonStyle custmCancelBtn" onClick={() => handleCloseDeleteAlert()}>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  className="buttonStyle custmCancelBtn"
+                  onClick={() => handleCloseDeleteAlert()}
+                >
                   No
                 </Button>
               </Grid>

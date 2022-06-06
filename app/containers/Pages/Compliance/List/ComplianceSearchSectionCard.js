@@ -413,26 +413,28 @@ export default function ComplianceSearchSectionCard() {
     }
   }, []);
 
+  let timer;
   let debounce = (v, d) => {
     return function () {
-      setSearch(v);
+      clearTimeout(timer);
+      timer = setTimeout(() => setSearch(v), d);
     };
   };
 
   const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 500)();
 
   useEffect(() => {
-    localStorage.setItem('SearchedText', JSON.stringify(search));
-    console.log(search, typeof search);
-  }, [search])
+    localStorage.setItem("SearchedText", JSON.stringify(search));
+    console.log(search);
+  }, [search]);
 
   useEffect(() => {
     if (search === "") {
-      setBlank(true)
+      setBlank(true);
     } else {
-      setBlank(false)
+      setBlank(false);
     }
-  }, [search])
+  }, [search]);
 
   return (
     <div className={classes.root}>
@@ -480,7 +482,7 @@ export default function ComplianceSearchSectionCard() {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
-                value={search}
+                // value={search}
                 onChange={(e) => handleSearch(e)}
                 inputProps={{ "aria-label": "search" }}
               />
@@ -504,7 +506,11 @@ export default function ComplianceSearchSectionCard() {
           <TabPanel value={value} index={0} className={classes.paddLRzero}>
             <ComplianceFilterCard
               compliance={compliance}
-              search={JSON.parse(localStorage.getItem("SearchedText")) || search}
+              search={
+                search !== ""
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText"))
+              }
               status={status}
               blank={blank}
             />
@@ -512,7 +518,11 @@ export default function ComplianceSearchSectionCard() {
           <TabPanel value={value} index={1}>
             <ComplianceFilterCard
               compliance={compliance}
-              search={JSON.parse(localStorage.getItem("SearchedText")) || search}
+              search={
+                search !== ""
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText"))
+              }
               status={status}
               blank={blank}
             />
@@ -520,7 +530,11 @@ export default function ComplianceSearchSectionCard() {
           <TabPanel value={value} index={2}>
             <ComplianceFilterCard
               compliance={compliance}
-              search={JSON.parse(localStorage.getItem("SearchedText")) || search}
+              search={
+                search !== ""
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText"))
+              }
               status={status}
               blank={blank}
             />
@@ -528,7 +542,9 @@ export default function ComplianceSearchSectionCard() {
           <TabPanel value={value} index={3}>
             <ComplianceFilterCard
               compliance={compliance}
-              search={JSON.parse(localStorage.getItem("SearchedText")) || search}
+              search={
+                JSON.parse(localStorage.getItem("SearchedText")) || search
+              }
               status={status}
               blank={blank}
             />
