@@ -406,6 +406,7 @@ export default function ComplianceSearchSectionCard() {
   };
 
   useEffect(() => {
+    console.log(document.referrer, "refereeeer");
     // localStorage.setItem("SearchedText", JSON.stringify(search))
     if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
       const retreiveSearchText = JSON.parse(
@@ -498,7 +499,6 @@ export default function ComplianceSearchSectionCard() {
                 onChange={(e) => handleSearch(e)}
                 inputProps={{ "aria-label": "search" }}
               />
-              <Typography style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", fontSize: 12 }}>Enter</Typography>
             </Paper>
           </Grid>
 
