@@ -520,9 +520,7 @@ export default function ComplianceSearchSectionCard() {
             <ComplianceFilterCard
               compliance={compliance}
               search={
-                search !== ''
-                  ? search
-                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+                search || JSON.parse(localStorage.getItem("SearchedText")) || ''
               }
               status={status}
               blank={blank}

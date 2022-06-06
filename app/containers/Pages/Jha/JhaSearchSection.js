@@ -357,27 +357,64 @@ export default function JhaSearchSection() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [search, setSearch] = useState("")
+  const [dummySearch, setDummySearch] = React.useState("");
+  const [blank, setBlank] = React.useState(true);
   const [status, setStatus] = useState("")
   const [assessment, setAssessments] = useState("My Assessments")
 
-  let timer
-  let debounce = ( v, d) => {
-    return function() {
-      clearTimeout(timer)
-      timer = setTimeout(() => setSearch(v), d)
-    }
-  }
+  // let timer
+  // let debounce = ( v, d) => {
+  //   return function() {
+  //     clearTimeout(timer)
+  //     timer = setTimeout(() => setSearch(v), d)
+  //   }
+  // }
 
-  const handelSearch = e => debounce( e.target.value.toLowerCase(), 1000)()
+  // const handelSearch = e => debounce( e.target.value.toLowerCase(), 1000)()
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    if(newValue === 0){
+    if (newValue === 0) {
       setAssessments("My Assessments")
-    }else if(newValue === 1){
+    } else if (newValue === 1) {
       setAssessments("Big Picture")
     }
   };
+
+  useEffect(() => {
+    // localStorage.setItem("SearchedText", JSON.stringify(search))
+    if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
+      const retreiveSearchText = JSON.parse(
+        localStorage.getItem("SearchedText")
+      );
+      setSearch(retreiveSearchText);
+      setDummySearch(retreiveSearchText);
+    }
+  }, []);
+
+  const handleSearch = (e) => {
+    setDummySearch(e.target.value.toLowerCase());
+  }
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearch(dummySearch);
+    }, 1000)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [dummySearch])
+
+  useEffect(() => {
+    localStorage.setItem("SearchedText", JSON.stringify(search));
+  }, [search]);
+
+  useEffect(() => {
+    if (search === "") {
+      setBlank(true);
+    } else {
+      setBlank(false);
+    }
+  }, [search]);
 
   return (
     <div className={classes.root}>
@@ -406,8 +443,9 @@ export default function JhaSearchSection() {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
+                value={dummySearch}
                 inputProps={{ 'aria-label': 'search' }}
-                onChange={(e) => handelSearch(e)}
+                onChange={(e) => handleSearch(e)}
               />
             </Paper>
           </Grid>
@@ -422,16 +460,46 @@ export default function JhaSearchSection() {
       <Grid container spacing={3}>
         <Grid item sm={12} xs={12}>
           <TabPanel value={value} index={0} className={classes.paddLRzero}>
-            <JhaFilter search={search} assessment={assessment} status={status}/>
+            <JhaFilter
+              search={
+                search || JSON.parse(localStorage.getItem("SearchedText")) || ''
+              }
+              assessment={assessment}
+              status={status}
+            />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <JhaFilter search={search} assessment={assessment} status={status}/>
+            <JhaFilter
+              search={
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+              }
+              assessment={assessment}
+              status={status}
+            />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <JhaFilter search={search} assessment={assessment} status={status}/>
+            <JhaFilter
+              search={
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+              }
+              assessment={assessment}
+              status={status}
+            />
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <JhaFilter search={search} assessment={assessment} status={status}/>
+            <JhaFilter
+              search={
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+              }
+              assessment={assessment}
+              status={status}
+            />
           </TabPanel>
         </Grid>
       </Grid>

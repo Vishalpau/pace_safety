@@ -246,6 +246,12 @@ export default function Observations() {
     }, 100);
   }, [acls]);
 
+  useEffect(() => {
+    return () => {
+      localStorage.setItem("SearchedText", JSON.stringify(''))
+    }
+  }, [])
+
   return (!showHTML ? '' : (
     <Acl
       module="safety-observations"
@@ -276,7 +282,7 @@ export default function Observations() {
                     cursor: checkACL('safety-observations', 'add_observations') ? 'pointer' : 'not-allowed'
                   }}
                 >
-                Upload
+                  Upload
                 </Button>
                 {/* } */}
                 {/* {!checkACL('safety', 'add_observations') ? '' : ( */}
@@ -293,7 +299,7 @@ export default function Observations() {
                 >
                   <AddIcon className={classes.floatR} />
                   {' '}
-Add new
+                  Add new
                 </Button>
                 {/* )} */}
 
