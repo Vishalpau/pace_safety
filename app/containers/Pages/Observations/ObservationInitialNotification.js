@@ -443,7 +443,7 @@ const ObservationInitialNotification = (props) => {
     if (!isValid) {
       return 'Data is not valid';
     }
-    // setLoading(true);
+    setLoading(true);
 
     // we are convert form into FormData
     const data = new FormData();
@@ -495,7 +495,7 @@ const ObservationInitialNotification = (props) => {
     if (form.attachment !== null && typeof form.attachment !== 'string') {
       data.append('attachment', form.attachment);
     }
-    if (form.files !== null && typeof form.files !== 'string') {
+    if (form.files !== null && form.files !== undefined && typeof form.files !== 'string') {
       form.files.map((file) => {
         data.append('files', file);
       });
