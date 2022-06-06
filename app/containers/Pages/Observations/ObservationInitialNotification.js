@@ -1663,7 +1663,7 @@ const ObservationInitialNotification = (props) => {
                   </Paper>
                 </Grid>
 
-                <MultiAttachment attachmentHandler={(files)=>{setForm({ ...form, files: files })}} />
+                <MultiAttachment attachmentHandler={(files) => { setForm({ ...form, files: files }) }} />
 
                 <Grid item md={12} xs={12} className="paddBRemove">
                   <FormGroup className={classes.customCheckBoxListCondition}>
