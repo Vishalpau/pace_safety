@@ -459,7 +459,7 @@ const AssessmentAndNotification = (props) => {
       data.append("permitToPerahaform", ahaform.permitToPerahaform),
       data.append("permitNumber", ahaform.permitNumber),
       data.append("ahaNumber", ahaform.ahaNumber);
-      if (ahaform.files !== null && typeof ahaform.files !== 'string') {
+      if (ahaform.files !== null && ahaform.files !== undefined && typeof ahaform.files !== 'string') {
         ahaform.files.map((file) => {
           data.append('files', file);
         });
