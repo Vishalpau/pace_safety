@@ -414,19 +414,19 @@ export default function ComplianceSearchSectionCard() {
   }, []);
 
   let debounce = (v, d) => {
-    return function() {
+    return function () {
       setSearch(v);
     };
   };
 
   const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 500)();
 
-  useEffect(()=>{
+  useEffect(() => {
     localStorage.setItem('SearchedText', JSON.stringify(search));
     console.log(search, typeof search);
   }, [search])
 
-  useEffect(()=>{
+  useEffect(() => {
     if (search === "") {
       setBlank(true)
     } else {

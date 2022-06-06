@@ -418,7 +418,7 @@ export default function SimpleTabs() {
   }, []);
 
   let debounce = (v, d) => {
-    return function() {
+    return function () {
       setSearch(v);
     };
   };
