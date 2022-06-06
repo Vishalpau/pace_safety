@@ -479,6 +479,7 @@ class ComplianceFilterCard extends React.Component {
               search={this.props.search}
               status={this.props.status}
               type={this.state.type}
+              blank={this.props.blank}
             />
           </main>
           {after}

@@ -341,6 +341,7 @@ function Actions(props) {
     props.search,
     props.status,
     props.type,
+    props.blank
   ]);
 
   return (
@@ -356,7 +357,7 @@ function Actions(props) {
                     data["auditNumber"],
                     data["auditType"] ,
                     data["area"] ? data["area"] : '-',
-                    moment(data["createdAt"]).format("Do MMMM YYYY"),
+                    moment(data["createdAt"]).format("DD MMMM YYYY"),
                     data["username"] !== null ? data["username"] : "-",
                   ])}
                   columns={columns}

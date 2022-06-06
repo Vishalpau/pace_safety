@@ -413,8 +413,8 @@ export default function JhaSearchSection() {
           </Grid>
           <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
             <span className={classes.mR10}>
-              <img src={preplanning} onClick={() => setStatus("Open")} />
-              <img src={completed} onClick={() => setStatus("Completed")} />
+              <img src={preplanning} title={"Open"} onClick={() => setStatus("Open")} />
+              <img src={completed} title={"Completed"} onClick={() => setStatus("Closed")} />
             </span>
           </Grid>
         </Grid>

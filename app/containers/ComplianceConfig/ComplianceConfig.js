@@ -162,7 +162,7 @@ class ComplianceConfig extends React.Component {
 
     return (
       <CustomPapperBlock
-        title="Compliance config"
+        title="Compliance Configuration"
         icon="customDropdownPageIcon complianceConfigPageIcon"
         whiteBg
       >

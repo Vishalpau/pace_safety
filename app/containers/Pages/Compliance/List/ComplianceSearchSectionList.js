@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -395,6 +395,7 @@ export default function SimpleTabs() {
   const [value, setValue] = React.useState(0);
   const [compliance, setCompliancesetValue] = React.useState("My Inspections");
   const [search, setSearch] = React.useState("");
+  const [blank, setBlank] = React.useState(true);
   const [status, setStatus] = React.useState("");
 
   const handleChange = (event, newValue) => {
@@ -407,15 +408,35 @@ export default function SimpleTabs() {
     }
   };
 
-  let timer;
+  useEffect((e) => {
+    if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
+      const retreiveSearchText = JSON.parse(
+        localStorage.getItem("SearchedText")
+      );
+      setSearch(retreiveSearchText);
+    }
+  }, []);
+
   let debounce = (v, d) => {
-    return function() {
-      clearTimeout(timer);
-      timer = setTimeout(() => setSearch(v), d);
+    return function () {
+      setSearch(v);
     };
   };
 
-  const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 1000)();
+  const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 500)();
+
+  useEffect(() => {
+    localStorage.setItem("SearchedText", JSON.stringify(search));
+    // console.log(search, typeof search);
+  }, [search]);
+
+  useEffect(() => {
+    if (search === "") {
+      setBlank(true);
+    } else {
+      setBlank(false);
+    }
+  }, [search]);
 
   return (
     <div className={classes.root}>
@@ -458,6 +479,7 @@ export default function SimpleTabs() {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
+                value={search}
                 inputProps={{ "aria-label": "search" }}
                 onChange={(e) => handleSearch(e)}
               />
@@ -477,16 +499,40 @@ export default function SimpleTabs() {
       <Grid container spacing={3}>
         <Grid item sm={12} xs={12}>
           <TabPanel value={value} index={0} className={classes.paddLRzero}>
-            <ComplianceFilterList compliance={compliance} search={search} />
+            <ComplianceFilterList
+              compliance={compliance}
+              search={
+                JSON.parse(localStorage.getItem("SearchedText")) || search
+              }
+              blank={blank}
+            />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <ComplianceFilterList compliance={compliance} search={search} />
+            <ComplianceFilterList
+              compliance={compliance}
+              search={
+                JSON.parse(localStorage.getItem("SearchedText")) || search
+              }
+              blank={blank}
+            />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <ComplianceFilterList compliance={compliance} search={search} />
+            <ComplianceFilterList
+              compliance={compliance}
+              search={
+                JSON.parse(localStorage.getItem("SearchedText")) || search
+              }
+              blank={blank}
+            />
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <ComplianceFilterList compliance={compliance} search={search} />
+            <ComplianceFilterList
+              compliance={compliance}
+              search={
+                JSON.parse(localStorage.getItem("SearchedText")) || search
+              }
+              blank={blank}
+            />
           </TabPanel>
         </Grid>
       </Grid>

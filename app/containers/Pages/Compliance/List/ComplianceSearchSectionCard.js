@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -391,6 +391,7 @@ export default function ComplianceSearchSectionCard() {
   const [value, setValue] = React.useState(0);
   const [compliance, setCompliancesetValue] = React.useState("My Inspections");
   const [search, setSearch] = React.useState("");
+  const [blank, setBlank] = React.useState(true);
   const [status, setStatus] = React.useState("");
 
   const handleChange = (event, newValue) => {
@@ -403,15 +404,35 @@ export default function ComplianceSearchSectionCard() {
     }
   };
 
-  let timer;
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
+      const retreiveSearchText = JSON.parse(
+        localStorage.getItem("SearchedText")
+      );
+      setSearch(retreiveSearchText);
+    }
+  }, []);
+
   let debounce = (v, d) => {
-    return function() {
-      clearTimeout(timer);
-      timer = setTimeout(() => setSearch(v), d);
+    return function () {
+      setSearch(v);
     };
   };
 
-  const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 1000)();
+  const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 500)();
+
+  useEffect(() => {
+    localStorage.setItem('SearchedText', JSON.stringify(search));
+    console.log(search, typeof search);
+  }, [search])
+
+  useEffect(() => {
+    if (search === "") {
+      setBlank(true)
+    } else {
+      setBlank(false)
+    }
+  }, [search])
 
   return (
     <div className={classes.root}>
@@ -459,6 +480,7 @@ export default function ComplianceSearchSectionCard() {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
+                value={search}
                 onChange={(e) => handleSearch(e)}
                 inputProps={{ "aria-label": "search" }}
               />
@@ -482,29 +504,33 @@ export default function ComplianceSearchSectionCard() {
           <TabPanel value={value} index={0} className={classes.paddLRzero}>
             <ComplianceFilterCard
               compliance={compliance}
-              search={search}
+              search={JSON.parse(localStorage.getItem("SearchedText")) || search}
               status={status}
+              blank={blank}
             />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <ComplianceFilterCard
               compliance={compliance}
-              search={search}
+              search={JSON.parse(localStorage.getItem("SearchedText")) || search}
               status={status}
+              blank={blank}
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
             <ComplianceFilterCard
               compliance={compliance}
-              search={search}
+              search={JSON.parse(localStorage.getItem("SearchedText")) || search}
               status={status}
+              blank={blank}
             />
           </TabPanel>
           <TabPanel value={value} index={3}>
             <ComplianceFilterCard
               compliance={compliance}
-              search={search}
+              search={JSON.parse(localStorage.getItem("SearchedText")) || search}
               status={status}
+              blank={blank}
             />
           </TabPanel>
         </Grid>

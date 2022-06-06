@@ -85,7 +85,7 @@ var menu = [
       },
       {
         key: 'compliance_config',
-        name: 'Compliance Config',
+        name: 'Compliance Configuration',
         link: '/app/compliance-config',
       },
       // {
