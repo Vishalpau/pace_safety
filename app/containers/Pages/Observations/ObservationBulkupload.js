@@ -301,6 +301,9 @@ function ObservationBulkupload() {
           ...x,
           uploadStatus: el.uploadStatus,
           processedDate: el.processedDate,
+          numberOfRecords: el.numberOfRecords,
+          processedRecords: el.processedRecords,
+          failedRecordFile: el.failedRecordFile,
         };
       return x;
     });
@@ -409,7 +412,7 @@ function ObservationBulkupload() {
                           </TableCell>
                           <TableCell>
                             {handelDateTime(row.uploadedDate)
-                              ? handelDateTime(row.uploadedDate, false)
+                              ? handelDateTime(row.uploadedDate)
                               : "-"}
                           </TableCell>
                           <TableCell>
