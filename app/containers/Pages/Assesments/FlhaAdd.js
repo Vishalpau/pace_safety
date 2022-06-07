@@ -674,7 +674,7 @@ const FlhaDetails = (props) => {
     if (jobForm.attachment != null) {
       formDataPost.append('attachment', jobForm.attachment);
     }
-    if (jobForm.files !== null && typeof jobForm.files !== 'string') {
+    if (jobForm.files !== null && jobForm.files !== undefined && typeof jobForm.files !== 'string') {
       jobForm.files.map((file) => {
         formDataPost.append('files', file);
       });

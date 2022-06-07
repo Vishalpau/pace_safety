@@ -395,6 +395,7 @@ export default function SimpleTabs() {
   const [value, setValue] = React.useState(0);
   const [compliance, setCompliancesetValue] = React.useState("My Inspections");
   const [search, setSearch] = React.useState("");
+  const [dummySearch, setDummySearch] = React.useState("");
   const [blank, setBlank] = React.useState(true);
   const [status, setStatus] = React.useState("");
 
@@ -414,22 +415,26 @@ export default function SimpleTabs() {
         localStorage.getItem("SearchedText")
       );
       setSearch(retreiveSearchText);
+      setDummySearch(retreiveSearchText);
     }
   }, []);
 
-  let timer;
-  let debounce = (v, d) => {
-    return function () {
-      clearTimeout(timer);
-      timer = setTimeout(() => setSearch(v), d);
-    };
-  };
+  // const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 500)();
 
-  const handleSearch = (e) => debounce(e.target.value.toLowerCase(), 500)();
+  const handleSearch = (e) => {
+    setDummySearch(e.target.value.toLowerCase());
+  }
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearch(dummySearch)
+    }, 1000)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [dummySearch])
 
   useEffect(() => {
     localStorage.setItem("SearchedText", JSON.stringify(search));
-    // console.log(search, typeof search);
   }, [search]);
 
   useEffect(() => {
@@ -481,7 +486,7 @@ export default function SimpleTabs() {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
-                // value={search}
+                value={dummySearch}
                 inputProps={{ "aria-label": "search" }}
                 onChange={(e) => handleSearch(e)}
               />
@@ -504,7 +509,9 @@ export default function SimpleTabs() {
             <ComplianceFilterList
               compliance={compliance}
               search={
-                JSON.parse(localStorage.getItem("SearchedText")) || search
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
               }
               blank={blank}
             />
@@ -513,7 +520,9 @@ export default function SimpleTabs() {
             <ComplianceFilterList
               compliance={compliance}
               search={
-                JSON.parse(localStorage.getItem("SearchedText")) || search
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
               }
               blank={blank}
             />
@@ -522,7 +531,9 @@ export default function SimpleTabs() {
             <ComplianceFilterList
               compliance={compliance}
               search={
-                JSON.parse(localStorage.getItem("SearchedText")) || search
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
               }
               blank={blank}
             />
@@ -531,7 +542,9 @@ export default function SimpleTabs() {
             <ComplianceFilterList
               compliance={compliance}
               search={
-                JSON.parse(localStorage.getItem("SearchedText")) || search
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
               }
               blank={blank}
             />

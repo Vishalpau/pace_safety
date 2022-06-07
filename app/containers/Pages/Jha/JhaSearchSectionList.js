@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -259,11 +259,11 @@ const useStyles = makeStyles((theme) => ({
   },
   searchSetionBox: {
     paddingRight: '0px',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       padding: '0px 12px !important',
     },
-    '& .MuiPaper-root':{
-      ['@media (max-width:800px)']: { 
+    '& .MuiPaper-root': {
+      ['@media (max-width:800px)']: {
         margin: '0px 0px 0px 8px',
       },
     },
@@ -271,20 +271,20 @@ const useStyles = makeStyles((theme) => ({
   statusIconBox: {
     textAlign: 'center',
     padding: '24px 0px !important',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       padding: '0px 0px 25px 0px !important',
     },
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       padding: '12px 0px 25px 16px !important',
       textAlign: 'left',
     },
   },
   mR10: {
     marginRight: '10px',
-   '& img:hover': {
-     borderRadius: '50%',
-     boxShadow: '0px 0px 2px 2px #f47607',
-   },
+    '& img:hover': {
+      borderRadius: '50%',
+      boxShadow: '0px 0px 2px 2px #f47607',
+    },
   },
   pLThirty: {
     paddingLeft: '30px',
@@ -309,7 +309,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'transparent',
     marginTop: '13px',
     '& button': {
-      ['@media (max-width:480px)']: { 
+      ['@media (max-width:480px)']: {
         fontSize: '9px',
       },
     },
@@ -343,7 +343,7 @@ const useStyles = makeStyles((theme) => ({
       minHeight: '40px',
       marginLeft: '5px',
       padding: '10px',
-      ['@media (max-width:480px)']: { 
+      ['@media (max-width:480px)']: {
         minWidth: 'auto',
         marginLeft: '2px',
         marginRight: '2px',
@@ -369,84 +369,152 @@ export default function JhaSearchSection() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [search, setSearch] = React.useState("")
+  const [dummySearch, setDummySearch] = React.useState("");
+  const [blank, setBlank] = React.useState(true);
   const [status, setStatus] = React.useState('')
   const [assessment, setAssessments] = React.useState("My Assessments")
 
   let timer
-  let debounce = ( v, d) => {
-    return function() {
+  let debounce = (v, d) => {
+    return function () {
       clearTimeout(timer)
       timer = setTimeout(() => setSearch(v), d)
     }
   }
 
-  const handelSearch = e => debounce( e.target.value.toLowerCase(), 1000)()
+  const handelSearch = e => debounce(e.target.value.toLowerCase(), 1000)()
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    if(newValue === 0){
+    if (newValue === 0) {
       setAssessments("My Assessments")
-    }else if(newValue === 1){
+    } else if (newValue === 1) {
       setAssessments("Big Picture")
     }
   };
 
+  useEffect(() => {
+    // localStorage.setItem("SearchedText", JSON.stringify(search))
+    if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
+      const retreiveSearchText = JSON.parse(
+        localStorage.getItem("SearchedText")
+      );
+      setSearch(retreiveSearchText);
+      setDummySearch(retreiveSearchText);
+    }
+  }, []);
+
+  const handleSearch = (e) => {
+    setDummySearch(e.target.value.toLowerCase());
+  }
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearch(dummySearch);
+    }, 1000)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [dummySearch])
+
+  useEffect(() => {
+    localStorage.setItem("SearchedText", JSON.stringify(search));
+  }, [search]);
+
+  useEffect(() => {
+    if (search === "") {
+      setBlank(true);
+    } else {
+      setBlank(false);
+    }
+  }, [search]);
+
   return (
     <div className={classes.root}>
-	  <Grid item md={12} className={classes.AppBarHeader}>
-		  <Grid container spacing={3}>			
-        <Grid item md={7} sm={12} xs={12}>
-          <AppBar position="static" className={classes.navTabBack}>
-            <div className={classes.floatL}>
-            <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-              <Tab label="My Assessments" {...a11yProps(0)} className={classes.hoverB} />
-              {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
-              <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
-              {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
-            </Tabs>
-            </div>  
-          </AppBar>
+      <Grid item md={12} className={classes.AppBarHeader}>
+        <Grid container spacing={3}>
+          <Grid item md={7} sm={12} xs={12}>
+            <AppBar position="static" className={classes.navTabBack}>
+              <div className={classes.floatL}>
+                <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
+                  <Tab label="My Assessments" {...a11yProps(0)} className={classes.hoverB} />
+                  {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
+                  <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
+                  {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
+                </Tabs>
+              </div>
+            </AppBar>
+          </Grid>
+          <Grid item md={3} sm={6} xs={12} className={classes.searchSetionBox}>
+            <Paper elevation={1} className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                value={dummySearch}
+                onChange={(e) => handelSearch(e)}
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Paper>
+          </Grid>
+          <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
+            <span className={classes.mR10}>
+              <img src={preplanning} onClick={() => setStatus("Open")} />
+              <img src={completed} onClick={() => setStatus("Completed")} />
+            </span>
+          </Grid>
         </Grid>
-        <Grid item md={3} sm={6} xs={12} className={classes.searchSetionBox}>
-          <Paper elevation={1} className={classes.search}>
-            <div className={classes.searchIcon}>
-            <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              onChange={(e) => handelSearch(e)}
-              inputProps={{ 'aria-label': 'search' }}
+      </Grid>
+      <Grid container spacing={3}>
+        <Grid item sm={12} xs={12}>
+          <TabPanel value={value} index={0} className={classes.paddLRzero}>
+            <JhaFilterList
+              search={
+                search || JSON.parse(localStorage.getItem("SearchedText")) || ''
+              }
+              assessment={assessment}
+              status={status}
             />
-          </Paper> 
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <JhaFilterList
+              search={
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+              }
+              assessment={assessment}
+              status={status}
+            />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <JhaFilterList
+              search={
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+              }
+              assessment={assessment}
+              status={status}
+            />
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <JhaFilterList
+              search={
+                search !== ''
+                  ? search
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+              }
+              assessment={assessment}
+              status={status}
+            />
+          </TabPanel>
         </Grid>
-        <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
-          <span className={classes.mR10}>
-            <img src={preplanning} onClick={() => setStatus("Open")} />
-            <img src={completed} onClick={() => setStatus("Completed")} />
-          </span>
-        </Grid>
-		  </Grid>
-	  </Grid>
-	  <Grid container spacing={3}>
-		<Grid item sm={12} xs={12}>
-		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <JhaFilterList search={search} assessment={assessment} status={status} />
-		  </TabPanel>
-		  <TabPanel value={value} index={1}>
-        <JhaFilterList search={search} assessment={assessment} status={status} />
-		  </TabPanel>
-		  <TabPanel value={value} index={2}>
-        <JhaFilterList search={search} assessment={assessment} status={status} />
-		  </TabPanel>
-		  <TabPanel value={value} index={3}>
-        <JhaFilterList search={search} assessment={assessment} status={status} />
-		  </TabPanel>
-		</Grid>
-	</Grid>
-	</div>
+      </Grid>
+    </div>
   );
 }

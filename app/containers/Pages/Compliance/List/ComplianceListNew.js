@@ -515,6 +515,9 @@ function ComplianceListNew(props) {
 
   //method to fetch all compliance data filetrs
   const fetchAllComplianceData = async () => {
+    if (props.search) {
+      setAllComplianceData([])
+    }
     await setPage(1);
     // get all the ids (fkCompanyId,fkProjectId, selectBreakdown,fkProjectStructureIds, createdBy )
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -538,6 +541,7 @@ function ComplianceListNew(props) {
         : null;
     // for types filter
     if (props.type === "Categories" || props.type === "All") {
+      setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
@@ -549,6 +553,7 @@ function ComplianceListNew(props) {
         await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
+        setIsLoading(false);
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
@@ -560,9 +565,11 @@ function ComplianceListNew(props) {
         await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
+        setIsLoading(false);
       }
     } else {
       if (props.compliance === "My Inspections") {
+        setIsLoading(true);
         const res = await api.get(
           `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
@@ -574,6 +581,7 @@ function ComplianceListNew(props) {
         await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
+        setIsLoading(false);
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
@@ -586,15 +594,11 @@ function ComplianceListNew(props) {
         await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         await setPageCount(pageCount);
+        setIsLoading(false);
       }
     }
   };
 
-  useEffect(() => {
-    if (allComplianceData.length > 0) {
-      setIsLoading(false);
-    }
-  }, [allComplianceData])
 
   //method for  all the filters
   const handleChange = async (event, value) => {
@@ -675,10 +679,6 @@ function ComplianceListNew(props) {
 
   useEffect(() => {
     fetchAllComplianceData();
-  }, []);
-
-  useEffect(() => {
-    fetchAllComplianceData();
     setCheckDeletePermission(
       checkACL("safety-compliance", "delete_compliance")
     );
@@ -688,7 +688,7 @@ function ComplianceListNew(props) {
     props.search,
     props.status,
     props.type,
-    props.blank,
+    // props.blank,
   ]);
 
   // separate card component

@@ -247,7 +247,7 @@ export default function Compliance() {
   };
 
   const handleNewCompliancePush = async () => {
-    localStorage.setItem('compliance-navigation','Add New');
+    localStorage.setItem('compliance-navigation', 'Add New');
     localStorage.removeItem("fkComplianceId");
     history.push("/app/pages/compliance/compliance-details");
   };
@@ -258,69 +258,75 @@ export default function Compliance() {
     }
   }, []);
 
+  useEffect(() => {
+    return () => {
+      localStorage.setItem("SearchedText", JSON.stringify(''))
+    }
+  }, [])
+
   return (
     <Acl
       module="safety-compliance"
       action="view_compliance"
       html={
         <div className={classes.root}>
-        <Grid item sm={12} xs={12} className={classes.borderTop}>
-          <Grid container spacing={3}>
-            <Grid item sm={8} xs={9} className="mainPageTitleBox">
-              {/* <img src={complianceLogoSymbol} className={classes.attachImg} alt="decoration" /> */}
-              <span className="customDropdownPageIcon compliancePageIcon" />
-              <Typography variant="h5"> Compliance</Typography>
-            </Grid>
-            <Grid item sm={4} xs={3}>
-              <Button
-                size="medium"
-                variant="contained"
-                className={classNames(classes.buttonsNew, classes.floatR)}
-                color="primary"
-                onClick={(e) => handleNewCompliancePush(e)}
-                style={{
-                  background: checkACL('safety-compliance', 'add_compliance') ? '#06425c' : '#c0c0c0',
-                  cursor: checkACL('safety-compliance', 'add_compliance') ? 'pointer' : 'not-allowed'
-                }}
-              >
-                <AddIcon className={classes.spacerRight} /> Add New
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item sm={6} xs={12} className={classes.listViewTab}>
-            <AppBar position="static" className={classes.navTabBack}>
-              <div className={classes.floatLTabs}>
-                <Tabs
-                  className={classes.minwdTab}
-                  value={value}
-                  onChange={handleChange}
-                  aria-label="Tabs"
-                  indicatorColor="none"
+          <Grid item sm={12} xs={12} className={classes.borderTop}>
+            <Grid container spacing={3}>
+              <Grid item sm={8} xs={9} className="mainPageTitleBox">
+                {/* <img src={complianceLogoSymbol} className={classes.attachImg} alt="decoration" /> */}
+                <span className="customDropdownPageIcon compliancePageIcon" />
+                <Typography variant="h5"> Compliance</Typography>
+              </Grid>
+              <Grid item sm={4} xs={3}>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  className={classNames(classes.buttonsNew, classes.floatR)}
+                  color="primary"
+                  onClick={(e) => handleNewCompliancePush(e)}
+                  style={{
+                    background: checkACL('safety-compliance', 'add_compliance') ? '#06425c' : '#c0c0c0',
+                    cursor: checkACL('safety-compliance', 'add_compliance') ? 'pointer' : 'not-allowed'
+                  }}
                 >
-                  <Tab
-                    label="Card"
-                    {...a11yProps(0)}
-                    icon={
-                      <DashboardIcon
-                        className={classNames(classes.pL0, classes.active)}
-                      />
-                    }
-                  />
-                  <Tab
-                    label="List"
-                    {...a11yProps(1)}
-                    icon={<ReorderIcon />}
-                    classNames={classes.pLTen}
-                  />
-                  {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
-                  <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} />  */}
-                </Tabs>
-              </div>
-            </AppBar>
+                  <AddIcon className={classes.spacerRight} /> Add New
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-          {/* <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
+          <Grid container spacing={3}>
+            <Grid item sm={6} xs={12} className={classes.listViewTab}>
+              <AppBar position="static" className={classes.navTabBack}>
+                <div className={classes.floatLTabs}>
+                  <Tabs
+                    className={classes.minwdTab}
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="Tabs"
+                    indicatorColor="none"
+                  >
+                    <Tab
+                      label="Card"
+                      {...a11yProps(0)}
+                      icon={
+                        <DashboardIcon
+                          className={classNames(classes.pL0, classes.active)}
+                        />
+                      }
+                    />
+                    <Tab
+                      label="List"
+                      {...a11yProps(1)}
+                      icon={<ReorderIcon />}
+                      classNames={classes.pLTen}
+                    />
+                    {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
+                  <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} />  */}
+                  </Tabs>
+                </div>
+              </AppBar>
+            </Grid>
+            {/* <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
             <Grid className={classes.Lheight}>
               <div className={classes.floatR}>
                 <span className={classes.pLTen}>
@@ -331,22 +337,22 @@ export default function Compliance() {
               </div>
             </Grid>
           </Grid> */}
-        </Grid>
-        <TabPanel value={value} index={0} className={classes.paddLRzero}>
-          <ComplianceSearchSectionCard />
-        </TabPanel>
-        <TabPanel value={value} index={1} className={classes.paddLRzero}>
-          <ComplianceSearchSectionList />
-        </TabPanel>
-        <TabPanel value={value} index={2} className={classes.paddLRzero}>
-          <ComplianceSearchSectionKanban />
-        </TabPanel>
-        <TabPanel value={value} index={3} className={classes.paddLRzero}>
-          <ComplianceSearchSectionTrend />
-        </TabPanel>
-      </div>
+          </Grid>
+          <TabPanel value={value} index={0} className={classes.paddLRzero}>
+            <ComplianceSearchSectionCard />
+          </TabPanel>
+          <TabPanel value={value} index={1} className={classes.paddLRzero}>
+            <ComplianceSearchSectionList />
+          </TabPanel>
+          <TabPanel value={value} index={2} className={classes.paddLRzero}>
+            <ComplianceSearchSectionKanban />
+          </TabPanel>
+          <TabPanel value={value} index={3} className={classes.paddLRzero}>
+            <ComplianceSearchSectionTrend />
+          </TabPanel>
+        </div>
       }
     />
-   
+
   );
 }

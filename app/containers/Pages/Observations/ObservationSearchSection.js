@@ -1,4 +1,4 @@
-import React, { useState, lazy } from "react";
+import React, { useState, lazy, useEffect } from "react";
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -347,6 +347,8 @@ export default function SimpleTabs(props) {
   const [value, setValue] = React.useState(0);
   const [observation, setObservation] = useState("My Observations");
   const [searchIncident, setSeacrhIncident] = useState("")
+  const [dummySearch, setDummySearch] = React.useState("");
+  const [blank, setBlank] = React.useState(true);
   const [status, setStatus] = useState('')
 
   const handleChange = (event, newValue) => {
@@ -359,9 +361,45 @@ export default function SimpleTabs(props) {
       setStatus('')
     }
   };
+  // const handleSearch = (e) => {
+  //   setSeacrhIncident(e.target.value);
+  // };
+
+  useEffect(() => {
+    // localStorage.setItem("SearchedText", JSON.stringify(search))
+    if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
+      const retreiveSearchText = JSON.parse(
+        localStorage.getItem("SearchedText")
+      );
+      setSeacrhIncident(retreiveSearchText);
+      setDummySearch(retreiveSearchText);
+    }
+  }, []);
+
   const handleSearch = (e) => {
-    setSeacrhIncident(e.target.value);
-  };
+    setDummySearch(e.target.value.toLowerCase());
+  }
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSeacrhIncident(dummySearch);
+    }, 1000)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [dummySearch])
+
+
+  useEffect(() => {
+    localStorage.setItem("SearchedText", JSON.stringify(searchIncident));
+  }, [searchIncident]);
+
+  useEffect(() => {
+    if (searchIncident === "") {
+      setBlank(true);
+    } else {
+      setBlank(false);
+    }
+  }, [searchIncident]);
 
   return (
     <div className={classes.root}>
@@ -391,6 +429,7 @@ export default function SimpleTabs(props) {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
+                value={dummySearch}
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={(e) => handleSearch(e)}
 
@@ -412,13 +451,38 @@ export default function SimpleTabs(props) {
       <Grid container spacing={3}>
         <Grid item sm={12} xs={12}>
           <TabPanel value={value} index={0} className={classes.paddLRzero}>
-            <ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value} />
+            <ObservationsFilter
+              observation={observation}
+              search={
+                searchIncident || JSON.parse(localStorage.getItem("SearchedText")) || ''
+              }
+              status={status}
+              value={props.value}
+            />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value} />
+            <ObservationsFilter
+              observation={observation}
+              search={
+                searchIncident !== ''
+                  ? searchIncident
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+              }
+              status={status}
+              value={props.value}
+            />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value} />
+            <ObservationsFilter
+              observation={observation}
+              search={
+                searchIncident !== ''
+                  ? searchIncident
+                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+              }
+              status={status}
+              value={props.value}
+            />
           </TabPanel>
           <TabPanel value={value} index={3}>
             <ObservationBookmarkFilter />

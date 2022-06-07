@@ -246,6 +246,12 @@ export default function Observations() {
     }, 100);
   }, [acls]);
 
+  useEffect(() => {
+    return () => {
+      localStorage.setItem("SearchedText", JSON.stringify(''))
+    }
+  }, [])
+
   return (!showHTML ? '' : (
     <Acl
       module="safety-observations"

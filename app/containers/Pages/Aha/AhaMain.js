@@ -1,4 +1,4 @@
-import React , {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: '600',
       '&:hover': {
         color: '#f47607 !important',
-       },
+      },
     },
     '& .MuiTab-textColorInherit.Mui-selected': {
       color: '#f47607',
@@ -106,19 +106,19 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: '40px',
   },
   listViewTab: {
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       padding: '12px 12px 0px 12px !important',
     },
   },
   iplnGisDSection: {
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       padding: '0px 12px 12px 12px !important',
     },
   },
   Lheight: {
     lineHeight: '65px',
     textAlign: 'right',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       padding: '0px 0px 20px 0px !important',
       lineHeight: '0px',
       textAlign: 'left',
@@ -132,7 +132,7 @@ const useStyles = makeStyles((theme) => ({
       '&:hover': {
         backgroundColor: '#f47607',
       },
-      ['@media (max-width:480px)']: { 
+      ['@media (max-width:480px)']: {
         fontSize: '11px',
       },
     },
@@ -265,58 +265,64 @@ export default function AhaMain() {
     allPickListDataValue()
   }, [])
 
+  useEffect(() => {
+    return () => {
+      localStorage.setItem("SearchedText", JSON.stringify(''))
+    }
+  }, [])
+
   return (
-    <Acl 
+    <Acl
       module="safety-aha"
-      action="view_aha" 
+      action="view_aha"
       html={(
         <div className={classes.root}>
-      <Grid item sm={12} xs={12} className={classes.borderTop}>
-        <Grid container spacing={3}>
-          <Grid item md={7} sm={6} xs={12} className={classes.pLFiveHt40}>
-            <img src={ahaLogoSymbol} className={classes.attachImg} alt="decoration" />
-            <Typography variant="h5"> Area Hazard Assessments</Typography>
+          <Grid item sm={12} xs={12} className={classes.borderTop}>
+            <Grid container spacing={3}>
+              <Grid item md={7} sm={6} xs={12} className={classes.pLFiveHt40}>
+                <img src={ahaLogoSymbol} className={classes.attachImg} alt="decoration" />
+                <Typography variant="h5"> Area Hazard Assessments</Typography>
+              </Grid>
+              <Grid item md={5} sm={6} xs={12}>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  className={classNames(classes.buttonsNew, classes.floatR)}
+                  color="primary"
+                  onClick={(e) => handleNewAhaPush(e)}
+                  style={{
+                    background: checkACL('safety-aha', 'add_aha') ? '#06425c' : '#c0c0c0',
+                    cursor: checkACL('safety-aha', 'add_aha') ? 'pointer' : 'not-allowed'
+                  }}
+                >
+                  <AddIcon className={classes.floatR} /> Add new
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item md={5} sm={6} xs={12}>
-            <Button 
-              size="medium" 
-              variant="contained" 
-              className={classNames(classes.buttonsNew, classes.floatR)} 
-              color="primary" 
-              onClick={(e) => handleNewAhaPush(e)}
-              style={{
-                background: checkACL('safety-aha', 'add_aha') ? '#06425c' : '#c0c0c0',
-                cursor: checkACL('safety-aha', 'add_aha') ? 'pointer' : 'not-allowed'
-              }}
-              >
-              <AddIcon className={classes.floatR} /> Add new
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-      <Grid item sm={6} xs={12} className={classes.listViewTab}>
-        <AppBar position="static" className={classes.navTabBack}>
-          <div className={classes.floatL}>
-              <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-              <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon  className={classNames(classes.pL0)} />} />
-              <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />}  classNames={classes.pLTen} />
-              {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
+          <Grid container spacing={3}>
+            <Grid item sm={6} xs={12} className={classes.listViewTab}>
+              <AppBar position="static" className={classes.navTabBack}>
+                <div className={classes.floatL}>
+                  <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
+                    <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
+                    <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
+                    {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
               <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
-            </Tabs>
-          </div>  
-        </AppBar>
-      </Grid>
-      <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
-        <Grid className={classes.Lheight}>
-          <div className={classes.floatR}>				
-            {/* <span className={classes.pLTen}>
+                  </Tabs>
+                </div>
+              </AppBar>
+            </Grid>
+            <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
+              <Grid className={classes.Lheight}>
+                <div className={classes.floatR}>
+                  {/* <span className={classes.pLTen}>
               <Button size="small" className={classes.buttonsNTwo} variant="contained">
                 <PermIdentityIcon /> GIS
               </Button>
             </span> */}
-            
-            {/* <span className={classes.pLTen}>
+
+                  {/* <span className={classes.pLTen}>
               <Button size="small" className={classes.buttonsNTwo} variant="contained">
                 <DateRangeOutlinedIcon />iPlanner
               </Button>
@@ -326,26 +332,26 @@ export default function AhaMain() {
 				<Button size="small" className={classes.buttonsNTwo} variant="contained">
 				  <GamesOutlinedIcon /> 3D
 				</Button>
-				</span>*/} 
-            </div>
+				</span>*/}
+                </div>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-      </Grid>
-      <TabPanel value={value} index={0} className={classes.paddLRzero}>
-        <AhaSearchSection value={value} />
-      </TabPanel>
-      <TabPanel value={value} index={1} className={classes.paddLRzero}>
-      <AhaSearchSection value={value} />
-      </TabPanel>
-	    <TabPanel value={value} index={2} className={classes.paddLRzero}>
-        <AhaKanban />
-      </TabPanel>
-      <TabPanel value={value} index={3} className={classes.paddLRzero}>
-        <AhaBarCharts />
-      </TabPanel>
-    </div>
+          <TabPanel value={value} index={0} className={classes.paddLRzero}>
+            <AhaSearchSection value={value} />
+          </TabPanel>
+          <TabPanel value={value} index={1} className={classes.paddLRzero}>
+            <AhaSearchSection value={value} />
+          </TabPanel>
+          <TabPanel value={value} index={2} className={classes.paddLRzero}>
+            <AhaKanban />
+          </TabPanel>
+          <TabPanel value={value} index={3} className={classes.paddLRzero}>
+            <AhaBarCharts />
+          </TabPanel>
+        </div>
       )}
     />
-    
+
   );
 }
