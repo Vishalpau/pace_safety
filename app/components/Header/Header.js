@@ -459,7 +459,7 @@ function Header(props) {
     }
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -783,7 +783,7 @@ function Header(props) {
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])
-    try { 
+    try {
       let labellist = projectData.projectName.breakdown.map(item => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "" } })
       if (localStorage.getItem('selectBreakDown')) {
         setBreakDownData(JSON.parse(localStorage.getItem('selectBreakDown')))
@@ -821,7 +821,7 @@ function Header(props) {
 
   }, [props.initialValues.projectName]);
 
-  useEffect(() => { 
+  useEffect(() => {
     handleProjectList();
   }, [initialValues.projectName]);
 
@@ -911,7 +911,7 @@ function Header(props) {
       data.push({
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
-        unit: projectListData[index].breakdown[1].structure[0].name,
+        label: projectListData[index].breakdown[1].structure[0].name,
         name: secondBreakdown[unitIndex].structureName
       });
       data.push({
@@ -946,7 +946,7 @@ function Header(props) {
       data.push({
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
-        unit: projectListData[index].breakdown[1].structure[0].name,
+        label: projectListData[index].breakdown[1].structure[0].name,
         name: secondBreakdown[unitIndex].structureName
       });
       data.push({
@@ -1003,7 +1003,7 @@ function Header(props) {
         turnDarker && classes.darker,
         gradient ? classes.gradientBg : classes.solidBg
       )}
-    > 
+    >
       <Toolbar disableGutters={!open}>
         <Fab
           size="small"
@@ -1527,7 +1527,7 @@ function Header(props) {
             <Breadcrumbs
               className={classes.projectBreadcrumbs}
               separator={<NavigateNextIcon fontSize="small" />}
-            > 
+            >
               {isLoading ? labelList.map((item, index) => <Chip size="small" label={breakDownData && breakDownData[index] ? breakDownData[index].name : `All-${item.breakdownLabel}`} key={index} />) : null}
 
             </Breadcrumbs>

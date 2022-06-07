@@ -1000,7 +1000,7 @@ function PersonalDashboard(props) {
       data.push({
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
-        unit: projectListData[index].breakdown[1].structure[0].name,
+        label: projectListData[index].breakdown[1].structure[0].name,
         name: secondBreakdown[unitIndex].structureName
       });
       data.push({
@@ -1035,7 +1035,7 @@ function PersonalDashboard(props) {
       data.push({
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
-        unit: projectListData[index].breakdown[1].structure[0].name,
+        label: projectListData[index].breakdown[1].structure[0].name,
         name: secondBreakdown[unitIndex].structureName
       })
       data.push({

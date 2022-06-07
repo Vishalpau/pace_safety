@@ -918,6 +918,7 @@ const ObservationInitialNotification = (props) => {
                               ? form.reportedByBadgeId
                               : ''
                           }
+                          inputProps={{ maxLength: 12 }}
                           fullWidth
                           variant="outlined"
                           autoComplete="off"
