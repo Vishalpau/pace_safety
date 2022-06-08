@@ -7,6 +7,8 @@ import { Grid, Typography, TextField, Button } from "@material-ui/core";
 import PropTypes, { object } from "prop-types";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import { KeyboardDatePicker } from '@material-ui/pickers';
@@ -336,6 +338,7 @@ const Checks = (props) => {
   const [questionId, setQuestionId] = useState();
   const [loading, setLoading] = useState(false);
   const [stateToggle, setStateToggle] = useState("")
+  const [open, setOpen] = useState(false)
   const [showCheckData, setShowCheckData] = useState({});
   const [ratingColor, setRatingColor] = useState({});
   const [complianceData, setComplianceData] = useState({});
@@ -663,19 +666,27 @@ const Checks = (props) => {
     const name = event.target.name;
     const file = event.target.files[0];
     // checking type of attachments
-    temp.map((a, i) => {
-      if (a.questionId === questionId) {
-        if (name === 'attachment') {
-          a.attachment = file
+    if (file.size <= 1024 * 1024 * 25) {
+      temp.map((a, i) => {
+        if (a.questionId === questionId) {
+          if (name === 'attachment') {
+            a.attachment = file
+          }
+          if (name === 'evidence') {
+            a.mediaAttachment = file
+          }
         }
-        if (name === 'evidence') {
-          a.mediaAttachment = file
-        }
-      }
-      return a
-    });
-    setCheckData(temp);
+        return a
+      });
+      setCheckData(temp);
+    } else {      
+      setOpen(true);
+    }
   };
+
+  useEffect(() => {
+    console.log(checkData);
+  }, [checkData])
 
   const handelSubmit = async () => {
     updateAccordian();
@@ -786,6 +797,17 @@ const Checks = (props) => {
       calculate_rating(option.factorConstant, selectType, index, id);
       setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
     }
+  };
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -1858,6 +1880,11 @@ const Checks = (props) => {
 
         </Grid>
       </>
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          The file(s) you are attaching is bigger than the 25mb.
+        </Alert>
+      </Snackbar>
     </CustomPapperBlock>
 
   );

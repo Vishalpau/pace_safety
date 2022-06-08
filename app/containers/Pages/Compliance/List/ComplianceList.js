@@ -39,6 +39,7 @@ import api from "../../../../utils/axios";
 import moment from "moment";
 import Loader from "../../Loader";
 import Pagination from "@material-ui/lab/Pagination";
+import { MDBDataTable } from 'mdbreact';
 
 const useStyles = makeStyles((theme) => ({
   root: {

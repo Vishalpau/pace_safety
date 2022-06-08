@@ -459,11 +459,11 @@ const AssessmentAndNotification = (props) => {
       data.append("permitToPerahaform", ahaform.permitToPerahaform),
       data.append("permitNumber", ahaform.permitNumber),
       data.append("ahaNumber", ahaform.ahaNumber);
-      if (ahaform.files !== null && ahaform.files !== undefined && typeof ahaform.files !== 'string') {
-        ahaform.files.map((file) => {
-          data.append('files', file);
-        });
-      }
+    if (ahaform.files !== null && ahaform.files !== undefined && typeof ahaform.files !== 'string') {
+      ahaform.files.map((file) => {
+        data.append('files', file);
+      });
+    }
     if (
       ahaform.ahaAssessmentAttachment !== null &&
       typeof ahaform.ahaAssessmentAttachment !== "string"
@@ -1146,57 +1146,28 @@ const AssessmentAndNotification = (props) => {
                     </Grid>
                   </Paper>
                 </Grid>
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Typography variant="h6" className="sectionHeading">
-                    <svg
-                      id="twotone-closed_caption-24px"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        id="Path_5090"
-                        data-name="Path 5090"
-                        d="M0,0H24V24H0Z"
-                        fill="none"
-                      />
-                      <path
-                        id="Path_5091"
-                        data-name="Path 5091"
-                        d="M18.5,16H7A4,4,0,0,1,7,8H19.5a2.5,2.5,0,0,1,0,5H9a1,1,0,0,1,0-2h9.5V9.5H9a2.5,2.5,0,0,0,0,5H19.5a4,4,0,0,0,0-8H7a5.5,5.5,0,0,0,0,11H18.5Z"
-                        fill="#06425c"
-                      />
-                    </svg>{" "}
-                    Attachment
-                  </Typography>
-                </Grid>
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Paper elevation={1} className="paperSection">
-                    <Grid container spacing={3}>
-                      <MultiAttachment attachmentHandler={(files) => setAHAForm({ ...ahaform, files: files })} />
-                      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                        <Alert onClose={handleClose} severity="error">
-                          {message}
-                        </Alert>
-                      </Snackbar>
-                      <Grid item md={12} xs={12}>
-                        <TextField
-                          label="Link"
-                          margin="dense"
-                          name="link"
-                          id="link"
-                          value={ahaform.link !== "null" ? ahaform.link : ""}
-                          fullWidth
-                          variant="outlined"
-                          className={classes.formControl}
-                          onChange={(e) =>
-                            setAHAForm({ ...ahaform, link: e.target.value })
-                          }
-                        />
-                      </Grid>
-                    </Grid>
-                  </Paper>
+
+                <MultiAttachment attachmentHandler={(files) => setAHAForm({ ...ahaform, files: files })} />
+                
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="error">
+                    {message}
+                  </Alert>
+                </Snackbar>
+                <Grid item md={12} xs={12}>
+                  <TextField
+                    label="Link"
+                    margin="dense"
+                    name="link"
+                    id="link"
+                    value={ahaform.link !== "null" ? ahaform.link : ""}
+                    fullWidth
+                    variant="outlined"
+                    className={classes.formControl}
+                    onChange={(e) =>
+                      setAHAForm({ ...ahaform, link: e.target.value })
+                    }
+                  />
                 </Grid>
 
                 {notificationSentValue.length > 0 ? (

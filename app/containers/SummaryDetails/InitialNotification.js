@@ -210,6 +210,10 @@ const IncidentDetailsSummary = (props) => {
     );
   };
 
+  useEffect(()=>{
+    console.log(incidents);
+  }, [incidents])
+
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (

@@ -325,10 +325,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   userImage: {
-    borderRadius: '50px',
+    borderRadius: '50%',
     width: '50px',
     height: '50px',
     marginRight: '10px',
+    objectFit: "contain"
   },
   mrFifteen: {
     marginRight: '15px',
