@@ -576,7 +576,6 @@ const Summary = (props) => {
                     <Button
                       href="#"
                       color={props.viewMode.viewMode.initialNotification ? 'secondary' : 'primary'}
-                      variant="contained"
                       size="large"
                       variant={
                         initialNoticeficationStatus ? 'contained' : 'outlined'
@@ -606,7 +605,6 @@ const Summary = (props) => {
                     <Button
                       href="#investigation"
                       color={props.viewMode.viewMode.investigation == true ? 'secondary' : 'primary'}
-                      variant="outlined"
                       size="large"
                       variant={investigationOverview ? 'contained' : 'outlined'}
                       endIcon={
