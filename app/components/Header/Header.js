@@ -685,6 +685,7 @@ function Header(props) {
   const id = filterOpen ? "simple-popover" : undefined;
 
   const handleBreakdown = async (e, index, label) => {
+
     const value = e.target.value;
     let temp = [...labelList]
     temp[index][`selectValue`] = value;
@@ -727,21 +728,21 @@ function Header(props) {
           if (item.id === value) {
             await setSelectBreakDown([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name, label: label },
+              { depth: item.depth, id: item.id, name: item.structureName, label: label },
             ]);
             dispatch(breakDownDetails([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name, label: label },
+              { depth: item.depth, id: item.id, name: item.structureName, label: label },
             ]))
             setBreakDownData([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name, label: label }
+              { depth: item.depth, id: item.id, name: item.structureName, label: label }
             ])
             localStorage.setItem(
               "selectBreakDown",
               JSON.stringify([
                 ...selectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name, label: label },
+                { depth: item.depth, id: item.id, name: item.structureName, label: label },
               ])
             );
             return;
@@ -850,14 +851,11 @@ function Header(props) {
     }
     setChangeClass(isExpanded ? true : false);
     setPhaseSelect([phases]);
-    // console.log('isExpanded', isExpanded);
-    // console.log('changeClass', changeClass);
     setOpenPhase(isExpanded ? panel : false);
   };
 
   const [openUnit, setOpenUnit] = React.useState();
   const handleUnitChange = (panel, index, id) => async (event, isExpanded) => {
-    console.log(projectListData[index].breakdown[2].structure[0].ur, 'hey')
     if (openUnit !== panel && projectListData[index].breakdown && projectListData[index].breakdown.length > 2 && projectListData[index].breakdown[2].structure && projectListData[index].breakdown[2].structure[0].url) {
       const config = {
         method: "get",

@@ -83,6 +83,7 @@ import StatusFilter from './StatusFilter';
 import allPickListDataValue from '../../../utils/Picklist/allPickList';
 import { checkACL } from '../../../utils/helper';
 import Acl from '../../../components/Error/acl';
+import Delete from '../../Delete/Delete';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -957,7 +958,6 @@ function xflha(props) {
   };
 
   const handleDelete = async (item) => {
-    // console.log(item);
     if (checkACL('safety-flha', 'delete_flha')) {
       const data = {
         fkCompanyId: item[1].fkCompanyId,
@@ -966,11 +966,6 @@ function xflha(props) {
         jobDetails: item[1].jobDetails,
         status: 'Delete'
       };
-      // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
-      // let data = item[1];
-      // console.log(data);
-      // data.status = "Delete";
-      // delete data.attachment
       setIsLoading(false);
       const res1 = await api.put(`/api/v1/flhas/${item[1].id}/`, data)
         .then(response => {
@@ -1376,6 +1371,17 @@ function xflha(props) {
                                               />
                                             </Link>
                                           )}
+                                        {/* <Delete
+                                          deleteUrl={`/api/v1/flhas/${item[1].id}/`}
+                                          afterDelete={fetchData}
+                                          axiosObj={api}
+                                          item={item.item}
+                                          loader={setIsLoading}
+                                          loadingFlag={false}
+                                          deleteMsg='Are you sure you want to delete this AHA?'
+                                          yesBtn='Yes'
+                                          noBtn='No'
+                                        /> */}
                                       </Typography>
                                       {/* <Typography variant="body1" display="inline">
                 <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>

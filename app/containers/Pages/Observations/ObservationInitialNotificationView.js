@@ -461,10 +461,10 @@ const ObservationInitialNotificationView = () => {
                     Reported on
                   </FormLabel>
                   <Typography className="viewLabelValue">
-                    {moment(initialData.createdAt).format(
+                    {/* {moment(initialData.createdAt).format(
                       'Do MMMM YYYY, h:mm:ss a'
-                    )}
-                    {/* {initialData["createdAt"] ? handelDateTime(initialData["createdAt"]) : "-"} */}
+                    )} */}
+                    {initialData["createdAt"] ? handelDateTime(initialData["createdAt"]) : "-"}
 
                   </Typography>
                 </Grid>
