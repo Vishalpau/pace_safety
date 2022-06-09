@@ -57,6 +57,7 @@ import { handelCommonObject } from '../../../utils/CheckerValue';
 // Redux
 import { tabViewMode } from '../../../redux/actions/initialDetails';
 import Loader from "../Loader";
+import MultiAttachment from '../../MultiAttachment/MultiAttachment';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -879,7 +880,7 @@ const ReportingAndNotification = (props) => {
                         item
                         md={typeof item.evidenceDocument === 'string' ? 2 : 6}
                       >
-                        <input
+                        {/* <input
                           ref={ref}
                           id="file"
                           type="file"
@@ -889,9 +890,9 @@ const ReportingAndNotification = (props) => {
                               typeof item.evidenceDocument === 'string'
                               && 'transparent',
                           }}
-                          onChange={(e) => handleEvidanceForm(e, index, 'evidenceDocument')
-                          }
-                        />
+                          onChange={(e) => handleEvidanceForm(e, index, 'evidenceDocument')}
+                        /> */}
+                        <MultiAttachment attachmentHandler={(files) => handleEvidanceForm(files, index, 'evidenceDocument')} />
                       </Grid>
                       {typeof item.evidenceDocument === 'string' ? (
                         <Grid item md={4}>

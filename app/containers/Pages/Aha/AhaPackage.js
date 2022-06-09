@@ -56,6 +56,7 @@ import { handelCommonObject } from "../../../utils/CheckerValue"
 import Loader from "../Loader"
 import { checkACL } from '../../../utils/helper';
 import Attachment from '../../Attachment/Attachment';
+import Delete from '../../Delete/Delete'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -493,10 +494,15 @@ function AhaPackage(props) {
   // };
 
   const handleClickDeleteAlert = (value) => {
+    console.log(value, 'value')
     setDeleteQ(true);
     setDeleteValue(value);
     // handleDelete(value);
   };
+
+  const getFromChid = (value) => {
+    setDeleteValue(value)
+  }
 
   const handleCloseDeleteAlert = () => {
     setDeleteQ(false);
@@ -677,18 +683,11 @@ function AhaPackage(props) {
   const AllCardData = (item, index) => {
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
-    // const [hiddenn, setHiddenn] = useState(false);
-    // const [openAttachment, setopenAttachment] = React.useState(false);
 
     function handleVisibility() {
       setShowGrid(true);
       setHidden(!hidden);
     };
-
-    // function handleVisibilityComments() {
-    //   setCommentsOpen(true);
-    //   setHiddenn(!hiddenn);
-    // };
 
     function handleAttachClose() {
       setShowGrid(false);
@@ -910,7 +909,7 @@ function AhaPackage(props) {
                       </Typography> */}
               </Grid>
 
-              <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
+              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
                 <div className={classes.floatR}>
                   {/* <Typography variant="body1" display="inline">
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network view</Link>
@@ -929,8 +928,18 @@ function AhaPackage(props) {
                       </Typography> */}
                   <span item xs={1} className={classes.sepHeightTen}></span>
                   <Typography variant="body1" display="inline">
-
-                    {!checkDeletePermission
+                    <Delete
+                      deleteUrl={`/api/v1/ahas/${item.item.id}/`}
+                      afterDelete={fetchAllAHAData}
+                      axiosObj={api}
+                      item={item.item}
+                      loader={setIsLoading}
+                      loadingFlag={false}
+                      deleteMsg='Are you sure you want to delete this AHA?'
+                      yesBtn='Yes'
+                      noBtn='No'
+                    />
+                    {/* {!checkDeletePermission
                       ? (
                         <DeleteForeverOutlinedIcon
                           className={classes.iconteal}
@@ -950,7 +959,7 @@ function AhaPackage(props) {
                             onClick={(e) => handleClickDeleteAlert(item.item)}
                           />
                         </Link>
-                      )}
+                      )} */}
                     {/* <Link href="#" className={classes.mLeftR5}>
                           <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
                         </Link> */}

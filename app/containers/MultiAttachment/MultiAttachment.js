@@ -3,10 +3,64 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Grid, Typography } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { useDropzone } from 'react-dropzone'
 
 const MultiAttachment = (props) => {
 
-    const [files, setFiles] = useState();
+    const useStyles = makeStyles((theme) => ({
+        formBox: {
+            flex: '1',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '0.75rem',
+            borderWidth: '2px',
+            borderRadius: '5px',
+            borderColor: '#CBCBCB',
+            borderStyle: 'dashed',
+            backgroundColor: '#ffffff',
+            color: '#bdbdbd',
+            outline: 'none',
+            transition: 'border .24s ease-in-out',
+            marginTop: '0.625rem',
+            marginBottom: '0.625rem',
+            cursor: 'pointer',
+            position: "relative",
+            textAlign: 'center',
+
+            '& input': {
+                position: "absolute",
+                left: 0,
+                top: 0,
+                opacity: 0,
+                width: '100%',
+                height: '100%'
+            }
+        },
+    }));
+
+    const classes = useStyles();
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop: async (e) => {
+            const filesArray = e;
+            const temparray = [];
+            for (let i = 0; i < filesArray.length; i++) {
+                if ((filesArray[i].size <= 1024 * 1024 * 25)) {
+                    temparray.push(filesArray[i]);
+                }
+                else {
+                    document.getElementById('attachment').value = '';
+                    await setOpen(true);
+                }
+            }
+
+            await setFiles(temparray);
+        }
+    })
+
+    const [files, setFiles] = useState([]);
     const [open, setOpen] = useState(false);
 
     // send selected files to parent component
@@ -14,26 +68,6 @@ const MultiAttachment = (props) => {
     const attachmentHandler = () => {
         props.attachmentHandler(files);
     }
-
-    // select multiple files
-
-    const handleFile = async (e) => {
-
-        const filesArray = e.target.files;
-        const temparray = [];
-        for (let i = 0; i < filesArray.length; i++) {
-            if ((filesArray[i].size <= 1024 * 1024 * 25)) {
-                temparray.push(filesArray[i]);
-            }
-            else {
-                document.getElementById('attachment').value = '';
-                await setOpen(true);
-            }
-        }
-
-        await setFiles(temparray);
-
-    };
 
     useEffect(() => {
         attachmentHandler();
@@ -48,6 +82,26 @@ const MultiAttachment = (props) => {
             return;
         }
         setOpen(false);
+    };
+
+    const handleDragEnter = e => {
+        e.preventDefault();
+        console.log("drag enter");
+    };
+
+    const handleDragLeave = e => {
+        e.preventDefault();
+        console.log("drag leave");
+    };
+
+    const handleDragOver = e => {
+        e.preventDefault();
+        console.log("drag over");
+    };
+
+    const handleDrop = e => {
+        e.preventDefault();
+        console.log("drag drop");
     };
 
     return (
@@ -65,16 +119,52 @@ const MultiAttachment = (props) => {
             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
-                        <input
-                            type="file"
-                            multiple
-                            name="file"
-                            id="attachment"
-                            accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                            onChange={(e) => {
-                                handleFile(e);
-                            }}
-                        />
+                        <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
+                            <Typography className="viewLabelValue">
+                                <div {...getRootProps()}>
+                                    <input
+                                        {...getInputProps()}
+                                        type="file"
+                                        multiple
+                                        name="file"
+                                        id="attachment"
+                                        style={{ display: 'block' }}
+                                        accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                                    />
+                                </div>
+                                <span align="center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="39.4" height="28.69" viewBox="0 0 39.4 28.69">
+                                        <g id="upload-outbox-svgrepo-com" transform="translate(0 0)">
+                                            <g id="Group_4970" data-name="Group 4970" transform="translate(13.004)">
+                                                <g id="Group_4969" data-name="Group 4969">
+                                                    <path id="Path_3322" data-name="Path 3322" d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z" transform="translate(-166.342 -68.504)" fill="#7890a4" />
+                                                </g>
+                                            </g>
+                                            <g id="Group_4972" data-name="Group 4972" transform="translate(0 12.502)">
+                                                <g id="Group_4971" data-name="Group 4971">
+                                                    <path id="Path_3323" data-name="Path 3323" d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z" transform="translate(0 -228.424)" fill="#7890a4" />
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
+                                <aside>
+                                    {
+                                        files.length > 0 ?
+                                            <ul style={{ marginTop: '15px' }}>
+                                                {
+                                                    files.map(file => (
+                                                        <li style={{ marginTop: '5px' }} key={file.name}>
+                                                            {file.name}
+                                                        </li>
+                                                    ))
+                                                }
+                                            </ul> : ''
+                                    }
+                                </aside>
+                            </Typography>
+                        </Grid>
                     </Grid>
                 </Paper>
             </Grid>
