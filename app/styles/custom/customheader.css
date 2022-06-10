@@ -301,6 +301,20 @@ html .custmCancelBtn {
   padding-bottom: 5px;
   border-radius: 0px 0px 6px 6px;
 }
+
+.quickActionSectionLink {
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+  font-family: 'Montserrat-Regular';
+  line-height: 18px;
+  margin: 4px 0;
+}
+
+/* .quickActionSectionLink:hover {
+  color: white !important;
+} */
+
 .quickActionSection nav div a, .quickActionSection nav li a {
   width: 100%;
 }
@@ -329,6 +343,7 @@ html .custmCancelBtn {
 }
 .commentsShowSection  {
   margin-top: -30px !important;
+  margin-bottom: 30px !important;
 }
 .paddTRemove {
   padding-top: 0px !important;

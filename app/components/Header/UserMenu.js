@@ -208,7 +208,6 @@ function UserMenu(props) {
     let data = await api
       .get(`${ACCOUNT_API_URL}api/v1/applications/`)
       .then(function (res) {
-        console.log(res.data.data.results, 'resultsssss');
         subscriptionData = res.data.data.results;
         // setSubscriptions(res.data.data.results);
         return res.data.data.results
