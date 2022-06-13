@@ -190,7 +190,7 @@ html .custmCancelBtn {
   padding: 16px;
   background-color: #ffffff;
   border: 1px solid #E7E7E7;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 .sectionHeading {
   font-size: 16px !important;
@@ -311,9 +311,9 @@ html .custmCancelBtn {
   margin: 4px 0;
 }
 
-/* .quickActionSectionLink:hover {
+.quickActionSectionLink:hover {
   color: white !important;
-} */
+}
 
 .quickActionSection nav div a, .quickActionSection nav li a {
   width: 100%;
@@ -342,7 +342,7 @@ html .custmCancelBtn {
   padding-bottom: 0px !important;
 }
 .commentsShowSection  {
-  margin-top: -30px !important;
+  /* margin-top: -30px !important; */
   margin-bottom: 30px !important;
 }
 .paddTRemove {
@@ -1657,4 +1657,9 @@ ul.MuiMenu-list a ul li.userName {
 }
 .compliancePerMatrixPageIcon {
   background-position: -92.626rem -25.313rem;
+}
+
+/* comment image */ 
+.comment-image {
+  max-width: 10%;
 }

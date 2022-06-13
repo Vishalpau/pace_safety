@@ -1868,9 +1868,7 @@ function ComplianceSummary(props) {
                       className="quickActionSectionLink"
                       variant="subtitle"
                       name="Comments"
-                      to={`/app/pages/compliance/compliance-details/${localStorage.getItem(
-                        "fkComplianceId"
-                      )}`}
+                      to={`/app/comments/compliance/${id}`}
                     >
                       Comments
                     </NavLink>
