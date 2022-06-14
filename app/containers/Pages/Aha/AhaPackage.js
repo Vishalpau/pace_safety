@@ -590,8 +590,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -635,8 +635,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -649,16 +649,14 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
       setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -1044,13 +1042,13 @@ function AhaPackage(props) {
                       <Typography variant="body1" display="inline">
                       <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                       </Typography> */}
-                <span item xs={1} className={classes.sepHeightTen} />
+                {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                 <Typography variant="body1" display="inline">
                   <Delete
                     deleteUrl={`/api/v1/ahas/${item.id}/`}
                     afterDelete={fetchAllAHAData}
                     axiosObj={api}
-                    item={deleteItem}
+                    item={item.item}
                     loader={setIsLoading}
                     loadingFlag={false}
                     deleteMsg="Are you sure you want to delete this Observation?"
