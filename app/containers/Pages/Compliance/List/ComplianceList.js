@@ -129,6 +129,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     marginTop: "10px",
   },
+  dataTableSectionDesign: {
+    "& th > div": {
+      cursor: "pointer"
+    }
+  }
 }));
 
 function Actions(props) {
@@ -139,6 +144,7 @@ function Actions(props) {
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
+  const [order, setOrder] = useState('');
   const [page, setPage] = useState(1);
   const handelView = (e) => {
     setListToggle(false);
@@ -153,13 +159,8 @@ function Actions(props) {
   // };
 
   //   Data for the table view
-  const columns = ["Number", "Type", "Location", "Audited on", "Audited by"];
+  const columns = ["Number", "Type", "Location", { name: "Audited On", options: { sort: false } }, "Audited by"];
 
-  const data = [
-    ["Compliance-125-256-251", "Not found", "Delhi", "Dec 26, 2020", "Admin"],
-    ["Compliance-125-256-251", "Not found", "Delhi", "Dec 26, 2020", "Admin"],
-    ["Compliance-125-256-251", "Not found", "Delhi", "Dec 26, 2020", "Admin"],
-  ];
   const options = {
     filterType: "dropdown",
     responsive: "vertical",
@@ -176,6 +177,7 @@ function Actions(props) {
     rowsPerPage: 10,
     page: 0,
     pagination: false,
+    sort: false
   };
 
   const classes = useStyles();
@@ -298,6 +300,7 @@ function Actions(props) {
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
+        await setOrder('desc');
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
@@ -305,6 +308,7 @@ function Actions(props) {
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
+        await setOrder('desc');
       }
 
     } else {
@@ -316,6 +320,7 @@ function Actions(props) {
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
+        await setOrder('desc');
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
@@ -324,6 +329,7 @@ function Actions(props) {
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
+        await setOrder('desc');
       }
     }
   };
@@ -338,6 +344,37 @@ function Actions(props) {
     props.type,
     // props.blank
   ]);
+
+  window.onclick = (e) => {
+    console.log(e.target.innerHTML);
+    if (e.target.innerHTML === "Audited On") {
+      order === 'ascDate' ? setOrder('descDate') : setOrder('ascDate');
+    }
+    if (e.target.innerHTML === "Location") {
+      order === 'ascLoc' ? setOrder('descLoc') : setOrder('ascLoc');
+    }
+  }
+
+
+  const SetDataOrder = () => {
+    let newdata;
+    if (order === 'ascDate') {
+      newdata = allComplianceData.slice().sort(function (a, b) {
+        return moment(a.auditDateTime) - moment(b.auditDateTime);
+      })
+      setAllComplianceData(newdata);
+    } else if (order === 'descDate') {
+      newdata = allComplianceData.slice().sort(function (a, b) {
+        return moment(b.auditDateTime) - moment(a.auditDateTime);
+      })
+      setAllComplianceData(newdata)
+    } 
+  }
+
+  useEffect(() => {
+    console.log(order, "order");
+    SetDataOrder();
+  }, [order]);
 
   return (
     <>
@@ -357,7 +394,7 @@ function Actions(props) {
                   ])}
                   columns={columns}
                   options={options}
-                  className="dataTableSectionDesign"
+                  className={`${classes.dataTableSectionDesign} dataTableSectionDesign`}
                 />
               </Grid>
             </TableContainer>

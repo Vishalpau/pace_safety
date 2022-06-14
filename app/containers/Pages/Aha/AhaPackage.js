@@ -1041,7 +1041,7 @@ function AhaPackage(props) {
                 {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                 <Typography variant="body1" display="inline">
                   <Delete
-                    deleteUrl={`/api/v1/ahas/${item.item.id}/`}
+                    deleteUrl={`/api/v1/ahas/${item.id}/`}
                     afterDelete={fetchAllAHAData}
                     axiosObj={api}
                     item={item.item}
