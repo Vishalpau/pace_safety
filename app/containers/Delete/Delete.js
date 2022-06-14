@@ -6,8 +6,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import Link from '@material-ui/core/Link';
-import IconButton from '@material-ui/core/IconButton';
+import Link from "@material-ui/core/Link";
+import IconButton from "@material-ui/core/IconButton";
 
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -28,35 +28,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Delete = (props) => {
+  console.log(props, "propsssssssssssss");
+
   const classes = useStyles();
   const [deleteQ, setDeleteQ] = useState(false);
   const sendValue = async () => {
     props.loader(props.loadingFlag);
     setDeleteQ(false);
     const res = await props.axiosObj
-      .put(props.deleteUrl, {
-        fkCompanyId: props.item.fkCompanyId,
-        fkProjectId: props.item.fkProjectId,
-        fkProjectStructureIds: props.item.fkProjectStructureIds,
-        location: props.item.location,
-        assessmentDate: props.item.assessmentDate,
-        permitToPerform: props.item.permitToPerform,
-        description: props.item.description,
-        classification: props.item.classification,
-        createdBy: props.item.createdBy,
-        status: "Delete",
-      })
+      .put(props.deleteUrl, props.item)
       .then((res) => props.afterDelete())
       .then((res) => props.loader(!props.loadingFlag));
   };
 
   return (
     <>
-      <Link href="#" className={classes.mLeftR5}>
-        <IconButton onClick={() => setDeleteQ(true)}>
-          <DeleteForeverOutlinedIcon className={classes.iconteal} />
-        </IconButton>
-      </Link>
+      <Button
+        // className={classes.mLeftR5}
+        onClick={() => setDeleteQ(true)}
+      >
+        <DeleteForeverOutlinedIcon className={classes.iconteal} />
+      </Button>
 
       <Dialog
         open={deleteQ}

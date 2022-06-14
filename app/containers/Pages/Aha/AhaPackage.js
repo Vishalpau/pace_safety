@@ -474,7 +474,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-10px",
   },
   margT10: {
-    marginTop: "12px",
+    marginTop: "6px",
     display: "block",
   },
 }));
@@ -703,33 +703,46 @@ function AhaPackage(props) {
     props.status,
   ]); ///////////////////////////////////////
 
-  /*********************all card data**********************/ 
-  const AllCardData = ({item,index}) => {
+  /*********************all card data**********************/
+
+  const AllCardData = ({ item, index }) => {
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [commentData, setCommentData] = useState("");
 
+    const deleteItem = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      fkProjectStructureIds: item.fkProjectStructureIds,
+      location: item.location,
+      assessmentDate: item.assessmentDate,
+      permitToPerform: item.permitToPerform,
+      description: item.description,
+      classification: item.classification,
+      createdBy: item.createdBy,
+      status: "Delete",
+    };
+
     const addComments = (event) => {
       console.log(event.target.value);
       setCommentData(event.target.value);
     };
 
-    const commentPayload = {
-      fkCompanyId: item.fkCompanyId,
-      fkProjectId: item.fkProjectId,
-      commentContext: "aha",
-      contextReferenceIds: item.id,
-      commentTags: "",
-      comment: commentData,
-      parent: 0,
-      thanksFlag: 0,
-      status: "Active",
-      createdBy: item.createdBy,
-    };
-
     const handleSendComments = async () => {
+      const commentPayload = {
+        fkCompanyId: item.fkCompanyId,
+        fkProjectId: item.fkProjectId,
+        commentContext: "aha",
+        contextReferenceIds: item.id,
+        commentTags: "",
+        comment: commentData,
+        parent: 0,
+        thanksFlag: 0,
+        status: "Active",
+        createdBy: item.createdBy,
+      };
       if (commentData) {
         console.log(api, "apiiiiiiii");
         await api
@@ -1033,7 +1046,7 @@ function AhaPackage(props) {
                     deleteUrl={`/api/v1/ahas/${item.id}/`}
                     afterDelete={fetchAllAHAData}
                     axiosObj={api}
-                    item={item}
+                    item={deleteItem}
                     loader={setIsLoading}
                     loadingFlag={false}
                     deleteMsg="Are you sure you want to delete this AHA?"
@@ -1300,54 +1313,6 @@ function AhaPackage(props) {
                   </DialogActions>
                 </Dialog>
                 {/* </div> */}
-
-                <Dialog
-                  open={deleteQ}
-                  onClose={handleCloseDeleteAlert}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <Grid container spacing={3}>
-                        <Grid item md={12} xs={12}>
-                          <FormControl component="fieldset">
-                            <FormLabel
-                              component="legend"
-                              className="checkRadioLabel"
-                            >
-                              Are you sure you want to delete this question?
-                            </FormLabel>
-                          </FormControl>
-                        </Grid>
-                        <Grid
-                          item
-                          md={12}
-                          sm={12}
-                          xs={12}
-                          className={classes.popUpButton}
-                        >
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            className="spacerRight buttonStyle"
-                            onClick={() => handleDelete()}
-                          >
-                            Yes
-                          </Button>
-                          <Button
-                            color="secondary"
-                            variant="contained"
-                            className="buttonStyle custmCancelBtn"
-                            onClick={() => handleCloseDeleteAlert()}
-                          >
-                            No
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </DialogContentText>
-                  </DialogContent>
-                </Dialog>
               </div>
             </div>
             <div className={classes.pagination}>

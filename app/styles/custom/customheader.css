@@ -190,7 +190,7 @@ html .custmCancelBtn {
   padding: 16px;
   background-color: #ffffff;
   border: 1px solid #E7E7E7;
-  /* margin-bottom: 20px; */
+  margin-bottom: 20px;
 }
 .sectionHeading {
   font-size: 16px !important;
@@ -870,9 +870,9 @@ ul.MuiMenu-list a ul li.userName {
   text-transform: none;
 }
 
-.attactmentShowSection, .commentsShowSection {
+/* .attactmentShowSection, .commentsShowSection {
   margin-top: -30px !important;
-}
+} */
 .attactmentShowSection ul, .commentsShowSection ul{
   display: inline;
 }

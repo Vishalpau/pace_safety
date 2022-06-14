@@ -25,6 +25,8 @@ import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import in_progress_small from "dan-images/in_progress_small.png";
 import "../../../styles/custom/customheader.css";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
+import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
+
 import { useHistory, useParams } from "react-router";
 
 import List from "@material-ui/core/List";
@@ -46,6 +48,7 @@ import { handelCommonObject } from "../../../utils/CheckerValue";
 import Loader from "../Loader";
 import { checkACL } from "../../../utils/helper";
 import Attachment from "../../Attachment/Attachment";
+import Delete from "../../Delete/Delete";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -377,7 +380,6 @@ const useStyles = makeStyles((theme) => ({
       padding: "8px !important",
     },
   },
-
   fullWidth: {
     width: "100%",
     margin: ".5rem 0",
@@ -405,6 +407,11 @@ const useStyles = makeStyles((theme) => ({
         },
       },
     },
+  },
+
+  commentLink: {
+    marginLeft: "2px",
+    cursor: "pointer",
   },
 
   viewAttachmentDialog: {
@@ -474,21 +481,21 @@ function JhaPackage(props) {
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  const [deleteValue, setDeleteValue] = useState("");
-  const [deleteQ, setDeleteQ] = useState(false);
+  // const [deleteValue, setDeleteValue] = useState("");
+  // const [deleteQ, setDeleteQ] = useState(false);
 
-  const handleClickDeleteAlert = (value) => {
-    setDeleteQ(true);
-    setDeleteValue(value);
-    // handleDelete(value);
-  };
+  // const handleClickDeleteAlert = (value) => {
+  //   setDeleteQ(true);
+  //   setDeleteValue(value);
+  //   // handleDelete(value);
+  // };
 
-  const handleCloseDeleteAlert = () => {
-    setDeleteQ(false);
-    setDeleteValue("");
-  };
+  // const handleCloseDeleteAlert = () => {
+  //   setDeleteQ(false);
+  //   setDeleteValue("");
+  // };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
     await setIsLoading(false);
@@ -658,31 +665,31 @@ function JhaPackage(props) {
   //   .catch(err => console.log(err))
   // }
 
-  const handleDelete = async () => {
-    let temp = {
-      fkCompanyId: deleteValue.fkCompanyId,
-      fkProjectId: deleteValue.fkProjectId,
-      fkProjectStructureIds: deleteValue.fkProjectStructureIds,
-      location: deleteValue.location,
-      jhaAssessmentDate: deleteValue.jhaAssessmentDate,
-      permitToPerform: deleteValue.permitToPerform,
-      jobTitle: deleteValue.jobTitle,
-      description: deleteValue.description,
-      classification: deleteValue.classification,
-      createdBy: deleteValue.createdBy,
-      status: "Delete",
-    };
-    let id = deleteValue.id;
-    setIsLoading(false);
-    const res = await api
-      .put(`/api/v1/jhas/${id}/`, temp)
-      .then((response) => {
-        fetchData();
-        handleCloseDeleteAlert();
-        // setIsLoading(true);
-      })
-      .catch((error) => console.log(error));
-  };
+  // const handleDelete = async () => {
+  //   let temp = {
+  //     fkCompanyId: deleteValue.fkCompanyId,
+  //     fkProjectId: deleteValue.fkProjectId,
+  //     fkProjectStructureIds: deleteValue.fkProjectStructureIds,
+  //     location: deleteValue.location,
+  //     jhaAssessmentDate: deleteValue.jhaAssessmentDate,
+  //     permitToPerform: deleteValue.permitToPerform,
+  //     jobTitle: deleteValue.jobTitle,
+  //     description: deleteValue.description,
+  //     classification: deleteValue.classification,
+  //     createdBy: deleteValue.createdBy,
+  //     status: "Delete",
+  //   };
+  //   let id = deleteValue.id;
+  //   setIsLoading(false);
+  //   const res = await api
+  //     .put(`/api/v1/jhas/${id}/`, temp)
+  //     .then((response) => {
+  //       fetchData();
+  //       handleCloseDeleteAlert();
+  //       // setIsLoading(true);
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
 
   useEffect(() => {
     fetchData();
@@ -703,6 +710,49 @@ function JhaPackage(props) {
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+    const [commentData, setCommentData] = useState("");
+
+    let deleteItem = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      fkProjectStructureIds: item.fkProjectStructureIds,
+      location: item.location,
+      jhaAssessmentDate: item.jhaAssessmentDate,
+      permitToPerform: item.permitToPerform,
+      jobTitle: item.jobTitle,
+      description: item.description,
+      classification: item.classification,
+      createdBy: item.createdBy,
+      status: "Delete",
+    };
+
+    const addComments = (event) => {
+      console.log(event.target.value);
+      setCommentData(event.target.value);
+    };
+
+    const handleSendComments = async () => {
+      // console.log(commentsData, 'comments')
+      const commentPayload = {
+        fkCompanyId: item.fkCompanyId,
+        fkProjectId: item.fkProjectId,
+        commentContext: "jha",
+        contextReferenceIds: item.id,
+        commentTags: "",
+        comment: commentData,
+        parent: 0,
+        thanksFlag: 0,
+        status: "Active",
+        createdBy: item.createdBy,
+      };
+      if (commentData) {
+        console.log(api, "apiiiiiiii");
+        await api
+          .post("/api/v1/comments/", commentPayload)
+          .then((res) => handleCommentsClose())
+          .catch((err) => console.log(err));
+      }
+    };
 
     const handleChangeOne = (event, newValue) => {
       setValue(newValue);
@@ -727,24 +777,24 @@ function JhaPackage(props) {
       }
     };
 
-    const handleCommentVisibility = () => {
+    function handleVisibilityComments() {
       setCommentsOpen(true);
-      setHidden(!hidden);
-    };
+      setHiddenn(!hiddenn);
+    }
 
-    const handleCommentsClick = () => {
-      setCommentsOpen(!open);
-    };
-
-    const handleCommentsOpen = () => {
+    function handleCommentsOpen() {
       if (!hiddenn) {
         setCommentsOpen(true);
       }
-    };
+    }
 
-    const handleCommentsClose = () => {
+    function handleCommentsClose() {
       setCommentsOpen(false);
-    };
+    }
+
+    function handleCommentsClick() {
+      setCommentsOpen(!open);
+    }
 
     const handleMyUserPClickOpen = () => {
       setMyUserPOpen(true);
@@ -806,18 +856,10 @@ function JhaPackage(props) {
                               display="inline"
                               className={classes.listingLabelName}
                             >
-                              Number:{" "}
-                              {/* <span> */}
-                                {/* <Link
-                                  onClick={() => handleSummaryPush(item)}
-                                  variant="h6"
-                                  className={classes.mLeftfont}
-                                > */}
-                                  <span className={classes.listingLabelValue}>
-                                    {item.jhaNumber}
-                                  </span>
-                                {/* </Link> */}
-                              {/* </span> */}
+                              Number: {/* <span> */}
+                              <span className={classes.listingLabelValue}>
+                                {item.jhaNumber}
+                              </span>
                             </Typography>
                             <span
                               item
@@ -926,101 +968,106 @@ function JhaPackage(props) {
             <CardActions className={Incidents.cardActions}>
               <Grid container spacing={2} justify="flex-end" alignItems="left">
                 <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                  >
-                    <AttachmentIcon className={classes.mright5} />
-                    Attachments:
-                  </Typography>
-                  <Typography variant="body2" display="inline">
-                    <span>
-                      <Link
-                        // href="#"
-                        onClick={item.attachmentCount && handleVisibility}
-                        color="secondary"
-                        aria-haspopup="true"
-                        className={classes.mLeft}
-                      >
-                        {item.attachmentCount}
-                      </Link>
-                    </span>
-                  </Typography>
-                  <span item xs={1} className={classes.sepHeightTen} />
-                  {/* <Typography
-            variant="body1"
-            display="inline"
-            color="textPrimary"
-            className={classes.mLeft}
-          >
-            <InsertCommentOutlinedIcon className={classes.mright5} />
-            <Link href="#"
-              onClick={handleVisibilityComments}
-              aria-haspopup="true">
-              Comments:
-            </Link>
+                  <span className={classes.margT10}>
+                    <Typography
+                      variant="body1"
+                      display="inline"
+                      color="textPrimary"
+                    >
+                      <AttachmentIcon className={classes.mright5} />
+                      Attachments:
+                    </Typography>
 
-          </Typography>
-          <Typography variant="body2" display="inline" className={classes.mLeft}>
-            <span>
-              <Link href="#"
-                color="secondary"
-                aria-haspopup="true"
-                className={classes.mLeft}>
-                {value["commentsCount"]}
-              </Link>
-            </span>
-          </Typography> */}
+                    <Link
+                      onClick={item.attachmentCount && handleVisibility}
+                      color="secondary"
+                      aria-haspopup="true"
+                      className={
+                        item.attachmentCount
+                          ? classes.commentLink
+                          : classes.mLeft
+                      }
+                    >
+                      {item.attachmentCount}
+                    </Link>
+
+                    <span item xs={1} className={classes.sepHeightTen} />
+                    <Typography
+                      variant="body1"
+                      display="inline"
+                      color="textPrimary"
+                      className={classes.mLeft}
+                    >
+                      <InsertCommentOutlinedIcon className={classes.mright5} />
+                      Comments:
+                    </Typography>
+                    <Link
+                      onClick={handleVisibilityComments}
+                      color="secondary"
+                      aria-haspopup="true"
+                      className={classes.commentLink}
+                    >
+                      {item.commentsCount}
+                    </Link>
+                  </span>
                 </Grid>
 
-                <Grid
-                  item
-                  xs={12}
-                  md={7}
-                  md={7}
-                  sm={12}
-                  className={classes.textRight}
-                >
-                  <div className={classes.floatR}>
-                    {/* <Typography variant="body1" display="inline">
-          <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
-          </Typography>
-          <span item xs={1} className={classes.sepHeightTen}></span> */}
-                    {/* <Typography variant="body1" display="inline">
-              <PrintOutlinedIcon className={classes.iconColor} /> <Link href="/app/pages/general-observation-prints" className={classes.mLeftR5}>Print</Link>
-            </Typography>
-            <span item xs={1} className={classes.sepHeightTen}></span>
-            <Typography variant="body1" display="inline"><Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-            </Typography> */}
-                    <span item xs={1} className={classes.sepHeightTen} />
-                    <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}>
-                        {!checkDeletePermission ? (
+                <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
+                  {/* <div className={classes.floatR}> */}
+                  {/* <Typography variant="body1" display="inline">
+                      <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network view</Link>
+                      </Typography>
+                      <span item xs={1} className={classes.sepHeightTen}></span>
+                      <Typography variant="body1" display="inline">
+                        <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
+                      </Typography> */}
+                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                      <Typography variant="body1" display="inline">
+                      <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
+                      </Typography> */}
+                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                      <Typography variant="body1" display="inline">
+                      <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
+                      </Typography> */}
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Typography variant="body1" display="inline">
+                    <Delete
+                      deleteUrl={`/api/v1/jhas/${item.id}/`}
+                      afterDelete={fetchData}
+                      axiosObj={api}
+                      item={deleteItem}
+                      loader={setIsLoading}
+                      loadingFlag={false}
+                      deleteMsg="Are you sure you want to delete this JHA"
+                      yesBtn="Yes"
+                      noBtn="No"
+                    />
+                    {/* {!checkDeletePermission
+                      ? (
+                        <DeleteForeverOutlinedIcon
+                          className={classes.iconteal}
+                          style={{
+                            color: '#c0c0c0',
+                            cursor: 'not-allowed'
+                          }}
+                        />
+                      )
+                      : (
+                        <Link
+                          href="#"
+                          className={classes.mLeftR5}
+                        >
                           <DeleteForeverOutlinedIcon
                             className={classes.iconteal}
-                            style={{
-                              color: "#c0c0c0",
-                              cursor: "not-allowed",
-                            }}
+                            onClick={(e) => handleClickDeleteAlert(item.item)}
                           />
-                        ) : (
-                          <Link href="#" className={classes.mLeftR5}>
-                            <DeleteForeverOutlinedIcon
-                              className={classes.iconteal}
-                              // onClick={() => handleDelete(value)}
-                              onClick={() => handleClickDeleteAlert(item.item)}
-                            />
-                          </Link>
-                        )}
-                        {/* <IconButton onClick={() => handleDelete(value)}>
-                      <DeleteForeverOutlinedIcon
-                        className={classes.iconteal}
-                      />
-                    </IconButton> */}
-                      </Link>
-                    </Typography>
-                  </div>
+                        </Link>
+                      )} */}
+                    {/* <Link href="#" className={classes.mLeftR5}>
+                          <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
+                        </Link> */}
+                  </Typography>
+                  {/* </div> */}
                 </Grid>
               </Grid>
             </CardActions>
@@ -1064,73 +1111,70 @@ function JhaPackage(props) {
             ""
           )}
         </div>
-        <div>
-          <Grid
-            item
-            md={12}
-            sm={12}
-            xs={12}
-            hidden={!hiddenn}
-            onBlur={handleCommentsClose}
-            onClick={handleCommentsClick}
-            onClose={handleCommentsClose}
-            onFocus={handleCommentsOpen}
-            onMouseEnter={handleCommentsOpen}
-            onMouseLeave={handleCommentsClose}
-            open={commentsOpen}
-            className="commentsShowSection"
-          >
-            <Paper elevation={1} className="paperSection">
-              <Grid container spacing={3}>
-                <Grid item md={12} xs={12}>
-                  <Box padding={3}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <TextField
-                          multiline
-                          variant="outlined"
-                          rows="1"
-                          id="JobTitle"
-                          label="Add your comments here"
-                          className="formControl"
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <input type="file" />
-                      </Grid>
-                      <Grid item xs={9}>
-                        <AddCircleOutlineIcon className={classes.plusIcon} />
-                        <RemoveCircleOutlineIcon
-                          className={classes.minusIcon}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          className="spacerRight buttonStyle"
-                          disableElevation
-                        >
-                          Respond
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          size="small"
-                          className="buttonStyle custmCancelBtn"
-                          disableElevation
-                        >
-                          Cancel
-                        </Button>
-                      </Grid>
+
+        {/* <div> */}
+        <Grid
+          item
+          md={12}
+          sm={12}
+          xs={12}
+          hidden={!hiddenn}
+          onBlur={handleCommentsClose}
+          onClick={handleCommentsClick}
+          onClose={handleCommentsClose}
+          onFocus={handleCommentsOpen}
+          onMouseEnter={handleCommentsOpen}
+          onMouseLeave={handleCommentsClose}
+          open={commentsOpen}
+          className="commentsShowSection"
+        >
+          <Paper elevation={1} className="paperSection">
+            <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                <Box padding={3}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        multiline
+                        variant="outlined"
+                        rows="1"
+                        id="JobTitle"
+                        label="Add your comments here"
+                        className="formControl"
+                        value={commentData}
+                        onChange={(e) => addComments(e)}
+                      />
                     </Grid>
-                  </Box>
-                </Grid>
+
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className="spacerRight buttonStyle"
+                        disableElevation
+                        onClick={handleSendComments}
+                      >
+                        Respond
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        className="buttonStyle custmCancelBtn"
+                        disableElevation
+                        onClick={handleCommentsClose}
+                      >
+                        Cancel
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
               </Grid>
-            </Paper>
-          </Grid>
-        </div>
+            </Grid>
+          </Paper>
+        </Grid>
+        {/* </div> */}
 
         <Dialog
           open={myUserPOpen}
@@ -1287,51 +1331,6 @@ function JhaPackage(props) {
               : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
-
-          <Dialog
-            open={deleteQ}
-            onClose={handleCloseDeleteAlert}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                <Grid container spacing={3}>
-                  <Grid item md={12} xs={12}>
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend" className="checkRadioLabel">
-                        Are you sure you want to delete this question?
-                      </FormLabel>
-                    </FormControl>
-                  </Grid>
-                  <Grid
-                    item
-                    md={12}
-                    sm={12}
-                    xs={12}
-                    className={classes.popUpButton}
-                  >
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      className="spacerRight buttonStyle"
-                      onClick={() => handleDelete()}
-                    >
-                      Yes
-                    </Button>
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      className="buttonStyle custmCancelBtn"
-                      onClick={() => handleCloseDeleteAlert()}
-                    >
-                      No
-                    </Button>
-                  </Grid>
-                </Grid>
-              </DialogContentText>
-            </DialogContent>
-          </Dialog>
         </Box>
       ) : (
         <Loader />
