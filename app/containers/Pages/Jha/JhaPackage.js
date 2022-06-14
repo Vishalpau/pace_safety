@@ -60,6 +60,7 @@ import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
 import Loader from "../Loader";
 import { checkACL } from '../../../utils/helper';
+import CardView from '../../Card/CardView';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -654,16 +655,18 @@ function JhaPackage(props) {
     setCommentsOpen(false);
   };
 
-  const handleSummaryPush = async (selectedJha) => {
+  const handleSummaryPush = async (index) => {
 
-    const jha = selectedJha
+    const id = allJHAData[index].id;
 
-    localStorage.setItem("fkJHAId", jha.id)
-    handelCommonObject("commonObject", "jha", "projectStruct", jha.fkProjectStructureIds)
+    const fkProjectStructureIds = allJHAData[index].fkProjectStructureIds;
+
+    localStorage.setItem("fkJHAId", id)
+    handelCommonObject("commonObject", "jha", "projectStruct", fkProjectStructureIds)
     localStorage.removeItem('JSAAssessments')
     localStorage.removeItem('JSAApproval')
     localStorage.removeItem('JSAlessonsLearned')
-    history.push(`/app/pages/jha/jha-summary/${jha.id}`);
+    history.push(`/app/pages/jha/jha-summary/${id}`);
   };
 
   const handleDelete = async (item) => {
@@ -685,247 +688,17 @@ function JhaPackage(props) {
       {isLoading ?
         <Box>
 
-          {allJHAData.length > 0 ? allJHAData.map((value) => (
+          {allJHAData.length > 0 ? Object.entries(allJHAData).map((singleitem, index) => (
             <Grid className={classes.marginTopBottom}>
-
+              
               <div className="gridView">
-                <Card variant="outlined" className={classes.card}>
-                  <CardContent>
-                    <Grid container spacing={3} className={classes.cardContentSection}>
-                      <Grid item md={2} sm={4} xs={12}
-                        className={classes.userPictureBox}
-                      >
-                        <Button className={classNames(classes.floatR)}
-                        //  onClick={(e) => handleMyUserPClickOpen(e)}
-                        >
-                          <img src={value["avatar"]} className={classes.userImage} /> {value["username"]}
-                        </Button>
-                      </Grid>
-                      <Link
-                        onClick={() => handleSummaryPush(value)}
-                        className={classes.cardLinkAction}
-                      >
-
-                        <Grid item xs={12}>
-                          <Grid container spacing={3} alignItems="flex-start">
-                            <Grid item sm={12} xs={12} className={classes.listHeadColor}>
-                              <Grid container spacing={3} alignItems="flex-start">
-                                <Grid item md={10} sm={12} xs={12} className={classes.pr0}>
-                                  <Typography
-                                    className={classes.title}
-                                    variant="h6"
-                                  >
-                                    {value["description"]}
-                                  </Typography>
-                                  <Typography
-                                    display="inline"
-                                    className={classes.listingLabelName}
-                                  >
-                                    Number: <span>
-                                      <Link
-                                        onClick={() => handleSummaryPush()}
-                                        variant="h6"
-                                        className={classes.mLeftfont}
-                                      >
-                                        <span className={classes.listingLabelValue}>{value["jhaNumber"]}</span>
-                                      </Link></span>
-                                  </Typography>
-                                  <span item xs={1} className={classes.sepHeightOne}></span>
-                                  <Typography
-                                    variant="body1"
-                                    gutterBottom
-                                    display="inline"
-                                    color="textPrimary"
-                                    className={classes.listingLabelName}
-                                  >
-                                    Category: <span className={classes.listingLabelValue}>{value["jhaNumber"].split("-")[0]}</span>
-                                  </Typography>
-                                  <span item xs={1} className={classes.sepHeightOne}></span>
-                                  <Typography
-                                    variant="body1"
-                                    gutterBottom
-                                    display="inline"
-                                    color="textPrimary"
-                                    className={classes.listingLabelName}
-                                  >
-                                    Stage: <span className={classes.listingLabelValue}>{value["jhaStage"]}<img src={in_progress_small} className={classes.smallImage} /></span>
-                                    <span item xs={1} className={classes.sepHeightOne}></span>
-                                    Status: <span className="listingLabelValue statusColor_complete">{value["jhaStatus"]}</span>
-                                  </Typography>
-
-                                </Grid>
-
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-
-                        <Grid item sm={12} xs={12}>
-                          <Grid container spacing={3}>
-                            <Grid item md={3} sm={6} xs={12}>
-                              <Typography
-                                variant="body1"
-                                color="textPrimary"
-                                gutterBottom
-                                className={classes.listingLabelName}
-                              >
-                                Location:
-                              </Typography>
-                              <Typography
-
-                                className={classes.listingLabelValue}
-                              >
-                                {value["location"]}
-                              </Typography>
-                            </Grid>
-
-                            <Grid item md={3} sm={6} xs={12}>
-                              <Typography
-                                variant="body1"
-                                color="textPrimary"
-                                gutterBottom
-                                className={classes.listingLabelName}
-                              >
-                                Created on:
-                              </Typography>
-
-                              <Typography
-
-                                className={classes.listingLabelValue}
-                              >
-                                {value["jhaAssessmentDate"]}
-                              </Typography>
-                            </Grid>
-
-                            <Grid item md={3} sm={6} xs={12}>
-                              <Typography
-                                variant="body1"
-                                color="textPrimary"
-                                gutterBottom
-                                className={classes.listingLabelName}
-                              >
-                                Created by:
-                              </Typography>
-
-                              <Typography
-
-                                className={classes.listingLabelValue}
-                              >
-                                {value["createdByName"]}
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Link>
-
-                    </Grid>
-                  </CardContent>
-                  <Divider />
-                  <CardActions className={Incidents.cardActions}>
-                    <Grid
-                      container
-                      spacing={2}
-                      justify="flex-end"
-                      alignItems="left"
-                    >
-                      <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                        <Typography
-                          variant="body1"
-                          display="inline"
-                          color="textPrimary"
-
-                        >
-                          <AttachmentIcon className={classes.mright5} />
-                          Attachments: {" "}
-                        </Typography>
-                        <Typography variant="body2" display="inline">
-                          <span>
-                            <Link href="#"
-                              // onClick={handleVisibility}
-                              color="secondary"
-                              aria-haspopup="true"
-                              className={classes.mLeft}>
-                              {
-                                value.files !== null ? (
-                                  <>
-                                    {value.files.length}
-                                  </>
-                                ) : (
-                                  0
-                                )
-                              }
-                            </Link>
-                          </span>
-                        </Typography>
-                        <span item xs={1} className={classes.sepHeightTen}></span>
-                        {/* <Typography
-                        variant="body1"
-                        display="inline"
-                        color="textPrimary"
-                        className={classes.mLeft}
-                      >
-                        <InsertCommentOutlinedIcon className={classes.mright5} />
-                        <Link href="#"
-                          onClick={handleVisibilityComments}
-                          aria-haspopup="true">
-                          Comments:
-                        </Link>
-
-                      </Typography>
-                      <Typography variant="body2" display="inline" className={classes.mLeft}>
-                        <span>
-                          <Link href="#"
-                            color="secondary"
-                            aria-haspopup="true"
-                            className={classes.mLeft}>
-                            {value["commentsCount"]}
-                          </Link>
-                        </span>
-                      </Typography> */}
-                      </Grid>
-
-                      <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                        <div className={classes.floatR}>
-                          {/* <Typography variant="body1" display="inline">
-                      <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span> */}
-                          {/* <Typography variant="body1" display="inline">
-                          <PrintOutlinedIcon className={classes.iconColor} /> <Link href="/app/pages/general-observation-prints" className={classes.mLeftR5}>Print</Link>
-                        </Typography>
-                        <span item xs={1} className={classes.sepHeightTen}></span>
-                        <Typography variant="body1" display="inline"><Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                        </Typography> */}
-                          <span item xs={1} className={classes.sepHeightTen}></span>
-                          <Typography variant="body1" display="inline">
-                            {!checkDeletePermission
-                              ? (
-                                <DeleteForeverOutlinedIcon
-                                  className={classes.iconteal}
-                                  style={{
-                                    color: '#c0c0c0',
-                                    cursor: 'not-allowed'
-                                  }}
-                                />
-                              )
-                              : (
-                                <Link
-                                  href="#"
-                                  className={classes.mLeftR5}
-                                >
-                                  <DeleteForeverOutlinedIcon
-                                    className={classes.iconteal}
-                                    onClick={(e) => handleDelete(value)}
-                                  />
-                                </Link>
-                              )}
-                            {/* <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(value)} /></Link> */}
-                          </Typography>
-                        </div>
-                      </Grid>
-                    </Grid>
-                  </CardActions>
-                </Card>
+                <CardView 
+                  data={singleitem} 
+                  itemIndex={index} 
+                  handleSummaryPush={(i)=>{handleSummaryPush(i)}} 
+                  handleMyUserPClickOpen={(val)=>{handleMyUserPClickOpen(val)}} 
+                  checkDeletePermission={checkDeletePermission}
+                />
                 <Grid
                   item
                   md={12}
