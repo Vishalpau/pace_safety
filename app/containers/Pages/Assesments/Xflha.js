@@ -637,6 +637,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "2px",
     cursor: "pointer",
   },
+  margT10: {
+    marginTop: "6px",
+    display: "block",
+  },
   topNavTabBack: {
     backgroundColor: "transparent",
     color: "black",

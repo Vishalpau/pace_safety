@@ -56,6 +56,7 @@ import Loader from "../../Loader";
 import moment from "moment";
 import { checkACL } from "../../../../utils/helper";
 import Attachment from "../../../../containers/Attachment/Attachment";
+import Delete from "../../../Delete/Delete";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -252,7 +253,7 @@ const useStyles = makeStyles((theme) => ({
     borderLeft: "3px solid #cccccc",
     height: "8px",
     verticalAlign: "middle",
-    margin: "0px 10px 0px 0px",
+    margin: '15px 15px 15px 8px',
     fontSize: "10px",
     ["@media (max-width:480px)"]: {
       margin: "10px 5px 10px 5px",
@@ -355,6 +356,20 @@ const useStyles = makeStyles((theme) => ({
     ["@media (max-width:800px)"]: {
       right: "auto",
     },
+  },
+  mLeft: {
+    marginLeft: "2px",
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  commentLink: {
+    marginLeft: "2px",
+    cursor: "pointer",
+  },
+  margT10: {
+    marginTop: "6px",
+    display: "block",
   },
   cardContentSection: {
     position: "relative",
@@ -712,6 +727,11 @@ function ComplianceListNew(props) {
     const [hiddenn, setHiddenn] = useState(false);
     const [commentData, setCommentData] = useState("");
 
+    const deleteItem = {
+      ...value,
+      status: "Delete",
+    };
+
     const commentPayload = {
       fkCompanyId: value.fkCompanyId,
       fkProjectId: value.fkProjectId,
@@ -958,130 +978,94 @@ function ComplianceListNew(props) {
             </Grid>
           </CardContent>
           <Divider />
-          <CardActions
-            className={classNames(
-              Incidents.cardActions,
-              classes.cardActionBottomBox
-            )}
-          >
-            <Grid
-              container
-              spacing={2}
-              justify="flex-end"
-              alignItems="left"
-              className={classes.cardBottomSection}
-            >
-              <Grid item xs={12} sm={6} md={5}>
-                <Typography
-                  variant="body1"
-                  display="inline"
-                  color="textPrimary"
-                >
-                  <AttachmentIcon className={classes.mright5} />
-                  Attachments:
-                </Typography>
-                <Typography variant="body2" display="inline">
-                  <span>
-                    <Link
-                      // href="#"
-                      onClick={
-                        value.attachmentLinks.attachmentCount &&
-                        handleVisibility
-                      }
-                      color="secondary"
-                      aria-haspopup="true"
-                      className={classes.mLeftR5}
-                    >
-                      {value.attachmentLinks.attachmentCount}
-                    </Link>
-                  </span>
-                </Typography>
 
-                <span item xs={1} className={classes.sepHeightTen} />
-                <Typography
-                  variant="body1"
-                  display="inline"
-                  color="textPrimary"
-                  className={classes.mLeft}
-                >
-                  <InsertCommentOutlinedIcon className={classes.mright5} />
-                  <Link
-                    // href="#"
-                    style={{ textDecoration: "none" }}
-                    aria-haspopup="true"
+          <CardActions className={Incidents.cardActions}>
+            <Grid container spacing={2} justify="flex-end" alignItems="left">
+              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                <span className={classes.margT10}>
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
                   >
-                    Comments:
+                    <AttachmentIcon className={classes.mright5} />
+                    Attachments:
+                  </Typography>
+
+                  <Link
+                    onClick={
+                      value.attachmentLinks.attachmentCount && handleVisibility
+                    }
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={
+                      value.attachmentLinks.attachmentCount ? classes.commentLink : classes.mLeft
+                    }
+                  >
+                    {value.attachmentLinks.attachmentCount}
                   </Link>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  display="inline"
-                  className={classes.mLeft}
-                >
-                  <span>
-                    <Link
-                      // href="#"
-                      onClick={handleVisibilityComments}
-                      color="secondary"
-                      aria-haspopup="true"
-                      className={classes.mLeft}
-                    >
-                      {value.commentsCount}
-                    </Link>
-                  </span>
-                </Typography>
+
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
+                    className={classes.mLeft}
+                  >
+                    <InsertCommentOutlinedIcon className={classes.mright5} />
+                    Comments:
+                  </Typography>
+                  <Link
+                    onClick={handleVisibilityComments}
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={classes.commentLink}
+                  >
+                    {value.commentsCount}
+                  </Link>
+                </span>
               </Grid>
 
-              <Grid item xs={12} sm={6} md={7} className={classes.textRight}>
-                {/* <Typography variant="body1" display="inline">
-                <IconButton>
-                  <PrintOutlinedIcon className={classes.iconteal} />
-                </IconButton>{" "}
-                <Link
-                  href="/app/pages/general-observation-prints"
-                  className={classes.mLeftR5}
-                />
-              </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-          <Typography variant="body2" display="inline">
-          <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
-          </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen} />
-              <Typography variant="body1" display="inline">
-                <Link href="#" className={classes.mLeftR5}>
-                  <IconButton>
-                    <StarsIcon className={classes.iconteal} />
-                  </IconButton>
-                </Link>
-              </Typography> */}
+              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
                 <span item xs={1} className={classes.sepHeightTen} />
-
                 <Typography variant="body1" display="inline">
-                  <Link href="#" className={classes.mLeftR5}>
-                    {!checkDeletePermission ? (
-                      <DeleteForeverOutlinedIcon
-                        className={classes.iconteal}
-                        style={{
-                          color: "#c0c0c0",
-                          cursor: "not-allowed",
-                        }}
-                      />
-                    ) : (
-                      <Link href="#" className={classes.mLeftR5}>
+                  <Delete
+                    deleteUrl={`api/v1/audits/${value.id}/`}
+                    afterDelete={fetchAllComplianceData}
+                    axiosObj={api}
+                    item={deleteItem}
+                    loader={setIsLoading}
+                    loadingFlag={false}
+                    deleteMsg="Are you sure you want to delete this Compliance"
+                    yesBtn="Yes"
+                    noBtn="No"
+                  />
+                  {/* {!checkDeletePermission
+                      ? (
                         <DeleteForeverOutlinedIcon
                           className={classes.iconteal}
-                          // onClick={() => handleDelete(value)}
-                          onClick={() => handleClickDeleteAlert(value)}
+                          style={{
+                            color: '#c0c0c0',
+                            cursor: 'not-allowed'
+                          }}
                         />
-                      </Link>
-                    )}
-                    {/* <IconButton onClick={() => handleDelete(value)}>
-                      <DeleteForeverOutlinedIcon
-                        className={classes.iconteal}
-                      />
-                    </IconButton> */}
-                  </Link>
+                      )
+                      : (
+                        <Link
+                          href="#"
+                          className={classes.mLeftR5}
+                        >
+                          <DeleteForeverOutlinedIcon
+                            className={classes.iconteal}
+                            onClick={(e) => handleClickDeleteAlert(item.item)}
+                          />
+                        </Link>
+                      )} */}
+                  {/* <Link href="#" className={classes.mLeftR5}>
+                          <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
+                        </Link> */}
                 </Typography>
+                {/* </div> */}
               </Grid>
             </Grid>
           </CardActions>

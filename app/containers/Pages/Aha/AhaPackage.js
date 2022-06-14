@@ -146,6 +146,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "2px",
     cursor: "pointer",
   },
+  margT10: {
+    marginTop: "6px",
+    display: "block",
+  },
   mLeftR5: {
     marginLeft: "5px",
     marginRight: "15px",
