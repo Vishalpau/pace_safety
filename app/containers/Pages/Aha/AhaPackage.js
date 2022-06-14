@@ -926,7 +926,7 @@ function AhaPackage(props) {
                       <Typography variant="body1" display="inline">
                       <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                       </Typography> */}
-                  <span item xs={1} className={classes.sepHeightTen}></span>
+                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                   <Typography variant="body1" display="inline">
                     <Delete
                       deleteUrl={`/api/v1/ahas/${item.item.id}/`}
