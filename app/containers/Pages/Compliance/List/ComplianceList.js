@@ -131,9 +131,9 @@ const useStyles = makeStyles((theme) => ({
   },
   dataTableSectionDesign: {
     "& th > div": {
-      cursor: "pointer"
-    }
-  }
+      cursor: "pointer",
+    },
+  },
 }));
 
 function Actions(props) {
@@ -144,7 +144,7 @@ function Actions(props) {
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
-  const [order, setOrder] = useState('');
+  const [order, setOrder] = useState("");
   const [page, setPage] = useState(1);
   const handelView = (e) => {
     setListToggle(false);
@@ -159,7 +159,13 @@ function Actions(props) {
   // };
 
   //   Data for the table view
-  const columns = ["Number", "Type", "Location", { name: "Audited On", options: { sort: false } }, "Audited by"];
+  const columns = [
+    "Number",
+    "Type",
+    "Location",
+    { name: "Audited On", options: { sort: false } },
+    "Audited by",
+  ];
 
   const options = {
     filterType: "dropdown",
@@ -177,7 +183,7 @@ function Actions(props) {
     rowsPerPage: 10,
     page: 0,
     pagination: false,
-    sort: false
+    sort: false,
   };
 
   const classes = useStyles();
@@ -196,8 +202,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -212,7 +218,8 @@ function Actions(props) {
       setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -224,7 +231,8 @@ function Actions(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
 
@@ -240,8 +248,10 @@ function Actions(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -253,8 +263,10 @@ function Actions(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
+            props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
 
@@ -267,7 +279,6 @@ function Actions(props) {
         setIsLoading(false);
       }
     }
-
   };
 
   //method for  all the types filters
@@ -280,8 +291,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -295,41 +306,46 @@ function Actions(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
-        await setOrder('desc');
+        await setOrder("");
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
-        await setOrder('desc');
+        await setOrder("");
       }
-
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
-        await setOrder('desc');
+        await setOrder("");
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
-        await setOrder('desc');
+        await setOrder("");
       }
     }
   };
@@ -346,30 +362,95 @@ function Actions(props) {
   ]);
 
   window.onclick = (e) => {
-    console.log(e.target.innerHTML);
-    if (e.target.innerHTML === "Audited On") {
-      order === 'ascDate' ? setOrder('descDate') : setOrder('ascDate');
+    if (e.target.innerHTML.toLowerCase() === "audited on") {
+      order === "ascDate" ? setOrder("descDate") : setOrder("ascDate");
     }
-    if (e.target.innerHTML === "Location") {
-      order === 'ascLoc' ? setOrder('descLoc') : setOrder('ascLoc');
+    if (e.target.innerHTML.toLowerCase() === "type") {
+      order === "ascType" ? setOrder("descType") : setOrder("ascType");
     }
-  }
-
+    if (e.target.innerHTML.toLowerCase() === "number") {
+      order === "ascNum" ? setOrder("descNum") : setOrder("ascNum");
+    }
+    if (e.target.innerHTML.toLowerCase() === "location") {
+      order === "ascLoc" ? setOrder("descLoc") : setOrder("ascLoc");
+    }
+    if (e.target.innerHTML.toLowerCase() === "audited by") {
+      order === "ascAud" ? setOrder("descAud") : setOrder("ascAud");
+    }
+  };
 
   const SetDataOrder = () => {
     let newdata;
-    if (order === 'ascDate') {
-      newdata = allComplianceData.slice().sort(function (a, b) {
+    if (order === "ascDate") {
+      newdata = allComplianceData.slice().sort(function(a, b) {
         return moment(a.auditDateTime) - moment(b.auditDateTime);
-      })
+      });
       setAllComplianceData(newdata);
-    } else if (order === 'descDate') {
-      newdata = allComplianceData.slice().sort(function (a, b) {
+    } else if (order === "descDate") {
+      newdata = allComplianceData.slice().sort(function(a, b) {
         return moment(b.auditDateTime) - moment(a.auditDateTime);
-      })
-      setAllComplianceData(newdata)
-    } 
-  }
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "ascType") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.auditType < b.auditType) return -1;
+        if (a.auditType > b.auditType) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "descType") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.auditType > b.auditType) return -1;
+        if (a.auditType < b.auditType) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "ascNum") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.auditNumber < b.auditNumber) return -1;
+        if (a.auditNumber > b.auditNumber) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "descNum") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.auditNumber > b.auditNumber) return -1;
+        if (a.auditNumber < b.auditNumber) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "ascLoc") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (b.area === null) return -1;
+        if (a.area < b.area) return -1;
+        if (a.area > b.area) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "descLoc") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.area === null) return -1;
+        if (a.area > b.area) return -1;
+        if (a.area < b.area) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "ascAud") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.createdByName < b.createdByName) return -1;
+        if (a.createdByName > b.createdByName) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "descAud") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.createdByName > b.createdByName) return -1;
+        if (a.createdByName < b.createdByName) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    }
+  };
 
   useEffect(() => {
     console.log(order, "order");
@@ -388,13 +469,15 @@ function Actions(props) {
                   data={allComplianceData.map((data) => [
                     data["auditNumber"],
                     data["auditType"],
-                    data["area"] ? data["area"] : '-',
+                    data["area"] ? data["area"] : "-",
                     moment(data["createdAt"]).format("DD MMMM YYYY"),
                     data["username"] !== null ? data["username"] : "-",
                   ])}
                   columns={columns}
                   options={options}
-                  className={`${classes.dataTableSectionDesign} dataTableSectionDesign`}
+                  className={`${
+                    classes.dataTableSectionDesign
+                  } dataTableSectionDesign`}
                 />
               </Grid>
             </TableContainer>
