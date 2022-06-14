@@ -321,8 +321,6 @@ class JhaFilter extends React.Component {
       afterBtn = menuBtn;
     }
 
-    console.log(this.props, ">>>>>>>>>>>>>>>>");
-
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>

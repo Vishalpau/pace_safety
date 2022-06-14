@@ -78,6 +78,7 @@ export const handelCommonObject = (objName, mainKey, subKey, subValue) => {
 export const handleTimeOutError = (res) => { }
 
 export const handelActionData = async (incidentId, apiData, type = "all") => {
+    console.log(incidentId, apiData, 'data');
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId

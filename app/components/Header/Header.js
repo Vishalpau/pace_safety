@@ -437,7 +437,9 @@ function Header(props) {
   const [selectBreakDown, setSelectBreakDown] = useState([]);
 
   const [companyOpen, setCompanyOpen] = React.useState(false);
-  const [labelList, setLabelList] = useState([])
+  const [labelList, setLabelList] = useState([]);
+
+  const tempArray = [];
 
   // Initial header style
   let flagDarker = false;
@@ -710,13 +712,13 @@ function Header(props) {
               ...removeSelectBreakDown,
               { depth: item.depth, id: item.id, name: item.structureName, label: label },
             ]))
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...removeSelectBreakDown,
-                { depth: item.depth, id: item.id, name: item.structureName, label: label },
-              ])
-            );
+            // localStorage.setItem(
+            //   "selectBreakDown",
+            //   JSON.stringify([
+            //     ...removeSelectBreakDown,
+            //     { depth: item.depth, id: item.id, name: item.structureName, label: label },
+            //   ])
+            // );
             return;
           }
 
@@ -738,19 +740,47 @@ function Header(props) {
               ...selectBreakDown,
               { depth: item.depth, id: item.id, name: item.structureName, label: label }
             ])
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...selectBreakDown,
-                { depth: item.depth, id: item.id, name: item.structureName, label: label },
-              ])
-            );
+            // localStorage.setItem(
+            //   "selectBreakDown",
+            //   JSON.stringify([
+            //     ...selectBreakDown,
+            //     { depth: item.depth, id: item.id, name: item.name, label: label },
+            //   ])
+            // );
             return;
           }
 
         }
       );
     }
+
+    temp.forEach((items, tempIndex) => {
+      if (items.selectValue) {
+        items.breakdownValue.forEach((item) => {
+          console.log(item.id, value, "vvaaaaaalueeeee");
+          if (item.id === items.selectValue) {
+            tempArray.push({
+              depth: item.depth,
+              id: item.id,
+              name: item.structureName,
+              label: label,
+            });
+          }
+        });
+      } else {
+        tempArray.push({
+          depth: tempIndex + 1 + "L",
+          id: tempIndex,
+          name: "All-" + items.breakdownLabel,
+          label: "All-" + items.breakdownLabel,
+        });
+      }
+    });
+
+    localStorage.setItem(
+      "selectBreakDown",
+      JSON.stringify(tempArray)
+    );
 
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {

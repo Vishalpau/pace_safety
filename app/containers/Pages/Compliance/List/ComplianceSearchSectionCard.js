@@ -406,7 +406,6 @@ export default function ComplianceSearchSectionCard() {
   };
 
   useEffect(() => {
-    console.log(document.referrer, "refereeeer");
     // localStorage.setItem("SearchedText", JSON.stringify(search))
     if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
       const retreiveSearchText = JSON.parse(

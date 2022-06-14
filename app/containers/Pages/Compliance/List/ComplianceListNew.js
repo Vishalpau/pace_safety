@@ -130,6 +130,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: "2px",
+    cursor: "pointer",
   },
   mLeftR5: {
     marginLeft: "5px",
@@ -516,7 +517,7 @@ function ComplianceListNew(props) {
   //method to fetch all compliance data filetrs
   const fetchAllComplianceData = async () => {
     if (props.search) {
-      setAllComplianceData([])
+      setAllComplianceData([]);
     }
     await setPage(1);
     // get all the ids (fkCompanyId,fkProjectId, selectBreakdown,fkProjectStructureIds, createdBy )
@@ -528,8 +529,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -544,7 +545,8 @@ function ComplianceListNew(props) {
       setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -556,7 +558,8 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -571,8 +574,10 @@ function ComplianceListNew(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -584,8 +589,10 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
+            props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -599,7 +606,6 @@ function ComplianceListNew(props) {
     }
   };
 
-
   //method for  all the filters
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -610,8 +616,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -626,14 +632,16 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -642,16 +650,20 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -693,21 +705,56 @@ function ComplianceListNew(props) {
 
   // separate card component
   const AllCardData = ({ value, index }) => {
-    // const [commentsOpen, setCommentsOpen] = useState(false);
+    console.log(value, "value");
+    const [commentsOpen, setCommentsOpen] = useState(false);
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
-    // const [hiddenn, setHiddenn] = useState(false);
+    const [hiddenn, setHiddenn] = useState(false);
+    const [commentData, setCommentData] = useState("");
+
+    const commentPayload = {
+      fkCompanyId: value.fkCompanyId,
+      fkProjectId: value.fkProjectId,
+      commentContext: "compliance",
+      contextReferenceIds: value.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: value.createdBy,
+    };
     // const [openAttachment, setopenAttachment] = React.useState(false);
+
+    useEffect(() => {
+      console.log(commentsOpen, "commnentspjeo");
+    }, [commentsOpen]);
+
+    const addComments = (event) => {
+      console.log(event.target.value);
+      setCommentData(event.target.value);
+    };
+
+    const handleSendComments = async () => {
+      if (commentData) {
+        console.log(api, "apiiiiiiii");
+        await api
+          .post("/api/v1/comments/", commentPayload)
+          .then((res) => handleCommentsClose())
+          .catch((err) => console.log(err));
+      }
+    };
 
     function handleVisibility() {
       setShowGrid(true);
       setHidden(!hidden);
     }
 
-    // function handleVisibilityComments() {
-    //   setCommentsOpen(true);
-    //   setHiddenn(!hiddenn);
-    // };
+    function handleAttachOpen() {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    }
 
     function handleAttachClose() {
       setShowGrid(false);
@@ -717,25 +764,24 @@ function ComplianceListNew(props) {
       setShowGrid(!open);
     }
 
-    function handleAttachOpen() {
-      if (!hidden) {
-        setShowGrid(true);
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
+    }
+
+    function handleCommentsOpen() {
+      if (!hiddenn) {
+        setCommentsOpen(true);
       }
     }
 
-    // function handleCommentsOpen() {
-    //   if (!hiddenn) {
-    //     setCommentsOpen(true);
-    //   }
-    // };
+    function handleCommentsClose() {
+      setCommentsOpen(false);
+    }
 
-    // function handleCommentsClose() {
-    //   setCommentsOpen(false);
-    // };
-
-    // function handleCommentsClick() {
-    //   setCommentsOpen(!open);
-    // };
+    function handleCommentsClick() {
+      setCommentsOpen(!open);
+    }
 
     // function handleClickOpenAttachment() {
     //   setopenAttachment(true);
@@ -825,8 +871,8 @@ function ComplianceListNew(props) {
                             <span className={classes.listingLabelValue}>
                               {value["groups"].length > 0
                                 ? value["groups"]
-                                  .map((data) => data.checkListGroupName)
-                                  .join(", ")
+                                    .map((data) => data.checkListGroupName)
+                                    .join(", ")
                                 : "-"}
                             </span>
                           </Typography>
@@ -925,7 +971,7 @@ function ComplianceListNew(props) {
               alignItems="left"
               className={classes.cardBottomSection}
             >
-              {/* <Grid item xs={12} sm={6} md={5}>
+              <Grid item xs={12} sm={6} md={5}>
                 <Typography
                   variant="body1"
                   display="inline"
@@ -938,32 +984,30 @@ function ComplianceListNew(props) {
                   <span>
                     <Link
                       // href="#"
-                      onClick={value['attachmentCount'] && handleVisibility}
+                      onClick={
+                        value.attachmentLinks.attachmentCount &&
+                        handleVisibility
+                      }
                       color="secondary"
                       aria-haspopup="true"
                       className={classes.mLeftR5}
                     >
-                      {`${value['attachmentCount'] ? value['attachmentCount'] : '0'}`}
+                      {value.attachmentLinks.attachmentCount}
                     </Link>
                   </span>
-                </Typography> */}
-              {/* <span
-                  item
-                  xs={1}
-                  className={classes.sepHeightTen}
-                />
+                </Typography>
+
+                <span item xs={1} className={classes.sepHeightTen} />
                 <Typography
                   variant="body1"
                   display="inline"
                   color="textPrimary"
                   className={classes.mLeft}
                 >
-                  <InsertCommentOutlinedIcon
-                    className={classes.mright5}
-                  />
+                  <InsertCommentOutlinedIcon className={classes.mright5} />
                   <Link
-                    href="#"
-                    onClick={handleVisibilityComments}
+                    // href="#"
+                    style={{ textDecoration: "none" }}
                     aria-haspopup="true"
                   >
                     Comments:
@@ -976,16 +1020,17 @@ function ComplianceListNew(props) {
                 >
                   <span>
                     <Link
-                      href="#"
+                      // href="#"
+                      onClick={handleVisibilityComments}
                       color="secondary"
                       aria-haspopup="true"
                       className={classes.mLeft}
                     >
-                      3
+                      {value.commentsCount}
                     </Link>
                   </span>
-                </Typography> */}
-              {/* </Grid> */}
+                </Typography>
+              </Grid>
 
               <Grid item xs={12} sm={6} md={7} className={classes.textRight}>
                 {/* <Typography variant="body1" display="inline">
@@ -1041,7 +1086,7 @@ function ComplianceListNew(props) {
             </Grid>
           </CardActions>
         </Card>
-        {value.avatar && (
+        {value.attachmentLinks.attachmentCount ? (
           <Grid
             item
             md={12}
@@ -1063,9 +1108,13 @@ function ComplianceListNew(props) {
                   <List>
                     <ListItem>
                       <Grid item md={12} sm={12} xs={12}>
-                        <div className="attachFileThumb">
-                          <Attachment src={value.avatar} value={value.avatar} />
-                        </div>
+                        {value.attachmentLinks.links.map((dt) => {
+                          return (
+                            <div className="attachFileThumb">
+                              <Attachment src={dt} value={dt} />
+                            </div>
+                          );
+                        })}
                       </Grid>
                     </ListItem>
                   </List>
@@ -1073,7 +1122,77 @@ function ComplianceListNew(props) {
               </Grid>
             </Paper>
           </Grid>
+        ) : (
+          ""
         )}
+
+        <Grid
+          item
+          md={12}
+          sm={12}
+          xs={12}
+          hidden={!hiddenn}
+          onBlur={handleCommentsClose}
+          onClick={handleCommentsClick}
+          onClose={handleCommentsClose}
+          onFocus={handleCommentsOpen}
+          onMouseEnter={handleCommentsOpen}
+          onMouseLeave={handleCommentsClose}
+          open={commentsOpen}
+          className="commentsShowSection"
+        >
+          <Paper elevation={1} className="paperSection">
+            <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                <Box padding={3}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        multiline
+                        variant="outlined"
+                        rows="1"
+                        id="JobTitle"
+                        label="Add your comments here"
+                        className="formControl"
+                        value={commentData}
+                        onChange={(e) => addComments(e)}
+                      />
+                    </Grid>
+                    {/* <Grid item xs={3}>
+                      <input type="file" />
+                    </Grid>
+                    <Grid item xs={9}>
+                      <AddCircleOutlineIcon className={classes.plusIcon} />
+                      <RemoveCircleOutlineIcon className={classes.minusIcon} />
+                    </Grid> */}
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className="spacerRight buttonStyle"
+                        disableElevation
+                        onClick={handleSendComments}
+                      >
+                        Respond
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        className="custmCancelBtn buttonStyle"
+                        disableElevation
+                        onClick={handleCommentsClose}
+                      >
+                        Cancel
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
         {/* <div>
           <Dialog
             open={openAttachment}
