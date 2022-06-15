@@ -553,7 +553,7 @@ function PersonalDashboard(props) {
       try {
         let data = await api.get(`${SELF_API}${companyId}/`)
           .then(function (res) {
-            let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode == APPCODE)[0].roles[0].aclUrl
+            let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode.toLowerCase() == APPCODE)[0].roles[0].aclUrl
             api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`).then(d => {
               localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0]))
             });
@@ -679,7 +679,7 @@ function PersonalDashboard(props) {
   const handleCompanyName = async (e, key, name) => {
     let hosting = companyListData.filter(company => company.companyId === e)[0]
       .subscriptions
-      .filter(subscription => subscription.appCode == "safety")[0]
+      .filter(subscription => subscription.appCode.toLowerCase() == APPCODE)[0]
       .hostings[0].apiDomain
     let config = {
       method: "get",
@@ -784,9 +784,10 @@ function PersonalDashboard(props) {
             response.data.data.results.data.companies = response.data.data.results.data.companies.filter(comp => comp.companyId == comId)
           }
           if (response.data.data.results.data.companies.length === 1) {
+            console.log(response.data.data.results.data.companies.filter(company => company.companyId === response.data.data.results.data.companies[0].companyId)[0], 'ppppppppppppppppppppppppppp')
             let hosting = response.data.data.results.data.companies.filter(company => company.companyId === response.data.data.results.data.companies[0].companyId)[0]
               .subscriptions
-              .filter(subscription => subscription.appCode == "safety")[0]
+              .filter(subscription => subscription.appCode.toLowerCase() == APPCODE)[0]
               .hostings[0].apiDomain
             let config = {
               method: "get",
@@ -856,7 +857,7 @@ function PersonalDashboard(props) {
               // localStorage.setItem('companiesCount', response.data.data.results.data.companies.length);
               // setIsLoading(true)
               let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
-                .subscriptions.filter(subs => subs.appCode === "safety")[0]
+                .subscriptions.filter(subs => subs.appCode.toLowerCase() === APPCODE)[0]
                 .hostings[0].apiDomain
 
               localStorage.setItem("apiBaseUrl", hosting)
