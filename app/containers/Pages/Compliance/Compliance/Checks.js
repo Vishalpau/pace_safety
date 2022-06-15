@@ -612,7 +612,7 @@ const Checks = (props) => {
 
           tempQuestionId.push({ id: value.id });
           tempCheckData.push({
-            check: (defRes || ((crtic && auditS)) ? true : false),
+            check: (defRes || crtic ? true : false),
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
             question: value.question,
@@ -965,7 +965,6 @@ const Checks = (props) => {
                           {
                             Categor.length > 0 ?
                               Categor.map((value, index) => {
-                                console.log('vaaaaaaa', value);
                                 return (
                                   <>
                                     <Grid container item xs={12}>
