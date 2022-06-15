@@ -752,6 +752,7 @@ function JhaPackage(props) {
                     handleMyUserPClickOpen={(val) => {
                       handleMyUserPClickOpen(val);
                     }}
+                    files={singleitem[1].files}
                     checkDeletePermission={checkDeletePermission}
                     handleDelete={(val) => {
                       handleDelete(val);

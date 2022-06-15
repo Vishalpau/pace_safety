@@ -503,17 +503,17 @@ function AhaPackage(props) {
   const [MyFavopen, setMyFavOpen] = React.useState(false);
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-  const handleMyUserPClickOpen = (val) => {
-    setMyUserPOpen(val);
-  };
+  // const handleMyUserPClickOpen = (val) => {
+  //   setMyUserPOpen(val);
+  // };
 
   useEffect(() => {
     console.log(myUserPOpen, "myUserPOpen");
   }, [myUserPOpen]);
 
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
+  // const handleMyUserPClose = () => {
+  //   setMyUserPOpen(false);
+  // };
 
   // const handleSummaryPush = async () => {
   //   history.push(
@@ -678,6 +678,7 @@ function AhaPackage(props) {
                       data={item}
                       avatar={item[1].avatar}
                       username={item[1].username}
+                      itemIndex={index}
                       headerFields={[
                         { label: "Number", value: item[1].ahaNumber },
                         { label: "Category", value: "AHA" },
@@ -696,7 +697,6 @@ function AhaPackage(props) {
                         { label: "Created By", value: item[1].createdByName },
                       ]}
                       files={item[1].files}
-                      itemIndex={index}
                       handleSummaryPush={(i) => {
                         handleSummaryPush(i);
                       }}
@@ -720,7 +720,7 @@ function AhaPackage(props) {
                   </Typography>
                 )}
 
-                <div>
+                {/* <div>
                   <Dialog
                     open={myUserPOpen}
                     onClose={handleMyUserPClose}
@@ -742,11 +742,6 @@ function AhaPackage(props) {
                           <h3>Basic Information</h3>
                           <List>
                             <ListItem>
-                              {/* <ListItemAvatar>
-                              <Avatar>
-                                <ImageIcon />
-                              </Avatar>
-                            </ListItemAvatar> */}
                               <ListItemText
                                 primary="Full Name:"
                                 secondary="Prakash"
@@ -815,7 +810,7 @@ function AhaPackage(props) {
                       </Button>
                     </DialogActions>
                   </Dialog>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className={classes.pagination}>
