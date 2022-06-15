@@ -925,7 +925,10 @@ function Actions(props) {
         console.log(api, "apiiiiiiii");
         await api
           .post("/api/v1/comments/", commentPayload)
-          .then((res) => handleCommentsClose())
+          .then((res) => {
+            // handleCommentsClose();
+            fetchInitialiObservation();
+          })
           .catch((err) => console.log(err));
       }
     };

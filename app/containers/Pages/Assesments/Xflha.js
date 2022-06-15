@@ -1129,7 +1129,10 @@ function xflha(props) {
       if (commentData) {
         await api
           .post("/api/v1/comments/", commentPayload)
-          .then((res) => handleCommentsClose())
+          .then((res) => {
+            // handleCommentsClose()
+            fetchData();
+          })
           .catch((err) => console.log(err));
       }
     };
