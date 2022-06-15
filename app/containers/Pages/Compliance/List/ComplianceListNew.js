@@ -558,10 +558,8 @@ function ComplianceListNew(props) {
         : null;
     // for types filter
     if (props.type === "Categories" || props.type === "All") {
-      console.log("tedd");
       // setIsLoading(true);
       if (props.compliance === "My Inspections") {
-        console.log("shfldslf");
         const res = await api.get(
           `api/v1/audits/?search=${
             props.search
@@ -575,7 +573,6 @@ function ComplianceListNew(props) {
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         setPageCount(pageCount);
       } else {
-        console.log("teddddddd");
         // setIsLoading(false);
         const res = await api.get(
           `api/v1/audits/?search=${
