@@ -79,7 +79,7 @@ const CardView = (props) => {
           checkDeletePermission={props.checkDeletePermission}
         />
         <UserProfile
-          ifJsaOrNot={
+          ifJsa={
             props.headerFields.filter((one) => one.value === "JSA").length > 0
           }
           open={myUserPOpen}

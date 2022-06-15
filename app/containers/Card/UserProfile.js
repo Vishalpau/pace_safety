@@ -74,7 +74,7 @@ const UserProfile = (props) => {
         <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {props.ifJsaOrNot ? (
+            {props.ifJsa ? (
               <Grid
                 item
                 md={12}
