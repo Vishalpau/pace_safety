@@ -503,7 +503,7 @@ function JhaPackage(props) {
   // const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
-    setIsLoading(false);
+    setIsLoading(true);
     setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
@@ -542,7 +542,6 @@ function JhaPackage(props) {
         `api/v1/jhas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
       );
-
       const result = res.data.data.results.results;
       setAllJHAData(result);
       setTotalData(res.data.data.results.count);
@@ -551,7 +550,7 @@ function JhaPackage(props) {
       setPageCount(pageCount);
     }
     // handelTableView(result)
-    setIsLoading(true);
+    setIsLoading(false);
   };
 
   const handleChange = async (event, value) => {
@@ -1289,7 +1288,7 @@ function JhaPackage(props) {
 
   return (
     <>
-      {isLoading ? (
+      {!isLoading ? (
         <Box>
           {allJHAData.length > 0 ? (
             allJHAData.map((value, index) => (

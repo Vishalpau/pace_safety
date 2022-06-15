@@ -552,7 +552,7 @@ function Actions(props) {
   };
 
   const fetchInitialiObservation = async () => {
-    await setPage(1);
+     setPage(1);
 
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
     const fkProjectId =
