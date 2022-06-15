@@ -146,6 +146,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "2px",
     cursor: "pointer",
   },
+  margT10: {
+    marginTop: "6px",
+    display: "block",
+  },
   mLeftR5: {
     marginLeft: "5px",
     marginRight: "15px",
@@ -492,8 +496,8 @@ function AhaPackage(props) {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  const [deleteQ, setDeleteQ] = useState(false);
-  const [deleteValue, setDeleteValue] = useState("");
+  // const [deleteQ, setDeleteQ] = useState(false);
+  // const [deleteValue, setDeleteValue] = useState("");
 
   const search = props.search;
   const status = props.status;
@@ -501,21 +505,21 @@ function AhaPackage(props) {
   //   setAnchorEl(event.currentTarget);
   // };
 
-  const handleClickDeleteAlert = (value) => {
-    console.log(value, "value");
-    setDeleteQ(true);
-    setDeleteValue(value);
-    // handleDelete(value);
-  };
+  // const handleClickDeleteAlert = (value) => {
+  //   console.log(value, "value");
+  //   setDeleteQ(true);
+  //   setDeleteValue(value);
+  //   // handleDelete(value);
+  // };
 
-  const getFromChid = (value) => {
-    setDeleteValue(value);
-  };
+  // const getFromChid = (value) => {
+  //   setDeleteValue(value);
+  // };
 
-  const handleCloseDeleteAlert = () => {
-    setDeleteQ(false);
-    setDeleteValue("");
-  };
+  // const handleCloseDeleteAlert = () => {
+  //   setDeleteQ(false);
+  //   setDeleteValue("");
+  // };
 
   useEffect(() => {
     console.log(allAHAData, "allAHahData");
@@ -660,32 +664,32 @@ function AhaPackage(props) {
     }
   };
 
-  const handleDelete = async () => {
-    // let temp = { ...deleteValue }
-    let temp = {
-      fkCompanyId: deleteValue.fkCompanyId,
-      fkProjectId: deleteValue.fkProjectId,
-      fkProjectStructureIds: deleteValue.fkProjectStructureIds,
-      location: deleteValue.location,
-      assessmentDate: deleteValue.assessmentDate,
-      permitToPerform: deleteValue.permitToPerform,
-      description: deleteValue.description,
-      classification: deleteValue.classification,
-      createdBy: deleteValue.createdBy,
-      status: "Delete",
-    };
-    // temp.status = "Delete";
-    let id = deleteValue.id;
-    console.log(temp);
-    setIsLoading(false);
-    const res = await api
-      .put(`/api/v1/ahas/${id}/`, temp)
-      .then((response) => {
-        fetchAllAHAData();
-        handleCloseDeleteAlert();
-      })
-      .catch((error) => console.log(error));
-  };
+  // const handleDelete = async () => {
+  //   // let temp = { ...deleteValue }
+  //   let temp = {
+  //     fkCompanyId: deleteValue.fkCompanyId,
+  //     fkProjectId: deleteValue.fkProjectId,
+  //     fkProjectStructureIds: deleteValue.fkProjectStructureIds,
+  //     location: deleteValue.location,
+  //     assessmentDate: deleteValue.assessmentDate,
+  //     permitToPerform: deleteValue.permitToPerform,
+  //     description: deleteValue.description,
+  //     classification: deleteValue.classification,
+  //     createdBy: deleteValue.createdBy,
+  //     status: "Delete",
+  //   };
+  //   // temp.status = "Delete";
+  //   let id = deleteValue.id;
+  //   console.log(temp);
+  //   setIsLoading(false);
+  //   const res = await api
+  //     .put(`/api/v1/ahas/${id}/`, temp)
+  //     .then((response) => {
+  //       fetchAllAHAData();
+  //       handleCloseDeleteAlert();
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
 
   //Assigning 'classes' to useStyles()
   const classes = useStyles();
@@ -1047,9 +1051,9 @@ function AhaPackage(props) {
                     item={item.item}
                     loader={setIsLoading}
                     loadingFlag={false}
-                    deleteMsg='Are you sure you want to delete this AHA?'
-                    yesBtn='Yes'
-                    noBtn='No'
+                    deleteMsg="Are you sure you want to delete this Observation?"
+                    yesBtn="Yes"
+                    noBtn="No"
                   />
                   {/* {!checkDeletePermission
                       ? (

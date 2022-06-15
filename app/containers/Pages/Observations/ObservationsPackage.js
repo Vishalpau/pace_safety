@@ -46,6 +46,7 @@ import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined"
 
 const UserDetailsView = lazy(() => import("../../UserDetails/UserDetail"));
 const Loader = lazy(() => import("../Loader"));
+import Delete from "../../Delete/Delete";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -125,6 +126,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "14px",
   },
   mLeft: {
+    marginLeft: "2px",
+    cursor: "pointer",
+  },
+  commentLink: {
     marginLeft: "2px",
     cursor: "pointer",
   },
@@ -269,6 +274,10 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: "middle",
     margin: "15px",
     fontSize: "10px",
+  },
+  mLeft: {
+    marginLeft: "2px",
+    textDecoration: "none !important",
   },
   mright5: {
     marginRight: "5px",
@@ -429,7 +438,7 @@ function Actions(props) {
   const { searchIncident } = props;
   const { status } = props;
 
-  const [deleteValue, setDeleteValue] = useState("");
+  // const [deleteValue, setDeleteValue] = useState("");
   const [deleteQ, setDeleteQ] = useState(false);
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
@@ -444,11 +453,11 @@ function Actions(props) {
     setMyUserPOpen(false);
   };
 
-  const handleClickDeleteAlert = (value) => {
-    setDeleteQ(true);
-    setDeleteValue(value);
-    // handleDelete(value);
-  };
+  // const handleClickDeleteAlert = (value) => {
+  //   setDeleteQ(true);
+  //   setDeleteValue(value);
+  //   // handleDelete(value);
+  // };
 
   const handleCloseDeleteAlert = () => {
     setDeleteQ(false);
@@ -846,20 +855,20 @@ function Actions(props) {
   };
   const classes = useStyles();
 
-  const handleDelete = async () => {
-    // if (checkACL('safety-observations', 'delete_observations')) {
-    console.log(deleteValue, "dddddddddddddddddddd");
-    const data = deleteValue;
-    data.status = "Delete";
-    setIsLoading(false);
-    await api
-      .put(`/api/v1/observations/${data.id}/`, data)
-      .then((response) => {
-        fetchInitialiObservation();
-        handleCloseDeleteAlert();
-      })
-      .catch((err) => console.log(err));
-  };
+  // const handleDelete = async () => {
+  //   // if (checkACL('safety-observations', 'delete_observations')) {
+  //   console.log(deleteValue, "dddddddddddddddddddd");
+  //   const data = deleteValue;
+  //   data.status = "Delete";
+  //   setIsLoading(false);
+  //   await api
+  //     .put(`/api/v1/observations/${data.id}/`, data)
+  //     .then((response) => {
+  //       fetchInitialiObservation();
+  //       handleCloseDeleteAlert();
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
   useEffect(() => {
     const state = JSON.parse(localStorage.getItem("direct_loading"));
@@ -887,15 +896,48 @@ function Actions(props) {
     checkDeletePermission,
   ]);
 
-  const AllCardData = (item, index) => {
+  const AllCardData = ({ item, index }) => {
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [commentsOpen, setCommentsOpen] = useState(false);
+    const [commentData, setCommentData] = useState("");
+
+    const addComments = (event) => {
+      console.log(event.target.value);
+      setCommentData(event.target.value);
+    };
+
+    const handleSendComments = async () => {
+      const commentPayload = {
+        fkCompanyId: item.fkCompanyId,
+        fkProjectId: item.fkProjectId,
+        commentContext: "observations",
+        contextReferenceIds: item.id,
+        commentTags: "",
+        comment: commentData,
+        parent: 0,
+        thanksFlag: 0,
+        status: "Active",
+        createdBy: item.createdBy,
+      };
+      if (commentData) {
+        console.log(api, "apiiiiiiii");
+        await api
+          .post("/api/v1/comments/", commentPayload)
+          .then((res) => handleCommentsClose())
+          .catch((err) => console.log(err));
+      }
+    };
+
+    const deleteItem = {
+      ...item,
+      status: "Delete",
+    };
 
     useEffect(() => {
-      console.log(showGrid, 'showGrid');
-    },[showGrid])
+      console.log(showGrid, "showGrid");
+    }, [showGrid]);
 
     const handleVisibility = () => {
       setShowGrid(true);
@@ -952,18 +994,14 @@ function Actions(props) {
                   onClick={(e) => handleMyUserPClickOpen(e)}
                 >
                   <img
-                    src={
-                      item.item[1].avatar !== null
-                        ? item.item[1].avatar
-                        : paceLogoSymbol
-                    }
+                    src={item.avatar !== null ? item.avatar : paceLogoSymbol}
                     className={classes.userImage}
                   />{" "}
-                  {item.item[1].username ? item.item[1].username : "Admin"}
+                  {item.username ? item.username : "Admin"}
                 </Button>
               </Grid>
               <Link
-                onClick={() => handleSummaryPush(item.index)}
+                onClick={() => handleSummaryPush(index)}
                 className={classes.cardLinkAction}
               >
                 <Grid item xs={12}>
@@ -983,7 +1021,7 @@ function Actions(props) {
                           className={classes.pr0}
                         >
                           <Typography className={classes.title} variant="h6">
-                            {item.item[1].observationDetails}
+                            {item.observationDetails}
                           </Typography>
                           <Typography
                             display="inline"
@@ -997,7 +1035,7 @@ function Actions(props) {
                                 className={classes.mLeftfont}
                               >
                                 <span className={classes.listingLabelValue}>
-                                  {item.item[1].observationNumber}
+                                  {item.observationNumber}
                                 </span>
                               </Link>
                             </span>
@@ -1021,9 +1059,7 @@ function Actions(props) {
                           >
                             Assignee:{" "}
                             <span className={classes.listingLabelValue}>
-                              {item.item[1].assigneeName
-                                ? item.item[1].assigneeName
-                                : "-"}
+                              {item.assigneeName ? item.assigneeName : "-"}
                             </span>
                             <span
                               item
@@ -1032,23 +1068,22 @@ function Actions(props) {
                             />
                             Stage:{" "}
                             <span className={classes.listingLabelValue}>
-                              {item.item[1].observationStage
-                                ? item.item[1].observationStage
+                              {item.observationStage
+                                ? item.observationStage
                                 : "-"}{" "}
-                              {item.item[1].observationStage ===
-                                "Completed" && (
+                              {item.observationStage === "Completed" && (
                                 <img
                                   src={completed_small}
                                   className={classes.smallImage}
                                 />
                               )}
-                              {item.item[1].observationStage === "Planned" && (
+                              {item.observationStage === "Planned" && (
                                 <img
                                   src={in_progress_small}
                                   className={classes.smallImage}
                                 />
                               )}{" "}
-                              {item.item[1].observationStage === "Open" && (
+                              {item.observationStage === "Open" && (
                                 <img
                                   src={preplanning}
                                   className={classes.smallImage}
@@ -1062,19 +1097,19 @@ function Actions(props) {
                             />
                             Status:{" "}
                             <span className={classes.listingLabelValue}>
-                              {item.item[1].observationStatus
-                                ? item.item[1].observationStatus
+                              {item.observationStatus
+                                ? item.observationStatus
                                 : "-"}
                             </span>
                           </Typography>
                         </Grid>
 
                         {/* <Grid item md={2} sm={4} xs={12}>
-                                        <Button className={classes.floatR}>
-                                          <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
-                                        </Button>
+                        <Button className={classes.floatR}>
+                          <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
+                        </Button>
 
-                                      </Grid> */}
+                      </Grid> */}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1095,8 +1130,7 @@ function Actions(props) {
                         gutterBottom
                         className={classes.listingLabelValue}
                       >
-                        {/* {item[1]["incidentReportedByName"]} */}
-                        {item.item[1].observationType}
+                        {item.observationType}
                       </Typography>
                     </Grid>
                     <Grid item md={3} sm={6} xs={12}>
@@ -1109,7 +1143,7 @@ function Actions(props) {
                         Location:
                       </Typography>
                       <Typography className={classes.listingLabelValue}>
-                        {item.item[1].location ? item.item[1].location : "-"}
+                        {item.location ? item.location : "-"}
                       </Typography>
                     </Grid>
 
@@ -1124,7 +1158,7 @@ function Actions(props) {
                       </Typography>
 
                       <Typography className={classes.listingLabelValue}>
-                        {moment(item.item[1].createdAt).format(
+                        {moment(item.createdAt).format(
                           "Do MMMM YYYY, h:mm:ss a"
                         )}{" "}
                       </Typography>
@@ -1141,29 +1175,11 @@ function Actions(props) {
                       </Typography>
 
                       <Typography className={classes.listingLabelValue}>
-                        {item.item[1].reportedByName
-                          ? item.item[1].reportedByName
-                          : "Admin"}
+                        {item.reportedByName ? item.reportedByName : "Admin"}
                       </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-
-                {/* <Grid item sm={2} xs={12}>
-                      <Typography
-                        variant="h6"
-                        color="textPrimary"
-                      >
-                        <img src={qrcode} />
-                      </Typography>
-
-                      <Typography
-
-                        className={classes.listingLabelValue}
-                      >
-                        29 Dec 2020
-                      </Typography>
-                    </Grid> */}
               </Link>
             </Grid>
           </CardContent>
@@ -1171,97 +1187,67 @@ function Actions(props) {
           <CardActions className={Incidents.cardActions}>
             <Grid container spacing={2} justify="flex-end" alignItems="left">
               <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                <Typography
-                  variant="body1"
-                  display="inline"
-                  color="textPrimary"
-                >
-                  <AttachmentIcon className={classes.mright5} />
-                  Attachments:
-                </Typography>
-                <Typography variant="body2" display="inline">
-                  <span>
-                    <Link
-                      // href="#"
-                      onClick={item.item[1].attachmentCount && handleVisibility}
-                      color="secondary"
-                      aria-haspopup="true"
-                      className={classes.mLeft}
-                    >
-                      {item.item[1].attachmentCount}
-                    </Link>
-                  </span>
-                </Typography>
-                <span item xs={1} className={classes.sepHeightTen} />
-                <Typography
-                  variant="body1"
-                  display="inline"
-                  color="textPrimary"
-                  className={classes.mLeft}
-                >
-                  <InsertCommentOutlinedIcon className={classes.mright5} />
-                  Comments:
-                </Typography>
-                <Typography
-                  variant="body2"
-                  display="inline"
-                  className={classes.mLeft}
-                >
-                  <Link
-                    color="secondary"
-                    className={classes.mLeft}
-                    onClick={() => handleVisibilityComments()}
+                <span className={classes.margT10}>
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
                   >
-                    {item.item[1].commentsCount}
+                    <AttachmentIcon className={classes.mright5} />
+                    Attachments:
+                  </Typography>
+
+                  <Link
+                    onClick={item.attachmentCount && handleVisibility}
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={
+                      item.attachmentCount ? classes.commentLink : classes.mLeft
+                    }
+                  >
+                    {item.attachmentCount}
                   </Link>
-                </Typography>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
+                    className={classes.mLeft}
+                  >
+                    <InsertCommentOutlinedIcon className={classes.mright5} />
+                    Comments:
+                  </Typography>
+                  <Link
+                    onClick={handleVisibilityComments}
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={classes.commentLink}
+                  >
+                    {item.commentsCount}
+                  </Link>
+                </span>
               </Grid>
 
               <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                <div className={classes.floatR}>
-                  {/* <Typography variant="body1" display="inline">
-                      <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span> */}
-                  {/* <Typography variant="body1" display="inline">
-                                   <Button onClick={() => handlePrintPush(index)} > <PrintOutlinedIcon  className={classes.iconColor} /></Button>  <Button onClick={() => handlePrintPush(index)} className={classes.mLeftR5}>Print</Button>
-                                  </Typography> */}
-                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
-                  {/* <Typography variant="body1" display="inline">
-                      <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span> */}
-                  {/* <Typography variant="body1" display="inline">
-                                    <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                                  </Typography> */}
-                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
-                  <Typography variant="body1" display="inline">
-                    {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
-                    {!checkDeletePermission ? (
-                      <DeleteForeverOutlinedIcon
-                        className={classes.iconteal}
-                        style={{
-                          color: "#c0c0c0",
-                          cursor: "not-allowed",
-                        }}
-                      />
-                    ) : (
-                      <Link href="#" className={classes.mLeftR5}>
-                        <DeleteForeverOutlinedIcon
-                          className={classes.iconteal}
-                          // onClick={(e) => handleDelete(item)}
-
-                          onClick={() => handleClickDeleteAlert(item.item[1])}
-                        />
-                      </Link>
-                    )}
-                  </Typography>
-                </div>
+                <span item xs={1} className={classes.sepHeightTen} />
+                <Typography variant="body1" display="inline">
+                  <Delete
+                    deleteUrl={`/api/v1/observations/${item.id}/`}
+                    afterDelete={fetchInitialiObservation}
+                    axiosObj={api}
+                    item={deleteItem}
+                    loader={setIsLoading}
+                    loadingFlag={false}
+                    deleteMsg="Are you sure you want to delete this AHA?"
+                    yesBtn="Yes"
+                    noBtn="No"
+                  />
+                </Typography>
               </Grid>
             </Grid>
           </CardActions>
         </Card>
-        {item.item[1].attachmentCount ? (
+        {item.attachmentCount ? (
           <Grid
             item
             md={12}
@@ -1285,8 +1271,8 @@ function Actions(props) {
                       <Grid item md={12} sm={12} xs={12}>
                         <div className="attachFileThumb">
                           <Attachment
-                            src={item.item[1].attachment}
-                            value={item.item[1].attachment}
+                            src={item.attachment}
+                            value={item.attachment}
                           />
                         </div>
                       </Grid>
@@ -1329,15 +1315,8 @@ function Actions(props) {
                           id="JobTitle"
                           label="Add your comments here"
                           className="formControl"
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <input type="file" />
-                      </Grid>
-                      <Grid item xs={9}>
-                        <AddCircleOutlineIcon className={classes.plusIcon} />
-                        <RemoveCircleOutlineIcon
-                          className={classes.minusIcon}
+                          value={commentData}
+                          onChange={(e) => addComments(e)}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -1347,6 +1326,7 @@ function Actions(props) {
                           size="small"
                           className="spacerRight buttonStyle"
                           disableElevation
+                          onClick={handleSendComments}
                         >
                           Respond
                         </Button>
@@ -1380,8 +1360,8 @@ function Actions(props) {
               {listToggle == false ? (
                 <div>
                   <div className="gridView">
-                    {Object.keys(allInitialData).length > 0 ? (
-                      Object.entries(allInitialData).map((item, index) => (
+                    {allInitialData.length > 0 ? (
+                      allInitialData.map((item, index) => (
                         <AllCardData item={item} index={index} />
                       ))
                     ) : (
@@ -1394,35 +1374,6 @@ function Actions(props) {
                         Sorry, no matching records found
                       </Typography>
                     )}
-                  </div>
-                  <div>
-                    {/* {openAtt !== "" && <Attachment value={openAtt} /> } */}
-
-                    {/* <Dialog
-                open={openAttachment}
-                onClose={handleCloseAttachment}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                classNames={classes.viewAttachmentDialog}
-              > */}
-                    {/* <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
-                <DialogContent classNames={classes.imageSectionHeight}>
-                <Grid container spacing={3} classNames={classes.viewImageSection}>
-                  <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
-                    <ul classNames={classes.viewImageSection}>
-                      <li className={classes.viewattch1}>View Attachment</li>
-                      <li className={classes.viewattch2}>Download  444 Attachment</li>
-                    </ul>
-                  </Grid>
-                </Grid>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseAttachment} color="primary" autoFocus>
-                    Close
-                  </Button>
-                </DialogActions> */}
-
-                    {/* </Dialog> */}
                   </div>
                   <div>
                     <Dialog
@@ -1500,7 +1451,6 @@ function Actions(props) {
                 </div>
               ) : (
                 // listview end
-
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable

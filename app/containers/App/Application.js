@@ -624,7 +624,7 @@ function Application(props) {
         {/* <Route path="/app/pages/sample" component={SamplePage} /> */}
         <Route path="/app/assesments/" component={Xflha} />
         <Route path="/app/pages/assesments/xflha" component={Xflha} />
-        <Route path="/app/pages/assesments/FlhaSummary/:id" component={FlhaSummary} />
+        <Route path="/app/pages/assesments/flhaSummary/:id" component={FlhaSummary} />
         <Route path="/app/pages/assesments/PreventiveControls" component={PreventiveControls} />
         <Route path="/app/pages/assesments/IsolationControl" component={IsolationControl} />
         <Route path="/app/pages/assesments/EnergyControl" component={EnergyControl} />

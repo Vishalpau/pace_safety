@@ -414,6 +414,11 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
 
+  margT10: {
+    marginTop: "6px",
+    display: "block",
+  },
+
   viewAttachmentDialog: {
     "& .MuiDialogContent-root": {
       overflowY: "hidden !important",
@@ -498,8 +503,8 @@ function JhaPackage(props) {
   // const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
-    await setIsLoading(false);
-    await setPage(1);
+    setIsLoading(false);
+    setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -527,11 +532,11 @@ function JhaPackage(props) {
       );
 
       const result = res.data.data.results.results;
-      await setAllJHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setAllJHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${props.search
@@ -539,15 +544,14 @@ function JhaPackage(props) {
       );
 
       const result = res.data.data.results.results;
-      await setAllJHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setAllJHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     }
     // handelTableView(result)
-
-    await setIsLoading(true);
+    setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -575,14 +579,14 @@ function JhaPackage(props) {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`
       );
-      await setAllJHAData(res.data.data.results.results);
-      await setPage(value);
+      setAllJHAData(res.data.data.results.results);
+      setPage(value);
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`
       );
-      await setAllJHAData(res.data.data.results.results);
-      await setPage(value);
+      setAllJHAData(res.data.data.results.results);
+      setPage(value);
     }
   };
 
@@ -975,7 +979,6 @@ function JhaPackage(props) {
                       <AttachmentIcon className={classes.mright5} />
                       Attachments:
                     </Typography>
-
                     <Link
                       onClick={item.attachmentCount && handleVisibility}
                       color="secondary"
@@ -1011,22 +1014,6 @@ function JhaPackage(props) {
                 </Grid>
 
                 <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                  {/* <div className={classes.floatR}> */}
-                  {/* <Typography variant="body1" display="inline">
-                      <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network view</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                        <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
-                      </Typography> */}
-                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
-                      </Typography> */}
-                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                      </Typography> */}
                   <span item xs={1} className={classes.sepHeightTen} />
                   <Typography variant="body1" display="inline">
                     <Delete
