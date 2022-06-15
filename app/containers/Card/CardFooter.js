@@ -1,12 +1,11 @@
 import React from "react";
+import CardActions from "@material-ui/core/CardActions";
 import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Divider from "@material-ui/core/Divider";
-import { makeStyles } from "@material-ui/core/styles";
-import CardHeader from "./CardHeader";
-import CardBody from "./CardBody";
-import CardFooter from "./CardFooter";
+import AttachmentIcon from "@material-ui/icons/Attachment";
+import Typography from "@material-ui/core/Typography";
+import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
+import Incidents from "dan-styles/IncidentsList.scss";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -422,54 +421,50 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CardView = (props) => {
+const CardFooter = (props) => {
   const classes = useStyles();
-
-  const handleSummaryPush = () => {
-    props.handleSummaryPush(props.itemIndex);
-  };
-
-  const handleDelete = () => {
-    props.handleDelete(props.data);
-  };
-
-  const handleMyUserPClickOpen = (val) => {
-    props.handleMyUserPClickOpen(val);
-  };
-
   return (
     <>
-      <Card variant="outlined" className={classes.card}>
-        <CardContent>
-          <Grid container spacing={3} className={classes.cardContentSection}>
-            <CardHeader
-              cardTitle={props.cardTitle}
-              username={props.username}
-              avatar={props.avatar}
-              headerFields={props.headerFields}
-              handleMyUserPClickOpen={(val) => {
-                handleMyUserPClickOpen(val);
-              }}
-              handleSummaryPush={() => {
-                handleSummaryPush();
-              }}
-            />
-            <CardBody
-              handleSummaryPush={() => {
-                handleSummaryPush();
-              }}
-              bodyFields={props.bodyFields}
-            />
-            <CardFooter
-              files={props.files}
-              checkDeletePermission={props.checkDeletePermission}
-            />
+      <CardActions className={Incidents.cardActions}>
+        <Grid container spacing={2} justify="flex-end" alignItems="left">
+          <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+            <Typography variant="body1" display="inline" color="textPrimary">
+              <AttachmentIcon className={classes.mright5} />
+              Attachments:{" "}
+            </Typography>
+            <Typography variant="body2" display="inline">
+              {/* <Link href="#" color="secondary" className={classes.mLeftR5}> */}
+              {props.files !== null ? <>{props.files.length}</> : 0}
+            </Typography>
           </Grid>
-        </CardContent>
-        <Divider />
-      </Card>
+
+          <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
+            <div className={classes.floatR}>
+              <span item xs={1} className={classes.sepHeightTen} />
+              <Typography variant="body1" display="inline">
+                {!props.checkDeletePermission ? (
+                  <DeleteForeverOutlinedIcon
+                    className={classes.iconteal}
+                    style={{
+                      color: "#c0c0c0",
+                      cursor: "not-allowed",
+                    }}
+                  />
+                ) : (
+                  <Link href="javascript:void(0)" className={classes.mLeftR5}>
+                    <DeleteForeverOutlinedIcon
+                      className={classes.iconteal}
+                      // onClick={() => handleDelete()}
+                    />
+                  </Link>
+                )}
+              </Typography>
+            </div>
+          </Grid>
+        </Grid>
+      </CardActions>
     </>
   );
 };
 
-export default CardView;
+export default CardFooter;

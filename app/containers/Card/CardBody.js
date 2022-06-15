@@ -1,12 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import CardHeader from "./CardHeader";
-import CardBody from "./CardBody";
-import CardFooter from "./CardFooter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -233,6 +229,10 @@ const useStyles = makeStyles((theme) => ({
     ["@media (max-width:480px)"]: {
       float: "left",
     },
+    position: "absolute",
+    right: "5px",
+    top: "5px",
+    zIndex: 9999,
   },
   newIncidentButton: {
     marginTop: "20px",
@@ -291,15 +291,12 @@ const useStyles = makeStyles((theme) => ({
   cardLinkAction: {
     width: "100%",
     float: "left",
-    // padding: "14px",
+    padding: "14px",
     cursor: "pointer",
     textDecoration: "none !important",
     ["@media (max-width:800px)"]: {
       paddingTop: "85px",
     },
-  },
-  padding14: {
-    padding: "14px",
   },
   userPictureBox: {
     position: "absolute",
@@ -420,56 +417,52 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     marginTop: "-10px",
   },
+  padding14: {
+    padding: "14px",
+  },
 }));
 
-const CardView = (props) => {
+const CardBody = (props) => {
   const classes = useStyles();
 
+  const mappedBody = props.bodyFields.map((one) => {
+    return (
+      <>
+        <Grid item md={3} sm={6} xs={12}>
+          <Typography
+            variant="body1"
+            gutterBottom
+            color="textPrimary"
+            className={classes.listingLabelName}
+          >
+            {one.label}
+          </Typography>
+          <Typography gutterBottom className={classes.listingLabelValue}>
+            {one.value}
+          </Typography>
+        </Grid>
+      </>
+    );
+  });
+
   const handleSummaryPush = () => {
-    props.handleSummaryPush(props.itemIndex);
-  };
-
-  const handleDelete = () => {
-    props.handleDelete(props.data);
-  };
-
-  const handleMyUserPClickOpen = (val) => {
-    props.handleMyUserPClickOpen(val);
+    props.handleSummaryPush();
   };
 
   return (
     <>
-      <Card variant="outlined" className={classes.card}>
-        <CardContent>
-          <Grid container spacing={3} className={classes.cardContentSection}>
-            <CardHeader
-              cardTitle={props.cardTitle}
-              username={props.username}
-              avatar={props.avatar}
-              headerFields={props.headerFields}
-              handleMyUserPClickOpen={(val) => {
-                handleMyUserPClickOpen(val);
-              }}
-              handleSummaryPush={() => {
-                handleSummaryPush();
-              }}
-            />
-            <CardBody
-              handleSummaryPush={() => {
-                handleSummaryPush();
-              }}
-              bodyFields={props.bodyFields}
-            />
-            <CardFooter
-              files={props.files}
-              checkDeletePermission={props.checkDeletePermission}
-            />
+      <Link
+        onClick={() => handleSummaryPush()}
+        className={classes.cardLinkAction}
+      >
+        <Grid item sm={12} xs={12}>
+          <Grid container spacing={3}>
+            {mappedBody}
           </Grid>
-        </CardContent>
-        <Divider />
-      </Card>
+        </Grid>
+      </Link>
     </>
   );
 };
 
-export default CardView;
+export default CardBody;

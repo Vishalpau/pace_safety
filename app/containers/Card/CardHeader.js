@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import CardHeader from "./CardHeader";
-import CardBody from "./CardBody";
-import CardFooter from "./CardFooter";
+import progress from "dan-images/progress.png";
+import preplanning from "dan-images/preplanning.png";
+import completed from "dan-images/completed.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -233,6 +233,10 @@ const useStyles = makeStyles((theme) => ({
     ["@media (max-width:480px)"]: {
       float: "left",
     },
+    position: "absolute",
+    right: "5px",
+    top: "5px",
+    zIndex: 9999,
   },
   newIncidentButton: {
     marginTop: "20px",
@@ -291,15 +295,12 @@ const useStyles = makeStyles((theme) => ({
   cardLinkAction: {
     width: "100%",
     float: "left",
-    // padding: "14px",
+    padding: "14px",
     cursor: "pointer",
     textDecoration: "none !important",
     ["@media (max-width:800px)"]: {
       paddingTop: "85px",
     },
-  },
-  padding14: {
-    padding: "14px",
   },
   userPictureBox: {
     position: "absolute",
@@ -422,54 +423,90 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CardView = (props) => {
+const CardHeader = (props) => {
   const classes = useStyles();
 
+  const handleMyUserPClickOpen = () => {
+    props.handleMyUserPClickOpen(true);
+  };
+
   const handleSummaryPush = () => {
-    props.handleSummaryPush(props.itemIndex);
+    props.handleSummaryPush();
   };
 
-  const handleDelete = () => {
-    props.handleDelete(props.data);
-  };
-
-  const handleMyUserPClickOpen = (val) => {
-    props.handleMyUserPClickOpen(val);
-  };
+  const mappedHeader = props.headerFields.map((one) => {
+    return (
+      <>
+        <Typography display="inline" className={classes.listingLabelName}>
+          {one.label}:{" "}
+          <span
+            className={
+              (one.label === "Status" && one.value === "Closed") ||
+              (one.label === "Stage" && one.value === "Closed")
+                ? `${classes.listingLabelValue} green`
+                : `${classes.listingLabelValue}`
+            }
+          >
+            {one.value}{" "}
+            {one.label === "Stage" && one.value === "Open" ? (
+              <img src={preplanning} alt="preplaning" />
+            ) : one.label === "Stage" && one.value === "Closed" ? (
+              <img src={completed} alt="completed" />
+            ) : (
+              ""
+            )}
+            {one.label === "Status" && one.value === "Open" ? (
+              <img src={preplanning} alt="preplaning" />
+            ) : one.label === "Status" && one.value === "Closed" ? (
+              <img src={completed} alt="completed" />
+            ) : (
+              ""
+            )}
+          </span>
+        </Typography>
+        {one !== props.headerFields[props.headerFields.length - 1] ? (
+          <span item xs={1} className={classes.sepHeightOne} />
+        ) : (
+          ""
+        )}
+      </>
+    );
+  });
 
   return (
     <>
-      <Card variant="outlined" className={classes.card}>
-        <CardContent>
-          <Grid container spacing={3} className={classes.cardContentSection}>
-            <CardHeader
-              cardTitle={props.cardTitle}
-              username={props.username}
-              avatar={props.avatar}
-              headerFields={props.headerFields}
-              handleMyUserPClickOpen={(val) => {
-                handleMyUserPClickOpen(val);
-              }}
-              handleSummaryPush={() => {
-                handleSummaryPush();
-              }}
-            />
-            <CardBody
-              handleSummaryPush={() => {
-                handleSummaryPush();
-              }}
-              bodyFields={props.bodyFields}
-            />
-            <CardFooter
-              files={props.files}
-              checkDeletePermission={props.checkDeletePermission}
-            />
+      <Button
+        className={classes.floatR}
+        onClick={() => handleMyUserPClickOpen()}
+      >
+        <img
+          src={props.avatar !== null ? props.avatar : paceLogoSymbol}
+          className={classes.userImage}
+        />{" "}
+        {props.username}
+      </Button>
+
+      <Link
+        onClick={() => handleSummaryPush()}
+        className={classes.cardLinkAction}
+      >
+        <Grid item xs={12}>
+          <Grid container spacing={3} alignItems="flex-start">
+            <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+              <Grid container spacing={3} alignItems="flex-start">
+                <Grid item md={10} sm={12} xs={12}>
+                  <Typography className={classes.title} variant="h6">
+                    {props.cardTitle}
+                  </Typography>
+                  {mappedHeader}
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
-        </CardContent>
-        <Divider />
-      </Card>
+        </Grid>
+      </Link>
     </>
   );
 };
 
-export default CardView;
+export default CardHeader;
