@@ -503,7 +503,7 @@ function JhaPackage(props) {
   // const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
-    setIsLoading(false);
+    setIsLoading(true);
     setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
@@ -513,8 +513,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -527,7 +527,8 @@ function JhaPackage(props) {
 
     if (props.assessment === "My Assessments") {
       const res = await api.get(
-        `api/v1/jhas/?search=${props.search
+        `api/v1/jhas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`
       );
 
@@ -539,10 +540,10 @@ function JhaPackage(props) {
       setPageCount(pageCount);
     } else {
       const res = await api.get(
-        `api/v1/jhas/?search=${props.search
+        `api/v1/jhas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
       );
-
       const result = res.data.data.results.results;
       setAllJHAData(result);
       setTotalData(res.data.data.results.count);
@@ -551,7 +552,7 @@ function JhaPackage(props) {
       setPageCount(pageCount);
     }
     // handelTableView(result)
-    setIsLoading(true);
+    setIsLoading(false);
   };
 
   const handleChange = async (event, value) => {
@@ -563,8 +564,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -751,7 +752,10 @@ function JhaPackage(props) {
         console.log(api, "apiiiiiiii");
         await api
           .post("/api/v1/comments/", commentPayload)
-          .then((res) => handleCommentsClose())
+          .then((res) => {
+            // handleCommentsClose();
+            fetchData();
+          })
           .catch((err) => console.log(err));
       }
     };
@@ -1289,7 +1293,7 @@ function JhaPackage(props) {
 
   return (
     <>
-      {isLoading ? (
+      {!isLoading ? (
         <Box>
           {allJHAData.length > 0 ? (
             allJHAData.map((value, index) => (

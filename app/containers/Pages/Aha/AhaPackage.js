@@ -484,12 +484,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AhaPackage(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
-  const [cardView, setCardView] = useState(true);
-  const [tableView, setTableView] = useState(false);
+  // const [cardView, setCardView] = useState(true);
+  // const [tableView, setTableView] = useState(false);
   const [allAHAData, setAllAHAData] = useState([]);
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
@@ -581,7 +581,7 @@ function AhaPackage(props) {
   // }
 
   const fetchAllAHAData = async () => {
-    await setPage(1);
+    setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -590,8 +590,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -606,24 +606,24 @@ function AhaPackage(props) {
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`
       );
       const result = res.data.data.results.results;
-      await setAllAHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setAllAHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`
       );
       const result = res.data.data.results.results;
-      await setAllAHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setAllAHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     }
 
-    await setIsLoading(true);
+    setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -635,8 +635,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -649,14 +649,16 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${props.search
+        `api/v1/ahas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
       setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${props.search
+        `api/v1/ahas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -749,7 +751,10 @@ function AhaPackage(props) {
         console.log(api, "apiiiiiiii");
         await api
           .post("/api/v1/comments/", commentPayload)
-          .then((res) => handleCommentsClose())
+          .then((res) => {
+            // handleCommentsClose()
+            fetchAllAHAData()
+          })
           .catch((err) => console.log(err));
       }
     };
@@ -1081,7 +1086,6 @@ function AhaPackage(props) {
                           <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
                         </Link> */}
                 </Typography>
-                {/* </div> */}
               </Grid>
             </Grid>
           </CardActions>

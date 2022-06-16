@@ -565,8 +565,14 @@ function ComplianceSummary(props) {
                               display="block"
                               align="center"
                             >
-                              Done
-                              <CheckCircle />
+                              {complianceData.performanceSummary !== null
+                                ? "Done"
+                                : "Pending"}
+                              {complianceData.performanceSummary !== null ? (
+                                <CheckCircle />
+                              ) : (
+                                <AccessTime />
+                              )}
                             </Typography>
                           </li>
                         </ul>

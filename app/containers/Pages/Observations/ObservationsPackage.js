@@ -552,7 +552,7 @@ function Actions(props) {
   };
 
   const fetchInitialiObservation = async () => {
-    await setPage(1);
+     setPage(1);
 
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
     const fkProjectId =
@@ -925,7 +925,10 @@ function Actions(props) {
         console.log(api, "apiiiiiiii");
         await api
           .post("/api/v1/comments/", commentPayload)
-          .then((res) => handleCommentsClose())
+          .then((res) => {
+            // handleCommentsClose();
+            fetchInitialiObservation();
+          })
           .catch((err) => console.log(err));
       }
     };

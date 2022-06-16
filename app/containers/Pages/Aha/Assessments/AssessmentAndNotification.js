@@ -58,6 +58,7 @@ import {
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
 import { checkACL } from "../../../../utils/helper";
+import MultiAttachment from '../../../MultiAttachment/MultiAttachment';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({

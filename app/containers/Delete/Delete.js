@@ -28,17 +28,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Delete = (props) => {
-  console.log(props, "propsssssssssssss");
+  // console.log(props, "propsssssssssssss");
+  console.log(!props.loadingFlag);
 
   const classes = useStyles();
   const [deleteQ, setDeleteQ] = useState(false);
+
   const sendValue = async () => {
-    props.loader(props.loadingFlag);
+    props.loader(!props.loadingFlag);
     setDeleteQ(false);
     const res = await props.axiosObj
       .put(props.deleteUrl, props.item)
-      .then((res) => props.afterDelete())
-      .then((res) => props.loader(!props.loadingFlag));
+      .then(res => {
+        props.loader(props.loadingFlag);
+        props.afterDelete();
+      })
+     
   };
 
   return (
