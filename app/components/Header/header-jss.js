@@ -577,10 +577,10 @@ const styles = (theme) => ({
     }
   },
   projectSelect: {
-    minWidth: 150,
+    minWidth: '150px',
   },
   userLogo: {
-    width: 80,
+    height: '40px',
     display: "inline-block",
     marginRight: theme.spacing(2),
 

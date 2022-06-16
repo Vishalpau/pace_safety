@@ -15,6 +15,7 @@ class Editor extends Component {
   save = text => this.props.save(text, this.props.column, this.props.id)
 
   isvalidate = text => {
+
     if (text.trim() === "") {
       this.setState({
         emptyField: true
@@ -24,7 +25,8 @@ class Editor extends Component {
     this.setState({
       emptyField: false
     })
-    this.props.save(text, this.props.column, this.props.id)
+
+    return true
   }
 
   cancel = () => { }
@@ -45,7 +47,7 @@ class Editor extends Component {
         options={this.props.options}
         allowEdit={this.props.edit === undefined ? true : this.props.edit}
         onValidate={this.isvalidate}
-        validationMessage={this.state.emptyField ? "Please fill in the field" : "This picklist already exists"}
+        validationMessage={this.state.emptyField ? "Please fill in the field" : ''}
       />
     );
   }

@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     right: "5px",
     top: "5px",
-    zIndex: 9999,
+    zIndex: 9,
   },
   userImage: {
     borderRadius: "50px",

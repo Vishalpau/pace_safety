@@ -25,7 +25,7 @@ import ActionShow from '../../Forms/ActionShow';
 import ActionTracker from "../../Forms/ActionTracker";
 import CorrectiveActionValidator from "../../Validator/Observation/CorrectiveActionValidation";
 import Loader from "../Loader"
-import {checkACL} from '../../../utils/helper'
+import { checkACL } from '../../../utils/helper'
 
 
 // import FormLabel from '@material-ui/core/FormLabel';
@@ -211,7 +211,7 @@ function ObservationCorrectiveAction() {
 
   const handelActionTracker = async () => {
     let observationId = localStorage.getItem("fkobservationId")
-    let allAction = await handelActionIcare(observationId, [], "title","iCare")
+    let allAction = await handelActionIcare(observationId, [], "title", "iCare")
     setActionData(allAction)
   };
 
@@ -240,12 +240,12 @@ function ObservationCorrectiveAction() {
 
 
   const handleSubmit = async () => {
-    
-      const { error, isValid } = CorrectiveActionValidator(form, actionData, "submit");
-      await setError(error);
-      if (!isValid) {
-        return "Data is not valid";
-      }
+
+    const { error, isValid } = CorrectiveActionValidator(form, actionData, "submit");
+    await setError(error);
+    if (!isValid) {
+      return "Data is not valid";
+    }
 
     await setLoading(true)
     if (comment.id) {
@@ -278,7 +278,7 @@ function ObservationCorrectiveAction() {
     }).catch(err => { setLoading(false) })
   }
   const handleSave = async () => {
-    if(checkACL('action_tracker', 'view_actions')) {
+    if (checkACL('action_tracker', 'view_actions')) {
       const { error, isValid } = CorrectiveActionValidator(form, actionData, "save");
 
       await setError(error);
@@ -573,107 +573,109 @@ function ObservationCorrectiveAction() {
             {form.assigneeName ? form.assigneeName : "-"}
           </Typography>
         </Grid> */}
-        
-          <>
-        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-          <Typography variant="h6" className="sectionHeading">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24.096" height="27.08" viewBox="0 0 33.096 36.08">
-              <path id="online-survey" d="M2.458,0H30.635A2.418,2.418,0,0,1,33.1,2.367V25.175a2.421,2.421,0,0,1-2.461,2.364H19.105v-.047c0-.4,0-.784-.018-1.433H30.952a.692.692,0,0,0,.48-.192.639.639,0,0,0,.2-.463V5.714H1.563V25.4a.594.594,0,0,0,.021.164,2.077,2.077,0,0,0-.058.467,2.741,2.741,0,0,0,.263,1.224,1.492,1.492,0,0,0,.11.206h0A2.4,2.4,0,0,1,0,25.175V2.367A2.418,2.418,0,0,1,2.458,0Zm5.75,20.28a1.051,1.051,0,0,1,.769.262.969.969,0,0,1,.327.719V27.55h.663V24.464c0-1.248,2.046-1.21,2.046.07v3.083h.748V25.157c0-1.248,2.046-1.21,2.046.068V27.5h.721V25.768c0-1.248,2.046-1.21,2.046.068,0,1.439.085,3.136.031,4.572-.058,1.577-.4,3.353-1.585,4.346a5.706,5.706,0,0,1-4.58,1.254c-2.815-.429-3.527-2.088-4.867-4.131l-3.4-5.185c-.211-.473-.183-.793.027-1,.916-.564,2.376.634,4.006,2.328h.058V21.194a.935.935,0,0,1,.95-.913ZM5.276,11.833A1.013,1.013,0,0,1,5.6,10.441a1.106,1.106,0,0,1,1.462.241l.583.617L9.362,9.243A1.106,1.106,0,0,1,10.876,9.1a1.008,1.008,0,0,1,.147,1.456L8.434,13.551a1.133,1.133,0,0,1-.256.235,1.113,1.113,0,0,1-.811.152,1.08,1.08,0,0,1-.685-.446l-1.4-1.668Zm21.633,8.3a1.085,1.085,0,0,0,0-2.17H15.117a1.142,1.142,0,0,0-1.027.526,1.051,1.051,0,0,0,0,1.119,1.142,1.142,0,0,0,1.027.526Zm0-7.634a1.085,1.085,0,0,0,0-2.17H15.117a1.142,1.142,0,0,0-1.027.526,1.051,1.051,0,0,0,0,1.119,1.142,1.142,0,0,0,1.027.526ZM5.386,16.04h5.606a.752.752,0,0,1,.766.737V21.32a.755.755,0,0,1-.766.737H10.83v-.8a2.3,2.3,0,0,0-.611-1.577v-2.17H6.153v2.378a2.285,2.285,0,0,0-.409,1.3v.863H5.386a.755.755,0,0,1-.766-.737V16.777a.752.752,0,0,1,.766-.737ZM28.293,2.055A1.2,1.2,0,0,1,29.514,3.23a1.222,1.222,0,0,1-2.443,0A1.2,1.2,0,0,1,28.293,2.055Zm-8.229,0A1.2,1.2,0,0,1,21.285,3.23a1.222,1.222,0,0,1-2.443,0A1.2,1.2,0,0,1,20.064,2.055Zm4.116,0A1.2,1.2,0,0,1,25.4,3.23a1.222,1.222,0,0,1-2.443,0A1.2,1.2,0,0,1,24.18,2.055Z" fill="#06425c" />
-            </svg> Action
-          </Typography>
-        </Grid>
 
-        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-          <Paper elevation={1} className="paperSection">
-          {!ATACLStatus ? 'You do not have permissions to view the actions.' : (
-            <Grid container spacing={3}>
-              <Grid
-                item
-                md={12}
-                xs={12}
-                className={classes.formBox}
-              >
-                <FormControl component="fieldset" error={
-                  error && error["isCorrectiveActionTaken"]
-                }>
-                  <FormLabel className="checkRadioLabel" component="legend">Are there any corrective actions to be taken?*</FormLabel>
-                  <RadioGroup row aria-label="gender" name="gender1"
-                    onChange={(e) => {
-                      setForm({ ...form, isCorrectiveActionTaken: e.target.value });
-                    }}>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel
-                        value={value}
-                        checked={form.isCorrectiveActionTaken === value}
-                        className="selectLabel"
-                        onClick={(e) => handleAction(e)}
-                        control={<Radio />}
-                        label={value}
-                      />
-                    ))}
-                  </RadioGroup>
-                  <p style={{ color: "red" }}>{error.isCorrectiveActionTaken}</p>
+        <>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Typography variant="h6" className="sectionHeading">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24.096" height="27.08" viewBox="0 0 33.096 36.08">
+                <path id="online-survey" d="M2.458,0H30.635A2.418,2.418,0,0,1,33.1,2.367V25.175a2.421,2.421,0,0,1-2.461,2.364H19.105v-.047c0-.4,0-.784-.018-1.433H30.952a.692.692,0,0,0,.48-.192.639.639,0,0,0,.2-.463V5.714H1.563V25.4a.594.594,0,0,0,.021.164,2.077,2.077,0,0,0-.058.467,2.741,2.741,0,0,0,.263,1.224,1.492,1.492,0,0,0,.11.206h0A2.4,2.4,0,0,1,0,25.175V2.367A2.418,2.418,0,0,1,2.458,0Zm5.75,20.28a1.051,1.051,0,0,1,.769.262.969.969,0,0,1,.327.719V27.55h.663V24.464c0-1.248,2.046-1.21,2.046.07v3.083h.748V25.157c0-1.248,2.046-1.21,2.046.068V27.5h.721V25.768c0-1.248,2.046-1.21,2.046.068,0,1.439.085,3.136.031,4.572-.058,1.577-.4,3.353-1.585,4.346a5.706,5.706,0,0,1-4.58,1.254c-2.815-.429-3.527-2.088-4.867-4.131l-3.4-5.185c-.211-.473-.183-.793.027-1,.916-.564,2.376.634,4.006,2.328h.058V21.194a.935.935,0,0,1,.95-.913ZM5.276,11.833A1.013,1.013,0,0,1,5.6,10.441a1.106,1.106,0,0,1,1.462.241l.583.617L9.362,9.243A1.106,1.106,0,0,1,10.876,9.1a1.008,1.008,0,0,1,.147,1.456L8.434,13.551a1.133,1.133,0,0,1-.256.235,1.113,1.113,0,0,1-.811.152,1.08,1.08,0,0,1-.685-.446l-1.4-1.668Zm21.633,8.3a1.085,1.085,0,0,0,0-2.17H15.117a1.142,1.142,0,0,0-1.027.526,1.051,1.051,0,0,0,0,1.119,1.142,1.142,0,0,0,1.027.526Zm0-7.634a1.085,1.085,0,0,0,0-2.17H15.117a1.142,1.142,0,0,0-1.027.526,1.051,1.051,0,0,0,0,1.119,1.142,1.142,0,0,0,1.027.526ZM5.386,16.04h5.606a.752.752,0,0,1,.766.737V21.32a.755.755,0,0,1-.766.737H10.83v-.8a2.3,2.3,0,0,0-.611-1.577v-2.17H6.153v2.378a2.285,2.285,0,0,0-.409,1.3v.863H5.386a.755.755,0,0,1-.766-.737V16.777a.752.752,0,0,1,.766-.737ZM28.293,2.055A1.2,1.2,0,0,1,29.514,3.23a1.222,1.222,0,0,1-2.443,0A1.2,1.2,0,0,1,28.293,2.055Zm-8.229,0A1.2,1.2,0,0,1,21.285,3.23a1.222,1.222,0,0,1-2.443,0A1.2,1.2,0,0,1,20.064,2.055Zm4.116,0A1.2,1.2,0,0,1,25.4,3.23a1.222,1.222,0,0,1-2.443,0A1.2,1.2,0,0,1,24.18,2.055Z" fill="#06425c" />
+              </svg> Action
+            </Typography>
+          </Grid>
 
-                </FormControl>
-              </Grid>
-              {actionData.length == 0 ? <Grid item md={8}>
-                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              {!ATACLStatus ? 'You do not have permissions to view the actions.' : (
+                <Grid container spacing={3}>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                    className={classes.formBox}
+                  >
+                    <FormControl component="fieldset" error={
+                      error && error["isCorrectiveActionTaken"]
+                    }>
+                      <FormLabel className="checkRadioLabel" component="legend">Are there any corrective actions to be taken?*</FormLabel>
+                      <RadioGroup row aria-label="gender" name="gender1"
+                        onChange={(e) => {
+                          setForm({ ...form, isCorrectiveActionTaken: e.target.value });
+                        }}>
+                        {radioDecide.map((value) => (
+                          <FormControlLabel
+                            value={value}
+                            checked={form.isCorrectiveActionTaken === value}
+                            className="selectLabel"
+                            onClick={(e) => handleAction(e)}
+                            control={<Radio />}
+                            label={value}
+                          />
+                        ))}
+                      </RadioGroup>
+                      <p style={{ color: "red" }}>{error.isCorrectiveActionTaken}</p>
 
-              <Grid item md={8}>
-                {(form.isCorrectiveActionTaken === "Yes" || form.isCorrectiveActionTaken === null) ? (
-                  <>
-                    <Typography variant="h6" gutterBottom className={classes.labelName}>
-                      Actions
-                    </Typography>
-                    <Typography className={classes.labelValue}>
-                      {handelActionShow(id)}
-                    </Typography>
-                    {!checkACL('action_tracker', 'add_actions') ? 
-                      <Typography className={classes.increaseRowBox}>
-                        <ActionTracker
-                          actionContext="iCare"
-                          enitityReferenceId={id}
-                          setUpdatePage={setUpdatePage}
-                          fkCompanyId={fkCompanyId}
-                          fkProjectId={projectId}
-                          fkProjectStructureIds={fkProjectStructureIds}
-                          isCorrectiveActionTaken={null}
-                          createdBy={userId}
-                          updatePage={updatePage}
-                          handelShowData={handelActionTracker}
-                        />
+                    </FormControl>
+                  </Grid>
+                  {actionData.length == 0 ? <Grid item md={8}>
+                    <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
-                      </Typography> 
-                      : 
-                      <Typography className={classes.increaseRowBox}>
-                        <ActionTracker
-                          actionContext="iCare"
-                          enitityReferenceId={id}
-                          setUpdatePage={setUpdatePage}
-                          fkCompanyId={fkCompanyId}
-                          fkProjectId={projectId}
-                          fkProjectStructureIds={fkProjectStructureIds}
-                          isCorrectiveActionTaken={form.isCorrectiveActionTaken}
-                          createdBy={userId}
-                          updatePage={updatePage}
-                          handelShowData={handelActionTracker}
-                        />
+                  <Grid item md={8}>
+                    {(form.isCorrectiveActionTaken === "Yes" || form.isCorrectiveActionTaken === null) ? (
+                      <>
+                        <Typography variant="h6" gutterBottom className={classes.labelName}>
+                          Actions
+                        </Typography>
+                        {checkACL('action_tracker-actions', 'view_actions') &&
+                          <Typography className={classes.labelValue}>
+                            {handelActionShow(id)}
+                          </Typography>
+                        }
+                        {!checkACL('action_tracker-actions', 'add_actions') ?
+                          <Typography className={classes.increaseRowBox}>
+                            <ActionTracker
+                              actionContext="iCare"
+                              enitityReferenceId={id}
+                              setUpdatePage={setUpdatePage}
+                              fkCompanyId={fkCompanyId}
+                              fkProjectId={projectId}
+                              fkProjectStructureIds={fkProjectStructureIds}
+                              isCorrectiveActionTaken={null}
+                              createdBy={userId}
+                              updatePage={updatePage}
+                              handelShowData={handelActionTracker}
+                            />
 
-                      </Typography> 
-                } 
-                  </>
-                )
-                  :
-                  null}
+                          </Typography>
+                          :
+                          <Typography className={classes.increaseRowBox}>
+                            <ActionTracker
+                              actionContext="iCare"
+                              enitityReferenceId={id}
+                              setUpdatePage={setUpdatePage}
+                              fkCompanyId={fkCompanyId}
+                              fkProjectId={projectId}
+                              fkProjectStructureIds={fkProjectStructureIds}
+                              isCorrectiveActionTaken={form.isCorrectiveActionTaken}
+                              createdBy={userId}
+                              updatePage={updatePage}
+                              handelShowData={handelActionTracker}
+                            />
 
-              </Grid>
+                          </Typography>
+                        }
+                      </>
+                    )
+                      :
+                      null}
 
-            </Grid>)
-    }
-          </Paper>
-        </Grid>
+                  </Grid>
+
+                </Grid>)
+              }
+            </Paper>
+          </Grid>
         </>
-        
+
         {/* <Grid item md={4}>
            <TextField
             label="Action taken"

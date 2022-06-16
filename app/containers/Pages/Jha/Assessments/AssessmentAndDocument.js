@@ -41,7 +41,7 @@ import Attachment from '../../../Attachment/Attachment';
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
 import Snackbar from "@material-ui/core/Snackbar";
 import { connect } from "react-redux";
-import MultiAttachment from '../../../MultiAttachment/MultiAttachment';
+import { checkACL } from '../../../../utils/helper';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -205,7 +205,6 @@ const AssessmentAndDocument = (props) => {
         additionalRemarks: '',
         humanPerformanceAspects: [],
         workStopCondition: [],
-        files: '',
     });
     const [risk, setRisk] = useState([]);
     const [updatePage, setUpdatePage] = useState(false);
@@ -380,6 +379,13 @@ const AssessmentAndDocument = (props) => {
         history.push('/app/pages/error');
     };
 
+    const handelNext = async () => {
+        setSubmitLoader(true);
+        const res = await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/bulkhazards/`, form).catch(() => handelApiError());
+        await handelNextDocument()
+
+    };
+
     const handelActionLink = () => {
         const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
             ? JSON.parse(localStorage.getItem('userDetails')).id
@@ -508,7 +514,7 @@ const AssessmentAndDocument = (props) => {
 
     const handelNextDocument = async () => {
         setsubmitLoaderDocumentDocument(true);
-        if (typeof additinalJobDetails.files !== 'string' && additinalJobDetails.files !== null) {
+        if (typeof formDocument.jhaAssessmentAttachment === 'object' && formDocument.jhaAssessmentAttachment != null) {
             const data = new FormData();
             data.append('fkCompanyId', formDocument.fkCompanyId);
             data.append('fkProjectId', formDocument.fkProjectId);
@@ -534,6 +540,7 @@ const AssessmentAndDocument = (props) => {
                 });
             }
 
+            data.append('jhaAssessmentAttachment', formDocument.jhaAssessmentAttachment);
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
         } else {
             delete formDocument.jhaAssessmentAttachment;
@@ -553,15 +560,9 @@ const AssessmentAndDocument = (props) => {
         setSubmitLoader(false);
     };
 
-    const handelNext = async () => {
-        setSubmitLoader(true);
-        const res = await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/bulkhazards/`, form).catch(() => handelApiError());
-        await handelNextDocument()
-    };
-
-
     return (
         <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
+            {/* {console.log(form.Assessment)} */}
             {loading === false
                 ? (
                     <Row>
@@ -667,9 +668,11 @@ const AssessmentAndDocument = (props) => {
                                                                                     handelShowData={handelActionTracker}
                                                                                 />
                                                                             </Grid>
-                                                                            <Grid item xs={12} className={classes.createHazardbox}>
-                                                                                {handelActionShow(value.id)}
-                                                                            </Grid>
+                                                                            {checkACL('action_tracker-actions', 'view_actions') &&
+                                                                                <Grid item xs={12} className={classes.createHazardbox}>
+                                                                                    {handelActionShow(value.id)}
+                                                                                </Grid>
+                                                                            }
                                                                         </Grid>
 
                                                                     </Grid>
@@ -783,8 +786,54 @@ const AssessmentAndDocument = (props) => {
                                         </Paper>
                                     </Grid>
                                 </>) : null}
+                                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                                    <Typography variant="h6" className="sectionHeading">
+                                        <svg id="twotone-closed_caption-24px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                            <path id="Path_5090" data-name="Path 5090" d="M0,0H24V24H0Z" fill="none" />
+                                            <path id="Path_5091" data-name="Path 5091" d="M18.5,16H7A4,4,0,0,1,7,8H19.5a2.5,2.5,0,0,1,0,5H9a1,1,0,0,1,0-2h9.5V9.5H9a2.5,2.5,0,0,0,0,5H19.5a4,4,0,0,0,0-8H7a5.5,5.5,0,0,0,0,11H18.5Z" fill="#06425c" />
+                                        </svg>  Attachment
+                                    </Typography>
+                                </Grid>
+                                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                                    <Paper elevation={1} className="paperSection">
+                                        <Grid container spacing={3}>
+                                            {/* --------------- */}
+                                            <Typography className="viewLabelValue">
+                                                <div >
+                                                    <input
+                                                        id="selectFile"
+                                                        type="file"
+                                                        className={classes.fullWidth}
+                                                        name="file"
+                                                        ref={ref}
+                                                        accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                                                        // style={{
+                                                        //   color:
+                                                        //     typeof form.attachments === "string" && "transparent",
+                                                        // }}
+                                                        onChange={(e) => {
+                                                            handleFile(e);
+                                                        }}
+                                                    />
+                                                    <span align="center">
+                                                        {formDocument.jhaAssessmentAttachment !== ''
+                                                            && typeof formDocument.jhaAssessmentAttachment === 'string' ? (
+                                                            <Attachment value={formDocument.jhaAssessmentAttachment} />
+                                                        ) : (
+                                                            <p />
+                                                        )}
+                                                    </span>
+                                                </div>
 
-                                <MultiAttachment attachmentHandler={(files) => { setAdditionalJobDetails({ ...additinalJobDetails, files: files }); }} />
+                                            </Typography>
+                                        </Grid>
+                                        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                                            <Alert onClose={handleClose} severity="error">
+                                                {message}
+                                            </Alert>
+                                        </Snackbar>
+                                    </Paper>
+                                </Grid>
 
                                 {notificationSentValue.length > 0
                                     ?

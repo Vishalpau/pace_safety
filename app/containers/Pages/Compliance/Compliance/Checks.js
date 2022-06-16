@@ -95,6 +95,7 @@ import {
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
 import { connect } from "react-redux";
 import Attachment from "../../../../containers/Attachment/Attachment";
+import { checkACL } from "../../../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -355,10 +356,15 @@ const Checks = (props) => {
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
-    setColorData(result)
+    // console.log('result', result);
+    const a = result.filter(a => a.status !== 'Inactive');
+    // console.log(a, 'aaaaaaaaaaaaa');
+    setColorData(a)
   }
 
-
+  useEffect(() => {
+    console.log(showCheckData, 'showCheckData');
+  }, [showCheckData])
 
   const radioDecide = ["Yes", "No", "N/A"];
 
@@ -378,7 +384,7 @@ const Checks = (props) => {
       const temp = [...checkData]
 
       temp.forEach(a => {
-        if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+        if (a.criticality !== "") {
           setErrorBoundary('');
           a.check = true;
         }
@@ -391,7 +397,7 @@ const Checks = (props) => {
     if (expandedTableDetail !== `panel6 ${valueId}`) {
       const temp = [...checkData]
       temp.forEach(a => {
-        if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+        if (a.criticality !== "" ) {
           setErrorBoundary('');
           a.check = true;
         }
@@ -594,7 +600,7 @@ const Checks = (props) => {
     //here we are getting the data
     let fd = await fetchData();
 
-    console.log(temp);
+    console.log(fd, 'ffffffdddddddddd');
 
     //here we are making a separate array according to the key
     temp.map((tempvalue, i) => {
@@ -606,10 +612,13 @@ const Checks = (props) => {
 
           tempQuestionId.push({ id: value.id });
           tempCheckData.push({
-            check: (defRes || ((crtic && auditS)) ? true : false),
+            check: (defRes || crtic ? true : false),
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
             question: value.question,
+            // criticality: fd.filter(f => f.question == value.question).length ?
+            //   fd.filter(f => f.question == value.question)[0].criticality ||
+            //   fd.filter(f => f.question == value.question)[0].defaultResponse : "",
             criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
             auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
             performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
@@ -708,7 +717,15 @@ const Checks = (props) => {
             value = starvar
           }
           else if (type === '%') {
-            value = value + "%"
+            let pattern = /^[0-9]*$/;
+            if (pattern.test(value)) {
+              if (value <= 100) {
+                value = value + "%";
+              }
+            }
+            else {
+              value = "";
+            }
           }
           else if (type === '1-10') {
             value = value
@@ -718,8 +735,13 @@ const Checks = (props) => {
         temp[i][field] = value;
       }
     }
+    console.log(temp, 'tempppppppppppp');
     setCheckData(temp);
   };
+
+  useEffect(() => {
+    console.log(checkData, 'checkDataaaaaaaaaaa');
+  }, [checkData])
 
   // for get action tracker & showing
   const handelActionTracker = async () => {
@@ -983,17 +1005,18 @@ const Checks = (props) => {
                                                         row
                                                         aria-label="select-typeof-compliance"
                                                         name="select-typeof-compliance"
-                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].defaultResponse : ""}
+                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : ""}
                                                       >
                                                         {radioDecide.map((option) => (
                                                           <FormControlLabel
                                                             value={option}
                                                             className="selectLabel"
+
                                                             control={<Radio />}
                                                             onChange={(e) =>
                                                               handleChangeData(
                                                                 e.target.value,
-                                                                "defaultResponse",
+                                                                "criticality",
                                                                 index,
                                                                 value.id
                                                               )
@@ -1039,7 +1062,6 @@ const Checks = (props) => {
                                                           defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                           onChange={(event, newValue) => {
                                                             if (newValue !== null) {
-
                                                               handleChangeData(
                                                                 newValue,
                                                                 "score",
@@ -1128,137 +1150,140 @@ const Checks = (props) => {
                                                         }
                                                       />
                                                     </Grid>}
-                                                  <Grid item md={12} xs={12}>
-                                                    <FormLabel
-                                                      className="checkRadioLabel"
-                                                      component="legend"
-                                                    >
-                                                      Create Action{" "}
-                                                    </FormLabel>
-                                                    <Grid
-                                                      item
-                                                      xs={6}
-                                                      className={classes.createHazardbox}
-                                                    >
-                                                      <ActionTracker
-                                                        actionContext="audit:question"
-                                                        enitityReferenceId={`${localStorage.getItem(
-                                                          "fkComplianceId"
-                                                        )}:${value.id}`}
-                                                        setUpdatePage={setUpdatePage}
-                                                        fkCompanyId={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "company"
-                                                            )
-                                                          ).fkCompanyId
-                                                        }
-                                                        fkProjectId={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "projectName"
-                                                            )
-                                                          ).projectName.projectId
-                                                        }
-                                                        fkProjectStructureIds={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "commonObject"
-                                                            )
-                                                          )["audit"]["projectStruct"]
-                                                        }
-                                                        createdBy={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "userDetails"
-                                                            )
-                                                          ).id
-                                                        }
-                                                        updatePage={updatePage}
-                                                        handelShowData={
-                                                          handelActionTracker
-                                                        }
-                                                      />
+                                                  {checkACL('action_tracker-actions', 'add_actions') &&
+                                                    <Grid item md={12} xs={12}>
+                                                      <FormLabel
+                                                        className="checkRadioLabel"
+                                                        component="legend"
+                                                      >
+                                                        Create Action{" "}
+                                                      </FormLabel>
+                                                      <Grid
+                                                        item
+                                                        xs={6}
+                                                        className={classes.createHazardbox}
+                                                      >
+                                                        <ActionTracker
+                                                          actionContext="audit:question"
+                                                          enitityReferenceId={`${localStorage.getItem(
+                                                            "fkComplianceId"
+                                                          )}:${value.id}`}
+                                                          setUpdatePage={setUpdatePage}
+                                                          fkCompanyId={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "company"
+                                                              )
+                                                            ).fkCompanyId
+                                                          }
+                                                          fkProjectId={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "projectName"
+                                                              )
+                                                            ).projectName.projectId
+                                                          }
+                                                          fkProjectStructureIds={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "commonObject"
+                                                              )
+                                                            )["audit"]["projectStruct"]
+                                                          }
+                                                          createdBy={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "userDetails"
+                                                              )
+                                                            ).id
+                                                          }
+                                                          updatePage={updatePage}
+                                                          handelShowData={
+                                                            handelActionTracker
+                                                          }
+                                                        />
+                                                      </Grid>
                                                     </Grid>
-                                                  </Grid>
-                                                  <Grid item md={12} xs={12}>
-                                                    <Table
-                                                      component={Paper}
-                                                      className="simpleTableSection"
-                                                    >
-                                                      {/* {actionData.filter(val => val.id==value.id).length} */}
-                                                      {actionData.filter(val => val.id == value.id)[0] && actionData.filter(val => val.id == value.id)[0].action.length ?
-                                                        <TableHead>
-                                                          <TableRow>
-                                                            <TableCell className="tableHeadCellFirst">
-                                                              Action number
-                                                            </TableCell>
-                                                            <TableCell className="tableHeadCellSecond">
-                                                              Action title
-                                                            </TableCell>
-                                                          </TableRow>
-                                                        </TableHead>
-                                                        : ''}
-                                                      <TableBody>
-                                                        {actionData.map((val) => (
-                                                          <>
-
-                                                            {val.id == value.id ? (
-                                                              <>
-                                                                {val.action.length > 0 &&
-                                                                  val.action.map(
-                                                                    (valueAction) => (
-                                                                      <TableRow>
-                                                                        <TableCell align="left">
-                                                                          <Link
-                                                                            className={
-                                                                              classes.actionLinkAudit
-                                                                            }
-                                                                            display="block"
-                                                                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                              localStorage.getItem(
-                                                                                "BaseUrl"
-                                                                              )
-                                                                            )[
-                                                                              "actionClientID"
-                                                                            ]
-                                                                              }&response_type=code&companyId=${JSON.parse(
+                                                  }
+                                                  {checkACL('action_tracker-actions', 'view_actions') &&
+                                                    <Grid item md={12} xs={12}>
+                                                      <Table
+                                                        component={Paper}
+                                                        className="simpleTableSection"
+                                                      >
+                                                        {/* {actionData.filter(val => val.id==value.id).length} */}
+                                                        {actionData.filter(val => val.id == value.id)[0] && actionData.filter(val => val.id == value.id)[0].action.length ?
+                                                          <TableHead>
+                                                            <TableRow>
+                                                              <TableCell className="tableHeadCellFirst">
+                                                                Action number
+                                                              </TableCell>
+                                                              <TableCell className="tableHeadCellSecond">
+                                                                Action title
+                                                              </TableCell>
+                                                            </TableRow>
+                                                          </TableHead>
+                                                          : ''}
+                                                        <TableBody>
+                                                          {actionData.map((val) => (
+                                                            <>
+                                                              {val.id == value.id ? (
+                                                                <>
+                                                                  {val.action.length > 0 &&
+                                                                    val.action.map(
+                                                                      (valueAction) => (
+                                                                        <TableRow>
+                                                                          <TableCell align="left">
+                                                                            <Link
+                                                                              className={
+                                                                                classes.actionLinkAudit
+                                                                              }
+                                                                              display="block"
+                                                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
                                                                                 localStorage.getItem(
-                                                                                  "company"
+                                                                                  "BaseUrl"
                                                                                 )
-                                                                              )
-                                                                                .fkCompanyId
-                                                                              }&projectId=${JSON.parse(
-                                                                                localStorage.getItem(
-                                                                                  "projectName"
+                                                                              )[
+                                                                                "actionClientID"
+                                                                              ]
+                                                                                }&response_type=code&companyId=${JSON.parse(
+                                                                                  localStorage.getItem(
+                                                                                    "company"
+                                                                                  )
                                                                                 )
-                                                                              )
-                                                                                .projectName
-                                                                                .projectId
-                                                                              }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                              }`}
-                                                                            target="_blank"
-                                                                          >
+                                                                                  .fkCompanyId
+                                                                                }&projectId=${JSON.parse(
+                                                                                  localStorage.getItem(
+                                                                                    "projectName"
+                                                                                  )
+                                                                                )
+                                                                                  .projectName
+                                                                                  .projectId
+                                                                                }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                }`}
+                                                                              target="_blank"
+                                                                            >
+                                                                              {
+                                                                                valueAction.number
+                                                                              }
+                                                                            </Link>
+                                                                          </TableCell>
+                                                                          <TableCell>
                                                                             {
-                                                                              valueAction.number
+                                                                              valueAction.title
                                                                             }
-                                                                          </Link>
-                                                                        </TableCell>
-                                                                        <TableCell>
-                                                                          {
-                                                                            valueAction.title
-                                                                          }
-                                                                        </TableCell>
-                                                                      </TableRow>
-                                                                    )
-                                                                  )}
-                                                              </>
-                                                            ) : null}
-                                                          </>
-                                                        ))}
-                                                      </TableBody>
-                                                    </Table>
-                                                  </Grid>
+                                                                          </TableCell>
+                                                                        </TableRow>
+                                                                      )
+                                                                    )}
+                                                                </>
+                                                              ) : null}
+                                                            </>
+                                                          ))}
+                                                        </TableBody>
+                                                      </Table>
+                                                    </Grid>
+                                                  }
                                                   {(value.attachment === "Yes") &&
                                                     <Grid
                                                       item
@@ -1481,7 +1506,6 @@ const Checks = (props) => {
                                                           defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                           onChange={(event, newValue) => {
                                                             if (newValue != null) {
-
                                                               handleChangeData(
                                                                 newValue,
                                                                 "score",
@@ -1561,11 +1585,15 @@ const Checks = (props) => {
                                                       </FormLabel>
                                                       <TextField
                                                         label="Percentage"
+                                                        type="text"
+                                                        inputProps={
+                                                          { maxLength: 3 }
+                                                        }
+                                                        value={checkData.filter(cd => cd.question === value.question[0].score !== "") ? checkData.filter(cd => cd.question == value.question)[0].score.split('%')[0] : ""}
                                                         name="performancerating"
                                                         id="performancerating"
-                                                        defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                        // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('%')[0] : ""}
                                                         fullWidth
-                                                        // type="number"
                                                         variant="outlined"
                                                         className="formControl"
                                                         onChange={(e) =>

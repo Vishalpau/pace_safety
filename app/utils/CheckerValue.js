@@ -78,6 +78,7 @@ export const handelCommonObject = (objName, mainKey, subKey, subValue) => {
 export const handleTimeOutError = (res) => { }
 
 export const handelActionData = async (incidentId, apiData, type = "all") => {
+    console.log(incidentId, apiData, 'data');
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -176,7 +177,7 @@ export const handelDateTime = (value, showTime = true) => {
     if (value == null) {
         return
     }
-    let observedLocalTime = new Date(value).toLocaleTimeString(undefined, {timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit'});
+    // let observedLocalTime = new Date(value).toLocaleTimeString(undefined, {timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit'});
     let observedDateAndTime = value.split("T");
     let observedDate = moment(value.split("T")[0]).format('MMMM Do YYYY');
     let observedTime = observedDateAndTime[1].replace("Z", "");
@@ -186,7 +187,7 @@ export const handelDateTime = (value, showTime = true) => {
     var ampm = (H < 12 || H === 24) ? " AM" : " PM";
     timeString = h + timeString.substr(2, 3) + ampm;
 
-    return showTime ? `${observedDate} ${observedLocalTime}` : observedDate
+    return showTime ? `${observedDate} ${timeString}` : observedDate
 
 }
 

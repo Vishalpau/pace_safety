@@ -67,8 +67,7 @@ export const formatNames = (names) => {
   return f.join(' ');
 };
 
-export const checkACL = (module, action) => {
-  
+export const checkACL = (module, action) => {  
   let acls = JSON.parse(localStorage.getItem('app_acl'))
     let default_return = true
     if(acls == null) {

@@ -421,10 +421,10 @@ const ObservationInitialNotificationView = () => {
                     Observed On
                   </FormLabel>
                   <Typography className="viewLabelValue">
-                    {moment(initialData.observedAt).format(
+                    {/* {moment(initialData.observedAt).format(
                       'Do MMMM YYYY'
-                    )} {" "} {new Date(initialData.observedAt).toLocaleTimeString(undefined, {timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit'})}
-                    {/* {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"} */}
+                    )} {" "}  */}
+                    {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"}
                   </Typography>
                 </Grid>
 
@@ -461,10 +461,10 @@ const ObservationInitialNotificationView = () => {
                     Reported on
                   </FormLabel>
                   <Typography className="viewLabelValue">
-                    {moment(initialData.createdAt).format(
+                    {/* {moment(initialData.createdAt).format(
                       'Do MMMM YYYY, h:mm:ss a'
-                    )}
-                    {/* {initialData["createdAt"] ? handelDateTime(initialData["createdAt"]) : "-"} */}
+                    )} */}
+                    {initialData["createdAt"] ? handelDateTime(initialData["createdAt"]) : "-"}
 
                   </Typography>
                 </Grid>

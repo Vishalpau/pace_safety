@@ -57,7 +57,8 @@ import {
 } from "../../../../utils/constants";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
-import MultiAttachment from "../../../MultiAttachment/MultiAttachment";
+import { checkACL } from "../../../../utils/helper";
+import MultiAttachment from '../../../MultiAttachment/MultiAttachment';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -567,6 +568,43 @@ const AssessmentAndNotification = (props) => {
 
   const fileTypeError = 'Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!';
   const fielSizeError = 'Size less than 25Mb allowed';
+  const handleFile = async (e) => {
+    const acceptFileTypes = [
+      'pdf',
+      'png',
+      'jpeg',
+      'jpg',
+      'xls',
+      'xlsx',
+      'doc',
+      'word',
+      'ppt',
+    ];
+    const file = e.target.files[0].name.split('.');
+
+    if (
+      acceptFileTypes.includes(file[file.length - 1])
+      && e.target.files[0].size < 25670647
+    ) {
+      const temp = { ...ahaform };
+      const filesAll = e.target.files[0];
+      temp.ahaAssessmentAttachment = filesAll;
+      await setAHAForm(temp);
+    } else {
+      ref.current.value = '';
+      !acceptFileTypes.includes(file[file.length - 1])
+        ? await setMessage(fileTypeError)
+        : await setMessage(`${fielSizeError}`);
+      await setMessageType('error');
+      await setOpen(true);
+    }
+  };
+
+  // const handleFile = (e) => {
+  //   let temp = { ...ahaform };
+  //   temp.ahaAssessmentAttachment = e.target.files[0];
+  //   setAHAForm(temp);
+  // };
 
   const fetchAhaData = async () => {
     const res = await api.get(
@@ -675,10 +713,6 @@ const AssessmentAndNotification = (props) => {
   useEffect(() => {
     handelCallBack();
   }, []);
-
-  useEffect(() => {
-    console.log(ahaform.files, typeof ahaform.files);
-  }, [ahaform])
 
   const classes = useStyles();
   return (
@@ -1082,13 +1116,16 @@ const AssessmentAndNotification = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                   </Grid>
-                                  <Grid
-                                    item
-                                    xs={6}
-                                    className={classes.createHazardbox}
-                                  >
-                                    {handelActionShow(value.id)}
-                                  </Grid>
+                                  {checkACL('action_tracker-actions', 'view_actions') &&
+                                    <Grid
+                                      item
+                                      xs={6}
+                                      className={classes.createHazardbox}
+                                      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                                    >
+                                      {handelActionShow(value.id)}
+                                    </Grid>
+                                  }
                                 </Grid>
                               </AccordionDetails>
                             </Accordion>
@@ -1148,7 +1185,7 @@ const AssessmentAndNotification = (props) => {
                 </Grid>
 
                 <MultiAttachment attachmentHandler={(files) => setAHAForm({ ...ahaform, files: files })} />
-                
+
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                   <Alert onClose={handleClose} severity="error">
                     {message}

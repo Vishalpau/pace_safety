@@ -115,6 +115,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 function UserMenu(props) {
+  const direct_loading = JSON.parse(localStorage.getItem('direct_loading'));
   const history = useHistory();
   const [menuState, setMenuState] = useState({
     anchorEl: null,
@@ -135,9 +136,17 @@ function UserMenu(props) {
   const projectId = JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
     : null
-  const selectBreakDown = JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown")).selectBreakDown
-    : null
+  // const selectBreakDown = JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+  //   ? JSON.parse(localStorage.getItem("selectBreakDown")).selectBreakDown
+  //   : null
+
+  // const selectBreakdown = 
+  //     JSON.parse(localStorage.getItem("selectBreakDown"))
+  // let struct = "";
+  // for (const i in selectBreakdown) {
+  //   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  // }
+  // const projectStructure = struct.slice(0, -1);
 
   const { classes, dark } = props;
   const { anchorEl, openMenu } = menuState;
@@ -275,11 +284,13 @@ function UserMenu(props) {
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
-  const handleClick = (clientId, targetPage) => {
+  const handleClick = (clientId, tarProjectStruct, targetPage) => {
     if (clientId) {
 
+      // http://localhost:3000/?code=pBN2PBLLdbYb4frzG1Qe9xAlW8Bkdu&state=%7B%27companyId%27%3A+%271%27%2C+%27projectId%27%3A+%2713%27%2C+%27projectStructure%27%3A+%27%5B%7B%22depth%22%3A%221L%22%2C%22id%22%3A66%2C%22name%22%3A%22phase1%22%2C%22label%22%3A%22Phase%22%7D%2C%7B%22depth%22%3A%222L%22%2C%22id%22%3A68%2C%22name%22%3A%22unit1%22%2C%22label%22%3A%22Unit%22%7D%5D%27%2C+%27targetPage%27%3A+%27pages%2Fcompliance%27%2C+%27phaseId%27%3A+%27%27%2C+%27unitId%27%3A+%27%27%2C+%27moduleType%27%3A+%27%27%2C+%27targetId%27%3A+%27%27%2C+%27redirect_back%27%3A+%27%27%7D
+
       window.open(
-        ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId,
+        ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&projectStructure=' + tarProjectStruct + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId,
         '_blank' // <- This is what makes it open in a new window.
       );
     }
@@ -430,17 +441,26 @@ function UserMenu(props) {
                       />
                       <Divider />
                       <List>
-                        {subscription.modules.map((module) => (
-                          <div>
-                            <ListItemLink disabled={!apps.includes(module.moduleCode)} onClick={() => handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting => hosting.fkCompanyId === JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "", module.targetPage,)} className={classnames.appDrawerLink}>
-                              {Boolean(module.moduleIcon) ?
-                                <img className={classnames.appDrawerImage} src={module.moduleIcon} />
-                                : <AssignmentIcon />
-                              }
-                              <ListItemText primary={module.moduleWebName} />
-                            </ListItemLink>
-                          </div>
-                        ))}
+                        {subscription.modules.map((module) => {
+                          // console.log(module, 'module');
+                          return (
+                            <div>
+                              <ListItemLink disabled={!apps.includes(module.moduleCode)} onClick={() => handleClick(subscription.hostings[0].clientId != undefined ?
+                                ((subscription.hostings[0].clientId != undefined ?
+                                  subscription.hostings.filter(hosting => hosting.fkCompanyId === JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId
+                                  : ""))
+                                : "", direct_loading.tarProjectStruct, module.targetPage)}
+                                className={classnames.appDrawerLink}>
+                                {Boolean(module.moduleIcon) ?
+                                  <img className={classnames.appDrawerImage} src={module.moduleIcon} />
+                                  : <AssignmentIcon />
+                                }
+                                <ListItemText primary={module.moduleWebName} />
+                              </ListItemLink>
+                            </div>
+                          )
+                        }
+                        )}
                       </List>
                     </div>
                     : ""
@@ -573,6 +593,7 @@ function UserMenu(props) {
             component={Link}
             className="userText"
             onClick={handleCompanyDialog}
+            disabled={localStorage.getItem('companiesCount') > 1 ? false : true}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <g id="switch-compnay-24" transform="translate(-96.011 -108.003)">

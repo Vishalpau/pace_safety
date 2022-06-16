@@ -301,6 +301,20 @@ html .custmCancelBtn {
   padding-bottom: 5px;
   border-radius: 0px 0px 6px 6px;
 }
+
+.quickActionSectionLink {
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+  font-family: 'Montserrat-Regular';
+  line-height: 18px;
+  margin: 4px 0;
+}
+
+.quickActionSectionLink:hover {
+  color: white !important;
+}
+
 .quickActionSection nav div a, .quickActionSection nav li a {
   width: 100%;
 }
@@ -328,7 +342,8 @@ html .custmCancelBtn {
   padding-bottom: 0px !important;
 }
 .commentsShowSection  {
-  margin-top: -30px !important;
+  /* margin-top: -30px !important; */
+  margin-bottom: 30px !important;
 }
 .paddTRemove {
   padding-top: 0px !important;
@@ -855,9 +870,9 @@ ul.MuiMenu-list a ul li.userName {
   text-transform: none;
 }
 
-.attactmentShowSection, .commentsShowSection {
+/* .attactmentShowSection, .commentsShowSection {
   margin-top: -30px !important;
-}
+} */
 .attactmentShowSection ul, .commentsShowSection ul{
   display: inline;
 }
@@ -1642,4 +1657,9 @@ ul.MuiMenu-list a ul li.userName {
 }
 .compliancePerMatrixPageIcon {
   background-position: -92.626rem -25.313rem;
+}
+
+/* comment image */ 
+.comment-image {
+  max-width: 10%;
 }

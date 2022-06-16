@@ -16,7 +16,7 @@ import { Typography } from "@material-ui/core";
 import {
   INITIAL_NOTIFICATION_FORM,
   SSO_URL,
-  HEADER_AUTH,ACCOUNT_API_URL,
+  HEADER_AUTH, ACCOUNT_API_URL,
 } from "../../utils/constants";
 import api from "../../utils/axios";
 import Type from "../../styles/components/Fonts.scss";
@@ -273,11 +273,11 @@ const ProjectStructure = (props) => {
 
   useEffect(() => {
     console.log(labelList);
-  },[labelList])
+  }, [labelList])
 
   useEffect(() => {
     console.log(selectBreakDown)
-  },[selectBreakDown])
+  }, [selectBreakDown])
 
   const setStateBreakDown = async (select, projectData) => {
 
@@ -306,6 +306,7 @@ const ProjectStructure = (props) => {
 
       setStateBreakDown(select, projectData)
     } else {
+
       fetchCallBack(select, projectData);
     }
 
@@ -328,67 +329,68 @@ const ProjectStructure = (props) => {
 
     {labelList.length === 1 ? labelList.map((item, index) => {
       console.log(item.breakdownLabel);
-      return(
-      <Grid item md={3} sm={3} xs={12}>
-        <FormControl
-          key={index}
-          variant="outlined"
-          error={props.selectDepthAndId[item.index] != undefined ? false: props.error && props.error[`projectStructure${[item.index]}`]}
-          fullWidth={true}
-          className="formControl"
-          required
-        >
-
-          <InputLabel id={item.breakdownLabel}>
-            {item.breakdownLabel}
-          </InputLabel>
-          <Select
-            labelId="filter3-label"
-            id={item.breakdownLabel}
-            // value={item.selectValue}
-            disabled={item.breakdownValue.length > 0 ? false : true}
-            onChange={(e) => {
-              handleBreakdown(e, (item.index), item.breakdownLabel);
-
-            }}
-            value={item.selectValue !== "" ? parseInt(item.selectValue) : ""}
-            label={item.breakdownLabel}
-            style={{ width: "100%" }}
+      return (
+        <Grid item md={3} sm={3} xs={12}>
+          <FormControl
+            key={index}
+            variant="outlined"
+            error={props.selectDepthAndId[item.index] != undefined ? false : props.error && props.error[`projectStructure${[item.index]}`]}
+            fullWidth={true}
+            className="formControl"
+            required
           >
-            {item.breakdownValue.length > 0
-              ? item.breakdownValue.map(
-                (selectValue, selectKey) => (
-                  <MenuItem
-                    key={selectKey}
-                    value={selectValue.id}
-                  >
-                    {selectValue.name}
-                  </MenuItem>
-                )
-              )
-              : <MenuItem
 
-              >
-                No Data
-              </MenuItem>}
-          </Select>
-          {props.selectDepthAndId[item.index] != undefined ? null :<p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
-              }
-          {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
+            <InputLabel id={item.breakdownLabel}>
+              {item.breakdownLabel}
+            </InputLabel>
+            <Select
+              labelId="filter3-label"
+              id={item.breakdownLabel}
+              // value={item.selectValue}
+              disabled={item.breakdownValue.length > 0 ? false : true}
+              onChange={(e) => {
+                handleBreakdown(e, (item.index), item.breakdownLabel);
+
+              }}
+              value={item.selectValue !== "" ? parseInt(item.selectValue) : ""}
+              label={item.breakdownLabel}
+              style={{ width: "100%" }}
+            >
+              {item.breakdownValue.length > 0
+                ? item.breakdownValue.map(
+                  (selectValue, selectKey) => (
+                    <MenuItem
+                      key={selectKey}
+                      value={selectValue.id}
+                    >
+                      {selectValue.structureName}
+                    </MenuItem>
+                  )
+                )
+                : <MenuItem
+
+                >
+                  No Data
+                </MenuItem>}
+            </Select>
+            {props.selectDepthAndId[item.index] != undefined ? null : <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`]}</p>
+            }
+            {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
             <FormHelperText>
               {props.error[`projectStructure${[item.index]}`]}
             </FormHelperText>
           )} */}
-        </FormControl>
-      </Grid>
-    )})
+          </FormControl>
+        </Grid>
+      )
+    })
       : labelList.length === selectBreakdown.length ?
         labelList.slice(selectBreakdown.length - 1).map((item, index) => (
           <Grid item md={3} sm={3} xs={12}>
             <FormControl
               key={index}
               variant="outlined"
-              error={props.selectDepthAndId[item.index] != undefined ? false: props.error && props.error[`projectStructure${[item.index]}`]}
+              error={props.selectDepthAndId[item.index] != undefined ? false : props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
               className="formControl"
               required
@@ -417,7 +419,7 @@ const ProjectStructure = (props) => {
                         key={selectKey}
                         value={selectValue.id}
                       >
-                        {selectValue.name}
+                        {selectValue.structureName}
                       </MenuItem>
                     )
                   )
@@ -428,7 +430,7 @@ const ProjectStructure = (props) => {
                   </MenuItem>}
               </Select>
 
- {props.selectDepthAndId[item.index] != undefined ? null :<p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
+              {props.selectDepthAndId[item.index] != undefined ? null : <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`]}</p>
               }
               {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
                 <FormHelperText>
@@ -443,7 +445,7 @@ const ProjectStructure = (props) => {
             <FormControl
               key={index}
               variant="outlined"
-              error={props.selectDepthAndId[item.index] != undefined ? false: props.error && props.error[`projectStructure${[item.index]}`]}
+              error={props.selectDepthAndId[item.index] != undefined ? false : props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
               className="formControl"
               required
@@ -472,7 +474,7 @@ const ProjectStructure = (props) => {
                         key={selectKey}
                         value={selectValue.id}
                       >
-                        {selectValue.name}
+                        {selectValue.structureName}
                       </MenuItem>
                     )
                   )
@@ -482,9 +484,9 @@ const ProjectStructure = (props) => {
                     No Data
                   </MenuItem>}
               </Select>
-              {props.selectDepthAndId[item.index] != undefined ? null :<p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
+              {props.selectDepthAndId[item.index] != undefined ? null : <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`]}</p>
               }
-              
+
 
               {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
                 <FormHelperText>

@@ -296,6 +296,7 @@ function Application(props) {
           path="/incident/:id/modify/reporting-and-notification/"
           component={ReportingAndNotification}
         />
+
         {/* form Evidence */}
         <Route
           exact
@@ -338,7 +339,6 @@ function Application(props) {
           component={PersonalAndPpeDetails}
         />
 
-
         {/* form investigation */}
         <Route
           path="/app/incident-management/registration/investigation/action-taken/"
@@ -365,8 +365,6 @@ function Application(props) {
           path="/app/incident-management/registration/investigation/worker-details/:id"
           component={WorkerDetails}
         />
-
-
 
         {/* form root cause analysis */}
         <Route
@@ -541,9 +539,10 @@ function Application(props) {
           component={RadarPolarCharts}
         />
 
-        {/* Observation Routes  */}
-        <Route path="/app/icare/comments/:id" component={Comments} />
+        {/* Comments */}
+        <Route path="/app/comments/:module/:moduleId" component={Comments} />
 
+        {/* Observation Routes  */}
         <Route exact path="/app/icare" component={Observations} />
         <Route exact path="/app/observations" component={Observations} />
         <Route exact path="/icare" component={Observations} />
@@ -625,7 +624,7 @@ function Application(props) {
         {/* <Route path="/app/pages/sample" component={SamplePage} /> */}
         <Route path="/app/assesments/" component={Xflha} />
         <Route path="/app/pages/assesments/xflha" component={Xflha} />
-        <Route path="/app/pages/assesments/FlhaSummary/:id" component={FlhaSummary} />
+        <Route path="/app/pages/assesments/flhaSummary/:id" component={FlhaSummary} />
         <Route path="/app/pages/assesments/PreventiveControls" component={PreventiveControls} />
         <Route path="/app/pages/assesments/IsolationControl" component={IsolationControl} />
         <Route path="/app/pages/assesments/EnergyControl" component={EnergyControl} />

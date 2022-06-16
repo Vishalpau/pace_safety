@@ -23,6 +23,7 @@ import moment from "moment";
 
 import apiAction from "../../utils/axiosActionTracker";
 import { handelCommonObject, fetchReportedBy, fetchDepartmentName } from "../../utils/CheckerValue";
+import { checkACL } from "../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -52,6 +53,11 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     display: "inline-flex",
   },
+  disabledButton: {
+    "& .MuiButton-contained.Mui-disabled": {
+      background: '#616161'
+    }
+  }
 
 }));
 
@@ -259,7 +265,10 @@ export default function ActionTracker(props) {
           color="primary"
           onClick={handleClickOpen}
           disabled={props.isCorrectiveActionTaken === null ? true : false}
-          
+          style={{
+            background: props.isCorrectiveActionTaken ? '#616161!important' : '#c0c0c0',
+            cursor: props.isCorrectiveActionTaken ? 'pointer' : 'not-allowed'
+          }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 75 50">
             <g id="Group_336" data-name="Group 336" transform="translate(-338 -858)">
@@ -275,6 +284,11 @@ export default function ActionTracker(props) {
           variant="contained"
           color="primary"
           onClick={handleClickOpen}
+          disabled={!checkACL('action_tracker-actions', 'add_actions')}
+          style={{
+            background: checkACL('action_tracker-actions', 'add_actions') ? '#616161!important' : '#c0c0c0',
+            cursor: checkACL('action_tracker-actions', 'add_actions') ? 'pointer' : 'not-allowed'
+          }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 75 50">
             <g id="Group_336" data-name="Group 336" transform="translate(-338 -858)">

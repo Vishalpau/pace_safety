@@ -437,7 +437,9 @@ function Header(props) {
   const [selectBreakDown, setSelectBreakDown] = useState([]);
 
   const [companyOpen, setCompanyOpen] = React.useState(false);
-  const [labelList, setLabelList] = useState([])
+  const [labelList, setLabelList] = useState([]);
+
+  const tempArray = [];
 
   // Initial header style
   let flagDarker = false;
@@ -459,7 +461,7 @@ function Header(props) {
     }
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -685,6 +687,7 @@ function Header(props) {
   const id = filterOpen ? "simple-popover" : undefined;
 
   const handleBreakdown = async (e, index, label) => {
+
     const value = e.target.value;
     let temp = [...labelList]
     temp[index][`selectValue`] = value;
@@ -709,13 +712,13 @@ function Header(props) {
               ...removeSelectBreakDown,
               { depth: item.depth, id: item.id, name: item.structureName, label: label },
             ]))
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...removeSelectBreakDown,
-                { depth: item.depth, id: item.id, name: item.structureName, label: label },
-              ])
-            );
+            // localStorage.setItem(
+            //   "selectBreakDown",
+            //   JSON.stringify([
+            //     ...removeSelectBreakDown,
+            //     { depth: item.depth, id: item.id, name: item.structureName, label: label },
+            //   ])
+            // );
             return;
           }
 
@@ -727,29 +730,57 @@ function Header(props) {
           if (item.id === value) {
             await setSelectBreakDown([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name, label: label },
+              { depth: item.depth, id: item.id, name: item.structureName, label: label },
             ]);
             dispatch(breakDownDetails([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name, label: label },
+              { depth: item.depth, id: item.id, name: item.structureName, label: label },
             ]))
             setBreakDownData([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name, label: label }
+              { depth: item.depth, id: item.id, name: item.structureName, label: label }
             ])
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...selectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name, label: label },
-              ])
-            );
+            // localStorage.setItem(
+            //   "selectBreakDown",
+            //   JSON.stringify([
+            //     ...selectBreakDown,
+            //     { depth: item.depth, id: item.id, name: item.name, label: label },
+            //   ])
+            // );
             return;
           }
 
         }
       );
     }
+
+    temp.forEach((items, tempIndex) => {
+      if (items.selectValue) {
+        items.breakdownValue.forEach((item) => {
+          console.log(item.id, value, "vvaaaaaalueeeee");
+          if (item.id === items.selectValue) {
+            tempArray.push({
+              depth: item.depth,
+              id: item.id,
+              name: item.structureName,
+              label: label,
+            });
+          }
+        });
+      } else {
+        tempArray.push({
+          depth: tempIndex + 1 + "L",
+          id: tempIndex,
+          name: "All-" + items.breakdownLabel,
+          label: "All-" + items.breakdownLabel,
+        });
+      }
+    });
+
+    localStorage.setItem(
+      "selectBreakDown",
+      JSON.stringify(tempArray)
+    );
 
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
@@ -783,7 +814,7 @@ function Header(props) {
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])
-    try { 
+    try {
       let labellist = projectData.projectName.breakdown.map(item => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "" } })
       if (localStorage.getItem('selectBreakDown')) {
         setBreakDownData(JSON.parse(localStorage.getItem('selectBreakDown')))
@@ -821,7 +852,7 @@ function Header(props) {
 
   }, [props.initialValues.projectName]);
 
-  useEffect(() => { 
+  useEffect(() => {
     handleProjectList();
   }, [initialValues.projectName]);
 
@@ -850,14 +881,11 @@ function Header(props) {
     }
     setChangeClass(isExpanded ? true : false);
     setPhaseSelect([phases]);
-    // console.log('isExpanded', isExpanded);
-    // console.log('changeClass', changeClass);
     setOpenPhase(isExpanded ? panel : false);
   };
 
   const [openUnit, setOpenUnit] = React.useState();
   const handleUnitChange = (panel, index, id) => async (event, isExpanded) => {
-    console.log(projectListData[index].breakdown[2].structure[0].ur, 'hey')
     if (openUnit !== panel && projectListData[index].breakdown && projectListData[index].breakdown.length > 2 && projectListData[index].breakdown[2].structure && projectListData[index].breakdown[2].structure[0].url) {
       const config = {
         method: "get",
@@ -911,7 +939,7 @@ function Header(props) {
       data.push({
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
-        unit: projectListData[index].breakdown[1].structure[0].name,
+        label: projectListData[index].breakdown[1].structure[0].name,
         name: secondBreakdown[unitIndex].structureName
       });
       data.push({
@@ -946,7 +974,7 @@ function Header(props) {
       data.push({
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
-        unit: projectListData[index].breakdown[1].structure[0].name,
+        label: projectListData[index].breakdown[1].structure[0].name,
         name: secondBreakdown[unitIndex].structureName
       });
       data.push({
@@ -1003,7 +1031,7 @@ function Header(props) {
         turnDarker && classes.darker,
         gradient ? classes.gradientBg : classes.solidBg
       )}
-    > 
+    >
       <Toolbar disableGutters={!open}>
         <Fab
           size="small"
@@ -1527,7 +1555,7 @@ function Header(props) {
             <Breadcrumbs
               className={classes.projectBreadcrumbs}
               separator={<NavigateNextIcon fontSize="small" />}
-            > 
+            >
               {isLoading ? labelList.map((item, index) => <Chip size="small" label={breakDownData && breakDownData[index] ? breakDownData[index].name : `All-${item.breakdownLabel}`} key={index} />) : null}
 
             </Breadcrumbs>

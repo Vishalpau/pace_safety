@@ -24,6 +24,7 @@ import ActionTracker from "../../../Forms/ActionTracker";
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import Paper from '@material-ui/core/Paper';
+import { checkACL } from '../../../../utils/helper';
 
 
 
@@ -178,11 +179,11 @@ const LessonsLearned = () => {
       if (form["anyLessonsLearnt"] === "No") {
         form["lessonLearntDetails"] = ""
       }
-      form["qrCodeUrl"] = undefined 
+      form["qrCodeUrl"] = undefined
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
       localStorage.removeItem('JSAApproval')
       localStorage.removeItem('JSAAssessment')
-      localStorage.setItem("JSAlessonsLearned" , "Done")
+      localStorage.setItem("JSAlessonsLearned", "Done")
       history.push(SUMMARY_FORM["Summary"])
     }
     else {
@@ -238,9 +239,9 @@ const LessonsLearned = () => {
                           className={classes.formBox}
                         >
                           <FormControl component="fieldset" error={
-                          error && error["LessonDecide"]
-                        }>
-                          <FormLabel component="legend" className="checkRadioLabel">Are there any lessons learned?*</FormLabel>
+                            error && error["LessonDecide"]
+                          }>
+                            <FormLabel component="legend" className="checkRadioLabel">Are there any lessons learned?*</FormLabel>
                             <RadioGroup row aria-label="gender" name="gender1">
                               {radioDecide.map((value) => (
                                 <FormControlLabel
@@ -256,10 +257,10 @@ const LessonsLearned = () => {
                               ))}
                             </RadioGroup>
                             {error && error["LessonDecide"] && (
-                            <FormHelperText>
-                              {error["LessonDecide"]}
-                            </FormHelperText>
-                          )}
+                              <FormHelperText>
+                                {error["LessonDecide"]}
+                              </FormHelperText>
+                            )}
                           </FormControl>
                         </Grid>
                         {form.anyLessonsLearnt == "Yes" ?
@@ -273,25 +274,25 @@ const LessonsLearned = () => {
                               <FormLabel className="checkRadioLabel" component="legend">Work completion and lessons learned discussion</FormLabel>
                               <List className="listGapRemove">
                                 <ListItem>
-                                    <ListItemText
-                                      primary="1. What, where and when?"
-                                      //className={classes.fildLableTitle}
-                                      className="selectLabel"
-                                    />
+                                  <ListItemText
+                                    primary="1. What, where and when?"
+                                    //className={classes.fildLableTitle}
+                                    className="selectLabel"
+                                  />
                                 </ListItem>
                                 <ListItem>
-                                    <ListItemText
-                                      primary="2. How could the job have been improved?"
-                                      //className={classes.fildLableTitle}
-                                      className="selectLabel"
-                                    />
+                                  <ListItemText
+                                    primary="2. How could the job have been improved?"
+                                    //className={classes.fildLableTitle}
+                                    className="selectLabel"
+                                  />
                                 </ListItem>
                                 <ListItem>
-                                    <ListItemText
-                                      primary="3. Lessons learned"
-                                      //className={classes.fildLableTitle}
-                                      className="selectLabel"
-                                    />
+                                  <ListItemText
+                                    primary="3. Lessons learned"
+                                    //className={classes.fildLableTitle}
+                                    className="selectLabel"
+                                  />
                                 </ListItem>
                               </List>
                             </Grid>
@@ -332,9 +333,11 @@ const LessonsLearned = () => {
                                 />
                               </Typography>
                             </Grid>
-                            <Grid item xs={12} className={classes.createHazardbox}>
-                              {handelActionShow(localStorage.getItem("fkJHAId"))}
-                            </Grid>
+                            {checkACL('action_tracker-actions', 'view_actions') &&
+                              <Grid item xs={12} className={classes.createHazardbox}>
+                                {handelActionShow(localStorage.getItem("fkJHAId"))}
+                              </Grid>
+                            }
                             <Grid
                               item
                               md={12}
@@ -343,7 +346,7 @@ const LessonsLearned = () => {
                               margin="dense"
                             >
                               <FormLabel component="legend" className="viewLabel">Work responsible Person (WRP)</FormLabel>
-                                {user.name} {user.badgeNumber}
+                              {user.name} {user.badgeNumber}
                             </Grid>
                           </>
                           : null}
@@ -374,11 +377,11 @@ const LessonsLearned = () => {
                   )}
                 </div>
                 <Button
-                   size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
-                    onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
-                  >
-                    Cancel
-                  </Button>
+                  size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
+                  onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
+                >
+                  Cancel
+                </Button>
               </Grid>
             </Grid>
 
