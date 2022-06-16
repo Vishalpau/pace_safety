@@ -1044,14 +1044,15 @@ function AhaPackage(props) {
                       </Typography> */}
                 {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                 <Typography variant="body1" display="inline">
+
                   <Delete
                     deleteUrl={`/api/v1/ahas/${item.id}/`}
                     afterDelete={fetchAllAHAData}
                     axiosObj={api}
-                    item={item.item}
+                    item={deleteItem}
                     loader={setIsLoading}
                     loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this Observation?"
+                    deleteMsg="Are you sure you want to delete this AHA?"
                     yesBtn="Yes"
                     noBtn="No"
                   />

@@ -79,7 +79,7 @@ function App() {
 
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code") || jsonCode;
-    
+
     // const tagetPage = searchParams.get("targetPage") || tarPage;
     // // const targetId = searchParams.get("targetId");
     // const companyId = searchParams.get("companyId") || comId;
@@ -153,11 +153,13 @@ function App() {
       if (localStorage.getItem('access_token') === null) {
         let laststate = window.location.href.replace(window.location.protocol + '//' + window.location.host, '')
         if (laststate != '')
-        if (window.location.hostname === 'localhost') {
-          window.location.href = `${LOCAL_LOGIN_URL}`;
-        } else {
-          window.location.href = `${LOGIN_URL}`
-        }
+          if (window.location.hostname === 'localhost') {
+
+            window.location.href = `${LOCAL_LOGIN_URL}`;
+          } else {
+
+            window.location.href = `${LOGIN_URL}`
+          }
       }
     }
   };

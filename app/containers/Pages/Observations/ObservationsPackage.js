@@ -562,8 +562,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -690,8 +690,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -849,9 +849,9 @@ function Actions(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const classes = useStyles();
 
@@ -1238,7 +1238,7 @@ function Actions(props) {
                     item={deleteItem}
                     loader={setIsLoading}
                     loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this AHA?"
+                    deleteMsg="Are you sure you want to delete this iCare?"
                     yesBtn="Yes"
                     noBtn="No"
                   />
