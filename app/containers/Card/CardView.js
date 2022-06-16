@@ -8,6 +8,7 @@ import CardHeader from "./CardHeader";
 import CardBody from "./CardBody";
 import CardFooter from "./CardFooter";
 import UserProfile from "./UserProfile";
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   cardContentSection: {
@@ -33,11 +34,11 @@ const CardView = (props) => {
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
   const handleSummaryPush = () => {
-    props.handleSummaryPush(props.itemIndex);
+    props.handleSummaryPush(props.itemId);
   };
 
   const handleDelete = () => {
-    props.handleDelete(props.data);
+    props.handleDelete();
   };
 
   const handleMyUserPClickOpen = (val) => {
@@ -77,6 +78,7 @@ const CardView = (props) => {
         <CardFooter
           files={props.files}
           checkDeletePermission={props.checkDeletePermission}
+          handleDelete={()=>handleDelete()}
         />
         <UserProfile
           ifJsa={
@@ -92,4 +94,25 @@ const CardView = (props) => {
   );
 };
 
+CardHeader.propTypes = {
+  cardTitle: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  avatar: PropTypes.any,
+  headerFields: PropTypes.array.isRequired,
+}
+
+CardBody.propTypes = {
+  bodyFields: PropTypes.array.isRequired, 
+}
+
+CardFooter.propTypes = {
+  files: PropTypes.number.isRequired,
+  checkDeletePermission: PropTypes.bool
+}
+
+UserProfile.propTypes = {
+  ifJsa: PropTypes.bool,
+}
+
 export default CardView;
+

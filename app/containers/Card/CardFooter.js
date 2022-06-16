@@ -55,6 +55,11 @@ const useStyles = makeStyles((theme) => ({
 
 const CardFooter = (props) => {
   const classes = useStyles();
+
+  const handleDelete = () => {
+    props.handleDelete();
+  };
+
   return (
     <>
       <CardActions className={classes.width100}>
@@ -65,8 +70,7 @@ const CardFooter = (props) => {
               Attachments:{" "}
             </Typography>
             <Typography variant="body2" display="inline">
-              {/* <Link href="#" color="secondary" className={classes.mLeftR5}> */}
-              {props.files !== null ? <>{props.files.length}</> : 0}
+              {props.files !== null ? <>{props.files}</> : 0}
             </Typography>
           </Grid>
 
@@ -86,7 +90,7 @@ const CardFooter = (props) => {
                   <Link href="javascript:void(0)" className={classes.mLeftR5}>
                     <DeleteForeverOutlinedIcon
                       className={classes.iconteal}
-                      // onClick={() => handleDelete()}
+                      onClick={() => handleDelete()}
                     />
                   </Link>
                 )}

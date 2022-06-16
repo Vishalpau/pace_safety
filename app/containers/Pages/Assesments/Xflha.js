@@ -83,6 +83,7 @@ import StatusFilter from "./StatusFilter";
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
 import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
+import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -717,7 +718,7 @@ function xflha(props) {
     setMyUserPOpen(false);
   };
 
-  const handleFlhaSummaryPush = async (id) => {
+  const handleSummaryPush = async (id) => {
     localStorage.setItem("flhaId", id);
     history.push("/app/pages/assesments/flhasummary/" + id);
   };
@@ -838,8 +839,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -872,7 +873,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function() {
+    function () {
       clearTimeout(timer);
 
       timer = setTimeout(() => setSeacrhFlha(v), d);
@@ -1016,9 +1017,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleChange = async (event, value) => {
@@ -1030,8 +1031,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1123,23 +1124,23 @@ function xflha(props) {
   const SetDataOrder = () => {
     let newdata;
     if (order === "ascDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         return moment(a.createdAt) - moment(b.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "descDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         return moment(b.createdAt) - moment(a.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "ascAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
       setFlhas(newdata);
     } else if (order === "descAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
@@ -1397,355 +1398,38 @@ function xflha(props) {
                     <Box>
                       <Grid className={classes.marginTopBottom}>
                         <div className="gridView">
-                          <Card variant="outlined" className={classes.card}>
-                            <CardContent>
-                              <Grid
-                                container
-                                spacing={3}
-                                className={classes.cardContentSection}
-                              >
-                                <Grid
-                                  item
-                                  md={2}
-                                  sm={4}
-                                  xs={12}
-                                  className={classes.userPictureBox}
-                                >
-                                  <Button
-                                    className={classNames(classes.floatR)}
-                                  >
-                                    <img
-                                      src={
-                                        item[1].avatar !== null
-                                          ? item[1].avatar
-                                          : paceLogoSymbol
-                                      }
-                                      className={classes.userImage}
-                                    />{" "}
-                                    {item[1].username}
-                                  </Button>
-                                </Grid>
-                                <Link
-                                  onClick={() =>
-                                    handleFlhaSummaryPush(item[1].id)
-                                  }
-                                  className={classes.cardLinkAction}
-                                >
-                                  <Grid item xs={12}>
-                                    <Grid
-                                      container
-                                      spacing={3}
-                                      alignItems="flex-start"
-                                    >
-                                      <Grid
-                                        item
-                                        sm={12}
-                                        xs={12}
-                                        className={classes.listHeadColor}
-                                      >
-                                        <Grid
-                                          container
-                                          spacing={3}
-                                          alignItems="flex-start"
-                                        >
-                                          <Grid
-                                            item
-                                            md={10}
-                                            sm={12}
-                                            xs={12}
-                                            className={classes.pr0}
-                                          >
-                                            <Typography
-                                              className={classes.title}
-                                              variant="h6"
-                                            >
-                                              {item[1].jobTitle}
-                                            </Typography>
-                                            <Typography
-                                              display="inline"
-                                              className={
-                                                classes.listingLabelName
-                                              }
-                                            >
-                                              Number:{" "}
-                                              <span>
-                                                <Link
-                                                  href={`/app/pages/assesments/flhasummary/${
-                                                    item[1].id
-                                                  }`}
-                                                  variant="h6"
-                                                  className={classes.mLeftfont}
-                                                >
-                                                  <span
-                                                    className={
-                                                      classes.listingLabelValue
-                                                    }
-                                                  >
-                                                    {item[1].flhaNumber}
-                                                  </span>
-                                                </Link>
-                                              </span>
-                                            </Typography>
-                                            <span
-                                              item
-                                              xs={1}
-                                              className={classes.sepHeightOne}
-                                            />
-                                            <Typography
-                                              variant="body1"
-                                              gutterBottom
-                                              display="inline"
-                                              color="textPrimary"
-                                              className={
-                                                classes.listingLabelName
-                                              }
-                                            >
-                                              Category:{" "}
-                                              <span
-                                                className={
-                                                  classes.listingLabelValue
-                                                }
-                                              >
-                                                FLHA
-                                              </span>
-                                            </Typography>
-                                            <span
-                                              item
-                                              xs={1}
-                                              className={classes.sepHeightOne}
-                                            />
-                                            <Typography
-                                              variant="body1"
-                                              gutterBottom
-                                              display="inline"
-                                              color="textPrimary"
-                                              className={
-                                                classes.listingLabelName
-                                              }
-                                            >
-                                              {/* Assignee: <span className={classes.listingLabelValue}>NA</span>
-                                              <span item xs={1} className={classes.sepHeightOne}></span> */}
-                                              Stage:{" "}
-                                              <span
-                                                className={
-                                                  classes.listingLabelValue
-                                                }
-                                              >
-                                                {item[1].flhaStage}{" "}
-                                                <img
-                                                  src={draft_small}
-                                                  className={classes.smallImage}
-                                                />
-                                              </span>
-                                              <span
-                                                item
-                                                xs={1}
-                                                className={classes.sepHeightOne}
-                                              />
-                                              Status:{" "}
-                                              <span className="listingLabelValue statusColor_complete">
-                                                {item[1].flhaStatus}
-                                              </span>
-                                            </Typography>
-                                          </Grid>
-                                        </Grid>
-                                      </Grid>
-                                    </Grid>
-                                  </Grid>
-
-                                  <Grid item sm={12} xs={12}>
-                                    <Grid container spacing={3}>
-                                      {/* <Grid item md={3} sm={6} xs={12}>
-                                        <Typography
-                                          variant="body1"
-                                          gutterBottom
-                                          color="textPrimary"
-                                          className={classes.listingLabelName}
-                                        >
-                                          Type:
-                                        </Typography>
-
-                                        <Typography
-                                          gutterBottom
-                                          className={classes.listingLabelValue}
-                                        > */}
-                                      {/* {item[1]["incidentReportedByName"]} */}
-                                      {/* Not found
-                                        </Typography>
-                                      </Grid> */}
-                                      {/* <Grid item md={3} sm={6} xs={12}>
-                                        <Typography
-                                          variant="body1"
-                                          color="textPrimary"
-                                          gutterBottom
-                                          className={classes.listingLabelName}
-                                        >
-                                          Location:
-                                        </Typography>
-                                        <Typography
-
-                                          className={classes.listingLabelValue}
-                                        >
-                                          {item[1].location}
-                                        </Typography>
-                                      </Grid> */}
-
-                                      <Grid item md={3} sm={6} xs={12}>
-                                        <Typography
-                                          variant="body1"
-                                          color="textPrimary"
-                                          gutterBottom
-                                          className={classes.listingLabelName}
-                                        >
-                                          Created on:
-                                        </Typography>
-
-                                        <Typography
-                                          className={classes.listingLabelValue}
-                                        >
-                                          {moment(item[1].createdAt).format(
-                                            "Do MMMM YYYY, h:mm:ss a"
-                                          )}
-                                        </Typography>
-                                      </Grid>
-
-                                      <Grid item md={3} sm={6} xs={12}>
-                                        <Typography
-                                          variant="body1"
-                                          color="textPrimary"
-                                          gutterBottom
-                                          className={classes.listingLabelName}
-                                        >
-                                          Created by:
-                                        </Typography>
-
-                                        <Typography
-                                          className={classes.listingLabelValue}
-                                        >
-                                          {item[1].createdByName}
-                                        </Typography>
-                                      </Grid>
-                                    </Grid>
-                                  </Grid>
-                                </Link>
-                              </Grid>
-                            </CardContent>
-                            <Divider />
-                            <CardActions className={Incidents.cardActions}>
-                              <Grid
-                                container
-                                spacing={2}
-                                justify="flex-end"
-                                alignItems="left"
-                              >
-                                <Grid
-                                  item
-                                  xs={12}
-                                  md={5}
-                                  sm={12}
-                                  className={classes.pt15}
-                                >
-                                  <Typography
-                                    variant="body1"
-                                    display="inline"
-                                    color="textPrimary"
-                                  >
-                                    <AttachmentIcon
-                                      className={classes.mright5}
-                                    />
-                                    Attachments:
-                                  </Typography>
-                                  <Typography variant="body2" display="inline">
-                                    <span>
-                                      {/* <Link href="#"
-                                    onClick={handleVisibility}
-                                    color="secondary"
-                                    aria-haspopup="true"
-                                    className={classes.mLeftR5}
-                                    disable={true}
-                                    > */}
-                                      {" " + item[1].attachmentCount}
-                                      {/* </Link> */}
-                                    </span>
-                                  </Typography>
-                                  {/* <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}> */}
-
-                                  {/* </Grid> */}
-                                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                                  <Typography
-                                    variant="body1"
-                                    display="inline"
-                                    color="textPrimary"
-                                    className={classes.mLeft}
-                                  >
-                                    <InsertCommentOutlinedIcon className={classes.mright5} />
-
-                                    Comments:
-
-                                  </Typography> */}
-                                  {/* <Typography variant="body2" display="inline" className={classes.mLeft}>
-                                    <span>
-                                      <Link href="#"
-                                        color="secondary"
-                                        aria-haspopup="true"
-                                        className={classes.mLeft}>
-                                        {item[1].commentsCount}
-                                      </Link>
-                                    </span>
-                                  </Typography> */}
-                                </Grid>
-
-                                <Grid
-                                  item
-                                  xs={12}
-                                  md={7}
-                                  sm={12}
-                                  className={classes.textRight}
-                                >
-                                  <div className={classes.floatR}>
-                                    <Typography
-                                      variant="body1"
-                                      display="inline"
-                                    >
-                                      {!checkDeletePermission ? (
-                                        <DeleteForeverOutlinedIcon
-                                          className={classes.iconteal}
-                                          style={{
-                                            color: "#c0c0c0",
-                                            cursor: "not-allowed",
-                                          }}
-                                        />
-                                      ) : (
-                                        <Link
-                                          href="#"
-                                          className={classes.mLeftR5}
-                                        >
-                                          <DeleteForeverOutlinedIcon
-                                            className={classes.iconteal}
-                                            onClick={(e) => handleDelete(item)}
-                                          />
-                                        </Link>
-                                      )}
-                                    </Typography>
-                                    {/* <Typography variant="body1" display="inline">
-                <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
-                </Typography>
-                <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                    {/* <Typography variant="body1" display="inline">
-                                      <PrintOutlinedIcon className={classes.iconColor} /> <Link href="/app/pages/general-observation-prints" className={classes.mLeftR5}>Print</Link>
-                                    </Typography>
-                                    <span item xs={1} className={classes.sepHeightTen}></span>
-                                    <Typography variant="body1" display="inline"><Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                                    </Typography> */}
-                                    {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                                    <Typography variant="body1" display="inline">
-                                      <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
-                                    </Typography> */}
-                                  </div>
-                                </Grid>
-                              </Grid>
-                            </CardActions>
-                          </Card>
+                          <CardView
+                            cardTitle={item[1].jobTitle}
+                            avatar={item[1].avatar}
+                            username={item[1].username}
+                            itemId={item[1].id}
+                            headerFields={[
+                              { label: "Number", value: item[1].flhaNumber },
+                              { label: "Category", value: "FLHA" },
+                              { label: "Stage", value: item[1].flhaStage },
+                              { label: "Status", value: item[1].flhaStatus },
+                            ]}
+                            bodyFields={[
+                              {
+                                label: "Created On",
+                                value: moment(item[1].createdAt).format(
+                                  "Do MMMM YYYY, h:mm:ss a"
+                                ),
+                              },
+                              { label: "Created By", value: item[1].createdByName },
+                            ]}
+                            files={item[1].attachmentCount}
+                            handleSummaryPush={(i) => {
+                              handleSummaryPush(i);
+                            }}
+                            handleMyUserPClickOpen={(val) => {
+                              handleMyUserPClickOpen(val);
+                            }}
+                            checkDeletePermission={checkDeletePermission}
+                            handleDelete={() => {
+                              handleDelete(item);
+                            }}
+                          />
                           <Grid
                             item
                             md={12}
@@ -2328,9 +2012,8 @@ function xflha(props) {
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable
-                      className={`${
-                        classes.dataTableSectionDesign
-                      } dataTableSectionDesign`}
+                      className={`${classes.dataTableSectionDesign
+                        } dataTableSectionDesign`}
                       title="FLHA's"
                       data={Object.entries(flhas).map((item) => [
                         item[1].flhaNumber,

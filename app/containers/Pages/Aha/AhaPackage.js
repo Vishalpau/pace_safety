@@ -513,18 +513,13 @@ function AhaPackage(props) {
 
   // const handleMyUserPClose = () => {
   //   setMyUserPOpen(false);
-  // };
-
-  // const handleSummaryPush = async () => {
-  //   history.push(
-  //     "/app/pages/aha/aha-summary/"
-  //   );
-  // };
+  // }
 
   const handleSummaryPush = async (index) => {
-    const id = allAHAData[index].id;
-    const fkProjectStructureIds = allAHAData[index].fkProjectStructureIds;
-    localStorage.setItem("fkAHAId", id);
+    const itemid = index;
+    const filtered = allAHAData.filter(one => one.id === index);
+    const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
+    localStorage.setItem("fkAHAId", itemid);
     handelCommonObject(
       "commonObject",
       "aha",
@@ -534,7 +529,7 @@ function AhaPackage(props) {
     localStorage.removeItem("Assessments");
     localStorage.removeItem("Approval");
     localStorage.removeItem("lessonsLearned");
-    history.push(`/app/pages/aha/aha-summary/${id}`);
+    history.push(`/app/pages/aha/aha-summary/${itemid}`);
   };
 
   const handleNewAhaPush = async () => {
@@ -560,8 +555,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -605,8 +600,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -619,16 +614,14 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       await setAllAHAData(res.data.data.results.results);
       await setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       await setAllAHAData(res.data.data.results.results);
@@ -637,16 +630,15 @@ function AhaPackage(props) {
   };
 
   const handleDelete = async (item) => {
-    console.log(item[1].id);
     let data = item[1];
-    // let id = item[1].id
+    let id = data.id;
     data.status = "Delete";
     delete data.ahaAssessmentAttachment;
     console.log(data, "!!!!!!!!!");
     await setIsLoading(false);
-    const res1 = await api
-      .put(`/api/v1/ahas/${data.id}/`, data)
-      .then((response) => fetchAllAHAData())
+    await api
+      .delete(`/api/v1/ahas/${id}/`, data)
+      .then((response) => {fetchAllAHAData()})
       .catch((err) => console.log(err));
   };
 
@@ -675,10 +667,9 @@ function AhaPackage(props) {
                   Object.entries(allAHAData).map((item, index) => (
                     <CardView
                       cardTitle={item[1].description}
-                      data={item}
                       avatar={item[1].avatar}
                       username={item[1].username}
-                      itemIndex={index}
+                      itemId={item[1].id}
                       headerFields={[
                         { label: "Number", value: item[1].ahaNumber },
                         { label: "Category", value: "AHA" },
@@ -696,16 +687,13 @@ function AhaPackage(props) {
                         },
                         { label: "Created By", value: item[1].createdByName },
                       ]}
-                      files={item[1].files}
+                      files={item[1].files !== null ? item[1].files.length : 0}
                       handleSummaryPush={(i) => {
                         handleSummaryPush(i);
                       }}
-                      handleMyUserPClickOpen={(val) => {
-                        handleMyUserPClickOpen(val);
-                      }}
                       checkDeletePermission={checkDeletePermission}
-                      handleDelete={(val) => {
-                        handleDelete(val);
+                      handleDelete={() => {
+                        handleDelete(item);
                       }}
                     />
                   ))

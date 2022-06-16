@@ -510,8 +510,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -524,8 +524,7 @@ function JhaPackage(props) {
 
     if (props.assessment === "My Assessments") {
       const res = await api.get(
-        `api/v1/jhas/?search=${
-          props.search
+        `api/v1/jhas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`
       );
 
@@ -537,8 +536,7 @@ function JhaPackage(props) {
       await setPageCount(pageCount);
     } else {
       const res = await api.get(
-        `api/v1/jhas/?search=${
-          props.search
+        `api/v1/jhas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
       );
 
@@ -563,8 +561,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -627,9 +625,6 @@ function JhaPackage(props) {
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
@@ -674,11 +669,12 @@ function JhaPackage(props) {
   };
 
   const handleSummaryPush = async (index) => {
-    const id = allJHAData[index].id;
+    const itemid = index;
 
-    const fkProjectStructureIds = allJHAData[index].fkProjectStructureIds;
+    const filtered = allJHAData.filter(one => one.id === index);
+    const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
 
-    localStorage.setItem("fkJHAId", id);
+    localStorage.setItem("fkJHAId", itemid);
     handelCommonObject(
       "commonObject",
       "jha",
@@ -688,17 +684,17 @@ function JhaPackage(props) {
     localStorage.removeItem("JSAAssessments");
     localStorage.removeItem("JSAApproval");
     localStorage.removeItem("JSAlessonsLearned");
-    history.push(`/app/pages/jha/jha-summary/${id}`);
+    history.push(`/app/pages/jha/jha-summary/${itemid}`);
   };
 
   const handleDelete = async (item) => {
-    let data = item;
-    // let id = item[1].id
+    let data = item[1];
+    let id = data.id
     data.status = "Delete";
     delete data.jhaAssessmentAttachment;
     await setIsLoading(false);
-    const res1 = await api
-      .put(`/api/v1/jhas/${data.id}/`, data)
+    await api
+      .delete(`/api/v1/jhas/${id}/`, data)
       .then((response) => fetchData())
       .catch((err) => console.log(err));
   };
@@ -723,9 +719,9 @@ function JhaPackage(props) {
                 <div className="gridView">
                   <CardView
                     cardTitle={singleitem[1].description}
-                    data={singleitem}
                     avatar={singleitem[1].avatar}
                     username={singleitem[1].username}
+                    itemId={singleitem[1].id}
                     headerFields={[
                       { label: "Number", value: singleitem[1].jhaNumber },
                       { label: "Category", value: "JSA" },
@@ -745,17 +741,13 @@ function JhaPackage(props) {
                         value: singleitem[1].createdByName,
                       },
                     ]}
-                    itemIndex={index}
                     handleSummaryPush={(i) => {
                       handleSummaryPush(i);
                     }}
-                    handleMyUserPClickOpen={(val) => {
-                      handleMyUserPClickOpen(val);
-                    }}
-                    files={singleitem[1].files}
+                    files={singleitem[1].files !== null ? singleitem[1].files.length : 0}
                     checkDeletePermission={checkDeletePermission}
-                    handleDelete={(val) => {
-                      handleDelete(val);
+                    handleDelete={() => {
+                      handleDelete(singleitem);
                     }}
                   />
                   <Grid

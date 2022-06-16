@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import progress from "dan-images/progress.png";
 import preplanning from "dan-images/preplanning.png";
 import completed from "dan-images/completed.png";
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -163,4 +164,4 @@ const CardHeader = (props) => {
   );
 };
 
-export default CardHeader;
+export default CardHeader; 

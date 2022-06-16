@@ -56,6 +56,7 @@ import Loader from "../../Loader";
 import moment from "moment";
 import { checkACL } from "../../../../utils/helper";
 import Attachment from "../../../../containers/Attachment/Attachment";
+import CardView from "../../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -749,298 +750,37 @@ function ComplianceListNew(props) {
 
     return (
       <>
-        <Card variant="outlined" className={classes.card}>
-          <CardContent>
-            <Grid container spacing={3} className={classes.cardContentSection}>
-              <Grid
-                item
-                md={2}
-                sm={4}
-                xs={12}
-                className={classes.userPictureBox}
-              >
-                <Button
-                  className={classes.floatR}
-                  onClick={(e) => handleMyUserPClickOpen(e)}
-                >
-                  <img
-                    src={
-                      value["avatar"] !== null
-                        ? value["avatar"]
-                        : paceLogoSymbol
-                    }
-                    className={classes.userImage}
-                  />{" "}
-                  {value["username"]}
-                </Button>
-              </Grid>
-              <Link
-                onClick={() => handleSummaryPush(value["id"])}
-                className={classes.cardLinkAction}
-              >
-                <Grid item xs={12}>
-                  <Grid container spacing={3} alignItems="flex-start">
-                    <Grid
-                      item
-                      sm={12}
-                      xs={12}
-                      className={classes.listHeadColor}
-                    >
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item md={10} sm={12} xs={12}>
-                          <Typography className={classes.title} variant="h6">
-                            {value["auditType"] !== null
-                              ? value["auditType"]
-                              : "-"}
-                          </Typography>
-                          <Typography
-                            className={classes.listingLabelName}
-                            display="inline"
-                          >
-                            Number:{" "}
-                            <span>
-                              <Link
-                                onClick={() => handleSummaryPush()}
-                                //href="/app/pages/actions/actionsummary"
-                                variant="h6"
-                                className={classes.mLeftfont}
-                              >
-                                <span className={classes.listingLabelValue}>
-                                  {value["auditNumber"] !== null
-                                    ? value["auditNumber"]
-                                    : "-"}
-                                </span>
-                              </Link>
-                            </span>
-                          </Typography>
-                          <span item xs={1} className={classes.sepHeightOne} />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Group name:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {value["groups"].length > 0
-                                ? value["groups"]
-                                  .map((data) => data.checkListGroupName)
-                                  .join(", ")
-                                : "-"}
-                            </span>
-                          </Typography>
-                          {/* <span
-                            item
-                            xs={1}
-                            className={classes.sepHeightOne}
-                          />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Status:{" "}
-                            <span className="listingLabelValue statusColor_complete">
-                              Assigned
-                            </span>
-                          </Typography> */}
-                        </Grid>
-
-                        {/* <Grid item md={2} sm={4} xs={12}>
-                    <Button  className={classes.floatR} onClick={(e) => handleNewCompliancePush(e)} >
-                      <img src={paceLogoSymbol} className={classes.userImage} /> Admin
-                    </Button>
-                  </Grid> */}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid item sm={12} xs={12}>
-                  <Grid container spacing={3}>
-                    <Grid item sm={3} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Location:
-                      </Typography>
-                      <Typography className={classes.listingLabelValue}>
-                        {value["area"] !== null ? value["area"] : "-"}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item sm={3} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Audited on:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {moment(value["createdAt"]).format("Do MMMM YYYY")}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item sm={3} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Audited by:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {value["createdByName"] !== null
-                          ? value["createdByName"]
-                          : "-"}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Link>
-            </Grid>
-          </CardContent>
-          <Divider />
-          <CardActions
-            className={classNames(
-              Incidents.cardActions,
-              classes.cardActionBottomBox
-            )}
-          >
-            <Grid
-              container
-              spacing={2}
-              justify="flex-end"
-              alignItems="left"
-              className={classes.cardBottomSection}
-            >
-              {/* <Grid item xs={12} sm={6} md={5}>
-                <Typography
-                  variant="body1"
-                  display="inline"
-                  color="textPrimary"
-                >
-                  <AttachmentIcon className={classes.mright5} />
-                  Attachments:
-                </Typography>
-                <Typography variant="body2" display="inline">
-                  <span>
-                    <Link
-                      // href="#"
-                      onClick={value['attachmentCount'] && handleVisibility}
-                      color="secondary"
-                      aria-haspopup="true"
-                      className={classes.mLeftR5}
-                    >
-                      {`${value['attachmentCount'] ? value['attachmentCount'] : '0'}`}
-                    </Link>
-                  </span>
-                </Typography> */}
-              {/* <span
-                  item
-                  xs={1}
-                  className={classes.sepHeightTen}
-                />
-                <Typography
-                  variant="body1"
-                  display="inline"
-                  color="textPrimary"
-                  className={classes.mLeft}
-                >
-                  <InsertCommentOutlinedIcon
-                    className={classes.mright5}
-                  />
-                  <Link
-                    href="#"
-                    onClick={handleVisibilityComments}
-                    aria-haspopup="true"
-                  >
-                    Comments:
-                  </Link>
-                </Typography>
-                <Typography
-                  variant="body2"
-                  display="inline"
-                  className={classes.mLeft}
-                >
-                  <span>
-                    <Link
-                      href="#"
-                      color="secondary"
-                      aria-haspopup="true"
-                      className={classes.mLeft}
-                    >
-                      3
-                    </Link>
-                  </span>
-                </Typography> */}
-              {/* </Grid> */}
-
-              <Grid item xs={12} sm={6} md={7} className={classes.textRight}>
-                {/* <Typography variant="body1" display="inline">
-                <IconButton>
-                  <PrintOutlinedIcon className={classes.iconteal} />
-                </IconButton>{" "}
-                <Link
-                  href="/app/pages/general-observation-prints"
-                  className={classes.mLeftR5}
-                />
-              </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-          <Typography variant="body2" display="inline">
-          <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
-          </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen} />
-              <Typography variant="body1" display="inline">
-                <Link href="#" className={classes.mLeftR5}>
-                  <IconButton>
-                    <StarsIcon className={classes.iconteal} />
-                  </IconButton>
-                </Link>
-              </Typography> */}
-                <span item xs={1} className={classes.sepHeightTen} />
-
-                <Typography variant="body1" display="inline">
-                  <Link href="#" className={classes.mLeftR5}>
-                    {!checkDeletePermission ? (
-                      <DeleteForeverOutlinedIcon
-                        className={classes.iconteal}
-                        style={{
-                          color: "#c0c0c0",
-                          cursor: "not-allowed",
-                        }}
-                      />
-                    ) : (
-                      <Link href="#" className={classes.mLeftR5}>
-                        <DeleteForeverOutlinedIcon
-                          className={classes.iconteal}
-                          // onClick={() => handleDelete(value)}
-                          onClick={() => handleClickDeleteAlert(value)}
-                        />
-                      </Link>
-                    )}
-                    {/* <IconButton onClick={() => handleDelete(value)}>
-                      <DeleteForeverOutlinedIcon
-                        className={classes.iconteal}
-                      />
-                    </IconButton> */}
-                  </Link>
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardActions>
-        </Card>
+        <CardView
+          cardTitle={value.auditType}
+          avatar={value.avatar}
+          username={value.username}
+          itemId={value.id}
+          headerFields={[
+            { label: "Number", value: value.auditNumber },
+            { label: "Group Name", value: value.groups.length > 0 ? value.groups.name : '-' },
+          ]}
+          bodyFields={[
+            { label: "Location", value: value.area },
+            {
+              label: "Created On",
+              value: moment(value.createdAt).format(
+                "Do MMMM YYYY, h:mm:ss a"
+              ),
+            },
+            { label: "Created By", value: value.createdByName },
+          ]}
+          files={value.attachmentLinks.attachmentCount}
+          handleSummaryPush={(i) => {
+            handleSummaryPush(i);
+          }}
+          handleMyUserPClickOpen={(val) => {
+            handleMyUserPClickOpen(val);
+          }}
+          checkDeletePermission={checkDeletePermission}
+          handleDelete={(val) => {
+            // handleDelete(val);
+          }}
+        />
         {value.avatar && (
           <Grid
             item
