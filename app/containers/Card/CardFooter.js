@@ -7,6 +7,7 @@ import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
+import Delete from "../Delete/Delete";
 
 const useStyles = makeStyles((theme) => ({
   mLeftR5: {
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
   width100: {
     width: "100%",
-    padding: "20px 15px",
+    padding: "14px 15px",
   },
   commentLink: {
     marginLeft: "2px",
@@ -61,14 +62,22 @@ const useStyles = makeStyles((theme) => ({
 const CardFooter = (props) => {
   const classes = useStyles();
 
-  const handleDelete = () => {
-    props.handleDelete();
-  };
+  const {
+    deleteUrl,
+    axiosObj,
+    afterDelete,
+    item,
+    loader,
+    loadingFlag,
+    deleteMsg,
+    yesBtn,
+    noBtn,
+  } = props.deleteFields;
 
   return (
     <>
       <CardActions className={classes.width100}>
-        <Grid container spacing={2} justify="flex-end" alignItems="left">
+        <Grid container spacing={2} justify="flex-end" alignItems="center">
           <Grid item xs={12} md={5} sm={12}>
             <Typography variant="body1" display="inline" color="textPrimary">
               <AttachmentIcon className={classes.mright5} />
@@ -76,7 +85,6 @@ const CardFooter = (props) => {
             </Typography>
             <Typography variant="body2" display="inline">
               <Link
-                // onClick={handleVisibilityComments}
                 color="secondary"
                 aria-haspopup="true"
                 className={classes.commentLink}
@@ -92,10 +100,10 @@ const CardFooter = (props) => {
               className={classes.mLeft}
             >
               <InsertCommentOutlinedIcon className={classes.mright5} />
-              Comments: {" "}
+              Comments:{" "}
             </Typography>
             <Link
-              // onClick={handleVisibilityComments}
+              onClick={() => props.handleVisibilityComments()}
               color="secondary"
               aria-haspopup="true"
               className={classes.commentLink}
@@ -108,22 +116,17 @@ const CardFooter = (props) => {
             <div className={classes.floatR}>
               <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
-                {!props.checkDeletePermission ? (
-                  <DeleteForeverOutlinedIcon
-                    className={classes.iconteal}
-                    style={{
-                      color: "#c0c0c0",
-                      cursor: "not-allowed",
-                    }}
-                  />
-                ) : (
-                  <Link href="javascript:void(0)" className={classes.mLeftR5}>
-                    <DeleteForeverOutlinedIcon
-                      className={classes.iconteal}
-                      onClick={() => handleDelete()}
-                    />
-                  </Link>
-                )}
+                <Delete
+                  deleteUrl={deleteUrl}
+                  afterDelete={afterDelete}
+                  axiosObj={axiosObj}
+                  item={item}
+                  loader={loader}
+                  loadingFlag={loadingFlag}
+                  deleteMsg={deleteMsg}
+                  yesBtn={yesBtn}
+                  noBtn={noBtn}
+                />
               </Typography>
             </div>
           </Grid>

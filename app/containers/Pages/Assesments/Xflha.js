@@ -84,7 +84,8 @@ import allPickListDataValue from "../../../utils/Picklist/allPickList";
 import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 import Delete from "../../Delete/Delete";
-import Attachment from '../../Attachment/Attachment';
+import Attachment from "../../Attachment/Attachment";
+import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -643,8 +644,8 @@ const useStyles = makeStyles((theme) => ({
   },
   dataTableSectionDesign: {
     "& th > div": {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   topNavTabBack: {
     backgroundColor: "transparent",
@@ -705,7 +706,7 @@ function xflha(props) {
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [order, setOrder] = useState('');
+  const [order, setOrder] = useState("");
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
   const [valueTwo, setValueTwo] = React.useState(0);
@@ -725,7 +726,7 @@ function xflha(props) {
   //   setMyUserPOpen(false);
   // };
 
-  const handleFlhaSummaryPush = async (id) => {
+  const handleSummaryPush = async (id) => {
     console.log(id, "iddddddddd");
     localStorage.setItem("flhaId", id);
     history.push({
@@ -794,8 +795,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -828,7 +829,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function () {
+    function() {
       clearTimeout(timer);
 
       timer = setTimeout(() => setSeacrhFlha(v), d);
@@ -961,9 +962,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => { });
+          .catch((error) => {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -979,8 +980,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1065,23 +1066,23 @@ function xflha(props) {
   const SetDataOrder = () => {
     let newdata;
     if (order === "ascDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         return moment(a.createdAt) - moment(b.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "descDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         return moment(b.createdAt) - moment(a.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "ascAppDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
       setFlhas(newdata);
     } else if (order === "descAppDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
@@ -1179,8 +1180,6 @@ function xflha(props) {
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
     const [commentData, setCommentData] = useState("");
 
-    console.log(item, index, "iiiiteeeeeem");
-
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
@@ -1272,7 +1271,7 @@ function xflha(props) {
       // <Box>
       <Grid className={classes.marginTopBottom}>
         <div className="gridView">
-          <Card variant="outlined" className={classes.card}>
+          {/* <Card variant="outlined" className={classes.card}>
             <CardContent>
               <Grid
                 container
@@ -1364,8 +1363,6 @@ function xflha(props) {
                               color="textPrimary"
                               className={classes.listingLabelName}
                             >
-                              {/* Assignee: <span className={classes.listingLabelValue}>NA</span>
-                                              <span item xs={1} className={classes.sepHeightOne}></span> */}
                               Stage:{" "}
                               <span className={classes.listingLabelValue}>
                                 {item.flhaStage}{" "}
@@ -1392,41 +1389,6 @@ function xflha(props) {
 
                   <Grid item sm={12} xs={12}>
                     <Grid container spacing={3}>
-                      {/* <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          gutterBottom
-                          color="textPrimary"
-                          className={classes.listingLabelName}
-                        >
-                          Type:
-                        </Typography>
-
-                        <Typography
-                          gutterBottom
-                          className={classes.listingLabelValue}
-                        > */}
-                      {/* {item[1]["incidentReportedByName"]} */}
-                      {/* Not found
-                        </Typography>
-                      </Grid> */}
-                      {/* <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Location:
-                        </Typography>
-                        <Typography
-
-                          className={classes.listingLabelValue}
-                        >
-                          {item[1].location}
-                        </Typography>
-                      </Grid> */}
-
                       <Grid item md={3} sm={6} xs={12}>
                         <Typography
                           variant="body1"
@@ -1508,22 +1470,6 @@ function xflha(props) {
                 </span>
               </Grid>
               <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                {/* <div className={classes.floatR}> */}
-                {/* <Typography variant="body1" display="inline">
-                      <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network view</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                        <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                      </Typography> */}
                 <span item xs={1} className={classes.sepHeightTen} />
                 <Typography variant="body1" display="inline">
                   <Delete
@@ -1538,10 +1484,50 @@ function xflha(props) {
                     noBtn="No"
                   />
                 </Typography>
-                {/* </div> */}
               </Grid>
             </CardActions>
-          </Card>
+          </Card> */}
+
+          <CardView
+            cardTitle={item.jobTitle}
+            avatar={item.avatar}
+            username={item.username}
+            itemId={item.id}
+            headerFields={[
+              { label: "Number", value: item.flhaNumber },
+              { label: "Category", value: "FLHA" },
+              { label: "Stage", value: item.flhaStage },
+              { label: "Status", value: item.flhaStatus },
+            ]}
+            bodyFields={[
+              {
+                label: "Created On",
+                value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+              },
+              { label: "Created By", value: item.createdByName },
+            ]}
+            deleteFields={{
+              deleteUrl: `/api/v1/flhas/${item.id}/`,
+              afterDelete: () => {
+                fetchData();
+              },
+              axiosObj: api,
+              item: deleteItem,
+              loader: setIsLoading,
+              loadingFlag: false,
+              deleteMsg: "Are you sure you want to delete this FLHA?",
+              yesBtn: "Yes",
+              noBtn: "No",
+            }}
+            handleVisibilityComments={() => handleVisibilityComments()}
+            files={item.attachmentCount}
+            commentsCount={item.commentsCount}
+            handleSummaryPush={(i) => {
+              handleSummaryPush(i);
+            }}
+            checkDeletePermission={checkDeletePermission}
+          />
+
           {item.attachmentCount ? (
             <Grid
               item
@@ -1939,8 +1925,8 @@ function xflha(props) {
                   {flhas.length === 0
                     ? "Sorry, no matching records found"
                     : flhas.map((item, index) => (
-                      <AllCardData item={item} index={index} />
-                    ))}
+                        <AllCardData item={item} index={index} />
+                      ))}
                 </div>
 
                 <div className="gridView">
@@ -2181,7 +2167,9 @@ function xflha(props) {
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable
-                      className={`${classes.dataTableSectionDesign} dataTableSectionDesign`}
+                      className={`${
+                        classes.dataTableSectionDesign
+                      } dataTableSectionDesign`}
                       title="FLHA's"
                       data={Object.entries(flhas).map((item) => [
                         item[1].flhaNumber,

@@ -553,19 +553,21 @@ function AhaPackage(props) {
     setMyUserPOpen(false);
   };
 
-  const handleSummaryPush = async (selectedJha) => {
-    const aha = selectedJha;
-    localStorage.setItem("fkJHAId", aha.id);
+  const handleSummaryPush = async (index) => {
+    const ahaid = index;
+    const filtered = allAHAData.filter((one) => one.id === index);
+    const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
+    localStorage.setItem("fkAHAId", ahaid);
     handelCommonObject(
       "commonObject",
       "aha",
       "projectStruct",
-      aha.fkProjectStructureIds
+      fkProjectStructureIds
     );
     localStorage.removeItem("JSAAssessments");
     localStorage.removeItem("JSAApproval");
     localStorage.removeItem("JSAlessonsLearned");
-    history.push(`/app/pages/aha/aha-summary/${aha.id}`);
+    history.push(`/app/pages/aha/aha-summary/${ahaid}`);
   };
 
   // const handleNewAhaPush = async () => {
@@ -591,8 +593,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -636,8 +638,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -650,14 +652,16 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${props.search
+        `api/v1/ahas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
       setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${props.search
+        `api/v1/ahas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -752,7 +756,7 @@ function AhaPackage(props) {
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             // handleCommentsClose()
-            fetchAllAHAData()
+            fetchAllAHAData();
           })
           .catch((err) => console.log(err));
       }
@@ -798,7 +802,7 @@ function AhaPackage(props) {
 
     return (
       <>
-        <Card variant="outlined" className={classes.card}>
+        {/* <Card variant="outlined" className={classes.card}>
           <CardContent>
             <Grid container spacing={3} className={classes.cardContentSection}>
               <Grid
@@ -925,7 +929,6 @@ function AhaPackage(props) {
                         gutterBottom
                         className={classes.listingLabelValue}
                       >
-                        {/* {item[1]["incidentReportedByName"]} */}
                         {item.workArea}
                       </Typography>
                     </Grid>
@@ -992,11 +995,7 @@ function AhaPackage(props) {
                     <AttachmentIcon className={classes.mright5} />
                     Attachments:
                   </Typography>
-
-                  {/* <Typography variant="body2" display="inline">
-                    <span> */}
                   <Link
-                    // href="#"
                     onClick={item.attachmentCount && handleVisibility}
                     color="secondary"
                     aria-haspopup="true"
@@ -1006,8 +1005,6 @@ function AhaPackage(props) {
                   >
                     {item.attachmentCount}
                   </Link>
-                  {/* </span>
-                  </Typography> */}
                   <span item xs={1} className={classes.sepHeightTen} />
                   <Typography
                     variant="body1"
@@ -1030,23 +1027,6 @@ function AhaPackage(props) {
               </Grid>
 
               <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                {/* <div className={classes.floatR}> */}
-                {/* <Typography variant="body1" display="inline">
-                      <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network view</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                        <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                 <Typography variant="body1" display="inline">
 
                   <Delete
@@ -1060,35 +1040,11 @@ function AhaPackage(props) {
                     yesBtn="Yes"
                     noBtn="No"
                   />
-                  {/* {!checkDeletePermission
-                      ? (
-                        <DeleteForeverOutlinedIcon
-                          className={classes.iconteal}
-                          style={{
-                            color: '#c0c0c0',
-                            cursor: 'not-allowed'
-                          }}
-                        />
-                      )
-                      : (
-                        <Link
-                          href="#"
-                          className={classes.mLeftR5}
-                        >
-                          <DeleteForeverOutlinedIcon
-                            className={classes.iconteal}
-                            onClick={(e) => handleClickDeleteAlert(item.item)}
-                          />
-                        </Link>
-                      )} */}
-                  {/* <Link href="#" className={classes.mLeftR5}>
-                          <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
-                        </Link> */}
                 </Typography>
               </Grid>
             </Grid>
           </CardActions>
-        </Card>
+        </Card> */}
 
         <CardView
           cardTitle={item.description}
@@ -1106,21 +1062,30 @@ function AhaPackage(props) {
             { label: "Location", value: item.location },
             {
               label: "Created On",
-              value: moment(item.createdAt).format(
-                "Do MMMM YYYY, h:mm:ss a"
-              ),
+              value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
             },
             { label: "Created By", value: item.createdByName },
           ]}
+          deleteFields={{
+            deleteUrl: `/api/v1/ahas/${item.id}/`,
+            afterDelete: () => {
+              fetchAllAHAData();
+            },
+            axiosObj: api,
+            item: deleteItem,
+            loader: setIsLoading,
+            loadingFlag: false,
+            deleteMsg: "Are you sure you want to delete this AHA?",
+            yesBtn: "Yes",
+            noBtn: "No",
+          }}
+          handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
           commentsCount={item.commentsCount}
           handleSummaryPush={(i) => {
-            // handleSummaryPush(i);
+            handleSummaryPush(i);
           }}
           checkDeletePermission={checkDeletePermission}
-          handleDelete={() => {
-            // handleDelete(item);
-          }}
         />
 
         {item.attachmentCount ? (
