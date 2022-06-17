@@ -104,13 +104,13 @@ const useStyles = makeStyles((theme) => ({
   paddZero: {
     padding: '0px',
   },
-  pLTen : {
+  pLTen: {
     marginLeft: '5px',
   },
-  mTtop20 : {
+  mTtop20: {
     marginTop: '20px',
   },
-  marginTopBottom : {
+  marginTopBottom: {
     marginBottom: '16px',
     backgroundColor: '#f3f3f3',
     padding: '16px',
@@ -134,189 +134,189 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '3px',
     marginBottom: '30px',
     boxShadow: '1px 1px 13px #e6e6e6',
-},
-buttonsNewChild: {
-  borderRadius: '5px 5px 5px 5px',
-  backgroundColor: '#517b8d',
-  color: '#ffffff',
-  minWidth: '100px',
-  marginRight: '6px',
-  maxHeight: '40px',
-  minHeight: '40px',
-  opacity: '10',
-},
-buckmark: {
-  borderRadius: '5px 5px 5px 5px',
-  color: '#06425c',
-  minWidth: '50px',
-  marginRight: '6px',
-  paddingTop: '0px',
-},
-buckmarkIcon: {
-  height: '35px',
-  width: '35px',
-},
-buttonsNTwo: {
-  borderRadius: '5px 5px 5px 5px',
-  backgroundColor: '#517b8d',
-  color: '#ffffff',
-  marginRight: '6px',
-  maxHeight: '40px',
-  minHeight: '40px',
-  opacity: '10',
-},
-active: {
-  backgroundColor: '#f47607',
-  borderRadius: '5px 5px 5px 5px',
-  color: '#ffffff',
-  minWidth: '100px',
-  marginRight: '6px',
-  maxHeight: '40px',
-  minHeight: '40px',
-  marginLeft: '5px',
-},
-activeFont: {
-  backgroundColor: '#f47607',
-  borderRadius: '5px',
-  color: '#ffffff',
-  minWidth: '34px',
-  padding: '4px 5px 5px 4px',
-},
-floatR: {
-  float: 'right',
-  marginTop: '18px',
-  marginRight: '20px',
-  '& .MuiButton-containedPrimary:hover': {
+  },
+  buttonsNewChild: {
+    borderRadius: '5px 5px 5px 5px',
+    backgroundColor: '#517b8d',
+    color: '#ffffff',
+    minWidth: '100px',
+    marginRight: '6px',
+    maxHeight: '40px',
+    minHeight: '40px',
+    opacity: '10',
+  },
+  buckmark: {
+    borderRadius: '5px 5px 5px 5px',
+    color: '#06425c',
+    minWidth: '50px',
+    marginRight: '6px',
+    paddingTop: '0px',
+  },
+  buckmarkIcon: {
+    height: '35px',
+    width: '35px',
+  },
+  buttonsNTwo: {
+    borderRadius: '5px 5px 5px 5px',
+    backgroundColor: '#517b8d',
+    color: '#ffffff',
+    marginRight: '6px',
+    maxHeight: '40px',
+    minHeight: '40px',
+    opacity: '10',
+  },
+  active: {
+    backgroundColor: '#f47607',
+    borderRadius: '5px 5px 5px 5px',
+    color: '#ffffff',
+    minWidth: '100px',
+    marginRight: '6px',
+    maxHeight: '40px',
+    minHeight: '40px',
+    marginLeft: '5px',
+  },
+  activeFont: {
     backgroundColor: '#f47607',
     borderRadius: '5px',
-    color: '#fff',
-},
-pR0: {
-  paddingRight: '0px',
-},
-},
-floatE: {
-  textAlign: 'center',
-  padding: '24px 0px !important',
-},
-mR10: {
-  marginRight: '10px',
- '& img:hover': {
-   borderRadius: '50%',
-   boxShadow: '0px 0px 2px 2px #f47607',
- },
-},
-sepHeight: {
-  borderLeft: '1px solid #cccccc',
-  height: '68px',
-},
-sepHeightTen: {
-  borderLeft: '1px solid #cccccc',
-  height: '10px',
-  verticalAlign:'middle',
-},
-textCenter: {
-  textAlign: 'right',
-  verticalAlign: 'middle',
-  padding: '20px 16px 12px 16px!important',
-},
-textLeftone: {
-  textAlign: 'left',
-  verticalAlign: 'middle',
-  padding: '16px!important',
-  minWidth: '19% !important',
-},
-pLtenPRten: {margin: '0px 10px 0px 10px',},
-buttonsNewDays: {
-  padding: '6px 5px 5px 6px', 
-  margin: '0px 10px',
-  minWidth: '38px',
-  backgroundColor: '#ffffff',
-  color: '#23343e',
-  borderRadius: '0px',
-  fontFamily: 'Montserrat-Medium',
-},
-WhiteBack: {
-  backgroundColor: '#ffffff',
-  padding: '13px 10px 5px 10px',
-},
-minWd55: {
-  minWidth: '55px !important',
-},
-navTabBack: {
-  backgroundColor: 'transparent',
-  marginTop: '13px',
-  '& .MuiTab-root': {
-    minWidth: '80px',
-    minHeight: '40px',
-    paddingLeft: '0px',
+    color: '#ffffff',
+    minWidth: '34px',
+    padding: '4px 5px 5px 4px',
   },
-  '& .MuiTab-wrapper': {
-    display: 'inline',
+  floatR: {
+    float: 'right',
+    marginTop: '18px',
+    marginRight: '20px',
+    '& .MuiButton-containedPrimary:hover': {
+      backgroundColor: '#f47607',
+      borderRadius: '5px',
+      color: '#fff',
+    },
+    pR0: {
+      paddingRight: '0px',
+    },
+  },
+  floatE: {
+    textAlign: 'center',
+    padding: '24px 0px !important',
+  },
+  mR10: {
+    marginRight: '10px',
+    '& img:hover': {
+      borderRadius: '50%',
+      boxShadow: '0px 0px 2px 2px #f47607',
+    },
+  },
+  sepHeight: {
+    borderLeft: '1px solid #cccccc',
+    height: '68px',
+  },
+  sepHeightTen: {
+    borderLeft: '1px solid #cccccc',
+    height: '10px',
+    verticalAlign: 'middle',
+  },
+  textCenter: {
+    textAlign: 'right',
+    verticalAlign: 'middle',
+    padding: '20px 16px 12px 16px!important',
+  },
+  textLeftone: {
     textAlign: 'left',
+    verticalAlign: 'middle',
+    padding: '16px!important',
+    minWidth: '19% !important',
+  },
+  pLtenPRten: { margin: '0px 10px 0px 10px', },
+  buttonsNewDays: {
+    padding: '6px 5px 5px 6px',
+    margin: '0px 10px',
+    minWidth: '38px',
+    backgroundColor: '#ffffff',
+    color: '#23343e',
+    borderRadius: '0px',
+    fontFamily: 'Montserrat-Medium',
+  },
+  WhiteBack: {
+    backgroundColor: '#ffffff',
+    padding: '13px 10px 5px 10px',
+  },
+  minWd55: {
+    minWidth: '55px !important',
+  },
+  navTabBack: {
+    backgroundColor: 'transparent',
+    marginTop: '13px',
+    '& .MuiTab-root': {
+      minWidth: '80px',
+      minHeight: '40px',
+      paddingLeft: '0px',
+    },
+    '& .MuiTab-wrapper': {
+      display: 'inline',
+      textAlign: 'left',
+      fontWeight: '600',
+    },
+    '& .MuiTab-textColorInherit.Mui-selected': {
+      backgroundColor: '#f47607',
+      borderRadius: '5px 5px 5px 5px',
+      color: '#ffffff',
+      minWidth: '100px',
+      marginRight: '6px',
+      maxHeight: '40px',
+      minHeight: '40px',
+      marginLeft: '5px',
+    },
+    '& .MuiTab-textColorInherit': {
+      backgroundColor: '#06425c',
+      borderRadius: '5px 5px 5px 5px',
+      color: '#ffffff',
+      minWidth: '100px',
+      marginRight: '6px',
+      maxHeight: '40px',
+      minHeight: '40px',
+      marginLeft: '5px',
+      padding: '10px',
+    },
+    '& .MuiTab-labelIcon .MuiTab-wrapper > *:first-child': {
+      marginBottom: '3px',
+      marginRight: '5px',
+    },
+  },
+  Lheight: {
+    lineHeight: '65px',
+    float: 'right',
+    marginRight: '15px',
+  },
+  pLThirty: {
+    paddingLeft: '30px',
+    color: '#23343e',
     fontWeight: '600',
+    '& svg:not(:root)': {
+      overflow: 'hidden',
+      marginRight: '5px',
+    },
+    iconSize: { height: '40px' },
+    pLTen: {
+      paddingLeft: '10px',
+    },
+    paddLRzero: {
+      padding: '0px 0px 24px 0px',
+      '& .MuiBox-root': {
+        padding: '0px',
+      },
+    },
   },
-  '& .MuiTab-textColorInherit.Mui-selected': {
-    backgroundColor: '#f47607',
-    borderRadius: '5px 5px 5px 5px',
-    color: '#ffffff',
-    minWidth: '100px',
-    marginRight: '6px',
-    maxHeight: '40px',
-    minHeight: '40px',
-    marginLeft: '5px',
+  statusIconBox: {
+    textAlign: 'center',
+    padding: '24px 0px !important',
+    ['@media (max-width:800px)']: {
+      padding: '0px 0px 25px 0px !important',
+    },
+    ['@media (max-width:480px)']: {
+      padding: '12px 0px 25px 16px !important',
+      textAlign: 'left',
+    },
   },
-  '& .MuiTab-textColorInherit': {
-    backgroundColor: '#06425c',
-    borderRadius: '5px 5px 5px 5px',
-    color: '#ffffff',
-    minWidth: '100px',
-    marginRight: '6px',
-    maxHeight: '40px',
-    minHeight: '40px',
-    marginLeft: '5px',
-    padding: '10px',
-  },
-  '& .MuiTab-labelIcon .MuiTab-wrapper > *:first-child': {
-    marginBottom: '3px',
-    marginRight: '5px',
-  },
-},
-Lheight: {
-  lineHeight: '65px',
-  float: 'right',
-  marginRight: '15px',
-},
-pLThirty: {
-  paddingLeft: '30px',
-  color: '#23343e',
-  fontWeight: '600',
-  '& svg:not(:root)': {
-    overflow: 'hidden',
-    marginRight: '5px',
-},
-iconSize: {height: '40px'},
-pLTen: {
-  paddingLeft: '10px',
-},
-paddLRzero: {
-  padding: '0px 0px 24px 0px',
-  '& .MuiBox-root': {
-    padding: '0px',
-  },
-},
-},
-statusIconBox: {
-  textAlign: 'center',
-  padding: '24px 0px !important',
-  ['@media (max-width:800px)']: { 
-    padding: '0px 0px 25px 0px !important',
-  },
-  ['@media (max-width:480px)']: { 
-    padding: '12px 0px 25px 16px !important',
-    textAlign: 'left',
-  },
-},
   filterIcon: {
     color: theme.palette.primary.dark,
     fontSize: '1.8rem',
@@ -364,15 +364,15 @@ function ObservationsList(props) {
 
   // const [searchIncident, setSeacrhIncident] = useState("")
   // const [status, setStatus] = useState('')
-  const [obs , setObs] = useState("My Observation")
+  const [obs, setObs] = useState("My Observation")
 
   const handleButtonChange = (event, newValue) => {
     setValue(newValue);
-    if(newValue === 0){
+    if (newValue === 0) {
       setObs("My Observation")
       fetchInitialiObservation("My Observation")
       setIsLoading(false)
-    }else if(newValue === 1){
+    } else if (newValue === 1) {
       setObs("Big Picture")
       fetchInitialiObservation("Big Picture")
       setIsLoading(false)
@@ -389,7 +389,8 @@ function ObservationsList(props) {
   const handelViewTabel = (e) => {
     setListToggle(true);
   };
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(1);
+  const [order, setOrder] = useState('');
 
 
   const [value, setValue] = React.useState(0);
@@ -427,6 +428,7 @@ function ObservationsList(props) {
     rowsPerPage: 10,
     page: 0,
     pagination: false,
+    sort: false,
   };
 
 
@@ -460,31 +462,31 @@ function ObservationsList(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     // let observation  = observation === undefined ? "My Observation" : "";
-    if(props.observation === "My Observations"){
-    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`);
-    if (res.status === 200) {
-      const result = res.data.data.results.results
-      await setAllInitialData(result)
-      let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageData(res.data.data.results.count / 25)
-      await setTotalData(res.data.data.results.count)
-      await setPageCount(pageCount)
+    if (props.observation === "My Observations") {
+      const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`);
+      if (res.status === 200) {
+        const result = res.data.data.results.results
+        await setAllInitialData(result)
+        let pageCount = Math.ceil(res.data.data.results.count / 25)
+        await setPageData(res.data.data.results.count / 25)
+        await setTotalData(res.data.data.results.count)
+        await setPageCount(pageCount)
 
-      await setIsLoading(true)
-    }
-  }else{
+        await setIsLoading(true)
+      }
+    } else {
       const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
-    if (res.status === 200) {
-      const result = res.data.data.results.results
-      await setAllInitialData(result)
-      let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageData(res.data.data.results.count / 25)
-      await setTotalData(res.data.data.results.count)
-      await setPageCount(pageCount)
+      if (res.status === 200) {
+        const result = res.data.data.results.results
+        await setAllInitialData(result)
+        let pageCount = Math.ceil(res.data.data.results.count / 25)
+        await setPageData(res.data.data.results.count / 25)
+        await setTotalData(res.data.data.results.count)
+        await setPageCount(pageCount)
 
-      await setIsLoading(true)
+        await setIsLoading(true)
+      }
     }
-  }
   };
 
 
@@ -496,23 +498,23 @@ function ObservationsList(props) {
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
-   const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-        ? JSON.parse(localStorage.getItem('userDetails')).id
-        : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    if(props.observation === "My Observations"){
-    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}&page=${value}`);
-    await setAllInitialData(res.data.data.results.results);
-    await setPage(value)
-    }else{
+    if (props.observation === "My Observations") {
+      const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}&page=${value}`);
+      await setAllInitialData(res.data.data.results.results);
+      await setPage(value)
+    } else {
       const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}&page=${value}`);
-    await setAllInitialData(res.data.data.results.results);
-    await setPage(value)
+      await setAllInitialData(res.data.data.results.results);
+      await setPage(value)
     }
   };
 
@@ -531,19 +533,115 @@ function ObservationsList(props) {
   useEffect(() => {
     fetchInitialiObservation();
     // handleProjectList();
-  }, [props.projectName.breakDown,props.projectName.projectName, searchIncident , props.status]);
+  }, [props.projectName.breakDown, props.projectName.projectName, searchIncident, props.status]);
+
+  window.onclick = (e) => {
+    if (e.target.innerHTML.toLowerCase() === "reported on") {
+      order === "ascDate" ? setOrder("descDate") : setOrder("ascDate");
+    }
+    if (e.target.innerHTML.toLowerCase() === "type") {
+      order === "ascType" ? setOrder("descType") : setOrder("ascType");
+    }
+    if (e.target.innerHTML.toLowerCase() === "number") {
+      order === "ascNum" ? setOrder("descNum") : setOrder("ascNum");
+    }
+    if (e.target.innerHTML.toLowerCase() === "location") {
+      order === "ascLoc" ? setOrder("descLoc") : setOrder("ascLoc");
+    }
+    if (e.target.innerHTML.toLowerCase() === "reported by") {
+      order === "ascAud" ? setOrder("descAud") : setOrder("ascAud");
+    }
+  };
+
+  const SetDataOrder = () => {
+    let newdata;
+    if (order === "ascDate") {
+      newdata = allInitialData.slice().sort(function (a, b) {
+        return moment(a.createdAt) - moment(b.createdAt);
+      });
+      setAllInitialData(newdata);
+    } else if (order === "descDate") {
+      newdata = allInitialData.slice().sort(function (a, b) {
+        return moment(b.createdAt) - moment(a.createdAt);
+      });
+      setAllInitialData(newdata);
+    } else if (order === "ascType") {
+      newdata = allInitialData.slice().sort((a, b) => {
+        if (a.observationType < b.observationType) return -1;
+        if (a.observationType > b.observationType) return 1;
+        return 0;
+      });
+      setAllInitialData(newdata);
+    } else if (order === "descType") {
+      newdata = allInitialData.slice().sort((a, b) => {
+        if (a.observationType > b.observationType) return -1;
+        if (a.observationType < b.observationType) return 1;
+        return 0;
+      });
+      setAllInitialData(newdata);
+    } else if (order === "ascNum") {
+      newdata = allInitialData.slice().sort((a, b) => {
+        if (a.observationNumber < b.observationNumber) return -1;
+        if (a.observationNumber > b.observationNumber) return 1;
+        return 0;
+      });
+      setAllInitialData(newdata);
+    } else if (order === "descNum") {
+      newdata = allInitialData.slice().sort((a, b) => {
+        if (a.observationNumber > b.observationNumber) return -1;
+        if (a.observationNumber < b.observationNumber) return 1;
+        return 0;
+      });
+      setAllInitialData(newdata);
+    } else if (order === "ascLoc") {
+      newdata = allInitialData.slice().sort((a, b) => {
+        if (b.location === null) return -1;
+        if (a.location < b.location) return -1;
+        if (a.location > b.location) return 1;
+        return 0;
+      });
+      setAllInitialData(newdata);
+    } else if (order === "descLoc") {
+      newdata = allInitialData.slice().sort((a, b) => {
+        if (a.location === null) return -1;
+        if (a.location > b.location) return -1;
+        if (a.location < b.location) return 1;
+        return 0;
+      });
+      setAllInitialData(newdata);
+    } else if (order === "ascAud") {
+      newdata = allInitialData.slice().sort((a, b) => {
+        if (a.createdByName < b.createdByName) return -1;
+        if (a.createdByName > b.createdByName) return 1;
+        return 0;
+      });
+      setAllInitialData(newdata);
+    } else if (order === "descAud") {
+      newdata = allInitialData.slice().sort((a, b) => {
+        if (a.createdByName > b.createdByName) return -1;
+        if (a.createdByName < b.createdByName) return 1;
+        return 0;
+      });
+      setAllInitialData(newdata);
+    }
+  };
+
+  useEffect(() => {
+    console.log(order, "order");
+    SetDataOrder();
+  }, [order]);
 
   return (
     <>
       <Box>
-          {/* <ObservationSearchSection/> */}
-          {isLoading ? <>
+        {/* <ObservationSearchSection/> */}
+        {isLoading ? <>
           <TableContainer component={Paper}>
-          
-    
+
+
 
             <Grid component={Paper}>
-            
+
               <MUIDataTable
                 data={Object.entries(allInitialData).map((item) => [
                   item[1]["observationNumber"],
@@ -565,10 +663,10 @@ function ObservationsList(props) {
               <Pagination count={pageCount} page={page} onChange={handleChange} />
             </div>
           </TableContainer>
-          </> 
+        </>
           :
-          <Loader/>
-          } 
+          <Loader />
+        }
       </Box>
     </>
   );

@@ -346,35 +346,101 @@ function Actions(props) {
   ]);
 
   window.onclick = (e) => {
-    console.log(e.target.innerHTML);
-    if (e.target.innerHTML === "Audited On") {
-      order === 'ascDate' ? setOrder('descDate') : setOrder('ascDate');
+    if (e.target.innerHTML.toLowerCase() === "audited on") {
+      order === "ascDate" ? setOrder("descDate") : setOrder("ascDate");
     }
-    if (e.target.innerHTML === "Location") {
-      order === 'ascLoc' ? setOrder('descLoc') : setOrder('ascLoc');
+    if (e.target.innerHTML.toLowerCase() === "type") {
+      order === "ascType" ? setOrder("descType") : setOrder("ascType");
     }
-  }
-
+    if (e.target.innerHTML.toLowerCase() === "number") {
+      order === "ascNum" ? setOrder("descNum") : setOrder("ascNum");
+    }
+    if (e.target.innerHTML.toLowerCase() === "location") {
+      order === "ascLoc" ? setOrder("descLoc") : setOrder("ascLoc");
+    }
+    if (e.target.innerHTML.toLowerCase() === "audited by") {
+      order === "ascAud" ? setOrder("descAud") : setOrder("ascAud");
+    }
+  };
 
   const SetDataOrder = () => {
     let newdata;
-    if (order === 'ascDate') {
+    if (order === "ascDate") {
       newdata = allComplianceData.slice().sort(function (a, b) {
         return moment(a.auditDateTime) - moment(b.auditDateTime);
-      })
+      });
       setAllComplianceData(newdata);
-    } else if (order === 'descDate') {
+    } else if (order === "descDate") {
       newdata = allComplianceData.slice().sort(function (a, b) {
         return moment(b.auditDateTime) - moment(a.auditDateTime);
-      })
-      setAllComplianceData(newdata)
-    } 
-  }
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "ascType") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.auditType < b.auditType) return -1;
+        if (a.auditType > b.auditType) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "descType") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.auditType > b.auditType) return -1;
+        if (a.auditType < b.auditType) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "ascNum") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.auditNumber < b.auditNumber) return -1;
+        if (a.auditNumber > b.auditNumber) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "descNum") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.auditNumber > b.auditNumber) return -1;
+        if (a.auditNumber < b.auditNumber) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "ascLoc") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (b.area === null) return -1;
+        if (a.area < b.area) return -1;
+        if (a.area > b.area) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "descLoc") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.area === null) return -1;
+        if (a.area > b.area) return -1;
+        if (a.area < b.area) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "ascAud") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.createdByName < b.createdByName) return -1;
+        if (a.createdByName > b.createdByName) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    } else if (order === "descAud") {
+      newdata = allComplianceData.slice().sort((a, b) => {
+        if (a.createdByName > b.createdByName) return -1;
+        if (a.createdByName < b.createdByName) return 1;
+        return 0;
+      });
+      setAllComplianceData(newdata);
+    }
+  };
 
   useEffect(() => {
     console.log(order, "order");
     SetDataOrder();
   }, [order]);
+
 
   return (
     <>
