@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
+import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
 
 const useStyles = makeStyles((theme) => ({
   mLeftR5: {
@@ -51,6 +52,10 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     padding: "20px 15px",
   },
+  commentLink: {
+    marginLeft: "2px",
+    cursor: "pointer",
+  },
 }));
 
 const CardFooter = (props) => {
@@ -72,6 +77,24 @@ const CardFooter = (props) => {
             <Typography variant="body2" display="inline">
               {props.files !== null ? <>{props.files}</> : 0}
             </Typography>
+            <span item xs={1} className={classes.sepHeightTen} />
+            <Typography
+              variant="body1"
+              display="inline"
+              color="textPrimary"
+              className={classes.mLeft}
+            >
+              <InsertCommentOutlinedIcon className={classes.mright5} />
+              Comments:
+            </Typography>
+            <Link
+              // onClick={handleVisibilityComments}
+              color="secondary"
+              aria-haspopup="true"
+              className={classes.commentLink}
+            >
+              {props.commentsCount}
+            </Link>
           </Grid>
 
           <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
