@@ -353,6 +353,11 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
+  dataTableSectionDesign: {
+    "& th > div": {
+      cursor: "pointer",
+    },
+  },
 }));
 
 function a11yProps(index) {
@@ -370,7 +375,6 @@ function ObservationsList(props) {
   // const [searchIncident, setSeacrhIncident] = useState("")
   // const [status, setStatus] = useState('')
   const [obs, setObs] = useState("My Observation");
-  const [order, setOrder] = useState("");
 
   const handleButtonChange = (event, newValue) => {
     setValue(newValue);
@@ -396,6 +400,7 @@ function ObservationsList(props) {
     setListToggle(true);
   };
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState("");
 
   const [value, setValue] = React.useState(0);
 

@@ -41,6 +41,7 @@ import CardView from "../../Card/CardView";
 
 const UserDetailsView = lazy(() => import("../../UserDetails/UserDetail"));
 const Loader = lazy(() => import("../Loader"));
+import Delete from "../../Delete/Delete";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -502,8 +503,8 @@ function Actions(props) {
 
   const handleSummaryPush = async (index) => {
     const itemid = index;
-    localStorage.setItem("fkobservationId", index);
-    const filtered = allInitialData.filter(one => one.id === index);
+    localStorage.setItem("fkobservationId", itemid);
+    const filtered = allInitialData.filter((one) => one.id === index);
     if (filtered[0].isCorrectiveActionTaken !== null) {
       localStorage.setItem("action", "Done");
     } else {
@@ -513,7 +514,7 @@ function Actions(props) {
   };
 
   const fetchInitialiObservation = async () => {
-    await setPage(1);
+    setPage(1);
 
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
     const fkProjectId =
@@ -523,8 +524,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -652,8 +653,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -836,9 +837,9 @@ function Actions(props) {
               });
             }
           })
-          .catch((error) => { });
+          .catch((error) => {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   const classes = useStyles();
 
@@ -882,6 +883,485 @@ function Actions(props) {
     checkDeletePermission,
   ]);
 
+  const AllCardData = ({ item, index }) => {
+    const [showGrid, setShowGrid] = useState(false);
+    const [hidden, setHidden] = useState(false);
+    const [hiddenn, setHiddenn] = useState(false);
+    const [commentsOpen, setCommentsOpen] = useState(false);
+    const [commentData, setCommentData] = useState("");
+
+    const addComments = (event) => {
+      console.log(event.target.value);
+      setCommentData(event.target.value);
+    };
+
+    const handleSendComments = async () => {
+      const commentPayload = {
+        fkCompanyId: item.fkCompanyId,
+        fkProjectId: item.fkProjectId,
+        commentContext: "observations",
+        contextReferenceIds: item.id,
+        commentTags: "",
+        comment: commentData,
+        parent: 0,
+        thanksFlag: 0,
+        status: "Active",
+        createdBy: item.createdBy,
+      };
+      if (commentData) {
+        console.log(api, "apiiiiiiii");
+        await api
+          .post("/api/v1/comments/", commentPayload)
+          .then((res) => {
+            // handleCommentsClose();
+            fetchInitialiObservation();
+          })
+          .catch((err) => console.log(err));
+      }
+    };
+
+    const deleteItem = {
+      ...item,
+      status: "Delete",
+    };
+
+    const handleVisibility = () => {
+      setShowGrid(true);
+      setHidden(!hidden);
+    };
+
+    const handleAttachClose = () => {
+      setShowGrid(false);
+    };
+
+    const handleAttachClick = () => {
+      setShowGrid(!open);
+    };
+
+    const handleAttachOpen = () => {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    };
+
+    const handleVisibilityComments = () => {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
+    };
+
+    const handleCommentsClick = () => {
+      setCommentsOpen(!open);
+    };
+
+    const handleCommentsOpen = () => {
+      if (!hiddenn) {
+        setCommentsOpen(true);
+      }
+    };
+
+    const handleCommentsClose = () => {
+      setCommentsOpen(false);
+    };
+
+    return (
+      <>
+        {/* <Card variant="outlined" className={classes.card}>
+          <CardContent>
+            <Grid container spacing={3} className={classes.cardContentSection}>
+              <Grid
+                item
+                md={2}
+                sm={4}
+                xs={12}
+                className={classes.userPictureBox}
+              >
+                <Button
+                  className={classes.floatR}
+                  onClick={(e) => handleMyUserPClickOpen(e)}
+                >
+                  <img
+                    src={item.avatar !== null ? item.avatar : paceLogoSymbol}
+                    className={classes.userImage}
+                  />{" "}
+                  {item.username ? item.username : "Admin"}
+                </Button>
+              </Grid>
+              <Link
+                onClick={() => handleSummaryPush(index)}
+                className={classes.cardLinkAction}
+              >
+                <Grid item xs={12}>
+                  <Grid container spacing={3} alignItems="flex-start">
+                    <Grid
+                      item
+                      sm={12}
+                      xs={12}
+                      className={classes.listHeadColor}
+                    >
+                      <Grid container spacing={3} alignItems="flex-start">
+                        <Grid
+                          item
+                          md={10}
+                          sm={8}
+                          xs={12}
+                          className={classes.pr0}
+                        >
+                          <Typography className={classes.title} variant="h6">
+                            {item.observationDetails}
+                          </Typography>
+                          <Typography
+                            display="inline"
+                            className={classes.listingLabelName}
+                          >
+                            Number:{" "}
+                            <span>
+                              <Link
+                                onClick={() => handleSummaryPush(index)}
+                                variant="h6"
+                                className={classes.mLeftfont}
+                              >
+                                <span className={classes.listingLabelValue}>
+                                  {item.observationNumber}
+                                </span>
+                              </Link>
+                            </span>
+                          </Typography>
+                          <span item xs={1} className={classes.sepHeightOne} />
+                          <Typography
+                            variant="body1"
+                            gutterBottom
+                            display="inline"
+                            color="textPrimary"
+                            className={classes.listingLabelName}
+                          >
+                            Assignee:{" "}
+                            <span className={classes.listingLabelValue}>
+                              {item.assigneeName ? item.assigneeName : "-"}
+                            </span>
+                            <span
+                              item
+                              xs={1}
+                              className={classes.sepHeightOne}
+                            />
+                            Stage:{" "}
+                            <span className={classes.listingLabelValue}>
+                              {item.observationStage
+                                ? item.observationStage
+                                : "-"}{" "}
+                              {item.observationStage === "Completed" && (
+                                <img
+                                  src={completed_small}
+                                  className={classes.smallImage}
+                                />
+                              )}
+                              {item.observationStage === "Planned" && (
+                                <img
+                                  src={in_progress_small}
+                                  className={classes.smallImage}
+                                />
+                              )}{" "}
+                              {item.observationStage === "Open" && (
+                                <img
+                                  src={preplanning}
+                                  className={classes.smallImage}
+                                />
+                              )}{" "}
+                            </span>
+                            <span
+                              item
+                              xs={1}
+                              className={classes.sepHeightOne}
+                            />
+                            Status:{" "}
+                            <span className={classes.listingLabelValue}>
+                              {item.observationStatus
+                                ? item.observationStatus
+                                : "-"}
+                            </span>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <Grid container spacing={3}>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        gutterBottom
+                        color="textPrimary"
+                        className={classes.listingLabelName}
+                      >
+                        Type:
+                      </Typography>
+
+                      <Typography
+                        gutterBottom
+                        className={classes.listingLabelValue}
+                      >
+                        {item.observationType}
+                      </Typography>
+                    </Grid>
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Location:
+                      </Typography>
+                      <Typography className={classes.listingLabelValue}>
+                        {item.location ? item.location : "-"}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Reported on:
+                      </Typography>
+
+                      <Typography className={classes.listingLabelValue}>
+                        {moment(item.createdAt).format(
+                          "Do MMMM YYYY, h:mm:ss a"
+                        )}{" "}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item md={3} sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Observed By:
+                      </Typography>
+
+                      <Typography className={classes.listingLabelValue}>
+                        {item.reportedByName ? item.reportedByName : "Admin"}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Link>
+            </Grid>
+          </CardContent>
+          <Divider />
+          <CardActions className={Incidents.cardActions}>
+            <Grid container spacing={2} justify="flex-end" alignItems="left">
+              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                <span className={classes.margT10}>
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
+                  >
+                    <AttachmentIcon className={classes.mright5} />
+                    Attachments:
+                  </Typography>
+
+                  <Link
+                    onClick={item.attachmentCount && handleVisibility}
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={
+                      item.attachmentCount ? classes.commentLink : classes.mLeft
+                    }
+                  >
+                    {item.attachmentCount}
+                  </Link>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
+                    className={classes.mLeft}
+                  >
+                    <InsertCommentOutlinedIcon className={classes.mright5} />
+                    Comments:
+                  </Typography>
+                  <Link
+                    onClick={handleVisibilityComments}
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={classes.commentLink}
+                  >
+                    {item.commentsCount}
+                  </Link>
+                </span>
+              </Grid>
+
+              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
+                <span item xs={1} className={classes.sepHeightTen} />
+                <Typography variant="body1" display="inline">
+                  <Delete
+                    deleteUrl={`/api/v1/observations/${item.id}/`}
+                    afterDelete={fetchInitialiObservation}
+                    axiosObj={api}
+                    item={deleteItem}
+                    loader={setIsLoading}
+                    loadingFlag={false}
+                    deleteMsg="Are you sure you want to delete this iCare?"
+                    yesBtn="Yes"
+                    noBtn="No"
+                  />
+                </Typography>
+              </Grid>
+            </Grid>
+          </CardActions>
+        </Card> */}
+        <CardView
+          cardTitle={item.observationDetails}
+          avatar={item.avatar}
+          username={item.username}
+          itemId={item.id}
+          headerFields={[
+            { label: "Number", value: item.observationNumber },
+            { label: "Assignee", value: "" },
+            { label: "Stage", value: item.observationStage },
+            { label: "Status", value: item.observationStatus },
+          ]}
+          bodyFields={[
+            { label: "Type", value: item.observationType },
+            { label: "Location", value: item.location },
+            {
+              label: "Created On",
+              value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+            },
+            { label: "Created By", value: item.createdByName },
+          ]}
+          deleteFields={{
+            deleteUrl: `/api/v1/observations/${item.id}/`,
+            afterDelete: () => {
+              fetchInitialiObservation();
+            },
+            axiosObj: api,
+            item: deleteItem,
+            loader: setIsLoading,
+            loadingFlag: false,
+            deleteMsg: "Are you sure you want to delete this iCare?",
+            yesBtn: "Yes",
+            noBtn: "No",
+          }}
+          handleVisibilityComments={() => handleVisibilityComments()}
+          files={item.files !== null ? item.files.length : 0}
+          commentsCount={item.commentsCount}
+          handleSummaryPush={(i) => {
+            handleSummaryPush(i);
+          }}
+          checkDeletePermission={checkDeletePermission}
+        />
+        {/* {item.attachmentCount !== null ? (
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            hidden={!hidden}
+            onBlur={handleAttachClose}
+            onClick={handleAttachClick}
+            onClose={handleAttachClose}
+            onFocus={handleAttachOpen}
+            onMouseEnter={handleAttachOpen}
+            onMouseLeave={handleAttachClose}
+            open={showGrid}
+            className="paddTBRemove attactmentShowSection"
+          >
+            <Paper elevation={1} className="cardSectionBottom">
+              <Grid container spacing={3}>
+                <Grid item md={12} sm={12} xs={12}>
+                  <List>
+                    <ListItem>
+                      <Grid item md={12} sm={12} xs={12}>
+                        <div className="attachFileThumb">
+                          <Attachment
+                            src={item.attachment}
+                            value={item.attachment}
+                          />
+                        </div>
+                      </Grid>
+                    </ListItem>
+                  </List>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+        ) : (
+          ""
+        )} */}
+
+        <div>
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            hidden={!hiddenn}
+            onBlur={handleCommentsClose}
+            onClick={handleCommentsClick}
+            onClose={handleCommentsClose}
+            onFocus={handleCommentsOpen}
+            onMouseEnter={handleCommentsOpen}
+            onMouseLeave={handleCommentsClose}
+            open={commentsOpen}
+            className="commentsShowSection"
+          >
+            <Paper elevation={1} className="paperSection">
+              <Grid container spacing={3}>
+                <Grid item md={12} xs={12}>
+                  <Box padding={3}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <TextField
+                          multiline
+                          variant="outlined"
+                          rows="1"
+                          id="JobTitle"
+                          label="Add your comments here"
+                          className="formControl"
+                          value={commentData}
+                          onChange={(e) => addComments(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          className="spacerRight buttonStyle"
+                          disableElevation
+                          onClick={handleSendComments}
+                        >
+                          Respond
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          size="small"
+                          className="custmCancelBtn buttonStyle"
+                          disableElevation
+                        >
+                          Cancel
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
       <Box>
@@ -894,75 +1374,7 @@ function Actions(props) {
                     {Object.keys(allInitialData).length > 0 ? (
                       Object.entries(allInitialData).map((item, index) => (
                         <>
-                          <CardView
-                            cardTitle={item[1].observationDetails}
-                            avatar={item[1].avatar}
-                            username={item[1].username}
-                            itemId={item[1].id}
-                            headerFields={[
-                              { label: "Number", value: item[1].observationNumber },
-                              { label: "Assignee", value: "" },
-                              { label: "Stage", value: item[1].observationStage },
-                              { label: "Status", value: item[1].observationStatus },
-                            ]}
-                            bodyFields={[
-                              { label: "Type", value: item[1].observationType },
-                              { label: "Location", value: item[1].location },
-                              {
-                                label: "Created On",
-                                value: moment(item[1].createdAt).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                ),
-                              },
-                              { label: "Created By", value: item[1].createdByName },
-                            ]}
-                            files={item[1].files !== null ? item[1].files.length : 0}
-                            handleSummaryPush={(i) => {
-                              handleSummaryPush(i);
-                            }}
-                            checkDeletePermission={checkDeletePermission}
-                            handleDelete={() => {
-                              handleDelete(item);
-                            }}
-                          />
-                          {attachIndex === index &&
-                            item[1].attachmentCount !== 0 ? (
-                            <Grid
-                              item
-                              md={12}
-                              sm={12}
-                              xs={12}
-                              hidden={!hidden}
-                              onBlur={handleAttachClose}
-                              onClick={handleAttachClick}
-                              onClose={handleAttachClose}
-                              onFocus={handleAttachOpen}
-                              onMouseEnter={handleAttachOpen}
-                              onMouseLeave={handleAttachClose}
-                              open={attachOpen}
-                              className="paddTBRemove attactmentShowSection"
-                            >
-                              <Paper elevation={1} className="paperSection">
-                                <Grid container spacing={3}>
-                                  <Grid item md={12} sm={12} xs={12}>
-                                    <List>
-                                      <ListItem>
-                                        <img
-                                          src={allInitialData[index].attachment}
-                                          onClick={() =>
-                                            handleClickOpenAttachment(
-                                              allInitialData[index].attachment
-                                            )
-                                          }
-                                          className="hoverIcon"
-                                        />
-                                      </ListItem>
-                                    </List>
-                                  </Grid>
-                                </Grid>
-                              </Paper>
-                            </Grid>
-                          ) : null}
+                          <AllCardData item={item[1]} index={index} />
                         </>
                       ))
                     ) : (

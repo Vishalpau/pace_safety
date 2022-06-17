@@ -83,6 +83,8 @@ import StatusFilter from "./StatusFilter";
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
 import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
+import Delete from "../../Delete/Delete";
+import Attachment from "../../Attachment/Attachment";
 import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
@@ -636,6 +638,11 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
+  dataTableSectionDesign: {
+    "& th > div": {
+      cursor: "pointer",
+    },
+  },
   topNavTabBack: {
     backgroundColor: "transparent",
     color: "black",
@@ -719,6 +726,7 @@ function xflha(props) {
   };
 
   const handleSummaryPush = async (id) => {
+    console.log(id, "iddddddddd");
     localStorage.setItem("flhaId", id);
     history.push("/app/pages/assesments/flhasummary/" + id);
   };
@@ -747,63 +755,7 @@ function xflha(props) {
     "Approved date",
     "Approved by",
   ];
-  const data = [
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-  ];
+
   const options = {
     filterType: "dropdown",
     responsive: "vertical",
@@ -839,8 +791,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -873,7 +825,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function () {
+    function() {
       clearTimeout(timer);
 
       timer = setTimeout(() => setSeacrhFlha(v), d);
@@ -1017,9 +969,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => { });
+          .catch((error) => {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handleChange = async (event, value) => {
@@ -1031,8 +983,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1124,23 +1076,23 @@ function xflha(props) {
   const SetDataOrder = () => {
     let newdata;
     if (order === "ascDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         return moment(a.createdAt) - moment(b.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "descDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         return moment(b.createdAt) - moment(a.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "ascAppDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
       setFlhas(newdata);
     } else if (order === "descAppDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
@@ -1226,6 +1178,578 @@ function xflha(props) {
     console.log(order, "order");
     SetDataOrder();
   }, [order]);
+
+  /*********************all card data***************************************/
+
+  const AllCardData = ({ item, index }) => {
+    const [showGrid, setShowGrid] = useState(false);
+    const [hidden, setHidden] = useState(false);
+
+    const [commentsOpen, setCommentsOpen] = useState(false);
+    const [hiddenn, setHiddenn] = useState(false);
+    const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+    const [commentData, setCommentData] = useState("");
+
+    const deleteItem = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      jobTitle: item.jobTitle,
+      jobDetails: item.jobDetails,
+      status: "Delete",
+    };
+
+    const addComments = (event) => {
+      setCommentData(event.target.value);
+    };
+
+    const handleSendComments = async () => {
+      console.log(commentData, "comments");
+      const commentPayload = {
+        fkCompanyId: item.fkCompanyId,
+        fkProjectId: item.fkProjectId,
+        commentContext: "flha",
+        contextReferenceIds: item.id,
+        commentTags: "",
+        comment: commentData,
+        parent: 0,
+        thanksFlag: 0,
+        status: "Active",
+        createdBy: item.createdBy,
+      };
+      if (commentData) {
+        await api
+          .post("/api/v1/comments/", commentPayload)
+          .then((res) => {
+            // handleCommentsClose()
+            fetchData();
+          })
+          .catch((err) => console.log(err));
+      }
+    };
+
+    const handleChangeOne = (event, newValue) => {
+      setValue(newValue);
+    };
+
+    const handleVisibility = () => {
+      setShowGrid(true);
+      setHidden(!hidden);
+    };
+
+    const handleAttachClose = () => {
+      setShowGrid(false);
+    };
+
+    const handleAttachClick = () => {
+      setShowGrid(!open);
+    };
+
+    const handleAttachOpen = () => {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    };
+
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
+    }
+
+    const handleMyUserPClickOpen = () => {
+      setMyUserPOpen(true);
+    };
+
+    const handleMyUserPClose = () => {
+      setMyUserPOpen(false);
+    };
+
+    return (
+      // <Box>
+      <Grid className={classes.marginTopBottom}>
+        <div className="gridView">
+          {/* <Card variant="outlined" className={classes.card}>
+            <CardContent>
+              <Grid
+                container
+                spacing={3}
+                className={classes.cardContentSection}
+              >
+                <Grid
+                  item
+                  md={2}
+                  sm={4}
+                  xs={12}
+                  className={classes.userPictureBox}
+                >
+                  <Button className={classNames(classes.floatR)}>
+                    <img
+                      src={item.avatar !== null ? item.avatar : paceLogoSymbol}
+                      className={classes.userImage}
+                    />{" "}
+                    {item.username}
+                  </Button>
+                </Grid>
+                <Link
+                  onClick={() => handleFlhaSummaryPush(item.id)}
+                  className={classes.cardLinkAction}
+                >
+                  <Grid item xs={12}>
+                    <Grid container spacing={3} alignItems="flex-start">
+                      <Grid
+                        item
+                        sm={12}
+                        xs={12}
+                        className={classes.listHeadColor}
+                      >
+                        <Grid container spacing={3} alignItems="flex-start">
+                          <Grid
+                            item
+                            md={10}
+                            sm={12}
+                            xs={12}
+                            className={classes.pr0}
+                          >
+                            <Typography className={classes.title} variant="h6">
+                              {item.jobTitle}
+                            </Typography>
+                            <Typography
+                              display="inline"
+                              className={classes.listingLabelName}
+                            >
+                              Number:{" "}
+                              <span>
+                                <Link
+                                  href={`/app/pages/assesments/flhasummary/${item.id
+                                    }`}
+                                  variant="h6"
+                                  className={classes.mLeftfont}
+                                >
+                                  <span className={classes.listingLabelValue}>
+                                    {item.flhaNumber}
+                                  </span>
+                                </Link>
+                              </span>
+                            </Typography>
+                            <span
+                              item
+                              xs={1}
+                              className={classes.sepHeightOne}
+                            />
+                            <Typography
+                              variant="body1"
+                              gutterBottom
+                              display="inline"
+                              color="textPrimary"
+                              className={classes.listingLabelName}
+                            >
+                              Category:{" "}
+                              <span className={classes.listingLabelValue}>
+                                FLHA
+                              </span>
+                            </Typography>
+                            <span
+                              item
+                              xs={1}
+                              className={classes.sepHeightOne}
+                            />
+                            <Typography
+                              variant="body1"
+                              gutterBottom
+                              display="inline"
+                              color="textPrimary"
+                              className={classes.listingLabelName}
+                            >
+                              Stage:{" "}
+                              <span className={classes.listingLabelValue}>
+                                {item.flhaStage}{" "}
+                                <img
+                                  src={draft_small}
+                                  className={classes.smallImage}
+                                />
+                              </span>
+                              <span
+                                item
+                                xs={1}
+                                className={classes.sepHeightOne}
+                              />
+                              Status:{" "}
+                              <span className="listingLabelValue statusColor_complete">
+                                {item.flhaStatus}
+                              </span>
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+                  <Grid item sm={12} xs={12}>
+                    <Grid container spacing={3}>
+                      <Grid item md={3} sm={6} xs={12}>
+                        <Typography
+                          variant="body1"
+                          color="textPrimary"
+                          gutterBottom
+                          className={classes.listingLabelName}
+                        >
+                          Created on:
+                        </Typography>
+
+                        <Typography className={classes.listingLabelValue}>
+                          {moment(item.createdAt).format(
+                            "Do MMMM YYYY, h:mm:ss a"
+                          )}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item md={3} sm={6} xs={12}>
+                        <Typography
+                          variant="body1"
+                          color="textPrimary"
+                          gutterBottom
+                          className={classes.listingLabelName}
+                        >
+                          Created by:
+                        </Typography>
+
+                        <Typography className={classes.listingLabelValue}>
+                          {item.createdByName}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Link>
+              </Grid>
+            </CardContent>
+            <Divider />
+            <CardActions className={Incidents.cardActions}>
+              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                <span className={classes.margT10}>
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
+                  >
+                    <AttachmentIcon className={classes.mright5} />
+                    Attachments:
+                  </Typography>
+
+                  <Link
+                    onClick={item.attachmentCount && handleVisibility}
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={
+                      item.attachmentCount ? classes.commentLink : classes.mLeft
+                    }
+                  >
+                    {item.attachmentCount}
+                  </Link>
+
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
+                    className={classes.mLeft}
+                  >
+                    <InsertCommentOutlinedIcon className={classes.mright5} />
+                    Comments:
+                  </Typography>
+                  <Link
+                    onClick={handleVisibilityComments}
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={classes.commentLink}
+                  >
+                    {item.commentsCount}
+                  </Link>
+                </span>
+              </Grid>
+              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
+                <span item xs={1} className={classes.sepHeightTen} />
+                <Typography variant="body1" display="inline">
+                  <Delete
+                    deleteUrl={`/api/v1/flhas/${item.id}/`}
+                    afterDelete={fetchData}
+                    axiosObj={api}
+                    item={deleteItem}
+                    loader={setIsLoading}
+                    loadingFlag={false}
+                    deleteMsg="Are you sure you want to delete this FLHA?"
+                    yesBtn="Yes"
+                    noBtn="No"
+                  />
+                </Typography>
+              </Grid>
+            </CardActions>
+          </Card> */}
+
+          <CardView
+            cardTitle={item.jobTitle}
+            avatar={item.avatar}
+            username={item.username}
+            itemId={item.id}
+            headerFields={[
+              { label: "Number", value: item.flhaNumber },
+              { label: "Category", value: "FLHA" },
+              { label: "Stage", value: item.flhaStage },
+              { label: "Status", value: item.flhaStatus },
+            ]}
+            bodyFields={[
+              {
+                label: "Created On",
+                value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+              },
+              { label: "Created By", value: item.createdByName },
+            ]}
+            deleteFields={{
+              deleteUrl: `/api/v1/flhas/${item.id}/`,
+              afterDelete: () => {
+                fetchData();
+              },
+              axiosObj: api,
+              item: deleteItem,
+              loader: setIsLoading,
+              loadingFlag: false,
+              deleteMsg: "Are you sure you want to delete this FLHA?",
+              yesBtn: "Yes",
+              noBtn: "No",
+            }}
+            handleVisibilityComments={() => handleVisibilityComments()}
+            files={item.attachmentCount}
+            commentsCount={item.commentsCount}
+            handleSummaryPush={(i) => {
+              handleSummaryPush(i);
+            }}
+            checkDeletePermission={checkDeletePermission}
+          />
+
+          {item.attachmentCount ? (
+            <Grid
+              item
+              md={12}
+              sm={12}
+              xs={12}
+              hidden={!hidden}
+              onBlur={handleAttachClose}
+              onClick={handleAttachClick}
+              onClose={handleAttachClose}
+              onFocus={handleAttachOpen}
+              onMouseEnter={handleAttachOpen}
+              onMouseLeave={handleAttachClose}
+              open={attachOpen}
+              className="paddTBRemove attactmentShowSection"
+            >
+              <Paper elevation={1} className="cardSectionBottom">
+                <Grid container spacing={3}>
+                  <Grid item md={12} sm={12} xs={12}>
+                    <List>
+                      <ListItem>
+                        <Grid item md={12} sm={12} xs={12}>
+                          <div className="attachFileThumb">
+                            <Attachment
+                              src={item.attachment}
+                              value={item.attachment}
+                            />
+                          </div>
+                        </Grid>
+                      </ListItem>
+                    </List>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          ) : (
+            ""
+          )}
+        </div>
+        <Grid
+          item
+          md={12}
+          sm={12}
+          xs={12}
+          hidden={!hiddenn}
+          onBlur={handleCommentsClose}
+          onClick={handleCommentsClick}
+          onClose={handleCommentsClose}
+          onFocus={handleCommentsOpen}
+          onMouseEnter={handleCommentsOpen}
+          onMouseLeave={handleCommentsClose}
+          open={commentsOpen}
+          className="commentsShowSection"
+        >
+          <Paper elevation={1} className="paperSection">
+            <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                {/* <Box padding={3}> */}
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      multiline
+                      variant="outlined"
+                      rows="1"
+                      id="JobTitle"
+                      label="Add your comments here"
+                      className="formControl"
+                      value={commentData}
+                      onChange={(e) => addComments(e)}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      className="spacerRight buttonStyle"
+                      disableElevation
+                      onClick={handleSendComments}
+                    >
+                      Respond
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      className="buttonStyle custmCancelBtn"
+                      disableElevation
+                      onClick={handleCommentsClose}
+                    >
+                      Cancel
+                    </Button>
+                  </Grid>
+                </Grid>
+                {/* </Box> */}
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+
+        <Dialog
+          open={myUserPOpen}
+          onClose={handleMyUserPClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          fullWidth
+          maxWidth="sm"
+        >
+          <DialogTitle classNames={classes.mb10} id="alert-dialog-title">
+            <img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <Grid
+                item
+                md={12}
+                sm={12}
+                xs={12}
+                className={classes.usrProfileListBox}
+              >
+                <h6>Change ownership</h6>
+                <FormControl
+                  variant="outlined"
+                  className={classes.formControlOwnership}
+                >
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Ownership
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value="Ashutosh"
+                    onChange={handleChangeOne}
+                    label="Ownership"
+                  >
+                    <MenuItem value={10}>Self</MenuItem>
+                    <MenuItem value={10}>Prakash</MenuItem>
+                    <MenuItem value={20}>Ashutosh</MenuItem>
+                    <MenuItem value={30}>Saddam</MenuItem>
+                    <MenuItem value={30}>Sunil</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                md={12}
+                sm={12}
+                xs={12}
+                className={classes.usrProfileListBox}
+              >
+                <h3>Basic information</h3>
+                <List>
+                  <ListItem>
+                    {/* <ListItemAvatar>
+                      <Avatar>
+                        <ImageIcon />
+                      </Avatar>
+                    </ListItemAvatar> */}
+                    <ListItemText primary="Full Name:" secondary="Prakash" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Organization Type:"
+                      secondary="Epc ORGANIZATION"
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Organization Role:"
+                      secondary="N/A"
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Role Title:" secondary="N/A" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Current Location:"
+                      secondary="Delhi » NCT » India"
+                    />
+                  </ListItem>
+                </List>
+              </Grid>
+
+              <Grid
+                item
+                md={12}
+                sm={12}
+                xs={12}
+                className={classes.usrProfileListBox}
+              >
+                <h3>Company information</h3>
+                <List>
+                  <ListItem>
+                    <ListItemText primary="Company Name:" secondary="JWIL" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Location:" secondary="Italy" />
+                  </ListItem>
+                </List>
+              </Grid>
+            </DialogContentText>
+          </DialogContent>
+          <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+            <DialogActions align="left" className="marginB10">
+              <Button
+                onClick={handleMyUserPClose}
+                color="secondary"
+                variant="contained"
+                className="buttonStyle custmCancelBtn"
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Grid>
+          {/* <DialogActions>
+            <Button onClick={handleMyUserPClose} className="buttonStyle custmCancelBtn" variant="contained" autoFocus>
+              Close
+            </Button>
+          </DialogActions> */}
+        </Dialog>
+      </Grid>
+      // </Box>
+    );
+  };
 
   return (
     <Acl
@@ -1398,38 +1922,7 @@ function xflha(props) {
                     <Box>
                       <Grid className={classes.marginTopBottom}>
                         <div className="gridView">
-                          <CardView
-                            cardTitle={item[1].jobTitle}
-                            avatar={item[1].avatar}
-                            username={item[1].username}
-                            itemId={item[1].id}
-                            headerFields={[
-                              { label: "Number", value: item[1].flhaNumber },
-                              { label: "Category", value: "FLHA" },
-                              { label: "Stage", value: item[1].flhaStage },
-                              { label: "Status", value: item[1].flhaStatus },
-                            ]}
-                            bodyFields={[
-                              {
-                                label: "Created On",
-                                value: moment(item[1].createdAt).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                ),
-                              },
-                              { label: "Created By", value: item[1].createdByName },
-                            ]}
-                            files={item[1].attachmentCount}
-                            handleSummaryPush={(i) => {
-                              handleSummaryPush(i);
-                            }}
-                            handleMyUserPClickOpen={(val) => {
-                              handleMyUserPClickOpen(val);
-                            }}
-                            checkDeletePermission={checkDeletePermission}
-                            handleDelete={() => {
-                              handleDelete(item);
-                            }}
-                          />
+                          <AllCardData item={item[1]} index={index} />
                           <Grid
                             item
                             md={12}
@@ -2012,8 +2505,9 @@ function xflha(props) {
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable
-                      className={`${classes.dataTableSectionDesign
-                        } dataTableSectionDesign`}
+                      className={`${
+                        classes.dataTableSectionDesign
+                      } dataTableSectionDesign`}
                       title="FLHA's"
                       data={Object.entries(flhas).map((item) => [
                         item[1].flhaNumber,

@@ -56,6 +56,7 @@ import Loader from "../../Loader";
 import moment from "moment";
 import { checkACL } from "../../../../utils/helper";
 import Attachment from "../../../../containers/Attachment/Attachment";
+import Delete from "../../../Delete/Delete";
 import CardView from "../../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
@@ -517,7 +518,7 @@ function ComplianceListNew(props) {
   //method to fetch all compliance data filetrs
   const fetchAllComplianceData = async () => {
     if (props.search) {
-      setAllComplianceData([])
+      setAllComplianceData([]);
     }
     await setPage(1);
     // get all the ids (fkCompanyId,fkProjectId, selectBreakdown,fkProjectStructureIds, createdBy )
@@ -529,8 +530,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -545,7 +546,8 @@ function ComplianceListNew(props) {
       setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -557,7 +559,8 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -572,8 +575,10 @@ function ComplianceListNew(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -585,8 +590,10 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
+            props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -600,7 +607,6 @@ function ComplianceListNew(props) {
     }
   };
 
-
   //method for  all the filters
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -611,8 +617,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -627,14 +633,16 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -643,16 +651,20 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -697,18 +709,31 @@ function ComplianceListNew(props) {
     // const [commentsOpen, setCommentsOpen] = useState(false);
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
-    // const [hiddenn, setHiddenn] = useState(false);
+    const [hiddenn, setHiddenn] = useState(false);
     // const [openAttachment, setopenAttachment] = React.useState(false);
+
+    const deleteItem = {
+      fkCompanyId: value.fkCompanyId,
+      fkProjectId: value.fkProjectId,
+      fkProjectStructureIds: value.fkProjectStructureIds,
+      location: value.location,
+      assessmentDate: value.assessmentDate,
+      permitToPerform: value.permitToPerform,
+      description: value.description,
+      classification: value.classification,
+      createdBy: value.createdBy,
+      status: "Delete",
+    };
 
     function handleVisibility() {
       setShowGrid(true);
       setHidden(!hidden);
     }
 
-    // function handleVisibilityComments() {
-    //   setCommentsOpen(true);
-    //   setHiddenn(!hiddenn);
-    // };
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
+    }
 
     function handleAttachClose() {
       setShowGrid(false);
@@ -750,6 +775,216 @@ function ComplianceListNew(props) {
 
     return (
       <>
+        {/* <Card variant="outlined" className={classes.card}>
+          <CardContent>
+            <Grid container spacing={3} className={classes.cardContentSection}>
+              <Grid
+                item
+                md={2}
+                sm={4}
+                xs={12}
+                className={classes.userPictureBox}
+              >
+                <Button
+                  className={classes.floatR}
+                  onClick={(e) => handleMyUserPClickOpen(e)}
+                >
+                  <img
+                    src={
+                      value["avatar"] !== null
+                        ? value["avatar"]
+                        : paceLogoSymbol
+                    }
+                    className={classes.userImage}
+                  />{" "}
+                  {value["username"]}
+                </Button>
+              </Grid>
+              <Link
+                onClick={() => handleSummaryPush(value["id"])}
+                className={classes.cardLinkAction}
+              >
+                <Grid item xs={12}>
+                  <Grid container spacing={3} alignItems="flex-start">
+                    <Grid
+                      item
+                      sm={12}
+                      xs={12}
+                      className={classes.listHeadColor}
+                    >
+                      <Grid container spacing={3} alignItems="flex-start">
+                        <Grid item md={10} sm={12} xs={12}>
+                          <Typography className={classes.title} variant="h6">
+                            {value["auditType"] !== null
+                              ? value["auditType"]
+                              : "-"}
+                          </Typography>
+                          <Typography
+                            className={classes.listingLabelName}
+                            display="inline"
+                          >
+                            Number:{" "}
+                            <span>
+                              <Link
+                                onClick={() => handleSummaryPush()}
+                                //href="/app/pages/actions/actionsummary"
+                                variant="h6"
+                                className={classes.mLeftfont}
+                              >
+                                <span className={classes.listingLabelValue}>
+                                  {value["auditNumber"] !== null
+                                    ? value["auditNumber"]
+                                    : "-"}
+                                </span>
+                              </Link>
+                            </span>
+                          </Typography>
+                          <span item xs={1} className={classes.sepHeightOne} />
+                          <Typography
+                            variant="body1"
+                            gutterBottom
+                            display="inline"
+                            color="textPrimary"
+                            className={classes.listingLabelName}
+                          >
+                            Group name:{" "}
+                            <span className={classes.listingLabelValue}>
+                              {value["groups"].length > 0
+                                ? value["groups"]
+                                  .map((data) => data.checkListGroupName)
+                                  .join(", ")
+                                : "-"}
+                            </span>
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid item sm={12} xs={12}>
+                  <Grid container spacing={3}>
+                    <Grid item sm={3} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Location:
+                      </Typography>
+                      <Typography className={classes.listingLabelValue}>
+                        {value["area"] !== null ? value["area"] : "-"}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item sm={3} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Audited on:
+                      </Typography>
+
+                      <Typography className={classes.listingLabelValue}>
+                        {moment(value["createdAt"]).format("Do MMMM YYYY")}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item sm={3} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Audited by:
+                      </Typography>
+
+                      <Typography className={classes.listingLabelValue}>
+                        {value["createdByName"] !== null
+                          ? value["createdByName"]
+                          : "-"}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Link>
+            </Grid>
+          </CardContent>
+          <Divider />
+
+          <CardActions className={Incidents.cardActions}>
+            <Grid container spacing={2} justify="flex-end" alignItems="left">
+              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                <span className={classes.margT10}>
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
+                  >
+                    <AttachmentIcon className={classes.mright5} />
+                    Attachments:
+                  </Typography>
+
+                  <Link
+                    onClick={
+                      value.attachmentLinks.attachmentCount && handleVisibility
+                    }
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={
+                      value.attachmentLinks.attachmentCount
+                        ? classes.commentLink
+                        : classes.mLeft
+                    }
+                  >
+                    {value.attachmentLinks.attachmentCount}
+                  </Link>
+
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Typography
+                    variant="body1"
+                    display="inline"
+                    color="textPrimary"
+                    className={classes.mLeft}
+                  >
+                    <InsertCommentOutlinedIcon className={classes.mright5} />
+                    Comments:
+                  </Typography>
+                  <Link
+                    onClick={handleVisibilityComments}
+                    color="secondary"
+                    aria-haspopup="true"
+                    className={classes.commentLink}
+                  >
+                    {value.commentsCount}
+                  </Link>
+                </span>
+              </Grid>
+
+              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
+                <span item xs={1} className={classes.sepHeightTen} />
+                <Typography variant="body1" display="inline">
+                  <Delete
+                    deleteUrl={`api/v1/audits/${value.id}/`}
+                    afterDelete={fetchAllComplianceData}
+                    axiosObj={api}
+                    item={deleteItem}
+                    loader={setIsLoading}
+                    loadingFlag={false}
+                    deleteMsg="Are you sure you want to delete this Compliance?"
+                    yesBtn="Yes"
+                    noBtn="No"
+                  />
+                </Typography>
+              </Grid>
+            </Grid>
+          </CardActions>
+        </Card> */}
+
         <CardView
           cardTitle={value.auditType}
           avatar={value.avatar}
@@ -757,31 +992,41 @@ function ComplianceListNew(props) {
           itemId={value.id}
           headerFields={[
             { label: "Number", value: value.auditNumber },
-            { label: "Group Name", value: value.groups.length > 0 ? value.groups.name : '-' },
+            {
+              label: "Group Name",
+              value: value.groups.length > 0 ? value.groups.name : "-",
+            },
           ]}
           bodyFields={[
             { label: "Location", value: value.area },
             {
               label: "Created On",
-              value: moment(value.createdAt).format(
-                "Do MMMM YYYY, h:mm:ss a"
-              ),
+              value: moment(value.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
             },
             { label: "Created By", value: value.createdByName },
           ]}
+          deleteFields={{
+            deleteUrl: `api/v1/audits/${value.id}/`,
+            afterDelete: () => {
+              fetchAllComplianceData();
+            },
+            axiosObj: api,
+            item: deleteItem,
+            loader: setIsLoading,
+            loadingFlag: false,
+            deleteMsg: "Are you sure you want to delete this Compliance?",
+            yesBtn: "Yes",
+            noBtn: "No",
+          }}
+          handleVisibilityComments={() => handleVisibilityComments()}
           files={value.attachmentLinks.attachmentCount}
+          commentsCount={value.commentsCount}
           handleSummaryPush={(i) => {
             handleSummaryPush(i);
           }}
-          handleMyUserPClickOpen={(val) => {
-            handleMyUserPClickOpen(val);
-          }}
           checkDeletePermission={checkDeletePermission}
-          handleDelete={(val) => {
-            // handleDelete(val);
-          }}
         />
-        {value.avatar && (
+        {value.attachmentLinks.attachmentCount ? (
           <Grid
             item
             md={12}
@@ -813,6 +1058,8 @@ function ComplianceListNew(props) {
               </Grid>
             </Paper>
           </Grid>
+        ) : (
+          ""
         )}
         {/* <div>
           <Dialog

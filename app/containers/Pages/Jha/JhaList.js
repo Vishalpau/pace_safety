@@ -148,9 +148,9 @@ function JhaList(props) {
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [order, setOrder] = useState("");
   const search = props.search;
   const status = props.status;
-  const [order, setOrder] = useState("");
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -267,6 +267,7 @@ function JhaList(props) {
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
+
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessment === "My Assessments") {
       const res = await api.get(
@@ -321,14 +322,12 @@ function JhaList(props) {
       );
       await setAllJHAData(res.data.data.results.results);
       await setPage(value);
-      await setOrder("");
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`
       );
       await setAllJHAData(res.data.data.results.results);
       await setPage(value);
-      await setOrder("");
     }
   };
 
@@ -481,6 +480,7 @@ function JhaList(props) {
             <TableContainer component={Paper}>
               <Grid component={Paper}>
                 <MUIDataTable
+                  //title="Observations List"
                   className={`${
                     classes.dataTableSectionDesign
                   } dataTableSectionDesign`}

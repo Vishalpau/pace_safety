@@ -59,9 +59,11 @@ import { connect } from "react-redux";
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
 import Loader from "../Loader";
-import { checkACL } from "../../../utils/helper";
-import CardView from "../../Card/CardView";
 import moment from "moment";
+import { checkACL } from "../../../utils/helper";
+import Attachment from "../../Attachment/Attachment";
+import Delete from "../../Delete/Delete";
+import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -510,8 +512,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -524,7 +526,8 @@ function JhaPackage(props) {
 
     if (props.assessment === "My Assessments") {
       const res = await api.get(
-        `api/v1/jhas/?search=${props.search
+        `api/v1/jhas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`
       );
 
@@ -536,7 +539,8 @@ function JhaPackage(props) {
       await setPageCount(pageCount);
     } else {
       const res = await api.get(
-        `api/v1/jhas/?search=${props.search
+        `api/v1/jhas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
       );
 
@@ -561,8 +565,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -625,7 +629,6 @@ function JhaPackage(props) {
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
   };
@@ -671,7 +674,7 @@ function JhaPackage(props) {
   const handleSummaryPush = async (index) => {
     const itemid = index;
 
-    const filtered = allJHAData.filter(one => one.id === index);
+    const filtered = allJHAData.filter((one) => one.id === index);
     const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
 
     localStorage.setItem("fkJHAId", itemid);
@@ -689,7 +692,7 @@ function JhaPackage(props) {
 
   const handleDelete = async (item) => {
     let data = item[1];
-    let id = data.id
+    let id = data.id;
     data.status = "Delete";
     delete data.jhaAssessmentAttachment;
     await setIsLoading(false);
@@ -709,6 +712,611 @@ function JhaPackage(props) {
     props.status,
   ]);
 
+  const AllCardData = ({ item, index }) => {
+    const [showGrid, setShowGrid] = useState(false);
+    const [hidden, setHidden] = useState(false);
+
+    const [value, setValue] = React.useState(2);
+
+    const [commentsOpen, setCommentsOpen] = useState(false);
+    const [hiddenn, setHiddenn] = useState(false);
+    const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+    const [commentData, setCommentData] = useState("");
+
+    let deleteItem = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      fkProjectStructureIds: item.fkProjectStructureIds,
+      location: item.location,
+      jhaAssessmentDate: item.jhaAssessmentDate,
+      permitToPerform: item.permitToPerform,
+      jobTitle: item.jobTitle,
+      description: item.description,
+      classification: item.classification,
+      createdBy: item.createdBy,
+      status: "Delete",
+    };
+
+    const addComments = (event) => {
+      console.log(event.target.value);
+      setCommentData(event.target.value);
+    };
+
+    const handleSendComments = async () => {
+      // console.log(commentsData, 'comments')
+      const commentPayload = {
+        fkCompanyId: item.fkCompanyId,
+        fkProjectId: item.fkProjectId,
+        commentContext: "jha",
+        contextReferenceIds: item.id,
+        commentTags: "",
+        comment: commentData,
+        parent: 0,
+        thanksFlag: 0,
+        status: "Active",
+        createdBy: item.createdBy,
+      };
+      if (commentData) {
+        console.log(api, "apiiiiiiii");
+        await api
+          .post("/api/v1/comments/", commentPayload)
+          .then((res) => {
+            // handleCommentsClose();
+            fetchData();
+          })
+          .catch((err) => console.log(err));
+      }
+    };
+
+    const handleChangeOne = (event, newValue) => {
+      setValue(newValue);
+    };
+
+    const handleVisibility = () => {
+      setShowGrid(true);
+      setHidden(!hidden);
+    };
+
+    const handleAttachClose = () => {
+      setShowGrid(false);
+    };
+
+    const handleAttachClick = () => {
+      setShowGrid(!open);
+    };
+
+    const handleAttachOpen = () => {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    };
+
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
+    }
+
+    function handleCommentsOpen() {
+      if (!hiddenn) {
+        setCommentsOpen(true);
+      }
+    }
+
+    function handleCommentsClose() {
+      setCommentsOpen(false);
+    }
+
+    function handleCommentsClick() {
+      setCommentsOpen(!open);
+    }
+
+    const handleMyUserPClickOpen = () => {
+      setMyUserPOpen(true);
+    };
+
+    const handleMyUserPClose = () => {
+      setMyUserPOpen(false);
+    };
+
+    return (
+      <Grid className={classes.marginTopBottom}>
+        <div className="gridView">
+          {/* <Card variant="outlined" className={classes.card}>
+            <CardContent>
+              <Grid
+                container
+                spacing={3}
+                className={classes.cardContentSection}
+              >
+                <Grid
+                  item
+                  md={2}
+                  sm={4}
+                  xs={12}
+                  className={classes.userPictureBox}
+                >
+                  <Button
+                    className={classNames(classes.floatR)}
+                    onClick={(e) => handleMyUserPClickOpen(e)}
+                  >
+                    <img src={item.avatar} className={classes.userImage} />{" "}
+                    {item.username}
+                  </Button>
+                </Grid>
+                <Link
+                  onClick={() => handleSummaryPush(item)}
+                  className={classes.cardLinkAction}
+                >
+                  <Grid item xs={12}>
+                    <Grid container spacing={3} alignItems="flex-start">
+                      <Grid
+                        item
+                        sm={12}
+                        xs={12}
+                        className={classes.listHeadColor}
+                      >
+                        <Grid container spacing={3} alignItems="flex-start">
+                          <Grid
+                            item
+                            md={10}
+                            sm={12}
+                            xs={12}
+                            className={classes.pr0}
+                          >
+                            <Typography className={classes.title} variant="h6">
+                              {item.description}
+                            </Typography>
+                            <Typography
+                              display="inline"
+                              className={classes.listingLabelName}
+                            >
+                              Number: 
+                              <span className={classes.listingLabelValue}>
+                                {item.jhaNumber}
+                              </span>
+                            </Typography>
+                            <span
+                              item
+                              xs={1}
+                              className={classes.sepHeightOne}
+                            />
+                            <Typography
+                              variant="body1"
+                              gutterBottom
+                              display="inline"
+                              color="textPrimary"
+                              className={classes.listingLabelName}
+                            >
+                              Category:{" "}
+                              <span className={classes.listingLabelValue}>
+                                {item.jhaNumber.split("-")[0]}
+                              </span>
+                            </Typography>
+                            <span
+                              item
+                              xs={1}
+                              className={classes.sepHeightOne}
+                            />
+                            <Typography
+                              variant="body1"
+                              gutterBottom
+                              display="inline"
+                              color="textPrimary"
+                              className={classes.listingLabelName}
+                            >
+                              Stage:{" "}
+                              <span className={classes.listingLabelValue}>
+                                {item.jhaStage}
+                                <img
+                                  src={in_progress_small}
+                                  className={classes.smallImage}
+                                />
+                              </span>
+                              <span
+                                item
+                                xs={1}
+                                className={classes.sepHeightOne}
+                              />
+                              Status:{" "}
+                              <span className="listingLabelValue statusColor_complete">
+                                {item.jhaStatus}
+                              </span>
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+                  <Grid item sm={12} xs={12}>
+                    <Grid container spacing={3}>
+                      <Grid item md={3} sm={6} xs={12}>
+                        <Typography
+                          variant="body1"
+                          color="textPrimary"
+                          gutterBottom
+                          className={classes.listingLabelName}
+                        >
+                          Location:
+                        </Typography>
+                        <Typography className={classes.listingLabelValue}>
+                          {item.location}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item md={3} sm={6} xs={12}>
+                        <Typography
+                          variant="body1"
+                          color="textPrimary"
+                          gutterBottom
+                          className={classes.listingLabelName}
+                        >
+                          Created on:
+                        </Typography>
+
+                        <Typography className={classes.listingLabelValue}>
+                          {item.jhaAssessmentDate}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item md={3} sm={6} xs={12}>
+                        <Typography
+                          variant="body1"
+                          color="textPrimary"
+                          gutterBottom
+                          className={classes.listingLabelName}
+                        >
+                          Created by:
+                        </Typography>
+
+                        <Typography className={classes.listingLabelValue}>
+                          {item.createdByName}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Link>
+              </Grid>
+            </CardContent>
+            <Divider />
+            <CardActions className={Incidents.cardActions}>
+              <Grid container spacing={2} justify="flex-end" alignItems="left">
+                <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                  <span className={classes.margT10}>
+                    <Typography
+                      variant="body1"
+                      display="inline"
+                      color="textPrimary"
+                    >
+                      <AttachmentIcon className={classes.mright5} />
+                      Attachments:
+                    </Typography>
+                    <Link
+                      onClick={item.attachmentCount && handleVisibility}
+                      color="secondary"
+                      aria-haspopup="true"
+                      className={
+                        item.attachmentCount
+                          ? classes.commentLink
+                          : classes.mLeft
+                      }
+                    >
+                      {item.attachmentCount}
+                    </Link>
+
+                    <span item xs={1} className={classes.sepHeightTen} />
+                    <Typography
+                      variant="body1"
+                      display="inline"
+                      color="textPrimary"
+                      className={classes.mLeft}
+                    >
+                      <InsertCommentOutlinedIcon className={classes.mright5} />
+                      Comments:
+                    </Typography>
+                    <Link
+                      onClick={handleVisibilityComments}
+                      color="secondary"
+                      aria-haspopup="true"
+                      className={classes.commentLink}
+                    >
+                      {item.commentsCount}
+                    </Link>
+                  </span>
+                </Grid>
+
+                <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Typography variant="body1" display="inline">
+                    <Delete
+                      deleteUrl={`/api/v1/jhas/${item.id}/`}
+                      afterDelete={fetchData}
+                      axiosObj={api}
+                      item={deleteItem}
+                      loader={setIsLoading}
+                      loadingFlag={false}
+                      deleteMsg="Are you sure you want to delete this JHA"
+                      yesBtn="Yes"
+                      noBtn="No"
+                    />
+                  </Typography>
+                </Grid>
+              </Grid>
+            </CardActions>
+          </Card> */}
+          <CardView
+            cardTitle={item.description}
+            avatar={item.avatar}
+            username={item.username}
+            itemId={item.id}
+            headerFields={[
+              { label: "Number", value: item.jhaNumber },
+              { label: "Category", value: "JSA" },
+              { label: "Stage", value: item.jhaStage },
+              { label: "Status", value: item.jhaStatus },
+            ]}
+            bodyFields={[
+              { label: "Location", value: item.location },
+              {
+                label: "Created On",
+                value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+              },
+              {
+                label: "Created By",
+                value: item.createdByName,
+              },
+            ]}
+            deleteFields={{
+              deleteUrl: `/api/v1/jhas/${item.id}/`,
+              afterDelete: () => {
+                fetchData();
+              },
+              axiosObj: api,
+              item: deleteItem,
+              loader: setIsLoading,
+              loadingFlag: false,
+              deleteMsg: "Are you sure you want to delete this JSA?",
+              yesBtn: "Yes",
+              noBtn: "No",
+            }}
+            handleVisibilityComments={() => handleVisibilityComments()}
+            handleSummaryPush={(i) => {
+              handleSummaryPush(i);
+            }}
+            files={item.files !== null ? item.files.length : 0}
+            commentsCount={item.commentsCount}
+            checkDeletePermission={checkDeletePermission}
+          />
+          {item.attachmentCount ? (
+            <Grid
+              item
+              md={12}
+              sm={12}
+              xs={12}
+              hidden={!hidden}
+              onBlur={handleAttachClose}
+              onClick={handleAttachClick}
+              onClose={handleAttachClose}
+              onFocus={handleAttachOpen}
+              onMouseEnter={handleAttachOpen}
+              onMouseLeave={handleAttachClose}
+              open={showGrid}
+              className="paddTBRemove attactmentShowSection"
+            >
+              <Paper elevation={1} className="cardSectionBottom">
+                <Grid container spacing={3}>
+                  <Grid item md={12} sm={12} xs={12}>
+                    <List>
+                      <ListItem>
+                        <Grid item md={12} sm={12} xs={12}>
+                          <div className="attachFileThumb">
+                            <Attachment
+                              src={item.jhaAssessmentAttachment}
+                              value={item.jhaAssessmentAttachment}
+                            />
+                          </div>
+                        </Grid>
+                      </ListItem>
+                    </List>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          ) : (
+            ""
+          )}
+        </div>
+
+        {/* <div> */}
+        <Grid
+          item
+          md={12}
+          sm={12}
+          xs={12}
+          hidden={!hiddenn}
+          onBlur={handleCommentsClose}
+          onClick={handleCommentsClick}
+          onClose={handleCommentsClose}
+          onFocus={handleCommentsOpen}
+          onMouseEnter={handleCommentsOpen}
+          onMouseLeave={handleCommentsClose}
+          open={commentsOpen}
+          className="commentsShowSection"
+        >
+          <Paper elevation={1} className="paperSection">
+            <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                <Box padding={3}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        multiline
+                        variant="outlined"
+                        rows="1"
+                        id="JobTitle"
+                        label="Add your comments here"
+                        className="formControl"
+                        value={commentData}
+                        onChange={(e) => addComments(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className="spacerRight buttonStyle"
+                        disableElevation
+                        onClick={handleSendComments}
+                      >
+                        Respond
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        className="buttonStyle custmCancelBtn"
+                        disableElevation
+                        onClick={handleCommentsClose}
+                      >
+                        Cancel
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        {/* </div> */}
+
+        <Dialog
+          open={myUserPOpen}
+          onClose={handleMyUserPClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          fullWidth={true}
+          maxWidth={"sm"}
+        >
+          <DialogTitle classNames={classes.mb10} id="alert-dialog-title">
+            <img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <Grid
+                item
+                md={12}
+                sm={12}
+                xs={12}
+                className={classes.usrProfileListBox}
+              >
+                <h6>Change ownership</h6>
+                <FormControl
+                  variant="outlined"
+                  className={classes.formControlOwnership}
+                >
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    Ownership
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value="Ashutosh"
+                    onChange={handleChangeOne}
+                    label="Ownership"
+                  >
+                    <MenuItem value={10}>Self</MenuItem>
+                    <MenuItem value={10}>Prakash</MenuItem>
+                    <MenuItem value={20}>Ashutosh</MenuItem>
+                    <MenuItem value={30}>Saddam</MenuItem>
+                    <MenuItem value={30}>Sunil</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                md={12}
+                sm={12}
+                xs={12}
+                className={classes.usrProfileListBox}
+              >
+                <h3>Basic information</h3>
+                <List>
+                  <ListItem>
+                    {/* <ListItemAvatar>
+                <Avatar>
+                  <ImageIcon />
+                </Avatar>
+              </ListItemAvatar> */}
+                    <ListItemText primary="Full Name:" secondary="Prakash" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Organization Type:"
+                      secondary="Epc ORGANIZATION"
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Organization Role:"
+                      secondary="N/A"
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Role Title:" secondary="N/A" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Current Location:"
+                      secondary="Delhi » NCT » India"
+                    />
+                  </ListItem>
+                </List>
+              </Grid>
+
+              <Grid
+                item
+                md={12}
+                sm={12}
+                xs={12}
+                className={classes.usrProfileListBox}
+              >
+                <h3>Company information</h3>
+                <List>
+                  <ListItem>
+                    <ListItemText primary="Company Name:" secondary="JWIL" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Location:" secondary="Italy" />
+                  </ListItem>
+                </List>
+              </Grid>
+            </DialogContentText>
+          </DialogContent>
+          <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+            <DialogActions align="left" className="marginB10">
+              <Button
+                onClick={handleMyUserPClose}
+                color="secondary"
+                variant="contained"
+                className="buttonStyle custmCancelBtn"
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Grid>
+
+          {/* <DialogActions>
+      <Button onClick={handleMyUserPClose} className="custmCancelBtn" variant="contained" autoFocus>
+        Close
+      </Button>
+    </DialogActions> */}
+        </Dialog>
+      </Grid>
+    );
+  };
+
   return (
     <>
       {isLoading ? (
@@ -717,39 +1325,7 @@ function JhaPackage(props) {
             Object.entries(allJHAData).map((singleitem, index) => (
               <Grid className={classes.marginTopBottom}>
                 <div className="gridView">
-                  <CardView
-                    cardTitle={singleitem[1].description}
-                    avatar={singleitem[1].avatar}
-                    username={singleitem[1].username}
-                    itemId={singleitem[1].id}
-                    headerFields={[
-                      { label: "Number", value: singleitem[1].jhaNumber },
-                      { label: "Category", value: "JSA" },
-                      { label: "Stage", value: singleitem[1].jhaStage },
-                      { label: "Status", value: singleitem[1].jhaStatus },
-                    ]}
-                    bodyFields={[
-                      { label: "Location", value: singleitem[1].location },
-                      {
-                        label: "Created On",
-                        value: moment(singleitem[1].createdAt).format(
-                          "Do MMMM YYYY, h:mm:ss a"
-                        ),
-                      },
-                      {
-                        label: "Created By",
-                        value: singleitem[1].createdByName,
-                      },
-                    ]}
-                    handleSummaryPush={(i) => {
-                      handleSummaryPush(i);
-                    }}
-                    files={singleitem[1].files !== null ? singleitem[1].files.length : 0}
-                    checkDeletePermission={checkDeletePermission}
-                    handleDelete={() => {
-                      handleDelete(singleitem);
-                    }}
-                  />
+                  <AllCardData item={singleitem[1]} index={index} />
                   <Grid
                     item
                     md={12}

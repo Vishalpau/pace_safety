@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import progress from "dan-images/progress.png";
 import preplanning from "dan-images/preplanning.png";
 import completed from "dan-images/completed.png";
-import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -97,7 +97,9 @@ const CardHeader = (props) => {
           <span
             className={
               (one.label === "Status" && one.value === "Closed") ||
-              (one.label === "Stage" && one.value === "Closed")
+              (one.label === "Stage" && one.value === "Closed") ||
+              (one.label === "Status" && one.value === "Close") ||
+              (one.label === "Stage" && one.value === "Close")
                 ? `${classes.listingLabelValue} green`
                 : `${classes.listingLabelValue}`
             }
@@ -105,14 +107,16 @@ const CardHeader = (props) => {
             {one.value}{" "}
             {one.label === "Stage" && one.value === "Open" ? (
               <img src={preplanning} alt="preplaning" />
-            ) : one.label === "Stage" && one.value === "Closed" ? (
+            ) : (one.label === "Stage" && one.value === "Closed") ||
+              (one.label === "Stage" && one.value === "Close") ? (
               <img src={completed} alt="completed" />
             ) : (
               ""
             )}
             {one.label === "Status" && one.value === "Open" ? (
               <img src={preplanning} alt="preplaning" />
-            ) : one.label === "Status" && one.value === "Closed" ? (
+            ) : (one.label === "Status" && one.value === "Closed") ||
+              (one.label === "Status" && one.value === "Close") ? (
               <img src={completed} alt="completed" />
             ) : (
               ""
@@ -164,4 +168,4 @@ const CardHeader = (props) => {
   );
 };
 
-export default CardHeader; 
+export default CardHeader;

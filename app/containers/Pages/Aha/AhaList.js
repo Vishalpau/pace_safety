@@ -155,10 +155,10 @@ function AhaList(props) {
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const search = props.search;
   const status = props.status;
-  const [order, setOrder] = useState("");
 
   //   Data for the table view
   const columns = [
@@ -269,7 +269,6 @@ function AhaList(props) {
       );
       await setAllAHAData(res.data.data.results.results);
       await setPage(value);
-      await setOrder("");
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${
@@ -278,12 +277,12 @@ function AhaList(props) {
       );
       await setAllAHAData(res.data.data.results.results);
       await setPage(value);
-      await setOrder("");
     }
   };
 
   useEffect(() => {
     fetchAllAHAData();
+    // handleProjectList()
   }, [
     props.projectName.breakDown,
     props.search,
@@ -430,6 +429,9 @@ function AhaList(props) {
               <Grid component={Paper}>
                 <MUIDataTable
                   //title="Observations List"
+                  className={`${
+                    classes.dataTableSectionDesign
+                  } dataTableSectionDesign`}
                   data={Object.entries(allAHAData).map((item) => [
                     item[1]["ahaNumber"],
                     item[1]["typeOfPermit"] !== null
@@ -448,9 +450,7 @@ function AhaList(props) {
                   ])}
                   columns={columns}
                   options={options}
-                  className={`${
-                    classes.dataTableSectionDesign
-                  } dataTableSectionDesign`}
+                  //className="classes.dataTableNew"
                 />
               </Grid>
             </TableContainer>

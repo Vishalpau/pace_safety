@@ -8,7 +8,7 @@ import CardHeader from "./CardHeader";
 import CardBody from "./CardBody";
 import CardFooter from "./CardFooter";
 import UserProfile from "./UserProfile";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   cardContentSection: {
@@ -35,10 +35,6 @@ const CardView = (props) => {
 
   const handleSummaryPush = () => {
     props.handleSummaryPush(props.itemId);
-  };
-
-  const handleDelete = () => {
-    props.handleDelete();
   };
 
   const handleMyUserPClickOpen = (val) => {
@@ -77,8 +73,12 @@ const CardView = (props) => {
         <Divider />
         <CardFooter
           files={props.files}
+          commentsCount={props.commentsCount}
           checkDeletePermission={props.checkDeletePermission}
-          handleDelete={()=>handleDelete()}
+          deleteFields={props.deleteFields}
+          handleVisibilityComments={() => {
+            props.handleVisibilityComments();
+          }}
         />
         <UserProfile
           ifJsa={
@@ -99,20 +99,19 @@ CardHeader.propTypes = {
   username: PropTypes.string.isRequired,
   avatar: PropTypes.any,
   headerFields: PropTypes.array.isRequired,
-}
+};
 
 CardBody.propTypes = {
-  bodyFields: PropTypes.array.isRequired, 
-}
+  bodyFields: PropTypes.array.isRequired,
+};
 
 CardFooter.propTypes = {
   files: PropTypes.number.isRequired,
-  checkDeletePermission: PropTypes.bool
-}
+  checkDeletePermission: PropTypes.bool,
+};
 
 UserProfile.propTypes = {
   ifJsa: PropTypes.bool,
-}
+};
 
 export default CardView;
-
