@@ -129,6 +129,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     marginTop: '10px',
   },
+  dataTableSectionDesign: {
+    "& th > div": {
+      cursor: "pointer"
+    }
+  }
 }));
 
 function JhaList(props) {
@@ -394,7 +399,7 @@ function JhaList(props) {
             <Grid component={Paper}>
               <MUIDataTable
                 //title="Observations List"
-                className="dataTableSectionDesign"
+                className={`${classes.dataTableSectionDesign} dataTableSectionDesign`}
                 data={Object.entries(allJHAData).map((item) => [
                   item[1]["jhaNumber"],
                   item[1]["typeOfPermit"],

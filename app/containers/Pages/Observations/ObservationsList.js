@@ -348,6 +348,11 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     color: 'rgba(0, 0, 0, 0.87) !important',
   },
+  dataTableSectionDesign: {
+    "& th > div": {
+      cursor: "pointer"
+    }
+  }
 }));
 
 function a11yProps(index) {
@@ -653,7 +658,7 @@ function ObservationsList(props) {
                   item[1]["username"] ? item[1]["username"] : "-",
                 ])}
                 // title="Observations List"
-                className="dataTableSectionDesign"
+                className={`${classes.dataTableSectionDesign} dataTableSectionDesign`}
                 columns={columns}
                 options={options}
               />

@@ -641,6 +641,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "6px",
     display: "block",
   },
+  dataTableSectionDesign: {
+    "& th > div": {
+      cursor: "pointer"
+    }
+  },
   topNavTabBack: {
     backgroundColor: "transparent",
     color: "black",
@@ -2176,7 +2181,7 @@ function xflha(props) {
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable
-                      className="dataTableSectionDesign"
+                      className={`${classes.dataTableSectionDesign} dataTableSectionDesign`}
                       title="FLHA's"
                       data={Object.entries(flhas).map((item) => [
                         item[1].flhaNumber,

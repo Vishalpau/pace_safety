@@ -129,6 +129,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     marginTop: '10px',
   },
+  dataTableSectionDesign: {
+    "& th > div": {
+      cursor: "pointer"
+    }
+  }
 }));
 
 function FlhaList(props) {
@@ -391,7 +396,7 @@ function FlhaList(props) {
             <Grid component={Paper}>
               <MUIDataTable
                 //title="Observations List"
-                className="dataTableSectionDesign"
+                className={`${classes.dataTableSectionDesign} dataTableSectionDesign`}
                 data={Object.entries(allAHAData).map((item) => [
                   item[1]["ahaNumber"],
                   item[1]["typeOfPermit"] !== null ? item[1]["typeOfPermit"] : "-",
