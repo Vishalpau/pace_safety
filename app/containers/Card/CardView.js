@@ -77,6 +77,7 @@ const CardView = (props) => {
         <Divider />
         <CardFooter
           files={props.files}
+          commentsCount={props.commentsCount}
           checkDeletePermission={props.checkDeletePermission}
           handleDelete={()=>handleDelete()}
         />

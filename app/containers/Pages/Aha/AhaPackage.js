@@ -58,6 +58,7 @@ import Loader from "../Loader";
 import { checkACL } from "../../../utils/helper";
 import Attachment from "../../Attachment/Attachment";
 import Delete from "../../Delete/Delete";
+import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -590,8 +591,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -635,8 +636,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -649,16 +650,14 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
       setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -1090,6 +1089,39 @@ function AhaPackage(props) {
             </Grid>
           </CardActions>
         </Card>
+
+        <CardView
+          cardTitle={item.description}
+          avatar={item.avatar}
+          username={item.username}
+          itemId={item.id}
+          headerFields={[
+            { label: "Number", value: item.ahaNumber },
+            { label: "Category", value: "AHA" },
+            { label: "Stage", value: item.ahaStage },
+            { label: "Status", value: item.ahaStatus },
+          ]}
+          bodyFields={[
+            { label: "Workarea", value: item.workArea },
+            { label: "Location", value: item.location },
+            {
+              label: "Created On",
+              value: moment(item.createdAt).format(
+                "Do MMMM YYYY, h:mm:ss a"
+              ),
+            },
+            { label: "Created By", value: item.createdByName },
+          ]}
+          files={item.files !== null ? item.files.length : 0}
+          commentsCount={item.commentsCount}
+          handleSummaryPush={(i) => {
+            // handleSummaryPush(i);
+          }}
+          checkDeletePermission={checkDeletePermission}
+          handleDelete={() => {
+            // handleDelete(item);
+          }}
+        />
 
         {item.attachmentCount ? (
           <Grid

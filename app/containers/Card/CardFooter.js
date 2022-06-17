@@ -75,7 +75,14 @@ const CardFooter = (props) => {
               Attachments:{" "}
             </Typography>
             <Typography variant="body2" display="inline">
-              {props.files !== null ? <>{props.files}</> : 0}
+              <Link
+                // onClick={handleVisibilityComments}
+                color="secondary"
+                aria-haspopup="true"
+                className={classes.commentLink}
+              >
+                {props.files !== null ? <>{props.files}</> : 0}
+              </Link>
             </Typography>
             <span item xs={1} className={classes.sepHeightTen} />
             <Typography
@@ -85,7 +92,7 @@ const CardFooter = (props) => {
               className={classes.mLeft}
             >
               <InsertCommentOutlinedIcon className={classes.mright5} />
-              Comments:
+              Comments: {" "}
             </Typography>
             <Link
               // onClick={handleVisibilityComments}
