@@ -645,7 +645,7 @@ function JhaPackage(props) {
   //   setHiddenn(!hiddenn);
   // };
 
-  const handleSummaryPush = async (selectedJha) => {
+  const handleSummaryPush = async (selectedJha, commentPayload) => {
     const jha = selectedJha;
     localStorage.setItem("fkJHAId", jha.id);
     handelCommonObject(
@@ -657,7 +657,10 @@ function JhaPackage(props) {
     localStorage.removeItem("JSAAssessments");
     localStorage.removeItem("JSAApproval");
     localStorage.removeItem("JSAlessonsLearned");
-    history.push(`/app/pages/jha/jha-summary/${jha.id}`);
+    history.push({
+      pathname: `/app/pages/jha/jha-summary/${jha.id}`,
+      state: commentPayload
+    });
   };
 
   // const handleDelete = async () => {
@@ -734,20 +737,22 @@ function JhaPackage(props) {
       setCommentData(event.target.value);
     };
 
+    const commentPayload = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      commentContext: "jha",
+      contextReferenceIds: item.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: item.createdBy,
+    };
+
     const handleSendComments = async () => {
       // console.log(commentsData, 'comments')
-      const commentPayload = {
-        fkCompanyId: item.fkCompanyId,
-        fkProjectId: item.fkProjectId,
-        commentContext: "jha",
-        contextReferenceIds: item.id,
-        commentTags: "",
-        comment: commentData,
-        parent: 0,
-        thanksFlag: 0,
-        status: "Active",
-        createdBy: item.createdBy,
-      };
+      
       if (commentData) {
         console.log(api, "apiiiiiiii");
         await api
@@ -836,7 +841,7 @@ function JhaPackage(props) {
                   </Button>
                 </Grid>
                 <Link
-                  onClick={() => handleSummaryPush(item)}
+                  onClick={() => handleSummaryPush(item, commentPayload)}
                   className={classes.cardLinkAction}
                 >
                   <Grid item xs={12}>

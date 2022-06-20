@@ -175,8 +175,10 @@ function AhaSummary(props) {
   const [lessonsLearned, setLessonsLearned] = useState(false);
   //const [summary, setSummary] = useState(false);
   const history = useHistory();
+  const commentPayload = history.location.state;
+  const [form, setForm] = useState([]);
   const { id } = useParams();
-  console.log(id, 'iddddddddddddddddddddd');
+  console.log(id, 'iiiiiiiiiiiiiiiiiiiiiiiiiiii');
   const [expanded, setExpanded] = React.useState("panel1");
 
   const handleNewAhaPush = async () => {
@@ -525,7 +527,6 @@ function AhaSummary(props) {
     setLessionAction(allAction);
   };
 
-  const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
     let ahaID = localStorage.getItem("fkAHAId");
     const res = await api.get(`/api/v1/ahas/${ahaID}/areahazards/`);
@@ -1928,7 +1929,10 @@ function AhaSummary(props) {
                       className="quickActionSectionLink"
                       variant="subtitle"
                       name="Comments"
-                      to={`/app/comments/aha/${id}`}
+                      to={{
+                        pathname: `/app/comments/aha/${id}`,
+                        state: commentPayload
+                      }}
                     >
                       Comments
                     </NavLink>

@@ -28,9 +28,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Delete = (props) => {
-  console.log(props, "propsssssssssssss");
-  console.log(!props.loadingFlag);
-
   const classes = useStyles();
   const [deleteQ, setDeleteQ] = useState(false);
 

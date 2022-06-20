@@ -225,6 +225,7 @@ function ComplianceSummary(props) {
   const [quesData, setQueData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
+  const commentPayload = history.location.state
   const { id } = useParams();
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [actionData, setActionData] = useState([]);
@@ -1866,7 +1867,7 @@ function ComplianceSummary(props) {
                       />
                     </Link> */}
                   </ListItem>
-                  <ListItem>
+                  <ListItem>  
                     <ListItemIcon>
                       <Comment />
                     </ListItemIcon>
@@ -1874,7 +1875,10 @@ function ComplianceSummary(props) {
                       className="quickActionSectionLink"
                       variant="subtitle"
                       name="Comments"
-                      to={`/app/comments/compliance/${id}`}
+                      to={{
+                        pathname: `/app/comments/compliance/${id}`,
+                        state: commentPayload
+                      }}
                     >
                       Comments
                     </NavLink>

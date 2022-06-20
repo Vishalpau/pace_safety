@@ -510,10 +510,13 @@ function ComplianceListNew(props) {
   };
 
   // method to push to new component
-  const handleSummaryPush = async (item) => {
+  const handleSummaryPush = async (item, commentPayload) => {
     let id = item;
     localStorage.setItem("fkComplianceId", id);
-    history.push(`/app/pages/compliance/compliance-summary/${id}`);
+    history.push({
+      pathname:`/app/pages/compliance/compliance-summary/${id}`,
+      state: commentPayload
+    });
   };
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
@@ -848,7 +851,7 @@ function ComplianceListNew(props) {
                 </Button>
               </Grid>
               <Link
-                onClick={() => handleSummaryPush(value["id"])}
+                onClick={() => handleSummaryPush(value["id"], commentPayload)}
                 className={classes.cardLinkAction}
               >
                 <Grid item xs={12}>

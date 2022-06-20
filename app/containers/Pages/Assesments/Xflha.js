@@ -84,7 +84,7 @@ import allPickListDataValue from "../../../utils/Picklist/allPickList";
 import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 import Delete from "../../Delete/Delete";
-import Attachment from '../../Attachment/Attachment';
+import Attachment from "../../Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -719,12 +719,12 @@ function xflha(props) {
   //   setMyUserPOpen(false);
   // };
 
-  const handleFlhaSummaryPush = async (id) => {
-    console.log(id, "iddddddddd");
+  const handleFlhaSummaryPush = async (id, commentPayload) => {
+    // console.log(id, "iddddddddd");
     localStorage.setItem("flhaId", id);
     history.push({
       pathname: `/app/pages/assesments/flhasummary/${id}`,
-      state: id,
+      state: commentPayload,
     });
   };
   const handleClickOpenAttachment = () => {
@@ -926,9 +926,9 @@ function xflha(props) {
   const handelSearchFlha = async (e) => {
     const allSeacrh = [];
     if (e.target.value.length === 0) {
-      await setShowFlha([]);
+      setShowFlha([]);
     } else {
-      await setSeacrhFlha(e.target.value.toLowerCase());
+      setSeacrhFlha(e.target.value.toLowerCase());
       Object.entries(flhas).map((item) => {
         if (item[1].flhaNumber.toLowerCase().includes(searchFlha)) {
           allSeacrh.push([
@@ -942,7 +942,7 @@ function xflha(props) {
           ]);
         }
       });
-      await setShowFlha(allSeacrh);
+      setShowFlha(allSeacrh);
     }
   };
   const userDetails = async (compId, proId) => {
@@ -1015,9 +1015,9 @@ function xflha(props) {
     } catch (error) {}
   };
 
-  useEffect(() => {
-    console.log(flhas, "flhas");
-  }, [flhas]);
+  // useEffect(() => {
+  //   console.log(flhas, "flhas");
+  // }, [flhas]);
 
   const handleChange = async (event, value) => {
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
@@ -1039,29 +1039,9 @@ function xflha(props) {
     const res = await api.get(
       `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
     );
-    await setFlhas(res.data.data.results.results);
-    await setPage(value);
+    setFlhas(res.data.data.results.results);
+    setPage(value);
   };
-
-  // const handleDelete = async (item) => {
-  //   if (checkACL("safety-flha", "delete_flha")) {
-  //     const data = {
-  //       fkCompanyId: item[1].fkCompanyId,
-  //       fkProjectId: item[1].fkProjectId,
-  //       jobTitle: item[1].jobTitle,
-  //       jobDetails: item[1].jobDetails,
-  //       status: "Delete",
-  //     };
-  //     setIsLoading(false);
-  //     const res1 = await api
-  //       .put(`/api/v1/flhas/${item[1].id}/`, data)
-  //       .then((response) => {
-  //         console.log(response);
-  //         fetchData();
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }
-  // };
 
   useEffect(() => {
     const state = JSON.parse(localStorage.getItem("direct_loading"));
@@ -1078,7 +1058,7 @@ function xflha(props) {
   }, []);
 
   useEffect(() => {
-    console.log(status, "statussss");
+    // console.log(status, "statussss");
     fetchData();
   }, [status]);
 
@@ -1098,7 +1078,7 @@ function xflha(props) {
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
     const [commentData, setCommentData] = useState("");
 
-    console.log(item, index, "iiiiteeeeeem");
+    // console.log(item, index, "iiiiteeeeeem");
 
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
@@ -1112,20 +1092,20 @@ function xflha(props) {
       setCommentData(event.target.value);
     };
 
-    const handleSendComments = async () => {
-      console.log(commentData, "comments");
-      const commentPayload = {
-        fkCompanyId: item.fkCompanyId,
-        fkProjectId: item.fkProjectId,
-        commentContext: "flha",
-        contextReferenceIds: item.id,
-        commentTags: "",
-        comment: commentData,
-        parent: 0,
-        thanksFlag: 0,
-        status: "Active",
-        createdBy: item.createdBy,
-      };
+    const commentPayload = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      commentContext: "flha",
+      contextReferenceIds: item.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: item.createdBy,
+    };
+
+    const handleSendComments = async () => {      
       if (commentData) {
         await api
           .post("/api/v1/comments/", commentPayload)
@@ -1214,7 +1194,7 @@ function xflha(props) {
                   </Button>
                 </Grid>
                 <Link
-                  onClick={() => handleFlhaSummaryPush(item.id)}
+                  onClick={() => handleFlhaSummaryPush(item.id, commentPayload)}
                   className={classes.cardLinkAction}
                 >
                   <Grid item xs={12}>
@@ -1520,43 +1500,43 @@ function xflha(props) {
             <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
                 {/* <Box padding={3}> */}
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        multiline
-                        variant="outlined"
-                        rows="1"
-                        id="JobTitle"
-                        label="Add your comments here"
-                        className="formControl"
-                        value={commentData}
-                        onChange={(e) => addComments(e)}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        className="spacerRight buttonStyle"
-                        disableElevation
-                        onClick={handleSendComments}
-                      >
-                        Respond
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        className="buttonStyle custmCancelBtn"
-                        disableElevation
-                        onClick={handleCommentsClose}
-                      >
-                        Cancel
-                      </Button>
-                    </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      multiline
+                      variant="outlined"
+                      rows="1"
+                      id="JobTitle"
+                      label="Add your comments here"
+                      className="formControl"
+                      value={commentData}
+                      onChange={(e) => addComments(e)}
+                    />
                   </Grid>
+
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      className="spacerRight buttonStyle"
+                      disableElevation
+                      onClick={handleSendComments}
+                    >
+                      Respond
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      className="buttonStyle custmCancelBtn"
+                      disableElevation
+                      onClick={handleCommentsClose}
+                    >
+                      Cancel
+                    </Button>
+                  </Grid>
+                </Grid>
                 {/* </Box> */}
               </Grid>
             </Grid>

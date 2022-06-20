@@ -539,7 +539,7 @@ function Actions(props) {
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
 
-  const handleSummaryPush = async (index) => {
+  const handleSummaryPush = async (index, commentPayload) => {
     console.log(allInitialData, "allInitialData");
     const { id } = allInitialData[index];
     localStorage.setItem("fkobservationId", id);
@@ -548,7 +548,10 @@ function Actions(props) {
     } else {
       localStorage.removeItem("action");
     }
-    history.push(`/app/icare/details/${id}`);
+    history.push({
+      pathname:`/app/icare/details/${id}`,
+      state: commentPayload
+    });
   };
 
   const fetchInitialiObservation = async () => {
@@ -907,20 +910,21 @@ function Actions(props) {
       console.log(event.target.value);
       setCommentData(event.target.value);
     };
+    
+    const commentPayload = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      commentContext: "observations",
+      contextReferenceIds: item.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: item.createdBy,
+    };
 
     const handleSendComments = async () => {
-      const commentPayload = {
-        fkCompanyId: item.fkCompanyId,
-        fkProjectId: item.fkProjectId,
-        commentContext: "observations",
-        contextReferenceIds: item.id,
-        commentTags: "",
-        comment: commentData,
-        parent: 0,
-        thanksFlag: 0,
-        status: "Active",
-        createdBy: item.createdBy,
-      };
       if (commentData) {
         console.log(api, "apiiiiiiii");
         await api
@@ -1004,7 +1008,7 @@ function Actions(props) {
                 </Button>
               </Grid>
               <Link
-                onClick={() => handleSummaryPush(index)}
+                onClick={() => handleSummaryPush(index, commentPayload)}
                 className={classes.cardLinkAction}
               >
                 <Grid item xs={12}>

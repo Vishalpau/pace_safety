@@ -328,7 +328,6 @@ const FlhaDetails = (props) => {
 
   const [open, setOpen] = useState(false);
   const handleRiskChange = (rating) => {
-    console.log(rating, 'rating')
     let colorRating = ''
     if (rating === "1 Trivial" || rating === "2 Trivial" || rating === "3 Trivial" || rating === "4 Trivial") {
       colorRating = '#009933'

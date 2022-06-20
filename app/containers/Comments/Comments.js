@@ -63,15 +63,55 @@ function Comments() {
   const history = useHistory();
   const { module } = useParams();
   const { moduleId } = useParams();
+  const commentPayload = history.location.state;
 
   const [commentData, setCommentData] = useState([]);
+  const [singleComment, setSingleComment] = useState('')
   const [isLoading, setIsLoading] = useState(false);
-
-  console.log(moduleId, "moduleId");
-  console.log(module, "moduel");
-
   const [commentReply, setCommentReply] = useState(true);
   const [commentEdit, setCommentEdit] = useState(true);
+
+  const handleChange = (event) => {
+    console.log(event, 'eeeeeeeee');
+    setSingleComment(event.target.value);
+  }
+
+  const updateComments = (payload) => {
+    delete payload.avatar;
+    delete payload.updatedBy;
+    delete payload.username;
+    console.log(payload);
+    setIsLoading(true);
+    api
+      .put(`api/v1/comments/${module}/${moduleId}/${payload.id}/`, payload)
+      .then((res) => {
+        console.log(res, "reessssss");
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  };
+
+  const postComments = () => {
+    setIsLoading(true);
+    delete commentPayload.comment;
+    commentPayload.comment = singleComment;
+    api
+      .post(`api/v1/comments/`, commentPayload)
+      .then((res) => {
+        console.log(res, "respost");
+        setIsLoading(false);
+        getComments();
+        setSingleComment('');
+        // setCommentData(res.data.data.results.results);
+      })
+      .catch(err => {
+        console.log(err);
+        setIsLoading(false);
+      })
+  };
 
   const getComments = async () => {
     api
@@ -134,6 +174,8 @@ function Comments() {
                   id="description"
                   label="Add your comments here"
                   className="formControl"
+                  value={singleComment}
+                  onChange={(e) => handleChange(e)}
                 />
               </Grid>
               <Grid item md={12} sm={12} xs={12}>
@@ -142,6 +184,7 @@ function Comments() {
                   variant="contained"
                   color="primary"
                   className="spacerRight buttonStyle"
+                  onClick={postComments}
                 >
                   Save
                 </Button>
@@ -222,6 +265,7 @@ function Comments() {
                                   variant="contained"
                                   color="primary"
                                   className="spacerRight buttonStyle"
+                                  onClick={() => updateComments(cd)}
                                 >
                                   Update
                                 </Button>
@@ -391,7 +435,9 @@ function Comments() {
                                 className="verticalSepareterLine"
                               />
                               <Delete
-                                deleteUrl={`/api/v1/comments/${module}/${moduleId}/${cd.id}/`}
+                                deleteUrl={`/api/v1/comments/${module}/${moduleId}/${
+                                  cd.id
+                                }/`}
                                 afterDelete={getComments}
                                 axiosObj={api}
                                 loader={setIsLoading}
