@@ -412,13 +412,13 @@ const AssessmentAndDocument = (props) => {
     let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
     const handelCallBack = async () => {
-        await setLoading(true);
+         setLoading(true);
         await handelCheckList();
         await handelJobDetailsDocument();
-        await handelActionLink();
+         handelActionLink();
         setRisk(pickListValues["78"])
         await handelActionTracker();
-        await setLoading(false);
+         setLoading(false);
     };
 
     useEffect(() => {
@@ -436,8 +436,6 @@ const AssessmentAndDocument = (props) => {
     const [message, setMessage] = useState('');
     const [submitLoaderDocument, setsubmitLoaderDocumentDocument] = useState(false);
     const ref = useRef();
-
-
 
     const fileTypeError = 'Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!';
     const fielSizeError = 'Size less than 25Mb allowed';
@@ -462,14 +460,14 @@ const AssessmentAndDocument = (props) => {
             const temp = { ...formDocument };
             const filesAll = e.target.files[0];
             temp.jhaAssessmentAttachment = filesAll;
-            await setFormDocument(temp);
+             setFormDocument(temp);
         } else {
             ref.current.value = '';
             !acceptFileTypes.includes(file[file.length - 1])
-                ? await setMessage(fileTypeError)
-                : await setMessage(`${fielSizeError}`);
-            await setMessageType('error');
-            await setOpen(true);
+                ?  setMessage(fileTypeError)
+                :  setMessage(`${fielSizeError}`);
+             setMessageType('error');
+             setOpen(true);
         }
     };
 
@@ -554,7 +552,7 @@ const AssessmentAndDocument = (props) => {
             formDocument['workStopCondition'] = additinalJobDetails.workStopCondition.toString();
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, formDocument).catch(() => handelApiErrorDocument());
         }
-        history.push(SUMMARY_FORM.Summary);
+        history.push(`/app/pages/jha/jha-summary/${localStorage.getItem('fkJHAId')}`);
         localStorage.setItem('Jha Status', JSON.stringify({ assessment: 'done' }));
         setsubmitLoaderDocumentDocument(false);
         setSubmitLoader(false);

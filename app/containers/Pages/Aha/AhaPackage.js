@@ -555,7 +555,6 @@ function AhaPackage(props) {
 
   const handleSummaryPush = async (selectedJha, commentPayload) => {
     const aha = selectedJha;
-    console.log(aha, 'aaaaaaaaaahhhhhhhhhaaaaaaa');
     localStorage.setItem("fkAHAId", aha.id);
     handelCommonObject(
       "commonObject",
