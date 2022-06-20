@@ -65,7 +65,9 @@ function Comments() {
   const history = useHistory();
   const { module } = useParams();
   const { moduleId } = useParams();
+  console.log(history, 'history');
   const commentPayload = history.location.state;
+  console.log(commentPayload, 'pcsfdsfdsk')
   const userId = JSON.parse(localStorage.getItem("userDetails"));
 
   const [commentData, setCommentData] = useState([]);

@@ -204,6 +204,7 @@ const AssessmentAndDocument = (props) => {
     humanPerformanceAspects: [],
     workStopCondition: [],
   });
+  const fkJHAId = JSON.parse(localStorage.getItem('fkJHAId'));
   const [risk, setRisk] = useState([]);
   const [updatePage, setUpdatePage] = useState(false);
   const [projectData, setProjectData] = useState({
@@ -222,6 +223,7 @@ const AssessmentAndDocument = (props) => {
     const project = JSON.parse(localStorage.getItem("projectName"));
     const { projectId } = project.projectName;
     const baseUrl = localStorage.getItem("apiBaseUrl");
+
     const specificPerformance = await api.get(
       `${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`
     );
@@ -251,14 +253,14 @@ const AssessmentAndDocument = (props) => {
       tempPerformance[value.checkListGroupName] = checkList;
       return tempPerformance;
     });
-    await setPerformance(tempPerformance);
-    await setDocument(apiCondition);
+     setPerformance(tempPerformance);
+     setDocument(apiCondition);
     const temp = [];
     apiData.map((value) => {
       temp.push({ id: value.id });
     });
     handelCommonObject("commonObject", "jha", "assessmentIds", temp);
-    await setForm(apiData);
+     setForm(apiData);
   };
 
   const handelActionTracker = async () => {
@@ -415,8 +417,8 @@ const AssessmentAndDocument = (props) => {
 
   const handelNext = async () => {
     setSubmitLoader(true);
-    const res = await api
-      .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form)
+    await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form)
+
       .catch(() => handelApiError());
     setSubmitLoader(false);
     await handelNextDocument();
@@ -452,13 +454,13 @@ const AssessmentAndDocument = (props) => {
   let pickListValues = JSON.parse(localStorage.getItem("pickList"));
 
   const handelCallBack = async () => {
-    await setLoading(true);
+     setLoading(true);
     await handelCheckList();
     await handelJobDetailsDocument();
-    await handelActionLink();
+     handelActionLink();
     setRisk(pickListValues["78"]);
     await handelActionTracker();
-    await setLoading(false);
+     setLoading(false);
   };
 
   useEffect(() => {
@@ -555,6 +557,7 @@ const AssessmentAndDocument = (props) => {
 
   const handelNextDocument = async () => {
     setsubmitLoaderDocumentDocument(true);
+    console.log('hiiiiiiiiiiiiiiiiiiiiiii');
     if (
       typeof formDocument.jhaAssessmentAttachment === "object" &&
       formDocument.jhaAssessmentAttachment != null
@@ -620,7 +623,8 @@ const AssessmentAndDocument = (props) => {
         .catch(() => handelApiErrorDocument());
     }
     console.log('hhhhhhhhh, shfdsfkds');
-    history.push(`/app/pages/jha/jha-summary/${localStorage.getItem(fkJHAId)}`);
+    console.log(fkJHAId, 'fkJhasdfds');
+    history.push(`/app/pages/jha/jha-summary/${fkJHAId}`);
     localStorage.setItem("Jha Status", JSON.stringify({ assessment: "done" }));
     setsubmitLoaderDocumentDocument(false);
     setSubmitLoader(false);

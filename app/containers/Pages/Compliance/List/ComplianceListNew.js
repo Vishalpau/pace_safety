@@ -628,9 +628,9 @@ function ComplianceListNew(props) {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    console.log(isLoading, "loadinggggggggg");
-  }, [isLoading]);
+  // useEffect(() => {
+  //   console.log(isLoading, "loadinggggggggg");
+  // }, [isLoading]);
 
   //method for  all the filters
   const handleChange = async (event, value) => {
@@ -1072,9 +1072,7 @@ function ComplianceListNew(props) {
           handleVisibilityComments={() => handleVisibilityComments()}
           files={value.attachmentLinks.attachmentCount}
           commentsCount={value.commentsCount}
-          handleSummaryPush={(i) => {
-            handleSummaryPush(i);
-          }}
+          handleSummaryPush={() => handleSummaryPush(value.id, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
         {value.attachmentLinks.attachmentCount ? (
