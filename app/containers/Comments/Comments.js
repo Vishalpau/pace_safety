@@ -82,11 +82,12 @@ function Comments() {
   const handleEditChange = (event, index) => {
     const temp = [...commentData];
     temp[index].comment = event.target.value;
-    console.log(temp, 'temppp');
+    console.log(temp, "temppp");
     setCommentData(temp);
-  }
+  };
 
   const updateComments = (payload) => {
+    console.log(payload, "payload");
     delete payload.avatar;
     delete payload.username;
     payload.updatedBy = userId.id;
@@ -147,6 +148,8 @@ function Comments() {
   }, []);
 
   const SingleCardData = ({ item, index }) => {
+    const [tempState, setTempState] = useState(item.comment);
+
     const [commentReply, setCommentReply] = useState(false);
     const [commentEdit, setCommentEdit] = useState(false);
 
@@ -190,7 +193,8 @@ function Comments() {
                   variant="outlined"
                   className="formControl"
                   name="main-comment"
-                  onChange={(e) => handleEditChange(e, index)}
+                  value={tempState}
+                  onChange={(e) => setTempState(e.target.value)}
                 />
                 <Grid item md={12} sm={12} xs={12} className="marginT15">
                   <Button
@@ -198,7 +202,12 @@ function Comments() {
                     variant="contained"
                     color="primary"
                     className="spacerRight buttonStyle"
-                    onClick={() => updateComments(item)}
+                    onClick={() =>
+                      updateComments({
+                        ...item,
+                        comment: tempState,
+                      })
+                    }
                   >
                     Update
                   </Button>
@@ -207,6 +216,7 @@ function Comments() {
                     variant="contained"
                     color="secondary"
                     className="buttonStyle custmCancelBtn"
+                    onClick={() => setTempState(item.comment)}
                   >
                     Cancel
                   </Button>
@@ -489,7 +499,13 @@ function Comments() {
                         </Grid>
                         {commentData.length
                           ? commentData.map((cd, index) => {
-                              return <SingleCardData item={cd} index={index} />;
+                              return (
+                                <SingleCardData
+                                  key={cd.id}
+                                  item={cd}
+                                  index={index}
+                                />
+                              );
                             })
                           : "No Comments "}
                       </Grid>

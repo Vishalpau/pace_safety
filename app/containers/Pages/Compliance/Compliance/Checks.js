@@ -723,6 +723,7 @@ const Checks = (props) => {
 
   // method for uploading a file
   const handleFileUpload = (event, questionId) => {
+    debugger;
     let temp = [...checkData];
     const name = event.target.name;
     const file = event.target.files[0];
@@ -742,6 +743,18 @@ const Checks = (props) => {
       setCheckData(temp);
     } else {
       setOpen(true);
+      const allAttchment = document.querySelectorAll("#attachment");
+      const allEvidence = document.querySelectorAll("#evidence");
+      allAttchment.forEach((element) => {
+        if (element.contains(event.currentTarget)) {
+          element.value = null;
+        }
+      });
+      allEvidence.forEach((element) => {
+        if (element.contains(event.currentTarget)) {
+          element.value = null;
+        }
+      });
     }
   };
 
