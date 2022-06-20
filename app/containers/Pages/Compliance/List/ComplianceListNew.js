@@ -57,6 +57,7 @@ import moment from "moment";
 import { checkACL } from "../../../../utils/helper";
 import Attachment from "../../../../containers/Attachment/Attachment";
 import Delete from "../../../Delete/Delete";
+import CardView from "../../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -825,7 +826,7 @@ function ComplianceListNew(props) {
 
     return (
       <>
-        <Card variant="outlined" className={classes.card}>
+        {/* <Card variant="outlined" className={classes.card}>
           <CardContent>
             <Grid container spacing={3} className={classes.cardContentSection}>
               <Grid
@@ -901,28 +902,11 @@ function ComplianceListNew(props) {
                             <span className={classes.listingLabelValue}>
                               {value["groups"].length > 0
                                 ? value["groups"]
-                                    .map((data) => data.checkListGroupName)
-                                    .join(", ")
+                                  .map((data) => data.checkListGroupName)
+                                  .join(", ")
                                 : "-"}
                             </span>
                           </Typography>
-                          {/* <span
-                            item
-                            xs={1}
-                            className={classes.sepHeightOne}
-                          />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Status:{" "}
-                            <span className="listingLabelValue statusColor_complete">
-                              Assigned
-                            </span>
-                          </Typography> */}
                         </Grid>
                       </Grid>
                     </Grid>
@@ -1042,40 +1026,57 @@ function ComplianceListNew(props) {
                     item={deleteItem}
                     loader={setIsLoading}
                     loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this Compliance"
+                    deleteMsg="Are you sure you want to delete this Compliance?"
                     yesBtn="Yes"
                     noBtn="No"
                   />
-                  {/* {!checkDeletePermission
-                      ? (
-                        <DeleteForeverOutlinedIcon
-                          className={classes.iconteal}
-                          style={{
-                            color: '#c0c0c0',
-                            cursor: 'not-allowed'
-                          }}
-                        />
-                      )
-                      : (
-                        <Link
-                          href="#"
-                          className={classes.mLeftR5}
-                        >
-                          <DeleteForeverOutlinedIcon
-                            className={classes.iconteal}
-                            onClick={(e) => handleClickDeleteAlert(item.item)}
-                          />
-                        </Link>
-                      )} */}
-                  {/* <Link href="#" className={classes.mLeftR5}>
-                          <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
-                        </Link> */}
                 </Typography>
-                {/* </div> */}
               </Grid>
             </Grid>
           </CardActions>
-        </Card>
+        </Card> */}
+
+        <CardView
+          cardTitle={value.auditType}
+          avatar={value.avatar}
+          username={value.username}
+          itemId={value.id}
+          headerFields={[
+            { label: "Number", value: value.auditNumber },
+            {
+              label: "Group Name",
+              value: value.groups.length > 0 ? value.groups.name : "-",
+            },
+          ]}
+          bodyFields={[
+            { label: "Location", value: value.area },
+            {
+              label: "Created On",
+              value: moment(value.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+            },
+            { label: "Created By", value: value.createdByName },
+          ]}
+          deleteFields={{
+            deleteUrl: `api/v1/audits/${value.id}/`,
+            afterDelete: () => {
+              fetchAllComplianceData();
+            },
+            axiosObj: api,
+            item: deleteItem,
+            loader: setIsLoading,
+            loadingFlag: false,
+            deleteMsg: "Are you sure you want to delete this Compliance?",
+            yesBtn: "Yes",
+            noBtn: "No",
+          }}
+          handleVisibilityComments={() => handleVisibilityComments()}
+          files={value.attachmentLinks.attachmentCount}
+          commentsCount={value.commentsCount}
+          handleSummaryPush={(i) => {
+            handleSummaryPush(i);
+          }}
+          checkDeletePermission={checkDeletePermission}
+        />
         {value.attachmentLinks.attachmentCount ? (
           <Grid
             item

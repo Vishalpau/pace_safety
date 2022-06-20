@@ -641,6 +641,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "6px",
     display: "block",
   },
+  dataTableSectionDesign: {
+    "& th > div": {
+      cursor: "pointer",
+    },
+  },
   topNavTabBack: {
     backgroundColor: "transparent",
     color: "black",
@@ -700,6 +705,7 @@ function xflha(props) {
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [order, setOrder] = useState("");
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
   const [valueTwo, setValueTwo] = React.useState(0);
@@ -752,63 +758,7 @@ function xflha(props) {
     "Approved date",
     "Approved by",
   ];
-  const data = [
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-    [
-      "AT-125-256-251",
-      "XFLHA",
-      "Planned",
-      "Assigned",
-      "Mayank",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Dec 26, 2020",
-      "Prakash",
-    ],
-  ];
+
   const options = {
     filterType: "dropdown",
     responsive: "vertical",
@@ -826,6 +776,7 @@ function xflha(props) {
     rowsPerPage: 10,
     page: 0,
     pagination: false,
+    sort: false,
   };
 
   const classes = useStyles();
@@ -1067,6 +1018,136 @@ function xflha(props) {
     fetchData();
   };
 
+  window.onclick = (e) => {
+    if (e.target.innerHTML.toLowerCase() === "submitted date") {
+      order === "ascDate" ? setOrder("descDate") : setOrder("ascDate");
+    }
+    if (e.target.innerHTML.toLowerCase() === "approved date") {
+      order === "ascAppDate" ? setOrder("descAppDate") : setOrder("ascAppDate");
+    }
+    if (e.target.innerHTML.toLowerCase() === "approved by") {
+      order === "ascAppBy" ? setOrder("descAppBy") : setOrder("ascAppBy");
+    }
+    if (e.target.innerHTML.toLowerCase() === "type") {
+      order === "ascType" ? setOrder("descType") : setOrder("ascType");
+    }
+    if (e.target.innerHTML.toLowerCase() === "stage") {
+      order === "ascStg" ? setOrder("descStg") : setOrder("ascStg");
+    }
+    if (e.target.innerHTML.toLowerCase() === "status") {
+      order === "ascStts" ? setOrder("descStts") : setOrder("ascStts");
+    }
+    if (e.target.innerHTML.toLowerCase() === "number") {
+      order === "ascNum" ? setOrder("descNum") : setOrder("ascNum");
+    }
+  };
+
+  const SetDataOrder = () => {
+    let newdata;
+    if (order === "ascDate") {
+      newdata = flhas.slice().sort(function(a, b) {
+        return moment(a.createdAt) - moment(b.createdAt);
+      });
+      setFlhas(newdata);
+    } else if (order === "descDate") {
+      newdata = flhas.slice().sort(function(a, b) {
+        return moment(b.createdAt) - moment(a.createdAt);
+      });
+      setFlhas(newdata);
+    } else if (order === "ascAppDate") {
+      newdata = flhas.slice().sort(function(a, b) {
+        if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
+        return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
+      });
+      setFlhas(newdata);
+    } else if (order === "descAppDate") {
+      newdata = flhas.slice().sort(function(a, b) {
+        if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
+        return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
+      });
+      setFlhas(newdata);
+    } else if (order === "ascType") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (b.jobTitle === "" || b.jobTitle === null) return -1;
+        if (a.jobTitle < b.jobTitle) return -1;
+        if (a.jobTitle > b.jobTitle) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    } else if (order === "descType") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (a.jobTitle === "" || a.jobTitle === null) return -1;
+        if (a.jobTitle > b.jobTitle) return -1;
+        if (a.jobTitle < b.jobTitle) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    } else if (order === "ascAppBy") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (b.closedByName === "" || b.closedByName === null) return -1;
+        if (a.closedByName < b.closedByName) return -1;
+        if (a.closedByName > b.closedByName) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    } else if (order === "descAppBy") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (a.closedByName === "" || a.closedByName === null) return -1;
+        if (a.closedByName > b.closedByName) return -1;
+        if (a.closedByName < b.closedByName) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    } else if (order === "ascNum") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (a.flhaNumber < b.flhaNumber) return -1;
+        if (a.flhaNumber > b.flhaNumber) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    } else if (order === "descNum") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (a.flhaNumber > b.flhaNumber) return -1;
+        if (a.flhaNumber < b.flhaNumber) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    } else if (order === "ascStg") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (a.flhaStage < b.flhaStage) return -1;
+        if (a.flhaStage > b.flhaStage) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    } else if (order === "descStg") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (a.flhaStage > b.flhaStage) return -1;
+        if (a.flhaStage < b.flhaStage) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    } else if (order === "ascStts") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (a.flhaStatus < b.flhaStatus) return -1;
+        if (a.flhaStatus > b.flhaStatus) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    } else if (order === "descStts") {
+      newdata = flhas.slice().sort((a, b) => {
+        if (a.flhaStatus > b.flhaStatus) return -1;
+        if (a.flhaStatus < b.flhaStatus) return 1;
+        return 0;
+      });
+      setFlhas(newdata);
+    }
+  };
+
+  useEffect(() => {
+    console.log(order, "order");
+    SetDataOrder();
+  }, [order]);
+
   /*********************all card data***************************************/
 
   const AllCardData = ({ item, index }) => {
@@ -1171,7 +1252,7 @@ function xflha(props) {
       // <Box>
       <Grid className={classes.marginTopBottom}>
         <div className="gridView">
-          <Card variant="outlined" className={classes.card}>
+          {/* <Card variant="outlined" className={classes.card}>
             <CardContent>
               <Grid
                 container
@@ -1223,9 +1304,8 @@ function xflha(props) {
                               Number:{" "}
                               <span>
                                 <Link
-                                  href={`/app/pages/assesments/flhasummary/${
-                                    item.id
-                                  }`}
+                                  href={`/app/pages/assesments/flhasummary/${item.id
+                                    }`}
                                   variant="h6"
                                   className={classes.mLeftfont}
                                 >
@@ -1264,8 +1344,6 @@ function xflha(props) {
                               color="textPrimary"
                               className={classes.listingLabelName}
                             >
-                              {/* Assignee: <span className={classes.listingLabelValue}>NA</span>
-                                              <span item xs={1} className={classes.sepHeightOne}></span> */}
                               Stage:{" "}
                               <span className={classes.listingLabelValue}>
                                 {item.flhaStage}{" "}
@@ -1292,41 +1370,6 @@ function xflha(props) {
 
                   <Grid item sm={12} xs={12}>
                     <Grid container spacing={3}>
-                      {/* <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          gutterBottom
-                          color="textPrimary"
-                          className={classes.listingLabelName}
-                        >
-                          Type:
-                        </Typography>
-
-                        <Typography
-                          gutterBottom
-                          className={classes.listingLabelValue}
-                        > */}
-                      {/* {item[1]["incidentReportedByName"]} */}
-                      {/* Not found
-                        </Typography>
-                      </Grid> */}
-                      {/* <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Location:
-                        </Typography>
-                        <Typography
-
-                          className={classes.listingLabelValue}
-                        >
-                          {item[1].location}
-                        </Typography>
-                      </Grid> */}
-
                       <Grid item md={3} sm={6} xs={12}>
                         <Typography
                           variant="body1"
@@ -1408,22 +1451,6 @@ function xflha(props) {
                 </span>
               </Grid>
               <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                {/* <div className={classes.floatR}> */}
-                {/* <Typography variant="body1" display="inline">
-                      <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network view</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                        <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                      </Typography> */}
                 <span item xs={1} className={classes.sepHeightTen} />
                 <Typography variant="body1" display="inline">
                   <Delete
@@ -1438,10 +1465,50 @@ function xflha(props) {
                     noBtn="No"
                   />
                 </Typography>
-                {/* </div> */}
               </Grid>
             </CardActions>
-          </Card>
+          </Card> */}
+
+          <CardView
+            cardTitle={item.jobTitle}
+            avatar={item.avatar}
+            username={item.username}
+            itemId={item.id}
+            headerFields={[
+              { label: "Number", value: item.flhaNumber },
+              { label: "Category", value: "FLHA" },
+              { label: "Stage", value: item.flhaStage },
+              { label: "Status", value: item.flhaStatus },
+            ]}
+            bodyFields={[
+              {
+                label: "Created On",
+                value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+              },
+              { label: "Created By", value: item.createdByName },
+            ]}
+            deleteFields={{
+              deleteUrl: `/api/v1/flhas/${item.id}/`,
+              afterDelete: () => {
+                fetchData();
+              },
+              axiosObj: api,
+              item: deleteItem,
+              loader: setIsLoading,
+              loadingFlag: false,
+              deleteMsg: "Are you sure you want to delete this FLHA?",
+              yesBtn: "Yes",
+              noBtn: "No",
+            }}
+            handleVisibilityComments={() => handleVisibilityComments()}
+            files={item.attachmentCount}
+            commentsCount={item.commentsCount}
+            handleSummaryPush={(i) => {
+              handleSummaryPush(i);
+            }}
+            checkDeletePermission={checkDeletePermission}
+          />
+
           {item.attachmentCount ? (
             <Grid
               item
@@ -2081,7 +2148,9 @@ function xflha(props) {
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable
-                      className="dataTableSectionDesign"
+                      className={`${
+                        classes.dataTableSectionDesign
+                      } dataTableSectionDesign`}
                       title="FLHA's"
                       data={Object.entries(flhas).map((item) => [
                         item[1].flhaNumber,

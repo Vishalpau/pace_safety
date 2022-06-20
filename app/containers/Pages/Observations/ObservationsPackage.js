@@ -47,6 +47,7 @@ import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined"
 const UserDetailsView = lazy(() => import("../../UserDetails/UserDetail"));
 const Loader = lazy(() => import("../Loader"));
 import Delete from "../../Delete/Delete";
+import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -555,7 +556,7 @@ function Actions(props) {
   };
 
   const fetchInitialiObservation = async () => {
-     setPage(1);
+    setPage(1);
 
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
     const fkProjectId =
@@ -942,10 +943,6 @@ function Actions(props) {
       status: "Delete",
     };
 
-    useEffect(() => {
-      console.log(showGrid, "showGrid");
-    }, [showGrid]);
-
     const handleVisibility = () => {
       setShowGrid(true);
       setHidden(!hidden);
@@ -986,7 +983,7 @@ function Actions(props) {
 
     return (
       <>
-        <Card variant="outlined" className={classes.card}>
+        {/* <Card variant="outlined" className={classes.card}>
           <CardContent>
             <Grid container spacing={3} className={classes.cardContentSection}>
               <Grid
@@ -1047,15 +1044,6 @@ function Actions(props) {
                               </Link>
                             </span>
                           </Typography>
-                          {/* <Typography
-                                variant="body1"
-                                gutterBottom
-                                display="inline"
-                                color="textPrimary"
-                                className={classes.listingLabelName}
-                              >
-                                Category: <span className={classes.listingLabelValue}>HSE incident Action</span>
-                              </Typography> */}
                           <span item xs={1} className={classes.sepHeightOne} />
                           <Typography
                             variant="body1"
@@ -1110,13 +1098,6 @@ function Actions(props) {
                             </span>
                           </Typography>
                         </Grid>
-
-                        {/* <Grid item md={2} sm={4} xs={12}>
-                        <Button className={classes.floatR}>
-                          <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
-                        </Button>
-
-                      </Grid> */}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1245,7 +1226,7 @@ function Actions(props) {
                     item={deleteItem}
                     loader={setIsLoading}
                     loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this AHA?"
+                    deleteMsg="Are you sure you want to delete this iCare?"
                     yesBtn="Yes"
                     noBtn="No"
                   />
@@ -1253,7 +1234,48 @@ function Actions(props) {
               </Grid>
             </Grid>
           </CardActions>
-        </Card>
+        </Card> */}
+        <CardView
+          cardTitle={item.observationDetails}
+          avatar={item.avatar}
+          username={item.username}
+          itemId={item.id}
+          headerFields={[
+            { label: "Number", value: item.observationNumber },
+            { label: "Assignee", value: "" },
+            { label: "Stage", value: item.observationStage },
+            { label: "Status", value: item.observationStatus },
+          ]}
+          bodyFields={[
+            { label: "Type", value: item.observationType },
+            { label: "Location", value: item.location },
+            {
+              label: "Created On",
+              value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+            },
+            { label: "Created By", value: item.createdByName },
+          ]}
+          deleteFields={{
+            deleteUrl: `/api/v1/observations/${item.id}/`,
+            afterDelete: () => {
+              fetchInitialiObservation();
+            },
+            axiosObj: api,
+            item: deleteItem,
+            loader: setIsLoading,
+            loadingFlag: false,
+            deleteMsg: "Are you sure you want to delete this iCare?",
+            yesBtn: "Yes",
+            noBtn: "No",
+          }}
+          handleVisibilityComments={() => handleVisibilityComments()}
+          files={item.files !== null ? item.files.length : 0}
+          commentsCount={item.commentsCount}
+          handleSummaryPush={(i) => {
+            handleSummaryPush(i);
+          }}
+          checkDeletePermission={checkDeletePermission}
+        />
         {item.attachmentCount ? (
           <Grid
             item

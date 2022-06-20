@@ -46,9 +46,11 @@ import { connect } from "react-redux";
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
 import Loader from "../Loader";
+import moment from "moment";
 import { checkACL } from "../../../utils/helper";
 import Attachment from "../../Attachment/Attachment";
 import Delete from "../../Delete/Delete";
+import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -818,7 +820,7 @@ function JhaPackage(props) {
     return (
       <Grid className={classes.marginTopBottom}>
         <div className="gridView">
-          <Card variant="outlined" className={classes.card}>
+          {/* <Card variant="outlined" className={classes.card}>
             <CardContent>
               <Grid
                 container
@@ -867,7 +869,7 @@ function JhaPackage(props) {
                               display="inline"
                               className={classes.listingLabelName}
                             >
-                              Number: {/* <span> */}
+                              Number: 
                               <span className={classes.listingLabelValue}>
                                 {item.jhaNumber}
                               </span>
@@ -1036,36 +1038,54 @@ function JhaPackage(props) {
                       yesBtn="Yes"
                       noBtn="No"
                     />
-                    {/* {!checkDeletePermission
-                      ? (
-                        <DeleteForeverOutlinedIcon
-                          className={classes.iconteal}
-                          style={{
-                            color: '#c0c0c0',
-                            cursor: 'not-allowed'
-                          }}
-                        />
-                      )
-                      : (
-                        <Link
-                          href="#"
-                          className={classes.mLeftR5}
-                        >
-                          <DeleteForeverOutlinedIcon
-                            className={classes.iconteal}
-                            onClick={(e) => handleClickDeleteAlert(item.item)}
-                          />
-                        </Link>
-                      )} */}
-                    {/* <Link href="#" className={classes.mLeftR5}>
-                          <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
-                        </Link> */}
                   </Typography>
-                  {/* </div> */}
                 </Grid>
               </Grid>
             </CardActions>
-          </Card>
+          </Card> */}
+          <CardView
+            cardTitle={item.description}
+            avatar={item.avatar}
+            username={item.username}
+            itemId={item.id}
+            headerFields={[
+              { label: "Number", value: item.jhaNumber },
+              { label: "Category", value: "JSA" },
+              { label: "Stage", value: item.jhaStage },
+              { label: "Status", value: item.jhaStatus },
+            ]}
+            bodyFields={[
+              { label: "Location", value: item.location },
+              {
+                label: "Created On",
+                value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+              },
+              {
+                label: "Created By",
+                value: item.createdByName,
+              },
+            ]}
+            deleteFields={{
+              deleteUrl: `/api/v1/jhas/${item.id}/`,
+              afterDelete: () => {
+                fetchData();
+              },
+              axiosObj: api,
+              item: deleteItem,
+              loader: setIsLoading,
+              loadingFlag: false,
+              deleteMsg: "Are you sure you want to delete this JSA?",
+              yesBtn: "Yes",
+              noBtn: "No",
+            }}
+            handleVisibilityComments={() => handleVisibilityComments()}
+            handleSummaryPush={(i) => {
+              handleSummaryPush(i);
+            }}
+            files={item.files !== null ? item.files.length : 0}
+            commentsCount={item.commentsCount}
+            checkDeletePermission={checkDeletePermission}
+          />
           {item.attachmentCount ? (
             <Grid
               item

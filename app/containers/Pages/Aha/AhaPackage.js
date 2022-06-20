@@ -58,6 +58,7 @@ import Loader from "../Loader";
 import { checkACL } from "../../../utils/helper";
 import Attachment from "../../Attachment/Attachment";
 import Delete from "../../Delete/Delete";
+import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -560,7 +561,7 @@ function AhaPackage(props) {
       "commonObject",
       "aha",
       "projectStruct",
-      aha.fkProjectStructureIds
+      fkProjectStructureIds
     );
     localStorage.removeItem("JSAAssessments");
     localStorage.removeItem("JSAApproval");
@@ -731,7 +732,7 @@ function AhaPackage(props) {
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             // handleCommentsClose()
-            fetchAllAHAData()
+            fetchAllAHAData();
           })
           .catch((err) => console.log(err));
       }
@@ -777,7 +778,7 @@ function AhaPackage(props) {
 
     return (
       <>
-        <Card variant="outlined" className={classes.card}>
+        {/* <Card variant="outlined" className={classes.card}>
           <CardContent>
             <Grid container spacing={3} className={classes.cardContentSection}>
               <Grid
@@ -904,7 +905,6 @@ function AhaPackage(props) {
                         gutterBottom
                         className={classes.listingLabelValue}
                       >
-                        {/* {item[1]["incidentReportedByName"]} */}
                         {item.workArea}
                       </Typography>
                     </Grid>
@@ -971,11 +971,7 @@ function AhaPackage(props) {
                     <AttachmentIcon className={classes.mright5} />
                     Attachments:
                   </Typography>
-
-                  {/* <Typography variant="body2" display="inline">
-                    <span> */}
                   <Link
-                    // href="#"
                     onClick={item.attachmentCount && handleVisibility}
                     color="secondary"
                     aria-haspopup="true"
@@ -985,8 +981,6 @@ function AhaPackage(props) {
                   >
                     {item.attachmentCount}
                   </Link>
-                  {/* </span>
-                  </Typography> */}
                   <span item xs={1} className={classes.sepHeightTen} />
                   <Typography
                     variant="body1"
@@ -1009,24 +1003,8 @@ function AhaPackage(props) {
               </Grid>
 
               <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                {/* <div className={classes.floatR}> */}
-                {/* <Typography variant="body1" display="inline">
-                      <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network view</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                        <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                      </Typography> */}
-                {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                 <Typography variant="body1" display="inline">
+
                   <Delete
                     deleteUrl={`/api/v1/ahas/${item.id}/`}
                     afterDelete={fetchAllAHAData}
@@ -1034,39 +1012,57 @@ function AhaPackage(props) {
                     item={deleteItem}
                     loader={setIsLoading}
                     loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this Observation?"
+                    deleteMsg="Are you sure you want to delete this AHA?"
                     yesBtn="Yes"
                     noBtn="No"
                   />
-                  {/* {!checkDeletePermission
-                      ? (
-                        <DeleteForeverOutlinedIcon
-                          className={classes.iconteal}
-                          style={{
-                            color: '#c0c0c0',
-                            cursor: 'not-allowed'
-                          }}
-                        />
-                      )
-                      : (
-                        <Link
-                          href="#"
-                          className={classes.mLeftR5}
-                        >
-                          <DeleteForeverOutlinedIcon
-                            className={classes.iconteal}
-                            onClick={(e) => handleClickDeleteAlert(item.item)}
-                          />
-                        </Link>
-                      )} */}
-                  {/* <Link href="#" className={classes.mLeftR5}>
-                          <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
-                        </Link> */}
                 </Typography>
               </Grid>
             </Grid>
           </CardActions>
-        </Card>
+        </Card> */}
+
+        <CardView
+          cardTitle={item.description}
+          avatar={item.avatar}
+          username={item.username}
+          itemId={item.id}
+          headerFields={[
+            { label: "Number", value: item.ahaNumber },
+            { label: "Category", value: "AHA" },
+            { label: "Stage", value: item.ahaStage },
+            { label: "Status", value: item.ahaStatus },
+          ]}
+          bodyFields={[
+            { label: "Workarea", value: item.workArea },
+            { label: "Location", value: item.location },
+            {
+              label: "Created On",
+              value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+            },
+            { label: "Created By", value: item.createdByName },
+          ]}
+          deleteFields={{
+            deleteUrl: `/api/v1/ahas/${item.id}/`,
+            afterDelete: () => {
+              fetchAllAHAData();
+            },
+            axiosObj: api,
+            item: deleteItem,
+            loader: setIsLoading,
+            loadingFlag: false,
+            deleteMsg: "Are you sure you want to delete this AHA?",
+            yesBtn: "Yes",
+            noBtn: "No",
+          }}
+          handleVisibilityComments={() => handleVisibilityComments()}
+          files={item.files !== null ? item.files.length : 0}
+          commentsCount={item.commentsCount}
+          handleSummaryPush={(i) => {
+            handleSummaryPush(i);
+          }}
+          checkDeletePermission={checkDeletePermission}
+        />
 
         {item.attachmentCount ? (
           <Grid
