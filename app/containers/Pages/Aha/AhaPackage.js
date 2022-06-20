@@ -561,7 +561,7 @@ function AhaPackage(props) {
       "commonObject",
       "aha",
       "projectStruct",
-      fkProjectStructureIds
+      aha.fkProjectStructureIds
     );
     localStorage.removeItem("JSAAssessments");
     localStorage.removeItem("JSAApproval");
