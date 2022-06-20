@@ -1058,9 +1058,7 @@ function AhaPackage(props) {
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
           commentsCount={item.commentsCount}
-          handleSummaryPush={(i) => {
-            handleSummaryPush(i);
-          }}
+          handleSummaryPush={() => handleSummaryPush(item, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
 

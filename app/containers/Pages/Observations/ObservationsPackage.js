@@ -1271,9 +1271,7 @@ function Actions(props) {
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
           commentsCount={item.commentsCount}
-          handleSummaryPush={(i) => {
-            handleSummaryPush(i);
-          }}
+          handleSummaryPush={() => handleSummaryPush(index, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
         {item.attachmentCount ? (

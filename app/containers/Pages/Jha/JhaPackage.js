@@ -1079,9 +1079,7 @@ function JhaPackage(props) {
               noBtn: "No",
             }}
             handleVisibilityComments={() => handleVisibilityComments()}
-            handleSummaryPush={(i) => {
-              handleSummaryPush(i);
-            }}
+            handleSummaryPush={() => handleSummaryPush(item, commentPayload)}
             files={item.files !== null ? item.files.length : 0}
             commentsCount={item.commentsCount}
             checkDeletePermission={checkDeletePermission}

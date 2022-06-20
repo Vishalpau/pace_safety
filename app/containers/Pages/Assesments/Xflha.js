@@ -85,6 +85,7 @@ import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 import Delete from "../../Delete/Delete";
 import Attachment from "../../Attachment/Attachment";
+import CardView from '../../Card/CardView';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1503,9 +1504,7 @@ function xflha(props) {
             handleVisibilityComments={() => handleVisibilityComments()}
             files={item.attachmentCount}
             commentsCount={item.commentsCount}
-            handleSummaryPush={(i) => {
-              handleSummaryPush(i);
-            }}
+            handleSummaryPush={() => handleFlhaSummaryPush(item.id, commentPayload)}
             checkDeletePermission={checkDeletePermission}
           />
 
