@@ -178,7 +178,6 @@ function AhaSummary(props) {
   const commentPayload = history.location.state;
   const [form, setForm] = useState([]);
   const { id } = useParams();
-  console.log(id, 'iiiiiiiiiiiiiiiiiiiiiiiiiiii');
   const [expanded, setExpanded] = React.useState("panel1");
 
   const handleNewAhaPush = async () => {
@@ -395,6 +394,10 @@ function AhaSummary(props) {
     }
     await setIsLoading(true);
   };
+
+  useEffect(() => {
+    console.log(ahaData, "ahaData");
+  }, [ahaData]);
 
   const handelWorkArea = async (assessment) => {
     const fkCompanyId =
@@ -692,7 +695,7 @@ function AhaSummary(props) {
                               }
                               // variant="contained"
                               variant={
-                                ahaData.notifyTo != "null"
+                                ahaData.notifyTo === "null"
                                   ? "contained"
                                   : "outlined"
                               }
@@ -708,8 +711,8 @@ function AhaSummary(props) {
                               display="block"
                               align="center"
                             >
-                              {ahaData.notifyTo != "null" ? "Done" : "Pending"}
-                              {ahaData.notifyTo != "null" ? (
+                              {ahaData.notifyTo === "null" ? "Done" : "Pending"}
+                              {ahaData.notifyTo === "null" ? (
                                 <CheckCircle />
                               ) : (
                                 <AccessTime />
@@ -1931,7 +1934,7 @@ function AhaSummary(props) {
                       name="Comments"
                       to={{
                         pathname: `/app/comments/aha/${id}`,
-                        state: commentPayload
+                        state: commentPayload,
                       }}
                     >
                       Comments
