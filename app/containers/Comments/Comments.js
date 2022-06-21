@@ -65,35 +65,23 @@ function Comments() {
   const history = useHistory();
   const { module } = useParams();
   const { moduleId } = useParams();
-  console.log(history, 'history');
   const commentPayload = history.location.state;
-  console.log(commentPayload, 'pcsfdsfdsk')
   const userId = JSON.parse(localStorage.getItem("userDetails"));
 
   const [commentData, setCommentData] = useState([]);
-  // const [mainComment, setMainComment] = useState("");
-  // const [subComment, setSubComment] = useState("");
   const [singleComment, setSingleComment] = useState("");
+  const [childPresentData, setChildPresentData] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (event, index, id) => {
+  const handleChange = (event) => {
     setSingleComment(event.target.value);
   };
 
-  const handleEditChange = (event, index) => {
-    const temp = [...commentData];
-    temp[index].comment = event.target.value;
-    console.log(temp, "temppp");
-    setCommentData(temp);
-  };
-
   const updateComments = (payload) => {
-    console.log(payload, "payload");
     delete payload.avatar;
     delete payload.username;
-    payload.updatedBy = userId.id;
-    console.log(payload);
+    console.log(payload, "payload");
     setIsLoading(true);
     api
       .put(`api/v1/comments/${module}/${moduleId}/${payload.id}/`, payload)
@@ -102,15 +90,13 @@ function Comments() {
         getComments();
       })
       .catch((err) => {
-        console.log(err);
         setIsLoading(false);
       });
   };
 
-  const postComments = () => {
+  const postComments = (commentPayload) => {
     setIsLoading(true);
-    delete commentPayload.comment;
-    commentPayload.comment = singleComment;
+    console.log(commentPayload, "commnetaylaod");
     api
       .post(`api/v1/comments/`, commentPayload)
       .then((res) => {
@@ -127,17 +113,32 @@ function Comments() {
     api
       .get(`api/v1/comments/${module}/${moduleId}/`)
       .then((res) => {
-        // console.log(res, "reessssss");
-        setCommentData(res.data.data.results.results);
+        console.log(res.data.data,'dgkldfgjdfgdfgjd')
+        const data = res.data.data.results.results.map(ad => {
+          if (ad.parent) {
+            return ({
+              ...ad,
+              childPresent: true
+            })
+          }
+          else {
+            return ({
+              ...ad,
+              childPresent: false
+            })
+          }
+        })
+        console.log(data,'fhdsh');
+        setCommentData(data);
       })
       .catch((err) => console.log(err));
   };
 
+  useEffect(() => {
+    console.log(childPresentData, 'childPresentData');
+  },[childPresentData])
+
   const handleModulePush = async () => {
-    // history.push("/app/pages/compliance-comment");
-    // const handleNewComplianceUpdatePush = async () => {
-    //   history.push("/app/pages/compliance/compliance");
-    // };
     console.log("push the data");
   };
 
@@ -149,8 +150,11 @@ function Comments() {
     getComments();
   }, []);
 
+  ////////////************************* single card data ************************//////////////////////
   const SingleCardData = ({ item, index }) => {
-    const [tempState, setTempState] = useState(item.comment);
+    console.log(item, "iiteeeeeee");
+    const [editState, setEditState] = useState(item.comment);
+    const [replyState, setReplyState] = useState("");
 
     const [commentReply, setCommentReply] = useState(false);
     const [commentEdit, setCommentEdit] = useState(false);
@@ -175,7 +179,6 @@ function Comments() {
             align="right"
           >
             {moment(item.updatedAt).format("MMMM Do YYYY, h:mm a")}
-            {/* {item.updatedAt} */}
           </Typography>
         </Grid>
         <Grid item md={9} sm={8} xs={12} className="commentContentSetion">
@@ -195,8 +198,8 @@ function Comments() {
                   variant="outlined"
                   className="formControl"
                   name="main-comment"
-                  value={tempState}
-                  onChange={(e) => setTempState(e.target.value)}
+                  value={editState}
+                  onChange={(e) => setEditState(e.target.value)}
                 />
                 <Grid item md={12} sm={12} xs={12} className="marginT15">
                   <Button
@@ -207,7 +210,8 @@ function Comments() {
                     onClick={() =>
                       updateComments({
                         ...item,
-                        comment: tempState,
+                        comment: editState,
+                        updatedBy: userId.id,
                       })
                     }
                   >
@@ -383,6 +387,8 @@ function Comments() {
                   rows="2"
                   id="description"
                   label="Add your comments here"
+                  value={replyState}
+                  onChange={(e) => setReplyState(e.target.value)}
                   className="formControl marginT15"
                 />
                 <Grid item md={12} sm={12} xs={12} className="marginT15">
@@ -391,7 +397,14 @@ function Comments() {
                     variant="contained"
                     color="primary"
                     className="spacerRight buttonStyle"
-                    onClick={() => addChildComments(item)}
+                    name="add"
+                    onClick={() =>
+                      postComments({
+                        ...commentPayload,
+                        parent: item.id,
+                        comment: replyState,
+                      })
+                    }
                   >
                     Add
                   </Button>
@@ -415,6 +428,7 @@ function Comments() {
   };
 
   const classes = useStyles();
+
   return (
     <Box>
       {isLoading ? (
@@ -475,7 +489,13 @@ function Comments() {
                               variant="contained"
                               color="primary"
                               className="spacerRight buttonStyle"
-                              onClick={postComments}
+                              name="save"
+                              onClick={() =>
+                                postComments({
+                                  ...commentPayload,
+                                  comment: singleComment,
+                                })
+                              }
                             >
                               Save
                             </Button>
@@ -510,6 +530,21 @@ function Comments() {
                               );
                             })
                           : "No Comments "}
+                      </Grid>
+                      <Grid
+                        item
+                        md={3}
+                        sm={4}
+                        xs={12}
+                        className="commentMoreLink"
+                      >
+                        <Typography
+                          variant="h6"
+                          className="commentMoreLinkTitle"
+                          align="right"
+                        >
+                          <Link href="#">View All Comments</Link>
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Grid>

@@ -24,33 +24,41 @@ import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
 import MessageIcon from "@material-ui/icons/Message";
 import SearchIcon from "@material-ui/icons/Search";
 import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
-import Pagination from '@material-ui/lab/Pagination';
-import axios from 'axios';
+import Pagination from "@material-ui/lab/Pagination";
+import axios from "axios";
 import { PapperBlock } from "dan-components";
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
 import moment from "moment";
 import MUIDataTable from "mui-datatables";
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { company, projectName, tabViewMode } from '../../../redux/actions/initialDetails';
+import {
+  company,
+  projectName,
+  tabViewMode,
+} from "../../../redux/actions/initialDetails";
 import api from "../../../utils/axios";
-import { HEADER_AUTH, INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL } from "../../../utils/constants";
+import {
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM_NEW,
+  SELF_API,
+  SSO_URL,
+} from "../../../utils/constants";
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
 import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 
-const Loader = lazy(() => import("../../Forms/Loader"))
-
+const Loader = lazy(() => import("../../Forms/Loader"));
 
 // Styles
 const useStyles = makeStyles((theme) => ({
   pagination: {
     padding: "1rem 0",
     display: "flex",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   root: {
     flexGrow: 1,
@@ -151,9 +159,9 @@ function BlankPage(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const [showIncident, setShowIncident] = useState([]);
   const [pageCount, setPageCount] = useState(0);
-  const [permissionListData, setPermissionListData] = useState([])
-  const [page, setPage] = useState(1)
-  const [pageData, setPageData] = useState(0)
+  const [permissionListData, setPermissionListData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
@@ -163,6 +171,10 @@ function BlankPage(props) {
   const handelView = (e) => {
     setListToggle(false);
   };
+
+  useEffect(() => {
+    console.log(isLoading, "isLoading");
+  }, [isLoading]);
 
   const handelViewTabel = (e) => {
     setListToggle(true);
@@ -177,14 +189,17 @@ function BlankPage(props) {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
-
   const fetchData = async () => {
-    await setPage(1)
+    setPage(1);
+    setIsLoading(true);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId;
-    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
     let struct = "";
@@ -194,44 +209,53 @@ function BlankPage(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     if (fkProjectStructureIds) {
-      try {
-        const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
-        // debugger;
-        await setIncidents(res.data.data.results.results);
-
-        await setTotalData(res.data.data.results.count)
-        await setPageData(res.data.data.results.count / 25)
-        let pageCount = Math.ceil(res.data.data.results.count / 25)
-        await setPageCount(pageCount)
-      }
-      catch (err) {
-
-        history.push("/app/pages/error")
-      }
+      // try {
+      const res = await api.get(
+        `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
+      );
+      // debugger;
+      setIsLoading(false);
+      setIncidents(res.data.data.results.results);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
+      let pageCount = Math.ceil(res.data.data.results.count / 25);
+      setPageCount(pageCount);
+      // }
+      // catch (err) {
+      //   console.log('errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
+      //   history.push("/app/pages/error")
+      // }
     } else {
-      const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
+      const res = await api
+        .get(
+          `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
+        )
         // alert('hey')
         .then(async (res) => {
           // debugger;
+          setIsLoading(false);
           setIncidents(res.data.data.results.results);
-          await setTotalData(res.data.data.results.count)
-          await setPageData(res.data.data.results.count / 25)
-          let pageCount = Math.ceil(res.data.data.results.count / 25)
-          await setPageCount(pageCount)
+          setTotalData(res.data.data.results.count);
+          setPageData(res.data.data.results.count / 25);
+          let pageCount = Math.ceil(res.data.data.results.count / 25);
+          setPageCount(pageCount);
         })
-        .catch(err => history.push("/app/pages/error"))
+        .catch((err) => history.push("/app/pages/error"));
       // handleTimeOutError(res)
     }
     const viewMode = {
-      initialNotification: true, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
-
+      initialNotification: true,
+      investigation: false,
+      evidence: false,
+      rootcauseanalysis: false,
+      lessionlearn: false,
     };
     dispatch(tabViewMode(viewMode));
     // id !== undefined && history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
   };
 
   const userDetails = async (compId, proId) => {
-    console.log("welcome user details")
+    console.log("welcome user details");
     try {
       if (compId) {
         let config = {
@@ -241,59 +265,68 @@ function BlankPage(props) {
         };
 
         await api(config)
-          .then(function (response) {
-            console.log(response)
+          .then(function(response) {
+            console.log(response);
             if (response.status === 200) {
-              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
-                .subscriptions.filter(subs => subs.appCode === "safety")[0]
-                .hostings[0].apiDomain
+              let hosting = response.data.data.results.data.companies
+                .filter((company) => company.companyId == compId)[0]
+                .subscriptions.filter((subs) => subs.appCode === "safety")[0]
+                .hostings[0].apiDomain;
 
-              console.log(hosting)
+              console.log(hosting);
               let data1 = {
                 method: "get",
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
               axios(data1).then((res) => {
-                console.log(response)
-                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+                console.log(response);
+                localStorage.setItem(
+                  "userDetails",
+                  JSON.stringify(response.data.data.results.data)
+                );
 
                 if (compId) {
-                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  let companies = response.data.data.results.data.companies.filter(
+                    (item) => item.companyId == compId
+                  );
 
-                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
-                  localStorage.setItem('company', JSON.stringify(companeyData))
+                  let companeyData = {
+                    fkCompanyId: companies[0].companyId,
+                    fkCompanyName: companies[0].companyName,
+                  };
+                  localStorage.setItem("company", JSON.stringify(companeyData));
 
-                  dispatch(company(companeyData))
+                  dispatch(company(companeyData));
                 }
                 if (proId) {
-                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-                  let project = companies[0].projects.filter(item => item.projectId == proId)
+                  let companies = response.data.data.results.data.companies.filter(
+                    (item) => item.companyId == compId
+                  );
+                  let project = companies[0].projects.filter(
+                    (item) => item.projectId == proId
+                  );
 
-                  localStorage.setItem("projectName", JSON.stringify(project[0]))
-                  dispatch(projectName(project[0]))
+                  localStorage.setItem(
+                    "projectName",
+                    JSON.stringify(project[0])
+                  );
+                  dispatch(projectName(project[0]));
                 }
                 // fetchPermissionData();
-                localStorage.removeItem("direct_loading")
-              })
-
-
-
-
-
+                localStorage.removeItem("direct_loading");
+              });
             }
           })
-          .catch(function (error) {
-          });
+          .catch(function(error) {});
       }
-    } catch (error) {
-    }
-  }
+    } catch (error) {}
+  };
 
   const handlePush = async () => {
     history.push({
-      pathname: INITIAL_NOTIFICATION_FORM_NEW['Incident details'],
-      state: 'new incident'
+      pathname: INITIAL_NOTIFICATION_FORM_NEW["Incident details"],
+      state: "new incident",
     });
   };
 
@@ -331,7 +364,6 @@ function BlankPage(props) {
         },
       },
     },
-
   ];
 
   const options = {
@@ -346,16 +378,18 @@ function BlankPage(props) {
     viewColumns: false,
     download: false,
     paging: false,
-    pagination: false
-
+    pagination: false,
   };
 
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId;
-    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
     let struct = "";
@@ -364,22 +398,22 @@ function BlankPage(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`)
+    const res = await api
+      .get(
+        `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
+      )
       .then((res) => {
         setIncidents(res.data.data.results.results);
-        setPage(value)
+        setPage(value);
       })
-      .catch(error => {
-
-      })
-
+      .catch((error) => {});
   };
 
   const handleDelete = async (item) => {
     // console.log(item);
-    if (checkACL('safety-incident', 'delete_incidents')) {
+    if (checkACL("safety-incident", "delete_incidents")) {
       const data = {
-        status: 'Delete'
+        status: "Delete",
       };
       // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
       // let data = item[1];
@@ -387,21 +421,25 @@ function BlankPage(props) {
       // data.status = "Delete";
       // delete data.attachment
       setIsLoading(false);
-      const res1 = await api.put(`/api/v1/incidents/${item[1].id}/`, data)
-        .then(response => {
+      const res1 = await api
+        .put(`/api/v1/incidents/${item[1].id}/`, data)
+        .then((response) => {
           console.log(response);
           // fetchData();
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
   };
 
   const handleSearchIncident = (serchValue) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId;
-    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
     let struct = "";
@@ -410,32 +448,35 @@ function BlankPage(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`)
+    api
+      .get(
+        `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`
+      )
 
       .then((res) => {
         setIncidents(res.data.data.results.results);
-        setTotalData(res.data.data.results.count)
-        setPageData(res.data.data.results.count / 25)
-        let pageCount = Math.ceil(res.data.data.results.count / 25)
-        setPageCount(pageCount)
-      })
-  }
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        setPageCount(pageCount);
+      });
+  };
 
   const handelCallBack = async () => {
-    await setIsLoading(true)
-    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    //  setIsLoading(true);
+    let state = JSON.parse(localStorage.getItem("direct_loading"));
     if (state !== null) {
-      await userDetails(state.comId, state.proId)
+      await userDetails(state.comId, state.proId);
     } else {
       await fetchData();
     }
-    await setIsLoading(false)
-    await allPickListDataValue()
-  }
+    //  setIsLoading(false);
+    await allPickListDataValue();
+  };
 
   useEffect(() => {
     handelCallBack();
-    setCheckDeletePermission(checkACL('safety-incident', 'delete_incidents'));
+    setCheckDeletePermission(checkACL("safety-incident", "delete_incidents"));
     // console.log(props.projectName);
   }, [props.projectName.breakDown, props.projectName.projectName]);
 
@@ -447,7 +488,7 @@ function BlankPage(props) {
     <Acl
       module="safety-incident"
       action="view_incidents"
-      html={(
+      html={
         <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
           <div className={classes.root}>
             <AppBar position="static" color="transparent">
@@ -499,7 +540,6 @@ function BlankPage(props) {
                   </Grid>
                   <Grid item xs={7} md={5}>
                     <Box display="flex" justifyContent="flex-end">
-
                       {isDesktop ? (
                         <Tooltip title="New Incident">
                           <Button
@@ -512,8 +552,18 @@ function BlankPage(props) {
                             className={classes.newIncidentButton}
                             disableElevation
                             style={{
-                              background: checkACL('safety-incident', 'add_incidents') ? '#06425c' : '#c0c0c0',
-                              cursor: checkACL('safety-incident', 'add_incidents') ? 'pointer' : 'not-allowed'
+                              background: checkACL(
+                                "safety-incident",
+                                "add_incidents"
+                              )
+                                ? "#06425c"
+                                : "#c0c0c0",
+                              cursor: checkACL(
+                                "safety-incident",
+                                "add_incidents"
+                              )
+                                ? "pointer"
+                                : "not-allowed",
                             }}
                           >
                             New Incident
@@ -538,13 +588,12 @@ function BlankPage(props) {
 
           {listToggle == false ? (
             <>
-              {isLoading == false ?
+              {isLoading == false ? (
                 <>
                   <div className="gridView">
                     {Object.entries(incidents)
                       .filter((searchText) => {
                         return (
-
                           searchText[1]["incidentTitle"]
                             .toLowerCase()
                             .includes(searchIncident.toLowerCase()) ||
@@ -554,11 +603,19 @@ function BlankPage(props) {
                         );
                       })
                       .map((item, index) => (
-                        <Card variant="outlined" className={Incidents.card} key={index}>
+                        <Card
+                          variant="outlined"
+                          className={Incidents.card}
+                          key={index}
+                        >
                           <CardContent>
                             <Grid container spacing={3}>
                               <Grid item xs={12}>
-                                <Grid container spacing={3} alignItems="flex-start">
+                                <Grid
+                                  container
+                                  spacing={3}
+                                  alignItems="flex-start"
+                                >
                                   <Grid item xs={12} md={10}>
                                     <Typography variant="h6">
                                       {item[1]["incidentTitle"]}
@@ -573,11 +630,25 @@ function BlankPage(props) {
                                   >
                                     <Box
                                       display={isDesktop ? "flex" : null}
-                                      justifyContent={isDesktop ? "flex-end" : null}
+                                      justifyContent={
+                                        isDesktop ? "flex-end" : null
+                                      }
                                     >
                                       <Chip
-                                        avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
-                                        label={item[1]["username"] ? item[1]["username"] : "Admin"}
+                                        avatar={
+                                          <Avatar
+                                            src={
+                                              item[1]["avatar"]
+                                                ? item[1]["avatar"]
+                                                : "/images/pp_boy.svg"
+                                            }
+                                          />
+                                        }
+                                        label={
+                                          item[1]["username"]
+                                            ? item[1]["username"]
+                                            : "Admin"
+                                        }
                                       />
                                     </Box>
                                   </Grid>
@@ -593,10 +664,14 @@ function BlankPage(props) {
                                     >
                                       Number:
                                       <ILink
-                                        onClick={(e) => history.push({
-                                          pathname: `/incident/details/${item[1].id}/`,
-                                          state: 'change_incident'
-                                        })}
+                                        onClick={(e) =>
+                                          history.push({
+                                            pathname: `/incident/details/${
+                                              item[1].id
+                                            }/`,
+                                            state: "change_incident",
+                                          })
+                                        }
                                         variant="subtitle2"
                                         className={Fonts.listingLabelValue}
                                       >
@@ -622,9 +697,9 @@ function BlankPage(props) {
                                       <Box display="flex" alignItems="center">
                                         <CalendarTodayIcon fontSize="small" />
                                         <span className={Incidents.dateValue}>
-                                          {moment(item[1]["incidentOccuredOn"]).format(
-                                            "Do MMM YYYY, h:mm a"
-                                          )}
+                                          {moment(
+                                            item[1]["incidentOccuredOn"]
+                                          ).format("Do MMM YYYY, h:mm a")}
                                         </span>
                                       </Box>
                                     </Typography>
@@ -640,7 +715,9 @@ function BlankPage(props) {
                                     >
                                       Incident type
                                     </Typography>
-                                    <Typography className={Fonts.listingLabelValue}>
+                                    <Typography
+                                      className={Fonts.listingLabelValue}
+                                    >
                                       {item[1]["incidentType"]}
                                     </Typography>
                                   </Grid>
@@ -671,9 +748,9 @@ function BlankPage(props) {
                                       variant="body1"
                                       className={Fonts.listingLabelValue}
                                     >
-                                      {moment(item[1]["incidentReportedOn"]).format(
-                                        "Do MMM YYYY, h:mm a"
-                                      )}
+                                      {moment(
+                                        item[1]["incidentReportedOn"]
+                                      ).format("Do MMM YYYY, h:mm a")}
                                     </Typography>
                                   </Grid>
 
@@ -685,7 +762,9 @@ function BlankPage(props) {
                                       Reported by
                                     </Typography>
 
-                                    <Typography className={Fonts.listingLabelValue}>
+                                    <Typography
+                                      className={Fonts.listingLabelValue}
+                                    >
                                       {item[1]["incidentReportedByName"]}
                                     </Typography>
                                   </Grid>
@@ -695,27 +774,32 @@ function BlankPage(props) {
                           </CardContent>
                           <Divider />
                           <CardActions className={Incidents.cardActions}>
-                            <Grid container spacing={2} justifyContent='space-between' alignItems="center">
+                            <Grid
+                              container
+                              spacing={2}
+                              justifyContent="space-between"
+                              alignItems="center"
+                            >
                               <Grid item xs={6} md={3}>
                                 <Typography
                                   variant="body2"
                                   display="inline"
                                   className={Fonts.listingLabelName}
-                                // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
+                                  // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                                 >
-                                  <MessageIcon fontSize="small" /> Comments:{item[1]["commentsCount"]}
+                                  <MessageIcon fontSize="small" /> Comments:
+                                  {item[1]["commentsCount"]}
                                 </Typography>
-
                               </Grid>
 
-
                               <Grid item xs={6} md={3}>
                                 <Typography
                                   variant="body2"
                                   display="inline"
                                   className={Fonts.listingLabelName}
                                 >
-                                  <AttachmentIcon fontSize="small" /> Attachments:
+                                  <AttachmentIcon fontSize="small" />{" "}
+                                  Attachments:
                                 </Typography>
                                 <Typography variant="body2" display="inline">
                                   {/* <ILink href="#"> */}
@@ -736,27 +820,25 @@ function BlankPage(props) {
                           </Button> */}
                                 <div className={classes.floatR}>
                                   <Typography variant="body1" display="inline">
-                                    {!checkDeletePermission
-                                      ? (
+                                    {!checkDeletePermission ? (
+                                      <DeleteForeverOutlinedIcon
+                                        className={classes.iconteal}
+                                        style={{
+                                          color: "#c0c0c0",
+                                          cursor: "not-allowed",
+                                        }}
+                                      />
+                                    ) : (
+                                      <Link
+                                        href="#"
+                                        className={classes.mLeftR5}
+                                      >
                                         <DeleteForeverOutlinedIcon
                                           className={classes.iconteal}
-                                          style={{
-                                            color: '#c0c0c0',
-                                            cursor: 'not-allowed'
-                                          }}
+                                          onClick={(e) => handleDelete(item)}
                                         />
-                                      )
-                                      : (
-                                        <Link
-                                          href="#"
-                                          className={classes.mLeftR5}
-                                        >
-                                          <DeleteForeverOutlinedIcon
-                                            className={classes.iconteal}
-                                            onClick={(e) => handleDelete(item)}
-                                          />
-                                        </Link>
-                                      )}
+                                      </Link>
+                                    )}
                                   </Typography>
                                 </div>
                               </Grid>
@@ -764,9 +846,8 @@ function BlankPage(props) {
                           </CardActions>
                         </Card>
                       ))}
-
                   </div>
-                  {Object.keys(incidents).length === 0 &&
+                  {Object.keys(incidents).length === 0 && (
                     <>
                       <Card variant="outlined">
                         <CardContent>
@@ -776,63 +857,71 @@ function BlankPage(props) {
                         </CardContent>
                       </Card>
                     </>
-                  }
+                  )}
                 </>
-                :
+              ) : (
                 <Loader />
-              }
+              )}
             </>
           ) : (
             // listview end
             <>
-              {isLoading == false ?
+              {isLoading == false ? (
                 <div className="listView">
                   <MUIDataTable
-                    data={Object.entries(incidents).filter((searchText) => {
-                      return (
-
-                        searchText[1]["incidentTitle"]
-                          .toLowerCase()
-                          .includes(searchIncident.toLowerCase()) ||
-                        searchText[1]["incidentNumber"].includes(
-                          searchIncident.toUpperCase()
-                        )
-                      );
-                    }).map((item) => [
-                      item[1]["incidentNumber"],
-                      item[1]["incidentReportedByName"],
-                      item[1]["incidentLocation"],
-                      moment(item[1]["incidentReportedOn"]).format(
-                        "Do MMMM YYYY, h:mm:ss a"
-                      ),
-                      item[1]["incidentReportedByName"],
-                      item[1]["id"],
-                    ])}
+                    data={Object.entries(incidents)
+                      .filter((searchText) => {
+                        return (
+                          searchText[1]["incidentTitle"]
+                            .toLowerCase()
+                            .includes(searchIncident.toLowerCase()) ||
+                          searchText[1]["incidentNumber"].includes(
+                            searchIncident.toUpperCase()
+                          )
+                        );
+                      })
+                      .map((item) => [
+                        item[1]["incidentNumber"],
+                        item[1]["incidentReportedByName"],
+                        item[1]["incidentLocation"],
+                        moment(item[1]["incidentReportedOn"]).format(
+                          "Do MMMM YYYY, h:mm:ss a"
+                        ),
+                        item[1]["incidentReportedByName"],
+                        item[1]["id"],
+                      ])}
                     columns={columns}
                     options={options}
-
-
                   />
                 </div>
-                :
+              ) : (
                 <Loader />
-              }
+              )}
             </>
           )}
           <div className={classes.pagination}>
-            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+            {totalData != 0
+              ? Number.isInteger(pageData) !== true
+                ? totalData < 25 * page
+                  ? `${page * 25 - 24} - ${totalData} of ${totalData}`
+                  : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+              : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
         </PapperBlock>
-      )} />
+      }
+    />
   );
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     projectName: state.getIn(["InitialDetailsReducer"]),
-    todoIncomplete: state
+    todoIncomplete: state,
+  };
+};
 
-  }
-}
-
-export default connect(mapStateToProps, null)(BlankPage);
+export default connect(
+  mapStateToProps,
+  null
+)(BlankPage);
