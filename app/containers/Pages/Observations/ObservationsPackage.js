@@ -981,7 +981,7 @@ function Actions(props) {
       setCommentsOpen(false);
     };
 
-    const oneHour = 10 * 60 * 1000;
+    const oneHour = 3 * 60 * 1000;
 
     return (
       <>
