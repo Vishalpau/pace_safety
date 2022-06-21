@@ -550,8 +550,8 @@ function Actions(props) {
       localStorage.removeItem("action");
     }
     history.push({
-      pathname:`/app/icare/details/${id}`,
-      state: commentPayload
+      pathname: `/app/icare/details/${id}`,
+      state: commentPayload,
     });
   };
 
@@ -911,7 +911,7 @@ function Actions(props) {
       console.log(event.target.value);
       setCommentData(event.target.value);
     };
-    
+
     const commentPayload = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
@@ -980,6 +980,8 @@ function Actions(props) {
     const handleCommentsClose = () => {
       setCommentsOpen(false);
     };
+
+    const oneHour = 10 * 60 * 1000;
 
     return (
       <>
@@ -1236,6 +1238,12 @@ function Actions(props) {
           </CardActions>
         </Card> */}
         <CardView
+          ifdifferent={
+            item.source === "Paper" &&
+            moment() - moment(item.createdAt) < oneHour
+              ? "latest"
+              : ""
+          }
           cardTitle={item.observationDetails}
           avatar={item.avatar}
           username={item.username}
