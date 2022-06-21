@@ -574,8 +574,8 @@ const Checks = (props) => {
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`
     );
     const result = res.data.data.results;
-    await setShowCheckData(result);
-    await setCheckData(result);
+    setShowCheckData(result);
+    setCheckData(result);
     return result;
   };
 
@@ -759,7 +759,7 @@ const Checks = (props) => {
   };
 
   useEffect(() => {
-    console.log(checkData, "checkData");
+    console.log(checkData);
   }, [checkData]);
 
   const handelSubmit = async () => {
