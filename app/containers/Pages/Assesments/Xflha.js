@@ -85,7 +85,7 @@ import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 import Delete from "../../Delete/Delete";
 import Attachment from "../../Attachment/Attachment";
-import CardView from '../../Card/CardView';
+import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -794,8 +794,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -828,7 +828,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function () {
+    function() {
       clearTimeout(timer);
 
       timer = setTimeout(() => setSeacrhFlha(v), d);
@@ -972,9 +972,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => { });
+          .catch((error) => {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   // useEffect(() => {
@@ -990,8 +990,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1056,23 +1056,23 @@ function xflha(props) {
   const SetDataOrder = () => {
     let newdata;
     if (order === "ascDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         return moment(a.createdAt) - moment(b.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "descDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         return moment(b.createdAt) - moment(a.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "ascAppDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
       setFlhas(newdata);
     } else if (order === "descAppDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
@@ -1498,9 +1498,11 @@ function xflha(props) {
               noBtn: "No",
             }}
             handleVisibilityComments={() => handleVisibilityComments()}
-            files={item.attachmentCount}
+            files={item.files !== null ? item.files.length : 0}
             commentsCount={item.commentsCount}
-            handleSummaryPush={() => handleFlhaSummaryPush(item.id, commentPayload)}
+            handleSummaryPush={() =>
+              handleFlhaSummaryPush(item.id, commentPayload)
+            }
             checkDeletePermission={checkDeletePermission}
           />
 
@@ -2485,8 +2487,9 @@ function xflha(props) {
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable
-                      className={`${classes.dataTableSectionDesign
-                        } dataTableSectionDesign`}
+                      className={`${
+                        classes.dataTableSectionDesign
+                      } dataTableSectionDesign`}
                       title="FLHA's"
                       data={Object.entries(flhas).map((item) => [
                         item[1].flhaNumber,
