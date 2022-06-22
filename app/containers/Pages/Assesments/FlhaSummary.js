@@ -168,22 +168,23 @@ class SimpleTabs extends React.Component {
     versions: ["1.0"],
     selectedVersion: "1.0",
     projectStructName: [],
-    id: ''
+    id: "",
   };
 
   componentDidMount() {
+    console.log(this.props)
     this.getFlhaDetails();
     this.getJobVisualConfirmation();
     this.handelVersion();
-    this.setState({id: this.props.history.location.state});
-    console.log(this.props.history.location.state, 'prrrrrrroppppssss');
+    this.setState({ id: this.props.match.params.id });
+    // console.log(this.props.history.location.state, "prrrrrrroppppssss");
   }
 
   getFlhaDetails = async () => {
     const flhaNumber = this.props.match.params.id;
     const res = await api.get("api/v1/flhas/" + flhaNumber + "/");
     await this.handelWorkArea1(res.data.data.results);
-    await this.setState({ flha: res.data.data.results });
+    this.setState({ flha: res.data.data.results });
     console.log(res);
   };
 
@@ -192,15 +193,15 @@ class SimpleTabs extends React.Component {
     let taskUrl = `api/v1/flhas/${flhaId}/criticaltasks/`;
     var res = await api.get(`${taskUrl}?version=1.0`);
     var resAllTask = await api.get(taskUrl);
-    await this.setState({ criticalTasks: res.data.data.results });
-    await this.setState({ versions: resAllTask.data.data.results.versions });
+    this.setState({ criticalTasks: res.data.data.results });
+    this.setState({ versions: resAllTask.data.data.results.versions });
   };
 
   getPreventiveControls = async (value) => {
     const flhaId = this.props.match.params.id;
     let taskUrl = `api/v1/flhas/${flhaId}/criticaltasks/`;
     var res = await api.get(`${taskUrl}?version=${value}`);
-    await this.setState({
+    this.setState({
       criticalTasks: res.data.data.results,
       selectedVersion: value,
     });
@@ -211,7 +212,7 @@ class SimpleTabs extends React.Component {
     const res = await api.get(
       "api/v1/flhas/" + flhaId + "/visualconfirmations/"
     );
-    await this.setState({ visualConfirmations: res.data.data.results });
+    this.setState({ visualConfirmations: res.data.data.results });
   };
 
   handelWorkArea1 = async (assessment) => {
@@ -242,7 +243,7 @@ class SimpleTabs extends React.Component {
       );
       structName.push(workArea.data.data.results[0]["structureName"]);
     }
-    await this.setState({ projectStructName: structName });
+    this.setState({ projectStructName: structName });
   };
   redirectToHome = (Path) => {
     const { history } = this.props;
@@ -268,6 +269,8 @@ class SimpleTabs extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const commentPayload = this.props.location.state
+    console.log()
     const {
       value,
       flha,
@@ -526,7 +529,10 @@ class SimpleTabs extends React.Component {
                         className="quickActionSectionLink"
                         variant="subtitle"
                         name="Comments"
-                        to={`/app/comments/flha/${id}`}
+                        to={{
+                          pathname: `/app/comments/flha/${id}`,
+                          state: commentPayload
+                        }}
                       >
                         Comments
                       </NavLink>

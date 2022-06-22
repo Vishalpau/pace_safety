@@ -501,16 +501,19 @@ function Actions(props) {
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
 
-  const handleSummaryPush = async (index) => {
-    const itemid = index;
-    localStorage.setItem("fkobservationId", itemid);
-    const filtered = allInitialData.filter((one) => one.id === index);
-    if (filtered[0].isCorrectiveActionTaken !== null) {
+  const handleSummaryPush = async (index, commentPayload) => {
+    console.log(allInitialData, "allInitialData");
+    const { id } = allInitialData[index];
+    localStorage.setItem("fkobservationId", id);
+    if (allInitialData[index].isCorrectiveActionTaken !== null) {
       localStorage.setItem("action", "Done");
     } else {
       localStorage.removeItem("action");
     }
-    history.push(`/app/icare/details/${itemid}`);
+    history.push({
+      pathname: `/app/icare/details/${id}`,
+      state: commentPayload,
+    });
   };
 
   const fetchInitialiObservation = async () => {
@@ -895,19 +898,20 @@ function Actions(props) {
       setCommentData(event.target.value);
     };
 
+    const commentPayload = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      commentContext: "observations",
+      contextReferenceIds: item.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: item.createdBy,
+    };
+
     const handleSendComments = async () => {
-      const commentPayload = {
-        fkCompanyId: item.fkCompanyId,
-        fkProjectId: item.fkProjectId,
-        commentContext: "observations",
-        contextReferenceIds: item.id,
-        commentTags: "",
-        comment: commentData,
-        parent: 0,
-        thanksFlag: 0,
-        status: "Active",
-        createdBy: item.createdBy,
-      };
       if (commentData) {
         console.log(api, "apiiiiiiii");
         await api
@@ -963,6 +967,8 @@ function Actions(props) {
       setCommentsOpen(false);
     };
 
+    const oneHour = 3 * 60 * 1000;
+
     return (
       <>
         {/* <Card variant="outlined" className={classes.card}>
@@ -987,7 +993,7 @@ function Actions(props) {
                 </Button>
               </Grid>
               <Link
-                onClick={() => handleSummaryPush(index)}
+                onClick={() => handleSummaryPush(index, commentPayload)}
                 className={classes.cardLinkAction}
               >
                 <Grid item xs={12}>
@@ -1218,6 +1224,12 @@ function Actions(props) {
           </CardActions>
         </Card> */}
         <CardView
+          ifdifferent={
+            item.source === "Paper" &&
+            moment() - moment(item.createdAt) < oneHour
+              ? "latest"
+              : ""
+          }
           cardTitle={item.observationDetails}
           avatar={item.avatar}
           username={item.username}
@@ -1253,9 +1265,7 @@ function Actions(props) {
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
           commentsCount={item.commentsCount}
-          handleSummaryPush={(i) => {
-            handleSummaryPush(i);
-          }}
+          handleSummaryPush={() => handleSummaryPush(index, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
         {/* {item.attachmentCount !== null ? (

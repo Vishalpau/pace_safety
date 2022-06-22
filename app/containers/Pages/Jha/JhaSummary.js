@@ -160,6 +160,7 @@ function JhaSummary(props) {
   const [lessonsLearnedView, setLessonsLearnedView] = useState(false);
   const [commentsView, setCommentsView] = useState(false);
   const history = useHistory();
+  const commentPayload = history.location.state;
   const { id } = useParams();
   console.log(id, 'iddddddddddddd');
   const [assessment, setAssessment] = useState({});
@@ -1954,7 +1955,10 @@ function JhaSummary(props) {
                     className="quickActionSectionLink"
                     variant="subtitle"
                     name="Comments"
-                    to={`/app/comments/jha/${id}`}
+                    to={{
+                      pathname:`/app/comments/jha/${id}`,
+                      state: commentPayload
+                    }}
                   >
                     Comments
                   </NavLink>

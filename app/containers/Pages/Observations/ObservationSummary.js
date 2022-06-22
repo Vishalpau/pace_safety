@@ -102,6 +102,7 @@ const ObservationSummary = () => {
   const [activity, setActivity] = useState(false);
   const { id } = useParams();
   const history = useHistory();
+  const commentPayload = history.location.state;
   // const [observationCloseOut, setObservationCloseOut] = useState(false);
   // const [observationReview, setObservationReview] = useState(false);
 
@@ -495,7 +496,10 @@ const ObservationSummary = () => {
                         className="quickActionSectionLink"
                         variant="subtitle"
                         name="Comments"
-                        to={`/app/comments/observations/${id}`}
+                        to={{
+                          pathname: `/app/comments/observations/${id}`,
+                          state: commentPayload
+                        }}
                       >
                         Comments
                       </NavLink>

@@ -32,7 +32,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Comment from '@material-ui/icons/Comment';
+import Comment from "@material-ui/icons/Comment";
 
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -225,6 +225,8 @@ function ComplianceSummary(props) {
   const [quesData, setQueData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
+  const commentPayload = history.location.state;
+  // console.log(commentPayload, 'commentPayloadddd');
   const { id } = useParams();
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [actionData, setActionData] = useState([]);
@@ -343,13 +345,13 @@ function ComplianceSummary(props) {
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {
-    console.log(groupData, "GROUPTdATA");
-  }, [groupData]);
+  // useEffect(() => {
+  //   console.log(groupData, "GROUPTdATA");
+  // }, [groupData]);
 
-  useEffect(() => {
-    console.log(quesData, "questionData");
-  }, [quesData]);
+  // useEffect(() => {
+  //   console.log(quesData, "questionData");
+  // }, [quesData]);
 
   // for fetching the work area
   const handelWorkArea = async (complianceData) => {
@@ -439,7 +441,7 @@ function ComplianceSummary(props) {
             }
           }
         }
-        await setNotificationSentValue(data);
+        setNotificationSentValue(data);
       }
     } catch (error) {}
   };
@@ -1874,7 +1876,10 @@ function ComplianceSummary(props) {
                       className="quickActionSectionLink"
                       variant="subtitle"
                       name="Comments"
-                      to={`/app/comments/compliance/${id}`}
+                      to={{
+                        pathname: `/app/comments/compliance/${id}`,
+                        state: commentPayload,
+                      }}
                     >
                       Comments
                     </NavLink>

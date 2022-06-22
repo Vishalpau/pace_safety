@@ -8,6 +8,7 @@ import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
 import Delete from "../Delete/Delete";
+import Bookmark from "../Bookmark/Bookmark";
 
 const useStyles = makeStyles((theme) => ({
   mLeftR5: {
@@ -113,7 +114,14 @@ const CardFooter = (props) => {
           </Grid>
 
           <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-            <div className={classes.floatR}>
+            <div
+              className={classes.floatR}
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              {/* <span item xs={1} className={classes.sepHeightTen} />
+              <Typography variant="body1" display="inline">
+                <Bookmark />
+              </Typography> */}
               <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
                 <Delete

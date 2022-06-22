@@ -512,8 +512,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -526,8 +526,7 @@ function JhaPackage(props) {
 
     if (props.assessment === "My Assessments") {
       const res = await api.get(
-        `api/v1/jhas/?search=${
-          props.search
+        `api/v1/jhas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`
       );
 
@@ -539,8 +538,7 @@ function JhaPackage(props) {
       await setPageCount(pageCount);
     } else {
       const res = await api.get(
-        `api/v1/jhas/?search=${
-          props.search
+        `api/v1/jhas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
       );
 
@@ -565,8 +563,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -671,13 +669,15 @@ function JhaPackage(props) {
     setCommentsOpen(false);
   };
 
-  const handleSummaryPush = async (index) => {
-    const itemid = index;
+  // const handleSummaryPush = async (index) => {
+  //   const itemid = index;
 
-    const filtered = allJHAData.filter((one) => one.id === index);
-    const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
+  //   const filtered = allJHAData.filter((one) => one.id === index);
+  //   const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
 
-    localStorage.setItem("fkJHAId", itemid);
+  const handleSummaryPush = async (selectedJha, commentPayload) => {
+    const jha = selectedJha;
+    localStorage.setItem("fkJHAId", jha.id);
     handelCommonObject(
       "commonObject",
       "jha",
@@ -687,7 +687,10 @@ function JhaPackage(props) {
     localStorage.removeItem("JSAAssessments");
     localStorage.removeItem("JSAApproval");
     localStorage.removeItem("JSAlessonsLearned");
-    history.push(`/app/pages/jha/jha-summary/${itemid}`);
+    history.push({
+      pathname: `/app/pages/jha/jha-summary/${jha.id}`,
+      state: commentPayload
+    });
   };
 
   const handleDelete = async (item) => {
@@ -742,20 +745,22 @@ function JhaPackage(props) {
       setCommentData(event.target.value);
     };
 
+    const commentPayload = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      commentContext: "jha",
+      contextReferenceIds: item.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: item.createdBy,
+    };
+
     const handleSendComments = async () => {
       // console.log(commentsData, 'comments')
-      const commentPayload = {
-        fkCompanyId: item.fkCompanyId,
-        fkProjectId: item.fkProjectId,
-        commentContext: "jha",
-        contextReferenceIds: item.id,
-        commentTags: "",
-        comment: commentData,
-        parent: 0,
-        thanksFlag: 0,
-        status: "Active",
-        createdBy: item.createdBy,
-      };
+
       if (commentData) {
         console.log(api, "apiiiiiiii");
         await api
@@ -844,7 +849,7 @@ function JhaPackage(props) {
                   </Button>
                 </Grid>
                 <Link
-                  onClick={() => handleSummaryPush(item)}
+                  onClick={() => handleSummaryPush(item, commentPayload)}
                   className={classes.cardLinkAction}
                 >
                   <Grid item xs={12}>
@@ -1080,9 +1085,7 @@ function JhaPackage(props) {
               noBtn: "No",
             }}
             handleVisibilityComments={() => handleVisibilityComments()}
-            handleSummaryPush={(i) => {
-              handleSummaryPush(i);
-            }}
+            handleSummaryPush={() => handleSummaryPush(item, commentPayload)}
             files={item.files !== null ? item.files.length : 0}
             commentsCount={item.commentsCount}
             checkDeletePermission={checkDeletePermission}

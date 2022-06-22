@@ -17,6 +17,15 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "500",
     lineHeight: "1.6",
   },
+  titlespan: {
+    fontSize: "11px",
+    marginLeft: "10px",
+    color: "#fff",
+    padding: "4px 5px",
+    background: "#ff6e0c",
+    borderRadius: "3px",
+    textTransform: "uppercase",
+  },
   listHeadColor: { backgroundColor: "#fafafa" },
   marginTopBottom: {
     "& .MuiTypography-h6 .MuiTypography-h5": {
@@ -156,6 +165,13 @@ const CardHeader = (props) => {
                 <Grid item md={10} sm={12} xs={12}>
                   <Typography className={classes.title} variant="h6">
                     {props.cardTitle}
+                    {props.ifdifferent ? (
+                      <span className={classes.titlespan}>
+                        {props.ifdifferent}
+                      </span>
+                    ) : (
+                      ""
+                    )}
                   </Typography>
                   {mappedHeader}
                 </Grid>

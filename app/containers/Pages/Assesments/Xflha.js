@@ -85,7 +85,7 @@ import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 import Delete from "../../Delete/Delete";
 import Attachment from "../../Attachment/Attachment";
-import CardView from "../../Card/CardView";
+import CardView from '../../Card/CardView';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -725,10 +725,13 @@ function xflha(props) {
     setMyUserPOpen(false);
   };
 
-  const handleSummaryPush = async (id) => {
-    console.log(id, "iddddddddd");
+  const handleFlhaSummaryPush = async (id, commentPayload) => {
+    // console.log(id, "iddddddddd");
     localStorage.setItem("flhaId", id);
-    history.push("/app/pages/assesments/flhasummary/" + id);
+    history.push({
+      pathname: `/app/pages/assesments/flhasummary/${id}`,
+      state: commentPayload,
+    });
   };
   const handleClickOpenAttachment = () => {
     setopenAttachment(true);
@@ -791,8 +794,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -825,7 +828,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function() {
+    function () {
       clearTimeout(timer);
 
       timer = setTimeout(() => setSeacrhFlha(v), d);
@@ -885,9 +888,9 @@ function xflha(props) {
   const handelSearchFlha = async (e) => {
     const allSeacrh = [];
     if (e.target.value.length === 0) {
-      await setShowFlha([]);
+      setShowFlha([]);
     } else {
-      await setSeacrhFlha(e.target.value.toLowerCase());
+      setSeacrhFlha(e.target.value.toLowerCase());
       Object.entries(flhas).map((item) => {
         if (item[1].flhaNumber.toLowerCase().includes(searchFlha)) {
           allSeacrh.push([
@@ -901,7 +904,7 @@ function xflha(props) {
           ]);
         }
       });
-      await setShowFlha(allSeacrh);
+      setShowFlha(allSeacrh);
     }
   };
   const userDetails = async (compId, proId) => {
@@ -969,10 +972,14 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
+
+  // useEffect(() => {
+  //   console.log(flhas, "flhas");
+  // }, [flhas]);
 
   const handleChange = async (event, value) => {
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
@@ -983,8 +990,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -994,35 +1001,8 @@ function xflha(props) {
     const res = await api.get(
       `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
     );
-    await setFlhas(res.data.data.results.results);
-    await setPage(value);
-    await setOrder("");
-  };
-
-  const handleDelete = async (item) => {
-    // console.log(item);
-    if (checkACL("safety-flha", "delete_flha")) {
-      const data = {
-        fkCompanyId: item[1].fkCompanyId,
-        fkProjectId: item[1].fkProjectId,
-        jobTitle: item[1].jobTitle,
-        jobDetails: item[1].jobDetails,
-        status: "Delete",
-      };
-      // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
-      // let data = item[1];
-      // console.log(data);
-      // data.status = "Delete";
-      // delete data.attachment
-      setIsLoading(false);
-      const res1 = await api
-        .put(`/api/v1/flhas/${item[1].id}/`, data)
-        .then((response) => {
-          console.log(response);
-          fetchData();
-        })
-        .catch((err) => console.log(err));
-    }
+    setFlhas(res.data.data.results.results);
+    setPage(value);
   };
 
   useEffect(() => {
@@ -1040,7 +1020,7 @@ function xflha(props) {
   }, []);
 
   useEffect(() => {
-    console.log(status, "statussss");
+    // console.log(status, "statussss");
     fetchData();
   }, [status]);
 
@@ -1076,23 +1056,23 @@ function xflha(props) {
   const SetDataOrder = () => {
     let newdata;
     if (order === "ascDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         return moment(a.createdAt) - moment(b.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "descDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         return moment(b.createdAt) - moment(a.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "ascAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
       setFlhas(newdata);
     } else if (order === "descAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
@@ -1190,6 +1170,8 @@ function xflha(props) {
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
     const [commentData, setCommentData] = useState("");
 
+    // console.log(item, index, "iiiiteeeeeem");
+
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
@@ -1202,20 +1184,20 @@ function xflha(props) {
       setCommentData(event.target.value);
     };
 
+    const commentPayload = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      commentContext: "flha",
+      contextReferenceIds: item.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: item.createdBy,
+    };
+
     const handleSendComments = async () => {
-      console.log(commentData, "comments");
-      const commentPayload = {
-        fkCompanyId: item.fkCompanyId,
-        fkProjectId: item.fkProjectId,
-        commentContext: "flha",
-        contextReferenceIds: item.id,
-        commentTags: "",
-        comment: commentData,
-        parent: 0,
-        thanksFlag: 0,
-        status: "Active",
-        createdBy: item.createdBy,
-      };
       if (commentData) {
         await api
           .post("/api/v1/comments/", commentPayload)
@@ -1290,7 +1272,7 @@ function xflha(props) {
                   </Button>
                 </Grid>
                 <Link
-                  onClick={() => handleFlhaSummaryPush(item.id)}
+                  onClick={() => handleFlhaSummaryPush(item.id, commentPayload)}
                   className={classes.cardLinkAction}
                 >
                   <Grid item xs={12}>
@@ -1518,9 +1500,7 @@ function xflha(props) {
             handleVisibilityComments={() => handleVisibilityComments()}
             files={item.attachmentCount}
             commentsCount={item.commentsCount}
-            handleSummaryPush={(i) => {
-              handleSummaryPush(i);
-            }}
+            handleSummaryPush={() => handleFlhaSummaryPush(item.id, commentPayload)}
             checkDeletePermission={checkDeletePermission}
           />
 
@@ -2505,9 +2485,8 @@ function xflha(props) {
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable
-                      className={`${
-                        classes.dataTableSectionDesign
-                      } dataTableSectionDesign`}
+                      className={`${classes.dataTableSectionDesign
+                        } dataTableSectionDesign`}
                       title="FLHA's"
                       data={Object.entries(flhas).map((item) => [
                         item[1].flhaNumber,

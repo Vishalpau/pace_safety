@@ -540,21 +540,22 @@ function AhaPackage(props) {
     setMyUserPOpen(false);
   };
 
-  const handleSummaryPush = async (index) => {
-    const ahaid = index;
-    const filtered = allAHAData.filter((one) => one.id === index);
-    const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
-    localStorage.setItem("fkAHAId", ahaid);
+  const handleSummaryPush = async (selectedJha, commentPayload) => {
+    const aha = selectedJha;
+    localStorage.setItem("fkAHAId", aha.id);
     handelCommonObject(
       "commonObject",
       "aha",
       "projectStruct",
-      fkProjectStructureIds
+      aha.fkProjectStructureIds
     );
     localStorage.removeItem("JSAAssessments");
     localStorage.removeItem("JSAApproval");
     localStorage.removeItem("JSAlessonsLearned");
-    history.push(`/app/pages/aha/aha-summary/${ahaid}`);
+    history.push({
+      pathname: `/app/pages/aha/aha-summary/${aha.id}`,
+      state: commentPayload
+    });
   };
 
   const handleNewAhaPush = async () => {
@@ -580,8 +581,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -625,8 +626,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -639,16 +640,14 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       await setAllAHAData(res.data.data.results.results);
       await setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       await setAllAHAData(res.data.data.results.results);
@@ -656,22 +655,7 @@ function AhaPackage(props) {
     }
   };
 
-  const handleDelete = async (item) => {
-    let data = item[1];
-    let id = data.id;
-    data.status = "Delete";
-    delete data.ahaAssessmentAttachment;
-    console.log(data, "!!!!!!!!!");
-    await setIsLoading(false);
-    await api
-      .delete(`/api/v1/ahas/${id}/`, data)
-      .then((response) => {
-        fetchAllAHAData();
-      })
-      .catch((err) => console.log(err));
-  };
-
-  //   Assigning 'classes' to useStyles()
+  //Assigning 'classes' to useStyles()
   const classes = useStyles();
 
   useEffect(() => {
@@ -708,23 +692,24 @@ function AhaPackage(props) {
     };
 
     const addComments = (event) => {
-      console.log(event.target.value);
+      // console.log(event.target.value);
       setCommentData(event.target.value);
     };
 
+    const commentPayload = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      commentContext: "aha",
+      contextReferenceIds: item.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: item.createdBy,
+    };
+
     const handleSendComments = async () => {
-      const commentPayload = {
-        fkCompanyId: item.fkCompanyId,
-        fkProjectId: item.fkProjectId,
-        commentContext: "aha",
-        contextReferenceIds: item.id,
-        commentTags: "",
-        comment: commentData,
-        parent: 0,
-        thanksFlag: 0,
-        status: "Active",
-        createdBy: item.createdBy,
-      };
       if (commentData) {
         console.log(api, "apiiiiiiii");
         await api
@@ -799,7 +784,7 @@ function AhaPackage(props) {
                 </Button>
               </Grid>
               <Link
-                onClick={(e) => handleSummaryPush(item)}
+                onClick={(e) => handleSummaryPush(item, commentPayload)}
                 className={classes.cardLinkAction}
               >
                 <Grid item xs={12}>
@@ -1057,9 +1042,7 @@ function AhaPackage(props) {
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
           commentsCount={item.commentsCount}
-          handleSummaryPush={(i) => {
-            handleSummaryPush(i);
-          }}
+          handleSummaryPush={() => handleSummaryPush(item, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
 

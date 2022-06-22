@@ -579,7 +579,7 @@ function Application(props) {
         {/* Jha  */}
 
         <Route path="/app/pages/jha/all_jha" component={JhaMain} />
-        <Route path="/app/pages/jha/jha-summary" component={JhaSummary} />
+        <Route path="/app/pages/jha/jha-summary/:id" component={JhaSummary} />
         <Route path="/app/pages/jha/assessments/Job-hazards" component={JhaJobDetailHazard} />
         <Route path="/app/pages/jha/assessments/assessment" component={JhaAssessmentAndDocument} />
         <Route path="/app/pages/jha/approvals/approvals" component={JhaApprovals} />

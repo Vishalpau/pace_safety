@@ -175,8 +175,9 @@ function AhaSummary(props) {
   const [lessonsLearned, setLessonsLearned] = useState(false);
   //const [summary, setSummary] = useState(false);
   const history = useHistory();
+  const commentPayload = history.location.state;
+  const [form, setForm] = useState([]);
   const { id } = useParams();
-  console.log(id, 'iddddddddddddddddddddd');
   const [expanded, setExpanded] = React.useState("panel1");
 
   const handleNewAhaPush = async () => {
@@ -394,6 +395,10 @@ function AhaSummary(props) {
     await setIsLoading(true);
   };
 
+  useEffect(() => {
+    console.log(ahaData, "ahaData");
+  }, [ahaData]);
+
   const handelWorkArea = async (assessment) => {
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
@@ -525,7 +530,6 @@ function AhaSummary(props) {
     setLessionAction(allAction);
   };
 
-  const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
     let ahaID = localStorage.getItem("fkAHAId");
     const res = await api.get(`/api/v1/ahas/${ahaID}/areahazards/`);
@@ -691,7 +695,7 @@ function AhaSummary(props) {
                               }
                               // variant="contained"
                               variant={
-                                ahaData.notifyTo != "null"
+                                ahaData.notifyTo === "null"
                                   ? "contained"
                                   : "outlined"
                               }
@@ -707,8 +711,8 @@ function AhaSummary(props) {
                               display="block"
                               align="center"
                             >
-                              {ahaData.notifyTo != "null" ? "Done" : "Pending"}
-                              {ahaData.notifyTo != "null" ? (
+                              {ahaData.notifyTo === "null" ? "Done" : "Pending"}
+                              {ahaData.notifyTo === "null" ? (
                                 <CheckCircle />
                               ) : (
                                 <AccessTime />
@@ -1928,7 +1932,10 @@ function AhaSummary(props) {
                       className="quickActionSectionLink"
                       variant="subtitle"
                       name="Comments"
-                      to={`/app/comments/aha/${id}`}
+                      to={{
+                        pathname: `/app/comments/aha/${id}`,
+                        state: commentPayload,
+                      }}
                     >
                       Comments
                     </NavLink>

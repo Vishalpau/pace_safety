@@ -496,10 +496,13 @@ function ComplianceListNew(props) {
   };
 
   // method to push to new component
-  const handleSummaryPush = async (item) => {
+  const handleSummaryPush = async (item, commentPayload) => {
     let id = item;
     localStorage.setItem("fkComplianceId", id);
-    history.push(`/app/pages/compliance/compliance-summary/${id}`);
+    history.push({
+      pathname: `/app/pages/compliance/compliance-summary/${id}`,
+      state: commentPayload,
+    });
   };
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
@@ -530,8 +533,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -546,8 +549,7 @@ function ComplianceListNew(props) {
       setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -559,8 +561,7 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -575,10 +576,8 @@ function ComplianceListNew(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -590,10 +589,8 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -607,6 +604,10 @@ function ComplianceListNew(props) {
     }
   };
 
+  // useEffect(() => {
+  //   console.log(isLoading, "loadinggggggggg");
+  // }, [isLoading]);
+
   //method for  all the filters
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -617,8 +618,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -633,16 +634,14 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -651,20 +650,16 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -722,7 +717,27 @@ function ComplianceListNew(props) {
       description: value.description,
       classification: value.classification,
       createdBy: value.createdBy,
-      status: "Delete",
+    };
+    // const [openAttachment, setopenAttachment] = React.useState(false);
+
+    // useEffect(() => {
+    //   console.log(commentsOpen, "commnentspjeo");
+    // }, [commentsOpen]);
+
+    const addComments = (event) => {
+      console.log(event.target.value);
+      setCommentData(event.target.value);
+    };
+
+    const handleSendComments = async () => {
+      if (commentData) {
+        await api
+          .post("/api/v1/comments/", commentPayload)
+          .then((res) => {
+            fetchAllComplianceData();
+          })
+          .catch((err) => console.log(err));
+      }
     };
 
     function handleVisibility() {
@@ -773,6 +788,15 @@ function ComplianceListNew(props) {
 
     // console.log(showGrid);
 
+    const groupNames = value.groups.map((one) => {
+      return (
+        <>
+          {one.checkListGroupName}
+          {one !== value.groups[value.groups.length - 1] ? ", " : ""}
+        </>
+      );
+    });
+
     return (
       <>
         {/* <Card variant="outlined" className={classes.card}>
@@ -801,7 +825,7 @@ function ComplianceListNew(props) {
                 </Button>
               </Grid>
               <Link
-                onClick={() => handleSummaryPush(value["id"])}
+                onClick={() => handleSummaryPush(value["id"], commentPayload)}
                 className={classes.cardLinkAction}
               >
                 <Grid item xs={12}>
@@ -994,7 +1018,7 @@ function ComplianceListNew(props) {
             { label: "Number", value: value.auditNumber },
             {
               label: "Group Name",
-              value: value.groups.length > 0 ? value.groups.name : "-",
+              value: value.groups.length > 0 ? groupNames : "-",
             },
           ]}
           bodyFields={[
@@ -1021,9 +1045,7 @@ function ComplianceListNew(props) {
           handleVisibilityComments={() => handleVisibilityComments()}
           files={value.attachmentLinks.attachmentCount}
           commentsCount={value.commentsCount}
-          handleSummaryPush={(i) => {
-            handleSummaryPush(i);
-          }}
+          handleSummaryPush={() => handleSummaryPush(value.id, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
         {value.attachmentLinks.attachmentCount ? (
