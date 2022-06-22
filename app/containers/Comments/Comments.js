@@ -750,7 +750,7 @@ function Comments() {
                   className="commentMoreLinkTitle"
                   align="right"
                 >
-                  <Link href="#">View All Comments</Link>
+                  <Link>View All Comments</Link>
                 </Typography>
               </Grid>
               {/* </Grid> */}
