@@ -1324,7 +1324,7 @@ function AhaSummary(props) {
                                         Attachment
                                       </FormLabel>
                                       <Grid item md={12} sm={12} xs={12}>
-                                        <div className="attachFileThumb">
+                                        <div className="">
                                           {ahaData.files ? (
                                             <Typography
                                               style={{

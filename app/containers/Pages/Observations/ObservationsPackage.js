@@ -6,15 +6,11 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogContent from "@material-ui/core/DialogContent";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -41,13 +37,11 @@ import api from "../../../utils/axios";
 import { HEADER_AUTH, SELF_API } from "../../../utils/constants";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import { checkACL } from "../../../utils/helper";
-import Attachment from "../../Attachment/Attachment";
-import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
+import CardView from "../../Card/CardView";
 
 const UserDetailsView = lazy(() => import("../../UserDetails/UserDetail"));
 const Loader = lazy(() => import("../Loader"));
 import Delete from "../../Delete/Delete";
-import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -128,11 +122,6 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: "2px",
-    cursor: "pointer",
-  },
-  commentLink: {
-    marginLeft: "2px",
-    cursor: "pointer",
   },
   mLeftR5: {
     marginLeft: "5px",
@@ -276,10 +265,6 @@ const useStyles = makeStyles((theme) => ({
     margin: "15px",
     fontSize: "10px",
   },
-  mLeft: {
-    marginLeft: "2px",
-    textDecoration: "none !important",
-  },
   mright5: {
     marginRight: "5px",
     color: "#a7a7a7",
@@ -418,10 +403,6 @@ const useStyles = makeStyles((theme) => ({
 function Actions(props) {
   const type = localStorage.getItem("type");
 
-  useEffect(() => {
-    console.log("checking");
-  }, []);
-
   const userName =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).name
@@ -439,30 +420,10 @@ function Actions(props) {
   const { searchIncident } = props;
   const { status } = props;
 
-  // const [deleteValue, setDeleteValue] = useState("");
-  const [deleteQ, setDeleteQ] = useState(false);
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-
-  // view comments
-  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
-  };
-
-  // const handleClickDeleteAlert = (value) => {
-  //   setDeleteQ(true);
-  //   setDeleteValue(value);
-  //   // handleDelete(value);
-  // };
-
-  const handleCloseDeleteAlert = () => {
-    setDeleteQ(false);
-    setDeleteValue("");
   };
 
   const columns = [
@@ -581,24 +542,25 @@ function Actions(props) {
         const allLogInUserData = await api.get(
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`
         );
+        console.log(allLogInUserData);
         const result = allLogInUserData.data.data.results.results;
-        setAllInitialData(result);
-        setTotalData(allLogInUserData.data.data.results.count);
-        setPageData(allLogInUserData.data.data.results.count / 25);
+        await setAllInitialData(result);
+        await setTotalData(allLogInUserData.data.data.results.count);
+        await setPageData(allLogInUserData.data.data.results.count / 25);
         const pageCount = Math.ceil(
           allLogInUserData.data.data.results.count / 25
         );
-        setPageCount(pageCount);
+        await setPageCount(pageCount);
       } else {
         const res = await api.get(
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`
         );
         const result = res.data.data.results.results;
-        setAllInitialData(result);
-        setTotalData(res.data.data.results.count);
-        setPageData(res.data.data.results.count / 25);
+        await setAllInitialData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
         const pageCount = Math.ceil(res.data.data.results.count / 25);
-        setPageCount(pageCount);
+        await setPageCount(pageCount);
       }
     } else {
       if (props.type == "Risk") {
@@ -607,25 +569,25 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setTotalData(allLogInUserData.data.data.results.count);
-          setPageData(allLogInUserData.data.data.results.count / 25);
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          setPageCount(pageCount);
+          await setPageCount(pageCount);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setTotalData(allLogInUserData.data.data.results.count);
-          setPageData(allLogInUserData.data.data.results.count / 25);
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          setPageCount(pageCount);
+          await setPageCount(pageCount);
         }
       }
       if (props.type == "Comments") {
@@ -634,25 +596,25 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setTotalData(allLogInUserData.data.data.results.count);
-          setPageData(allLogInUserData.data.data.results.count / 25);
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          setPageCount(pageCount);
+          await setPageCount(pageCount);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setTotalData(allLogInUserData.data.data.results.count);
-          setPageData(allLogInUserData.data.data.results.count / 25);
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          setPageCount(pageCount);
+          await setPageCount(pageCount);
         }
       }
       if (props.type == "Positive behavior") {
@@ -661,29 +623,29 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setTotalData(allLogInUserData.data.data.results.count);
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          setPageData(allLogInUserData.data.data.results.count / 25);
-          setPageCount(pageCount);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
+          await setPageCount(pageCount);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setTotalData(allLogInUserData.data.data.results.count);
-          setPageData(allLogInUserData.data.data.results.count / 25);
+          await setAllInitialData(result);
+          await setTotalData(allLogInUserData.data.data.results.count);
+          await setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          setPageCount(pageCount);
+          await setPageCount(pageCount);
         }
       }
     }
-    setIsLoading(true);
+    await setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -710,15 +672,15 @@ function Actions(props) {
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`
         );
         const result = allLogInUserData.data.data.results.results;
-        setAllInitialData(result);
-        setPage(value);
+        await setAllInitialData(result);
+        await setPage(value);
       } else {
         const res = await api.get(
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&observationStage=${status}`
         );
         const result = res.data.data.results.results;
-        setAllInitialData(result);
-        setPage(value);
+        await setAllInitialData(result);
+        await setPage(value);
       }
     } else {
       if (props.type == "Risk") {
@@ -727,15 +689,15 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setPage(value);
+          await setAllInitialData(result);
+          await setPage(value);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setPage(value);
+          await setAllInitialData(result);
+          await setPage(value);
         }
       }
       if (props.type == "Comments") {
@@ -744,15 +706,15 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setPage(value);
+          await setAllInitialData(result);
+          await setPage(value);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setPage(value);
+          await setAllInitialData(result);
+          await setPage(value);
         }
       }
       if (props.type == "Positive behavior") {
@@ -761,36 +723,61 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setPage(value);
+          await setAllInitialData(result);
+          await setPage(value);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`
           );
 
           const result = allLogInUserData.data.data.results.results;
-          setAllInitialData(result);
-          setPage(value);
+          await setAllInitialData(result);
+          await setPage(value);
         }
       }
     }
   };
 
-  // const [openAttachment, setopenAttachment] = React.useState(false);
-  // const [openAtt, setopenAtt] = React.useState('');
+  const [openAttachment, setopenAttachment] = React.useState(false);
+  const [openAtt, setopenAtt] = React.useState("");
 
-  // const handleClickOpenAttachment = (value) => {
-  //   setopenAtt(value);
-  //   setopenAttachment(true);
-  // };
+  const handleClickOpenAttachment = (value) => {
+    setopenAtt(value);
+    setopenAttachment(true);
+  };
 
-  // const [attachOpen, setAttachOpen] = useState(false);
-  // const [attachIndex, setAttachIndex] = useState('');
-  // const [hidden, setHidden] = useState(false);
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [attachIndex, setAttachIndex] = useState("");
+  const [hidden, setHidden] = useState(false);
 
-  // const handleAttachClick = () => {
-  //   setAttachOpen(!open);
-  // };=
+  const handleAttachClick = () => {
+    setAttachOpen(!open);
+  };
+  const handleAttachOpen = () => {
+    if (!hidden) {
+      setAttachOpen(true);
+    }
+  };
+  const handleAttachClose = () => {
+    setAttachOpen(false);
+  };
+
+  // view comments
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [hiddenn, setHiddenn] = useState(false);
+  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+
+  const handleCommentsClick = () => {
+    setCommentsOpen(!open);
+  };
+  const handleCommentsOpen = () => {
+    if (!hiddenn) {
+      setCommentsOpen(true);
+    }
+  };
+  const handleCommentsClose = () => {
+    setCommentsOpen(false);
+  };
 
   const userDetails = async (compId, proId) => {
     try {
@@ -860,20 +847,19 @@ function Actions(props) {
   };
   const classes = useStyles();
 
-  // const handleDelete = async () => {
-  //   // if (checkACL('safety-observations', 'delete_observations')) {
-  //   console.log(deleteValue, "dddddddddddddddddddd");
-  //   const data = deleteValue;
-  //   data.status = "Delete";
-  //   setIsLoading(false);
-  //   await api
-  //     .put(`/api/v1/observations/${data.id}/`, data)
-  //     .then((response) => {
-  //       fetchInitialiObservation();
-  //       handleCloseDeleteAlert();
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
+  const handleDelete = async (item) => {
+    if (checkACL("safety-observations", "delete_observations")) {
+      const data = item[1];
+      data.status = "Delete";
+      delete data.attachment;
+      await setIsLoading(false);
+      await api
+        .put(`/api/v1/observations/${data.id}/`, data)
+        .then((response) => fetchInitialiObservation())
+        .catch((err) => console.log(err));
+    } else {
+    }
+  };
 
   useEffect(() => {
     const state = JSON.parse(localStorage.getItem("direct_loading"));
@@ -1283,7 +1269,7 @@ function Actions(props) {
           handleSummaryPush={() => handleSummaryPush(index, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
-        {item.attachmentCount ? (
+        {/* {item.attachmentCount !== null ? (
           <Grid
             item
             md={12}
@@ -1320,7 +1306,7 @@ function Actions(props) {
           </Grid>
         ) : (
           ""
-        )}
+        )} */}
 
         <div>
           <Grid
@@ -1396,9 +1382,11 @@ function Actions(props) {
               {listToggle == false ? (
                 <div>
                   <div className="gridView">
-                    {allInitialData.length > 0 ? (
-                      allInitialData.map((item, index) => (
-                        <AllCardData item={item} index={index} />
+                    {Object.keys(allInitialData).length > 0 ? (
+                      Object.entries(allInitialData).map((item, index) => (
+                        <>
+                          <AllCardData item={item[1]} index={index} />
+                        </>
                       ))
                     ) : (
                       <Typography
@@ -1410,6 +1398,104 @@ function Actions(props) {
                         Sorry, no matching records found
                       </Typography>
                     )}
+                  </div>
+                  <div>
+                    <Grid
+                      item
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      hidden={!hiddenn}
+                      onBlur={handleCommentsClose}
+                      onClick={handleCommentsClick}
+                      onClose={handleCommentsClose}
+                      onFocus={handleCommentsOpen}
+                      onMouseEnter={handleCommentsOpen}
+                      onMouseLeave={handleCommentsClose}
+                      open={commentsOpen}
+                      className="commentsShowSection"
+                    >
+                      <Paper elevation={1} className="paperSection">
+                        <Grid container spacing={3}>
+                          <Grid item md={12} xs={12}>
+                            <Box padding={3}>
+                              <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                  <TextField
+                                    multiline
+                                    variant="outlined"
+                                    rows="1"
+                                    id="JobTitle"
+                                    label="Add your comments here"
+                                    className="formControl"
+                                  />
+                                </Grid>
+                                <Grid item xs={3}>
+                                  <input type="file" />
+                                </Grid>
+                                <Grid item xs={9}>
+                                  <AddCircleOutlineIcon
+                                    className={classes.plusIcon}
+                                  />
+                                  <RemoveCircleOutlineIcon
+                                    className={classes.minusIcon}
+                                  />
+                                </Grid>
+                                <Grid item xs={12}>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="small"
+                                    className="spacerRight buttonStyle"
+                                    disableElevation
+                                  >
+                                    Respond
+                                  </Button>
+                                  <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    size="small"
+                                    className="custmCancelBtn buttonStyle"
+                                    disableElevation
+                                  >
+                                    Cancel
+                                  </Button>
+                                </Grid>
+                              </Grid>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Paper>
+                    </Grid>
+                  </div>
+                  <div>
+                    {/* {openAtt !== "" && <Attachment value={openAtt} /> } */}
+
+                    {/* <Dialog
+                open={openAttachment}
+                onClose={handleCloseAttachment}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                classNames={classes.viewAttachmentDialog}
+              > */}
+                    {/* <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
+                <DialogContent classNames={classes.imageSectionHeight}>
+                <Grid container spacing={3} classNames={classes.viewImageSection}>
+                  <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
+                    <ul classNames={classes.viewImageSection}>
+                      <li className={classes.viewattch1}>View Attachment</li>
+                      <li className={classes.viewattch2}>Download  444 Attachment</li>
+                    </ul>
+                  </Grid>
+                </Grid>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseAttachment} color="primary" autoFocus>
+                    Close
+                  </Button>
+                </DialogActions> */}
+
+                    {/* </Dialog> */}
                   </div>
                   <div>
                     <Dialog
@@ -1424,6 +1510,7 @@ function Actions(props) {
                         userName={userInfo.name}
                         userIcon={userInfo.userIcon}
                       />
+
                       <DialogActions>
                         <Button
                           onClick={handleMyUserPClose}
@@ -1436,57 +1523,10 @@ function Actions(props) {
                       </DialogActions>
                     </Dialog>
                   </div>
-
-                  <Dialog
-                    open={deleteQ}
-                    onClose={handleCloseDeleteAlert}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        <Grid container spacing={3}>
-                          <Grid item md={12} xs={12}>
-                            <FormControl component="fieldset">
-                              <FormLabel
-                                component="legend"
-                                className="checkRadioLabel"
-                              >
-                                Are you sure you want to delete this question?
-                              </FormLabel>
-                            </FormControl>
-                          </Grid>
-                          <Grid
-                            item
-                            md={12}
-                            sm={12}
-                            xs={12}
-                            className={classes.popUpButton}
-                          >
-                            <Button
-                              color="primary"
-                              variant="contained"
-                              className="spacerRight buttonStyle"
-                              onClick={() => handleDelete()}
-                            >
-                              Yes
-                            </Button>
-                            <Button
-                              color="secondary"
-                              variant="contained"
-                              className="buttonStyle custmCancelBtn"
-                              onClick={() => handleCloseDeleteAlert()}
-                            >
-                              No
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </DialogContentText>
-                    </DialogContent>
-                  </Dialog>
                 </div>
               ) : (
                 // listview end
+
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable

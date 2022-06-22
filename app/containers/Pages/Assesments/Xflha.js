@@ -176,7 +176,6 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: "2px",
-    textDecoration: "none !important",
   },
   mLeftR5: {
     marginLeft: "5px",
@@ -634,13 +633,10 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#f47607",
     },
   },
-  commentLink: {
-    marginLeft: "2px",
-    cursor: "pointer",
-  },
-  margT10: {
-    marginTop: "6px",
-    display: "block",
+  dataTableSectionDesign: {
+    "& th > div": {
+      cursor: "pointer",
+    },
   },
   dataTableSectionDesign: {
     "& th > div": {
@@ -697,34 +693,37 @@ function xflha(props) {
   const [listToggle, setListToggle] = useState(false);
   const [flhas, setFlhas] = useState([]);
   const [showFlha, setShowFlha] = useState([]);
+  const [hidden, setHidden] = useState(false);
   const [searchFlha, setSeacrhFlha] = useState("");
   const [attachOpen, setAttachOpen] = useState(false);
-  // const [openAttachment, setopenAttachment] = React.useState(false);
+  const [hiddenn, setHiddenn] = useState(false);
+  const [openAttachment, setopenAttachment] = React.useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [status, setStatus] = useState("");
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [order, setOrder] = useState("");
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
   const [valueTwo, setValueTwo] = React.useState(0);
   const [assessments, setAssessments] = useState("My Assessments");
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+  const [order, setOrder] = useState("");
 
   const dispatch = useDispatch();
 
-  // const handleChangeOne = (event, newValue) => {
-  //   setValue(newValue);
-  // };
-  // const handleMyUserPClickOpen = () => {
-  //   setMyUserPOpen(true);
-  // };
+  const handleChangeOne = (event, newValue) => {
+    setValue(newValue);
+  };
+  const handleMyUserPClickOpen = () => {
+    setMyUserPOpen(true);
+  };
 
-  // const handleMyUserPClose = () => {
-  //   setMyUserPOpen(false);
-  // };
+  const handleMyUserPClose = () => {
+    setMyUserPOpen(false);
+  };
 
   const handleFlhaSummaryPush = async (id, commentPayload) => {
     // console.log(id, "iddddddddd");
@@ -795,8 +794,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -829,7 +828,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function() {
+    function () {
       clearTimeout(timer);
 
       timer = setTimeout(() => setSeacrhFlha(v), d);
@@ -837,30 +836,41 @@ function xflha(props) {
   const handleSearch = (e) =>
     debounce(fetchData, e.target.value.toLowerCase(), 500)();
 
-  // const handleVisibility = () => {
-  //   setAttachOpen(true);
-  //   setHidden(!hidden);
-  // };
-  // const handleAttachClick = () => {
-  //   setAttachOpen(!open);
-  // };
-  // const handleAttachOpen = () => {
-  //   if (!hidden) {
-  //     setAttachOpen(true);
-  //   }
-  // };
-  // const handleVisibilityComments = () => {
-  //   setCommentsOpen(true);
-  //   setHiddenn(!hiddenn);
-  // };
-  // const handleCommentsClick = () => {
-  //   setCommentsOpen(!open);
-  // };
-  // const handleCommentsOpen = () => {
-  //   if (!hiddenn) {
-  //     setCommentsOpen(true);
-  //   }
-  // };
+  // const handleDelete = async (item) => {
+  //   console.log(item[1].id)
+  //   let data = item[1]
+  //   // let id = item[1].id
+  //   data.status = "Delete"
+  //   delete data.ahaAssessmentAttachment
+  //   console.log(data, "!!!!!!!!!")
+  //   await setIsLoading(false)
+  //   const res1 = await api.put(`/api/v1/flha/${data.id}/`, data).then(response => fetchData()).catch(err => console.log(err))
+  // }
+
+  const handleVisibility = () => {
+    setAttachOpen(true);
+    setHidden(!hidden);
+  };
+  const handleAttachClick = () => {
+    setAttachOpen(!open);
+  };
+  const handleAttachOpen = () => {
+    if (!hidden) {
+      setAttachOpen(true);
+    }
+  };
+  const handleVisibilityComments = () => {
+    setCommentsOpen(true);
+    setHiddenn(!hiddenn);
+  };
+  const handleCommentsClick = () => {
+    setCommentsOpen(!open);
+  };
+  const handleCommentsOpen = () => {
+    if (!hiddenn) {
+      setCommentsOpen(true);
+    }
+  };
   const handleAssment = (event, newValue) => {
     setValueTwo(newValue);
     if (newValue === 0) {
@@ -872,9 +882,9 @@ function xflha(props) {
     }
   };
 
-  // const handleCommentsClose = () => {
-  //   setCommentsOpen(false);
-  // };
+  const handleCommentsClose = () => {
+    setCommentsOpen(false);
+  };
   const handelSearchFlha = async (e) => {
     const allSeacrh = [];
     if (e.target.value.length === 0) {
@@ -962,9 +972,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // useEffect(() => {
@@ -980,8 +990,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1046,23 +1056,23 @@ function xflha(props) {
   const SetDataOrder = () => {
     let newdata;
     if (order === "ascDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         return moment(a.createdAt) - moment(b.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "descDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         return moment(b.createdAt) - moment(a.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "ascAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
       setFlhas(newdata);
     } else if (order === "descAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
@@ -1187,7 +1197,7 @@ function xflha(props) {
       createdBy: item.createdBy,
     };
 
-    const handleSendComments = async () => {      
+    const handleSendComments = async () => {
       if (commentData) {
         await api
           .post("/api/v1/comments/", commentPayload)
@@ -1225,20 +1235,6 @@ function xflha(props) {
     function handleVisibilityComments() {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
-    }
-
-    function handleCommentsOpen() {
-      if (!hiddenn) {
-        setCommentsOpen(true);
-      }
-    }
-
-    function handleCommentsClose() {
-      setCommentsOpen(false);
-    }
-
-    function handleCommentsClick() {
-      setCommentsOpen(!open);
     }
 
     const handleMyUserPClickOpen = () => {
@@ -1902,11 +1898,353 @@ function xflha(props) {
             {listToggle == false ? (
               <div>
                 <div className="gridView">
-                  {flhas.length === 0
-                    ? "Sorry, no matching records found"
-                    : flhas.map((item, index) => (
-                        <AllCardData item={item} index={index} />
-                      ))}
+                  {Object.entries(flhas).map((item, index) => (
+                    <Box>
+                      <Grid className={classes.marginTopBottom}>
+                        <div className="gridView">
+                          <AllCardData item={item[1]} index={index} />
+                          <Grid
+                            item
+                            md={12}
+                            sm={12}
+                            xs={12}
+                            hidden={!hidden}
+                            onBlur={handleAttachClose}
+                            onClick={handleAttachClick}
+                            onClose={handleAttachClose}
+                            onFocus={handleAttachOpen}
+                            onMouseEnter={handleAttachOpen}
+                            onMouseLeave={handleAttachClose}
+                            open={attachOpen}
+                            className="paddTBRemove attactmentShowSection"
+                          >
+                            <Paper elevation={1} className="paperSection">
+                              <Grid container spacing={3}>
+                                <Grid item md={12} sm={12} xs={12}>
+                                  <List>
+                                    <ListItem>
+                                      <img
+                                        src={projectpj}
+                                        onClick={handleClickOpenAttachment}
+                                        className="hoverIcon"
+                                      />
+                                    </ListItem>
+                                    <ListItem>
+                                      <img
+                                        src={projectpj}
+                                        onClick={handleClickOpenAttachment}
+                                        className="hoverIcon"
+                                      />
+                                    </ListItem>
+                                    <ListItem>
+                                      <img
+                                        src={projectpj}
+                                        onClick={handleClickOpenAttachment}
+                                        className="hoverIcon"
+                                      />
+                                    </ListItem>
+                                    <ListItem>
+                                      <img
+                                        src={projectpj}
+                                        onClick={handleClickOpenAttachment}
+                                        className="hoverIcon"
+                                      />
+                                    </ListItem>
+                                    <ListItem>
+                                      <img
+                                        src={projectpj}
+                                        onClick={handleClickOpenAttachment}
+                                        className="hoverIcon"
+                                      />
+                                    </ListItem>
+                                    <ListItem>
+                                      <img
+                                        src={projectpj}
+                                        onClick={handleClickOpenAttachment}
+                                        className="hoverIcon"
+                                      />
+                                    </ListItem>
+                                    <ListItem>
+                                      <img
+                                        src={projectpj}
+                                        onClick={handleClickOpenAttachment}
+                                        className="hoverIcon"
+                                      />
+                                    </ListItem>
+                                  </List>
+                                </Grid>
+                              </Grid>
+                            </Paper>
+                          </Grid>
+                        </div>
+                        <div>
+                          <Grid
+                            item
+                            md={12}
+                            sm={12}
+                            xs={12}
+                            hidden={!hiddenn}
+                            onBlur={handleCommentsClose}
+                            onClick={handleCommentsClick}
+                            onClose={handleCommentsClose}
+                            onFocus={handleCommentsOpen}
+                            onMouseEnter={handleCommentsOpen}
+                            onMouseLeave={handleCommentsClose}
+                            open={commentsOpen}
+                            className="commentsShowSection"
+                          >
+                            <Paper elevation={1} className="paperSection">
+                              <Grid container spacing={3}>
+                                <Grid item md={12} xs={12}>
+                                  <Box padding={3}>
+                                    <Grid container spacing={2}>
+                                      <Grid item xs={12}>
+                                        <TextField
+                                          multiline
+                                          variant="outlined"
+                                          rows="1"
+                                          id="JobTitle"
+                                          label="Add your comments here"
+                                          className="formControl"
+                                        />
+                                      </Grid>
+                                      <Grid item xs={3}>
+                                        <input type="file" />
+                                      </Grid>
+                                      <Grid item xs={9}>
+                                        <AddCircleOutlineIcon
+                                          className={classes.plusIcon}
+                                        />
+                                        <RemoveCircleOutlineIcon
+                                          className={classes.minusIcon}
+                                        />
+                                      </Grid>
+                                      <Grid item xs={12}>
+                                        <Button
+                                          variant="contained"
+                                          color="primary"
+                                          size="small"
+                                          className="spacerRight buttonStyle"
+                                          disableElevation
+                                        >
+                                          Respond
+                                        </Button>
+                                        <Button
+                                          variant="contained"
+                                          color="secondary"
+                                          size="small"
+                                          className="buttonStyle custmCancelBtn"
+                                          disableElevation
+                                        >
+                                          Cancel
+                                        </Button>
+                                      </Grid>
+                                    </Grid>
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                            </Paper>
+                          </Grid>
+                        </div>
+                        <div>
+                          <Dialog
+                            open={openAttachment}
+                            onClose={handleCloseAttachment}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                            classNames={classes.viewAttachmentDialog}
+                          >
+                            <DialogTitle id="alert-dialog-title">
+                              Viw Attachment
+                            </DialogTitle>
+                            <DialogContent
+                              classNames={classes.imageSectionHeight}
+                            >
+                              <Grid
+                                container
+                                spacing={3}
+                                classNames={classes.viewImageSection}
+                              >
+                                <Grid
+                                  item
+                                  md={12}
+                                  sm={12}
+                                  xs={12}
+                                  classNames={classes.mb10}
+                                >
+                                  <ul classNames={classes.viewImageSection}>
+                                    <li className={classes.viewattch1}>
+                                      View Attachment
+                                    </li>
+                                    <li className={classes.viewattch2}>
+                                      Download Attachment
+                                    </li>
+                                  </ul>
+                                </Grid>
+                              </Grid>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button
+                                onClick={handleCloseAttachment}
+                                color="primary"
+                                autoFocus
+                              >
+                                Close
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </div>
+                        <Dialog
+                          open={myUserPOpen}
+                          onClose={handleMyUserPClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                          fullWidth
+                          maxWidth="sm"
+                        >
+                          <DialogTitle
+                            classNames={classes.mb10}
+                            id="alert-dialog-title"
+                          >
+                            <img
+                              src={paceLogoSymbol}
+                              className={classes.userImage}
+                            />{" "}
+                            {"Admin"}
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                              <Grid
+                                item
+                                md={12}
+                                sm={12}
+                                xs={12}
+                                className={classes.usrProfileListBox}
+                              >
+                                <h6>Change ownership</h6>
+                                <FormControl
+                                  variant="outlined"
+                                  className={classes.formControlOwnership}
+                                >
+                                  <InputLabel id="demo-simple-select-outlined-label">
+                                    Ownership
+                                  </InputLabel>
+                                  <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value="Ashutosh"
+                                    onChange={handleChangeOne}
+                                    label="Ownership"
+                                  >
+                                    <MenuItem value={10}>Self</MenuItem>
+                                    <MenuItem value={10}>Prakash</MenuItem>
+                                    <MenuItem value={20}>Ashutosh</MenuItem>
+                                    <MenuItem value={30}>Saddam</MenuItem>
+                                    <MenuItem value={30}>Sunil</MenuItem>
+                                  </Select>
+                                </FormControl>
+                              </Grid>
+                              <Grid
+                                item
+                                md={12}
+                                sm={12}
+                                xs={12}
+                                className={classes.usrProfileListBox}
+                              >
+                                <h3>Basic information</h3>
+                                <List>
+                                  <ListItem>
+                                    {/* <ListItemAvatar>
+                      <Avatar>
+                        <ImageIcon />
+                      </Avatar>
+                    </ListItemAvatar> */}
+                                    <ListItemText
+                                      primary="Full Name:"
+                                      secondary="Prakash"
+                                    />
+                                  </ListItem>
+                                  <ListItem>
+                                    <ListItemText
+                                      primary="Organization Type:"
+                                      secondary="Epc ORGANIZATION"
+                                    />
+                                  </ListItem>
+                                  <ListItem>
+                                    <ListItemText
+                                      primary="Organization Role:"
+                                      secondary="N/A"
+                                    />
+                                  </ListItem>
+                                  <ListItem>
+                                    <ListItemText
+                                      primary="Role Title:"
+                                      secondary="N/A"
+                                    />
+                                  </ListItem>
+                                  <ListItem>
+                                    <ListItemText
+                                      primary="Current Location:"
+                                      secondary="Delhi » NCT » India"
+                                    />
+                                  </ListItem>
+                                </List>
+                              </Grid>
+
+                              <Grid
+                                item
+                                md={12}
+                                sm={12}
+                                xs={12}
+                                className={classes.usrProfileListBox}
+                              >
+                                <h3>Company information</h3>
+                                <List>
+                                  <ListItem>
+                                    <ListItemText
+                                      primary="Company Name:"
+                                      secondary="JWIL"
+                                    />
+                                  </ListItem>
+                                  <ListItem>
+                                    <ListItemText
+                                      primary="Location:"
+                                      secondary="Italy"
+                                    />
+                                  </ListItem>
+                                </List>
+                              </Grid>
+                            </DialogContentText>
+                          </DialogContent>
+                          <Grid
+                            item
+                            md={12}
+                            sm={12}
+                            xs={12}
+                            className={classes.popUpButton}
+                          >
+                            <DialogActions align="left" className="marginB10">
+                              <Button
+                                onClick={handleMyUserPClose}
+                                color="secondary"
+                                variant="contained"
+                                className="buttonStyle custmCancelBtn"
+                              >
+                                Close
+                              </Button>
+                            </DialogActions>
+                          </Grid>
+                          {/* <DialogActions>
+            <Button onClick={handleMyUserPClose} className="buttonStyle custmCancelBtn" variant="contained" autoFocus>
+              Close
+            </Button>
+          </DialogActions> */}
+                        </Dialog>
+                      </Grid>
+                    </Box>
+                  ))}
+                  {Object.keys(flhas).length === 0 &&
+                    "Sorry, no matching records found"}
                 </div>
 
                 <div className="gridView">
@@ -2147,9 +2485,8 @@ function xflha(props) {
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable
-                      className={`${
-                        classes.dataTableSectionDesign
-                      } dataTableSectionDesign`}
+                      className={`${classes.dataTableSectionDesign
+                        } dataTableSectionDesign`}
                       title="FLHA's"
                       data={Object.entries(flhas).map((item) => [
                         item[1].flhaNumber,

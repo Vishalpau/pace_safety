@@ -132,7 +132,6 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: "2px",
-    cursor: "pointer",
   },
   mLeftR5: {
     marginLeft: "5px",
@@ -254,7 +253,7 @@ const useStyles = makeStyles((theme) => ({
     borderLeft: "3px solid #cccccc",
     height: "8px",
     verticalAlign: "middle",
-    margin: "15px 15px 15px 8px",
+    margin: "0px 10px 0px 0px",
     fontSize: "10px",
     ["@media (max-width:480px)"]: {
       margin: "10px 5px 10px 5px",
@@ -358,20 +357,6 @@ const useStyles = makeStyles((theme) => ({
       right: "auto",
     },
   },
-  mLeft: {
-    marginLeft: "2px",
-    "&:hover": {
-      cursor: "pointer",
-    },
-  },
-  commentLink: {
-    marginLeft: "2px",
-    cursor: "pointer",
-  },
-  margT10: {
-    marginTop: "6px",
-    display: "block",
-  },
   cardContentSection: {
     position: "relative",
     "&:hover": {
@@ -468,30 +453,30 @@ function ComplianceListNew(props) {
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [allComplianceData, setAllComplianceData] = useState([]);
-  // const [attachOpen, setAttachOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  // const [deleteValue, setDeleteValue] = useState("");
-  // const [deleteQ, setDeleteQ] = useState(false);
+  const [deleteValue, setDeleteValue] = useState("");
+  const [deleteQ, setDeleteQ] = useState(false);
 
   const handleChangeOne = (event, newValue) => {
     setValue(newValue);
   };
 
-  // const handleClickDeleteAlert = (value) => {
-  //   setDeleteQ(true);
-  //   setDeleteValue(value);
-  //   // handleDelete(value);
-  // };
+  const handleClickDeleteAlert = (value) => {
+    setDeleteQ(true);
+    setDeleteValue(value);
+    // handleDelete(value);
+  };
 
-  // const handleCloseDeleteAlert = () => {
-  //   setDeleteQ(false);
-  //   setDeleteValue("");
-  // };
+  const handleCloseDeleteAlert = () => {
+    setDeleteQ(false);
+    setDeleteValue("");
+  };
 
   const options = {
     filterType: "dropdown",
@@ -538,8 +523,7 @@ function ComplianceListNew(props) {
     if (props.search) {
       setAllComplianceData([]);
     }
-    setIsLoading(true);
-    setPage(1);
+    await setPage(1);
     // get all the ids (fkCompanyId,fkProjectId, selectBreakdown,fkProjectStructureIds, createdBy )
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
@@ -549,8 +533,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -562,70 +546,62 @@ function ComplianceListNew(props) {
         : null;
     // for types filter
     if (props.type === "Categories" || props.type === "All") {
-      // setIsLoading(true);
+      setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
-        // setIsLoading(false);
         const result = res.data.data.results.results;
-        setAllComplianceData(result);
-        setTotalData(res.data.data.results.count);
-        setPageData(res.data.data.results.count / 25);
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
-        setPageCount(pageCount);
+        await setPageCount(pageCount);
+        setIsLoading(false);
       } else {
-        // setIsLoading(false);
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
-        setAllComplianceData(result);
-        setTotalData(res.data.data.results.count);
-        setPageData(res.data.data.results.count / 25);
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
-        setPageCount(pageCount);
+        await setPageCount(pageCount);
+        setIsLoading(false);
       }
     } else {
-      // setIsLoading(true);
       if (props.compliance === "My Inspections") {
+        setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}`
         );
-        // setIsLoading(false);
         const result = res.data.data.results.results;
-        setAllComplianceData(result);
-        setTotalData(res.data.data.results.count);
-        setPageData(res.data.data.results.count / 25);
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
-        setPageCount(pageCount);
+        await setPageCount(pageCount);
+        setIsLoading(false);
       } else {
-        console.log("aaaaaaaaaaaaaaa");
-        // setIsLoading(false);
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
-        setAllComplianceData(result);
-        setTotalData(res.data.data.results.count);
-        setPageData(res.data.data.results.count / 25);
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
-        setPageCount(pageCount);
+        await setPageCount(pageCount);
+        setIsLoading(false);
       }
     }
-    setIsLoading(false);
   };
 
   // useEffect(() => {
@@ -642,8 +618,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -658,62 +634,56 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
-        setAllComplianceData(res.data.data.results.results);
-        setPage(value);
+        await setAllComplianceData(res.data.data.results.results);
+        await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
-        setAllComplianceData(res.data.data.results.results);
-        setPage(value);
+        await setAllComplianceData(res.data.data.results.results);
+        await setPage(value);
       }
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}&page=${value}`
         );
-        setAllComplianceData(res.data.data.results.results);
-        setPage(value);
+        await setAllComplianceData(res.data.data.results.results);
+        await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&page=${value}`
         );
-        setAllComplianceData(res.data.data.results.results);
-        setPage(value);
+        await setAllComplianceData(res.data.data.results.results);
+        await setPage(value);
       }
     }
   };
 
   //method to delete a compliance
-  // const handleDelete = async () => {
-  //   let temp = { ...deleteValue };
-  //   // let temp = { ...item };
-  //   temp.status = "Delete";
-  //   let id = deleteValue.id;
-  //   setIsLoading(true);
-  //   const res = await api
-  //     .put(`api/v1/audits/${id}/`, temp)
-  //     .then((response) => {
-  //       fetchAllComplianceData();
-  //       handleCloseDeleteAlert();
-  //       // setIsLoading(true);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
+  const handleDelete = async () => {
+    let temp = { ...deleteValue };
+    // let temp = { ...item };
+    temp.status = "Delete";
+    let id = deleteValue.id;
+    setIsLoading(true);
+    const res = await api
+      .put(`api/v1/audits/${id}/`, temp)
+      .then((response) => {
+        fetchAllComplianceData();
+        handleCloseDeleteAlert();
+        // setIsLoading(true);
+      })
+      .catch((error) => console.log(error));
+  };
 
   useEffect(() => {
     fetchAllComplianceData();
@@ -731,34 +701,28 @@ function ComplianceListNew(props) {
 
   // separate card component
   const AllCardData = ({ value, index }) => {
-    const [commentsOpen, setCommentsOpen] = useState(false);
+    // const [commentsOpen, setCommentsOpen] = useState(false);
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
-    const [commentData, setCommentData] = useState("");
+    // const [openAttachment, setopenAttachment] = React.useState(false);
 
     const deleteItem = {
-      ...value,
-      status: "Delete",
-    };
-
-    const commentPayload = {
       fkCompanyId: value.fkCompanyId,
       fkProjectId: value.fkProjectId,
-      commentContext: "compliance",
-      contextReferenceIds: value.id,
-      commentTags: "",
-      comment: commentData,
-      parent: 0,
-      thanksFlag: 0,
-      status: "Active",
+      fkProjectStructureIds: value.fkProjectStructureIds,
+      location: value.location,
+      assessmentDate: value.assessmentDate,
+      permitToPerform: value.permitToPerform,
+      description: value.description,
+      classification: value.classification,
       createdBy: value.createdBy,
     };
     // const [openAttachment, setopenAttachment] = React.useState(false);
 
-    useEffect(() => {
-      console.log(commentsOpen, "commnentspjeo");
-    }, [commentsOpen]);
+    // useEffect(() => {
+    //   console.log(commentsOpen, "commnentspjeo");
+    // }, [commentsOpen]);
 
     const addComments = (event) => {
       console.log(event.target.value);
@@ -781,10 +745,9 @@ function ComplianceListNew(props) {
       setHidden(!hidden);
     }
 
-    function handleAttachOpen() {
-      if (!hidden) {
-        setShowGrid(true);
-      }
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
     }
 
     function handleAttachClose() {
@@ -795,24 +758,25 @@ function ComplianceListNew(props) {
       setShowGrid(!open);
     }
 
-    function handleVisibilityComments() {
-      setCommentsOpen(true);
-      setHiddenn(!hiddenn);
-    }
-
-    function handleCommentsOpen() {
-      if (!hiddenn) {
-        setCommentsOpen(true);
+    function handleAttachOpen() {
+      if (!hidden) {
+        setShowGrid(true);
       }
     }
 
-    function handleCommentsClose() {
-      setCommentsOpen(false);
-    }
+    // function handleCommentsOpen() {
+    //   if (!hiddenn) {
+    //     setCommentsOpen(true);
+    //   }
+    // };
 
-    function handleCommentsClick() {
-      setCommentsOpen(!open);
-    }
+    // function handleCommentsClose() {
+    //   setCommentsOpen(false);
+    // };
+
+    // function handleCommentsClick() {
+    //   setCommentsOpen(!open);
+    // };
 
     // function handleClickOpenAttachment() {
     //   setopenAttachment(true);
@@ -1106,13 +1070,9 @@ function ComplianceListNew(props) {
                   <List>
                     <ListItem>
                       <Grid item md={12} sm={12} xs={12}>
-                        {value.attachmentLinks.links.map((dt) => {
-                          return (
-                            <div className="attachFileThumb">
-                              <Attachment src={dt} value={dt} />
-                            </div>
-                          );
-                        })}
+                        <div className="attachFileThumb">
+                          <Attachment src={value.avatar} value={value.avatar} />
+                        </div>
                       </Grid>
                     </ListItem>
                   </List>
@@ -1123,74 +1083,52 @@ function ComplianceListNew(props) {
         ) : (
           ""
         )}
-
-        <Grid
-          item
-          md={12}
-          sm={12}
-          xs={12}
-          hidden={!hiddenn}
-          onBlur={handleCommentsClose}
-          onClick={handleCommentsClick}
-          onClose={handleCommentsClose}
-          onFocus={handleCommentsOpen}
-          onMouseEnter={handleCommentsOpen}
-          onMouseLeave={handleCommentsClose}
-          open={commentsOpen}
-          className="commentsShowSection"
-        >
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-              <Grid item md={12} xs={12}>
-                <Box padding={3}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        multiline
-                        variant="outlined"
-                        rows="1"
-                        id="JobTitle"
-                        label="Add your comments here"
-                        className="formControl"
-                        value={commentData}
-                        onChange={(e) => addComments(e)}
-                      />
-                    </Grid>
-                    {/* <Grid item xs={3}>
-                      <input type="file" />
-                    </Grid>
-                    <Grid item xs={9}>
-                      <AddCircleOutlineIcon className={classes.plusIcon} />
-                      <RemoveCircleOutlineIcon className={classes.minusIcon} />
-                    </Grid> */}
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        className="spacerRight buttonStyle"
-                        disableElevation
-                        onClick={handleSendComments}
-                      >
-                        Respond
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        className="custmCancelBtn buttonStyle"
-                        disableElevation
-                        onClick={handleCommentsClose}
-                      >
-                        Cancel
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
+        {/* <div>
+          <Dialog
+            open={openAttachment}
+            onClose={handleCloseAttachment}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            classNames={classes.viewAttachmentDialog}
+          >
+            <DialogTitle id="alert-dialog-title">
+              Viw Attachment
+            </DialogTitle>
+            <DialogContent classNames={classes.imageSectionHeight}>
+              <Grid
+                container
+                spacing={3}
+                classNames={classes.viewImageSection}
+              >
+                <Grid
+                  item
+                  md={12}
+                  sm={12}
+                  xs={12}
+                  classNames={classes.mb10}
+                >
+                  <ul classNames={classes.viewImageSection}>
+                    <li className={classes.viewattch1}>
+                      View Attachment
+                    </li>
+                    <li className={classes.viewattch2}>
+                      Download Attachment
+                    </li>
+                  </ul>
+                </Grid>
               </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={handleCloseAttachment}
+                color="primary"
+                autoFocus
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div> */}
       </>
     );
   };
@@ -1295,6 +1233,11 @@ function ComplianceListNew(props) {
                         <h3>Basic information</h3>
                         <List>
                           <ListItem>
+                            {/* <ListItemAvatar>
+                                <Avatar>
+                                  <ImageIcon />
+                                </Avatar>
+                              </ListItemAvatar> */}
                             <ListItemText
                               primary="Full Name:"
                               secondary="Prakash"
@@ -1370,6 +1313,11 @@ function ComplianceListNew(props) {
                       </Button>
                     </DialogActions>
                   </Grid>
+                  {/* <DialogActions>
+                            <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
+                              Close
+                            </Button>
+                          </DialogActions> */}
                 </Dialog>
                 <div className={classes.pagination}>
                   {totalData != 0
@@ -1390,6 +1338,50 @@ function ComplianceListNew(props) {
           </div>
         </Grid>
       </Box>
+      <Dialog
+        open={deleteQ}
+        onClose={handleCloseDeleteAlert}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" className="checkRadioLabel">
+                    Are you sure you want to delete this question?
+                  </FormLabel>
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                md={12}
+                sm={12}
+                xs={12}
+                className={classes.popUpButton}
+              >
+                <Button
+                  color="primary"
+                  variant="contained"
+                  className="spacerRight buttonStyle"
+                  onClick={() => handleDelete()}
+                >
+                  Yes
+                </Button>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  className="buttonStyle custmCancelBtn"
+                  onClick={() => handleCloseDeleteAlert()}
+                >
+                  No
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

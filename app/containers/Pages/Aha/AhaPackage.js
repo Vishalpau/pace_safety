@@ -37,15 +37,13 @@ import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import WifiTetheringIcon from "@material-ui/icons/WifiTethering";
 import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import { useHistory, useParams } from "react-router";
+import { TextField } from "@material-ui/core";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import TextField from "@material-ui/core/TextField";
 
 import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
@@ -141,15 +139,6 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: "2px",
-    textDecoration: "none !important",
-  },
-  commentLink: {
-    marginLeft: "2px",
-    cursor: "pointer",
-  },
-  margT10: {
-    marginTop: "6px",
-    display: "block",
   },
   mLeftR5: {
     marginLeft: "5px",
@@ -157,9 +146,6 @@ const useStyles = makeStyles((theme) => ({
     ["@media (max-width:480px)"]: {
       marginLeft: "3px",
       marginRight: "3px",
-    },
-    "&:hover": {
-      cursor: "pointer",
     },
   },
   pLeft5: {
@@ -478,57 +464,58 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     marginTop: "-10px",
   },
-  margT10: {
-    marginTop: "6px",
-    display: "block",
-  },
 }));
 
 function AhaPackage(props) {
-  // const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
-  // const [cardView, setCardView] = useState(true);
-  // const [tableView, setTableView] = useState(false);
+  const [cardView, setCardView] = useState(true);
+  const [tableView, setTableView] = useState(false);
   const [allAHAData, setAllAHAData] = useState([]);
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  // const [deleteQ, setDeleteQ] = useState(false);
-  // const [deleteValue, setDeleteValue] = useState("");
 
   const search = props.search;
   const status = props.status;
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  // const handleClickDeleteAlert = (value) => {
-  //   console.log(value, "value");
-  //   setDeleteQ(true);
-  //   setDeleteValue(value);
-  //   // handleDelete(value);
-  // };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  // const getFromChid = (value) => {
-  //   setDeleteValue(value);
-  // };
+  const [incidents] = useState([]);
+  const [listToggle, setListToggle] = useState(false);
 
-  // const handleCloseDeleteAlert = () => {
-  //   setDeleteQ(false);
-  //   setDeleteValue("");
+  const handelView = (e) => {
+    setListToggle(false);
+  };
+  const handelViewTabel = (e) => {
+    setListToggle(true);
+  };
+
+  const [value, setValue] = React.useState(2);
+
+  //dialog
+  const [MyFavopen, setMyFavOpen] = React.useState(false);
+
+  // const handleMyUserPClickOpen = (val) => {
+  //   setMyUserPOpen(val);
   // };
 
   useEffect(() => {
-    console.log(allAHAData, "allAHahData");
-  }, [allAHAData]);
+    console.log(myUserPOpen, "myUserPOpen");
+  }, [myUserPOpen]);
 
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
+  // const handleMyUserPClose = () => {
+  //   setMyUserPOpen(false);
+  // }
 
   // const [incidents] = useState([]);
   // const [listToggle, setListToggle] = useState(false);
@@ -571,10 +558,10 @@ function AhaPackage(props) {
     });
   };
 
-  // const handleNewAhaPush = async () => {
-  //   localStorage.removeItem("fkAHAId");
-  //   history.push("/app/pages/aha/assessments/project-details");
-  // };
+  const handleNewAhaPush = async () => {
+    localStorage.removeItem("fkAHAId");
+    history.push("/app/pages/aha/assessments/project-details");
+  };
 
   // const fetchAllAHAData = async () => {
   //   const res = await api.get("/api/v1/ahas/")
@@ -585,7 +572,7 @@ function AhaPackage(props) {
   // }
 
   const fetchAllAHAData = async () => {
-    setPage(1);
+    await setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -594,8 +581,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -610,24 +597,24 @@ function AhaPackage(props) {
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`
       );
       const result = res.data.data.results.results;
-      setAllAHAData(result);
-      setTotalData(res.data.data.results.count);
-      setPageData(res.data.data.results.count / 25);
+      await setAllAHAData(result);
+      await setTotalData(res.data.data.results.count);
+      await setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      setPageCount(pageCount);
+      await setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`
       );
       const result = res.data.data.results.results;
-      setAllAHAData(result);
-      setTotalData(res.data.data.results.count);
-      setPageData(res.data.data.results.count / 25);
+      await setAllAHAData(result);
+      await setTotalData(res.data.data.results.count);
+      await setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      setPageCount(pageCount);
+      await setPageCount(pageCount);
     }
 
-    setIsLoading(true);
+    await setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -639,8 +626,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -653,20 +640,18 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
-      setAllAHAData(res.data.data.results.results);
-      setPage(value);
+      await setAllAHAData(res.data.data.results.results);
+      await setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
-      setAllAHAData(res.data.data.results.results);
-      setPage(value);
+      await setAllAHAData(res.data.data.results.results);
+      await setPage(value);
     }
   };
 
@@ -1179,10 +1164,9 @@ function AhaPackage(props) {
             <div>
               <div className="gridView">
                 {allAHAData.length > 0 ? (
-                  allAHAData.map((item, index) => {
-                    // console.log(item);
-                    return <AllCardData item={item} index={index} />;
-                  })
+                  Object.entries(allAHAData).map((item, index) => (
+                    <AllCardData item={item[1]} index={index} />
+                  ))
                 ) : (
                   <Typography
                     className={classes.sorryTitle}
@@ -1193,103 +1177,6 @@ function AhaPackage(props) {
                     Sorry, no matching records found
                   </Typography>
                 )}
-
-                {/* <div> */}
-                <Dialog
-                  open={myUserPOpen}
-                  onClose={handleMyUserPClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                  fullWidth={true}
-                  maxWidth={"sm"}
-                >
-                  <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Basic Information</h3>
-                        <List>
-                          <ListItem>
-                            {/* <ListItemAvatar>
-                              <Avatar>
-                                <ImageIcon />
-                              </Avatar>
-                            </ListItemAvatar> */}
-                            <ListItemText
-                              primary="Full Name:"
-                              secondary="Prakash"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Organization Type:"
-                              secondary="Epc ORGANIZATION"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Organization Role:"
-                              secondary="N/A"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Role Title:"
-                              secondary="N/A"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Current Location:"
-                              secondary="Delhi » NCT » India"
-                            />
-                          </ListItem>
-                        </List>
-                      </Grid>
-
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Company Information</h3>
-                        <List>
-                          <ListItem>
-                            <ListItemText
-                              primary="Company Name:"
-                              secondary="JWIL"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Location:"
-                              secondary="Italy"
-                            />
-                          </ListItem>
-                        </List>
-                      </Grid>
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={handleMyUserPClose}
-                      color="primary"
-                      variant="contained"
-                      autoFocus
-                    >
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                {/* </div> */}
               </div>
             </div>
             <div className={classes.pagination}>

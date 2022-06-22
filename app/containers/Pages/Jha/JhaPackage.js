@@ -7,26 +7,35 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
+import Share from "@material-ui/icons/Share";
 import Divider from "@material-ui/core/Divider";
 import Link from "@material-ui/core/Link";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import Box from "@material-ui/core/Box";
+import Chip from "@material-ui/core/Chip";
+import TableContainer from "@material-ui/core/TableContainer";
 import { makeStyles } from "@material-ui/core/styles";
 import Incidents from "dan-styles/IncidentsList.scss";
+import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
+import MUIDataTable from "mui-datatables";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
-import FormLabel from "@material-ui/core/FormLabel";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
+import completed_small from "dan-images/completed-small.png";
+import projectpj from "dan-images/projectpj.png";
 import in_progress_small from "dan-images/in_progress_small.png";
 import "../../../styles/custom/customheader.css";
+import StarsIcon from "@material-ui/icons/Stars";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
-import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-
+import WifiTetheringIcon from "@material-ui/icons/WifiTethering";
+import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import { useHistory, useParams } from "react-router";
 
 import List from "@material-ui/core/List";
@@ -36,9 +45,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 
 import TextField from "@material-ui/core/TextField";
+import Menu from "@material-ui/core/Menu";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import InputLabel from "@material-ui/core/InputLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import Pagination from "@material-ui/lab/Pagination";
@@ -133,9 +146,6 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: "2px",
-    "&:hover": {
-      cursor: "pointer",
-    },
   },
   mLeftR5: {
     marginLeft: "5px",
@@ -382,6 +392,7 @@ const useStyles = makeStyles((theme) => ({
       padding: "8px !important",
     },
   },
+
   fullWidth: {
     width: "100%",
     margin: ".5rem 0",
@@ -409,16 +420,6 @@ const useStyles = makeStyles((theme) => ({
         },
       },
     },
-  },
-
-  commentLink: {
-    marginLeft: "2px",
-    cursor: "pointer",
-  },
-
-  margT10: {
-    marginTop: "6px",
-    display: "block",
   },
 
   viewAttachmentDialog: {
@@ -474,39 +475,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JhaPackage(props) {
-  const classes = useStyles();
-
-  // const [cardView, setCardView] = useState(true);
-  // const [data, setData] = useState([]);
+  const [cardView, setCardView] = useState(true);
   const [allJHAData, setAllJHAData] = useState([]);
   const search = props.search;
   const status = props.status;
   const history = useHistory();
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
+  const [openAttachment, setopenAttachment] = React.useState(false);
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  // const [deleteValue, setDeleteValue] = useState("");
-  // const [deleteQ, setDeleteQ] = useState(false);
 
-  // const handleClickDeleteAlert = (value) => {
-  //   setDeleteQ(true);
-  //   setDeleteValue(value);
-  //   // handleDelete(value);
-  // };
+  const handleClickOpenAttachment = () => {
+    setopenAttachment(true);
+  };
 
-  // const handleCloseDeleteAlert = () => {
-  //   setDeleteQ(false);
-  //   setDeleteValue("");
-  // };
+  const handleCloseAttachment = () => {
+    setopenAttachment(false);
+  };
 
-  // const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
-    setIsLoading(true);
-    setPage(1);
+    await setIsLoading(false);
+    await setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -515,8 +512,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -529,32 +526,32 @@ function JhaPackage(props) {
 
     if (props.assessment === "My Assessments") {
       const res = await api.get(
-        `api/v1/jhas/?search=${
-          props.search
+        `api/v1/jhas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`
       );
 
       const result = res.data.data.results.results;
-      setAllJHAData(result);
-      setTotalData(res.data.data.results.count);
-      setPageData(res.data.data.results.count / 25);
+      await setAllJHAData(result);
+      await setTotalData(res.data.data.results.count);
+      await setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      setPageCount(pageCount);
+      await setPageCount(pageCount);
     } else {
       const res = await api.get(
-        `api/v1/jhas/?search=${
-          props.search
+        `api/v1/jhas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
       );
+
       const result = res.data.data.results.results;
-      setAllJHAData(result);
-      setTotalData(res.data.data.results.count);
-      setPageData(res.data.data.results.count / 25);
+      await setAllJHAData(result);
+      await setTotalData(res.data.data.results.count);
+      await setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      setPageCount(pageCount);
+      await setPageCount(pageCount);
     }
     // handelTableView(result)
-    setIsLoading(false);
+
+    await setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -566,8 +563,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -582,70 +579,101 @@ function JhaPackage(props) {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`
       );
-      setAllJHAData(res.data.data.results.results);
-      setPage(value);
+      await setAllJHAData(res.data.data.results.results);
+      await setPage(value);
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`
       );
-      setAllJHAData(res.data.data.results.results);
-      setPage(value);
+      await setAllJHAData(res.data.data.results.results);
+      await setPage(value);
     }
   };
 
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  // const [incidents] = useState([]);
-  // const [listToggle, setListToggle] = useState(false);
+  const [incidents] = useState([]);
+  const [listToggle, setListToggle] = useState(false);
 
-  // const handelView = (e) => {
-  //   setListToggle(false);
-  // };
-  // const handelViewTabel = (e) => {
-  //   setListToggle(true);
-  // };
+  const handelView = (e) => {
+    setListToggle(false);
+  };
+  const handelViewTabel = (e) => {
+    setListToggle(true);
+  };
+
+  const [value, setValue] = React.useState(2);
+
+  const handleChangeOne = (event, newValue) => {
+    setValue(newValue);
+  };
 
   //dialog
-  // const [MyFavopen, setMyFavOpen] = React.useState(false);
+  const [MyFavopen, setMyFavOpen] = React.useState(false);
 
-  // const handleMyFavClickOpen = () => {
-  //   setMyFavOpen(true);
-  // };
+  const handleMyFavClickOpen = () => {
+    setMyFavOpen(true);
+  };
 
-  // const handleMyFavClose = () => {
-  //   setMyFavOpen(false);
-  // };
+  const handleMyFavClose = () => {
+    setMyFavOpen(false);
+  };
 
-  // const handleVisibility = () => {
-  //   setAttachOpen(true);
-  //   setHidden(!hidden);
-  // };
-  // const handleAttachClick = () => {
-  //   setAttachOpen(!open);
-  // };
-  // const handleAttachOpen = () => {
-  //   if (!hidden) {
-  //     setAttachOpen(true);
-  //   }
-  // };
-  // const handleAttachClose = () => {
-  //   setAttachOpen(false);
-  // };
+  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+
+  const handleMyUserPClose = () => {
+    setMyUserPOpen(false);
+  };
+
+  const classes = useStyles();
+
+  const handleVisibility = () => {
+    setAttachOpen(true);
+    setHidden(!hidden);
+  };
+  const handleAttachClick = () => {
+    setAttachOpen(!open);
+  };
+  const handleAttachOpen = () => {
+    if (!hidden) {
+      setAttachOpen(true);
+    }
+  };
+  const handleAttachClose = () => {
+    setAttachOpen(false);
+  };
 
   //view comments
-  // const [commentsOpen, setCommentsOpen] = useState(false);
-  // const [hiddenn, setHiddenn] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [hiddenn, setHiddenn] = useState(false);
 
-  // const handleVisibilityComments = () => {
-  //   setCommentsOpen(true);
-  //   setHiddenn(!hiddenn);
-  // };
+  const handleVisibilityComments = () => {
+    setCommentsOpen(true);
+    setHiddenn(!hiddenn);
+  };
+  const handleCommentsClick = () => {
+    setCommentsOpen(!open);
+  };
+  const handleCommentsOpen = () => {
+    if (!hiddenn) {
+      setCommentsOpen(true);
+    }
+  };
+  const handleCommentsClose = () => {
+    setCommentsOpen(false);
+  };
+
+  // const handleSummaryPush = async (index) => {
+  //   const itemid = index;
+
+  //   const filtered = allJHAData.filter((one) => one.id === index);
+  //   const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
 
   const handleSummaryPush = async (selectedJha, commentPayload) => {
     const jha = selectedJha;
@@ -654,7 +682,7 @@ function JhaPackage(props) {
       "commonObject",
       "jha",
       "projectStruct",
-      jha.fkProjectStructureIds
+      fkProjectStructureIds
     );
     localStorage.removeItem("JSAAssessments");
     localStorage.removeItem("JSAApproval");
@@ -665,39 +693,17 @@ function JhaPackage(props) {
     });
   };
 
-  // const handleDelete = async () => {
-  //   let data = { ...deleteValue }
-  //   data.status = "Delete"
-  //   const res1 = await api.put(`/api/v1/jhas/${data.id}/`, data)
-  //   .then(response => fetchData())
-  //   .catch(err => console.log(err))
-  // }
-
-  // const handleDelete = async () => {
-  //   let temp = {
-  //     fkCompanyId: deleteValue.fkCompanyId,
-  //     fkProjectId: deleteValue.fkProjectId,
-  //     fkProjectStructureIds: deleteValue.fkProjectStructureIds,
-  //     location: deleteValue.location,
-  //     jhaAssessmentDate: deleteValue.jhaAssessmentDate,
-  //     permitToPerform: deleteValue.permitToPerform,
-  //     jobTitle: deleteValue.jobTitle,
-  //     description: deleteValue.description,
-  //     classification: deleteValue.classification,
-  //     createdBy: deleteValue.createdBy,
-  //     status: "Delete",
-  //   };
-  //   let id = deleteValue.id;
-  //   setIsLoading(false);
-  //   const res = await api
-  //     .put(`/api/v1/jhas/${id}/`, temp)
-  //     .then((response) => {
-  //       fetchData();
-  //       handleCloseDeleteAlert();
-  //       // setIsLoading(true);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
+  const handleDelete = async (item) => {
+    let data = item[1];
+    let id = data.id;
+    data.status = "Delete";
+    delete data.jhaAssessmentAttachment;
+    await setIsLoading(false);
+    await api
+      .delete(`/api/v1/jhas/${id}/`, data)
+      .then((response) => fetchData())
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     fetchData();
@@ -754,7 +760,7 @@ function JhaPackage(props) {
 
     const handleSendComments = async () => {
       // console.log(commentsData, 'comments')
-      
+
       if (commentData) {
         console.log(api, "apiiiiiiii");
         await api
@@ -1316,11 +1322,347 @@ function JhaPackage(props) {
 
   return (
     <>
-      {!isLoading ? (
+      {isLoading ? (
         <Box>
           {allJHAData.length > 0 ? (
-            allJHAData.map((value, index) => (
-              <AllCardData item={value} index={index} />
+            Object.entries(allJHAData).map((singleitem, index) => (
+              <Grid className={classes.marginTopBottom}>
+                <div className="gridView">
+                  <AllCardData item={singleitem[1]} index={index} />
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    hidden={!hidden}
+                    onBlur={handleAttachClose}
+                    onClick={handleAttachClick}
+                    onClose={handleAttachClose}
+                    onFocus={handleAttachOpen}
+                    onMouseEnter={handleAttachOpen}
+                    onMouseLeave={handleAttachClose}
+                    open={attachOpen}
+                    className="paddTBRemove attactmentShowSection"
+                  >
+                    <Paper elevation={1} className="paperSection">
+                      <Grid container spacing={3}>
+                        <Grid item md={12} sm={12} xs={12}>
+                          <List>
+                            <ListItem>
+                              <img
+                                src={projectpj}
+                                onClick={handleClickOpenAttachment}
+                                className="hoverIcon"
+                              />
+                            </ListItem>
+                            <ListItem>
+                              <img
+                                src={projectpj}
+                                onClick={handleClickOpenAttachment}
+                                className="hoverIcon"
+                              />
+                            </ListItem>
+                            <ListItem>
+                              <img
+                                src={projectpj}
+                                onClick={handleClickOpenAttachment}
+                                className="hoverIcon"
+                              />
+                            </ListItem>
+                            <ListItem>
+                              <img
+                                src={projectpj}
+                                onClick={handleClickOpenAttachment}
+                                className="hoverIcon"
+                              />
+                            </ListItem>
+                            <ListItem>
+                              <img
+                                src={projectpj}
+                                onClick={handleClickOpenAttachment}
+                                className="hoverIcon"
+                              />
+                            </ListItem>
+                            <ListItem>
+                              <img
+                                src={projectpj}
+                                onClick={handleClickOpenAttachment}
+                                className="hoverIcon"
+                              />
+                            </ListItem>
+                            <ListItem>
+                              <img
+                                src={projectpj}
+                                onClick={handleClickOpenAttachment}
+                                className="hoverIcon"
+                              />
+                            </ListItem>
+                          </List>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                </div>
+                <div>
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    hidden={!hiddenn}
+                    onBlur={handleCommentsClose}
+                    onClick={handleCommentsClick}
+                    onClose={handleCommentsClose}
+                    onFocus={handleCommentsOpen}
+                    onMouseEnter={handleCommentsOpen}
+                    onMouseLeave={handleCommentsClose}
+                    open={commentsOpen}
+                    className="commentsShowSection"
+                  >
+                    <Paper elevation={1} className="paperSection">
+                      <Grid container spacing={3}>
+                        <Grid item md={12} xs={12}>
+                          <Box padding={3}>
+                            <Grid container spacing={2}>
+                              <Grid item xs={12}>
+                                <TextField
+                                  multiline
+                                  variant="outlined"
+                                  rows="1"
+                                  id="JobTitle"
+                                  label="Add your comments here"
+                                  className="formControl"
+                                />
+                              </Grid>
+                              <Grid item xs={3}>
+                                <input type="file" />
+                              </Grid>
+                              <Grid item xs={9}>
+                                <AddCircleOutlineIcon
+                                  className={classes.plusIcon}
+                                />
+                                <RemoveCircleOutlineIcon
+                                  className={classes.minusIcon}
+                                />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  size="small"
+                                  className="spacerRight buttonStyle"
+                                  disableElevation
+                                >
+                                  Respond
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="secondary"
+                                  size="small"
+                                  className="buttonStyle custmCancelBtn"
+                                  disableElevation
+                                >
+                                  Cancel
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                </div>
+                <div>
+                  <Dialog
+                    open={openAttachment}
+                    onClose={handleCloseAttachment}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    classNames={classes.viewAttachmentDialog}
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      Viw Attachment
+                    </DialogTitle>
+                    <DialogContent classNames={classes.imageSectionHeight}>
+                      <Grid
+                        container
+                        spacing={3}
+                        classNames={classes.viewImageSection}
+                      >
+                        <Grid
+                          item
+                          md={12}
+                          sm={12}
+                          xs={12}
+                          classNames={classes.mb10}
+                        >
+                          <ul classNames={classes.viewImageSection}>
+                            <li className={classes.viewattch1}>
+                              View Attachment
+                            </li>
+                            <li className={classes.viewattch2}>
+                              Download Attachment
+                            </li>
+                          </ul>
+                        </Grid>
+                      </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        onClick={handleCloseAttachment}
+                        color="primary"
+                        autoFocus
+                      >
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
+                <Dialog
+                  open={myUserPOpen}
+                  onClose={handleMyUserPClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  fullWidth={true}
+                  maxWidth={"sm"}
+                >
+                  <DialogTitle
+                    classNames={classes.mb10}
+                    id="alert-dialog-title"
+                  >
+                    <img src={paceLogoSymbol} className={classes.userImage} />{" "}
+                    {"Admin"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Grid
+                        item
+                        md={12}
+                        sm={12}
+                        xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h6>Change ownership</h6>
+                        <FormControl
+                          variant="outlined"
+                          className={classes.formControlOwnership}
+                        >
+                          <InputLabel id="demo-simple-select-outlined-label">
+                            Ownership
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            value="Ashutosh"
+                            onChange={handleChangeOne}
+                            label="Ownership"
+                          >
+                            <MenuItem value={10}>Self</MenuItem>
+                            <MenuItem value={10}>Prakash</MenuItem>
+                            <MenuItem value={20}>Ashutosh</MenuItem>
+                            <MenuItem value={30}>Saddam</MenuItem>
+                            <MenuItem value={30}>Sunil</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid
+                        item
+                        md={12}
+                        sm={12}
+                        xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Basic information</h3>
+                        <List>
+                          <ListItem>
+                            {/* <ListItemAvatar>
+                            <Avatar>
+                              <ImageIcon />
+                            </Avatar>
+                          </ListItemAvatar> */}
+                            <ListItemText
+                              primary="Full Name:"
+                              secondary="Prakash"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Organization Type:"
+                              secondary="Epc ORGANIZATION"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Organization Role:"
+                              secondary="N/A"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Role Title:"
+                              secondary="N/A"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Current Location:"
+                              secondary="Delhi » NCT » India"
+                            />
+                          </ListItem>
+                        </List>
+                      </Grid>
+
+                      <Grid
+                        item
+                        md={12}
+                        sm={12}
+                        xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Company information</h3>
+                        <List>
+                          <ListItem>
+                            <ListItemText
+                              primary="Company Name:"
+                              secondary="JWIL"
+                            />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText
+                              primary="Location:"
+                              secondary="Italy"
+                            />
+                          </ListItem>
+                        </List>
+                      </Grid>
+                    </DialogContentText>
+                  </DialogContent>
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    className={classes.popUpButton}
+                  >
+                    <DialogActions align="left" className="marginB10">
+                      <Button
+                        onClick={handleMyUserPClose}
+                        color="secondary"
+                        variant="contained"
+                        className="buttonStyle custmCancelBtn"
+                      >
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Grid>
+
+                  {/* <DialogActions>
+                  <Button onClick={handleMyUserPClose} className="custmCancelBtn" variant="contained" autoFocus>
+                    Close
+                  </Button>
+                </DialogActions> */}
+                </Dialog>
+              </Grid>
             ))
           ) : (
             <Typography
