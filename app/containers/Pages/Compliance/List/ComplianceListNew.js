@@ -824,6 +824,15 @@ function ComplianceListNew(props) {
 
     // console.log(showGrid);
 
+    const groupNames = value.groups.map((one) => {
+      return (
+        <>
+          {one.checkListGroupName}
+          {one !== value.groups[value.groups.length - 1] ? ", " : ""}
+        </>
+      );
+    });
+
     return (
       <>
         {/* <Card variant="outlined" className={classes.card}>
@@ -1045,7 +1054,7 @@ function ComplianceListNew(props) {
             { label: "Number", value: value.auditNumber },
             {
               label: "Group Name",
-              value: value.groups.length > 0 ? value.groups.name : "-",
+              value: value.groups.length > 0 ? groupNames : "-",
             },
           ]}
           bodyFields={[
