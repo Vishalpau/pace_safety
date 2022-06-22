@@ -554,7 +554,7 @@ function AhaPackage(props) {
     localStorage.removeItem("JSAlessonsLearned");
     history.push({
       pathname: `/app/pages/aha/aha-summary/${aha.id}`,
-      state: commentPayload
+      state: {commentPayload, redirectUrl: '/app/pages/aha/assessments/project-details'}
     });
   };
 

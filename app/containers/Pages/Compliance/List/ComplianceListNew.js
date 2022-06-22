@@ -501,7 +501,10 @@ function ComplianceListNew(props) {
     localStorage.setItem("fkComplianceId", id);
     history.push({
       pathname: `/app/pages/compliance/compliance-summary/${id}`,
-      state: commentPayload,
+      state: {
+        commentPayload,
+        redirectUrl: "/app/pages/compliance/compliance-details",
+      },
     });
   };
 
@@ -533,8 +536,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -549,7 +552,8 @@ function ComplianceListNew(props) {
       setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -561,7 +565,8 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -576,8 +581,10 @@ function ComplianceListNew(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -589,8 +596,10 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
+            props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -618,8 +627,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -634,14 +643,16 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -650,16 +661,20 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -701,10 +716,11 @@ function ComplianceListNew(props) {
 
   // separate card component
   const AllCardData = ({ value, index }) => {
-    // const [commentsOpen, setCommentsOpen] = useState(false);
+    const [commentsOpen, setCommentsOpen] = useState(false);
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
+    const [commentData, setCommentData] = useState("");
     // const [openAttachment, setopenAttachment] = React.useState(false);
 
     const deleteItem = {
@@ -725,8 +741,20 @@ function ComplianceListNew(props) {
     // }, [commentsOpen]);
 
     const addComments = (event) => {
-      console.log(event.target.value);
       setCommentData(event.target.value);
+    };
+
+    const commentPayload = {
+      fkCompanyId: value.fkCompanyId,
+      fkProjectId: value.fkProjectId,
+      commentContext: "compliance",
+      contextReferenceIds: value.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: value.createdBy,
     };
 
     const handleSendComments = async () => {
@@ -764,27 +792,27 @@ function ComplianceListNew(props) {
       }
     }
 
-    // function handleCommentsOpen() {
-    //   if (!hiddenn) {
-    //     setCommentsOpen(true);
-    //   }
-    // };
+    function handleCommentsOpen() {
+      if (!hiddenn) {
+        setCommentsOpen(true);
+      }
+    }
 
-    // function handleCommentsClose() {
-    //   setCommentsOpen(false);
-    // };
+    function handleCommentsClose() {
+      setCommentsOpen(false);
+    }
 
-    // function handleCommentsClick() {
-    //   setCommentsOpen(!open);
-    // };
+    function handleCommentsClick() {
+      setCommentsOpen(!open);
+    }
 
-    // function handleClickOpenAttachment() {
-    //   setopenAttachment(true);
-    // };
+    function handleClickOpenAttachment() {
+      setopenAttachment(true);
+    }
 
-    // function handleCloseAttachment() {
-    //   setopenAttachment(false);
-    // };
+    function handleCloseAttachment() {
+      setopenAttachment(false);
+    }
 
     // console.log(showGrid);
 
@@ -1083,6 +1111,75 @@ function ComplianceListNew(props) {
         ) : (
           ""
         )}
+
+        <Grid
+          item
+          md={12}
+          sm={12}
+          xs={12}
+          hidden={!hiddenn}
+          onBlur={handleCommentsClose}
+          onClick={handleCommentsClick}
+          onClose={handleCommentsClose}
+          onFocus={handleCommentsOpen}
+          onMouseEnter={handleCommentsOpen}
+          onMouseLeave={handleCommentsClose}
+          open={commentsOpen}
+          className="commentsShowSection"
+        >
+          <Paper elevation={1} className="paperSection">
+            <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                <Box padding={3}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        multiline
+                        variant="outlined"
+                        rows="1"
+                        id="JobTitle"
+                        label="Add your comments here"
+                        className="formControl"
+                        value={commentData}
+                        onChange={(e) => addComments(e)}
+                      />
+                    </Grid>
+                    {/* <Grid item xs={3}>
+                      <input type="file" />
+                    </Grid>
+                    <Grid item xs={9}>
+                      <AddCircleOutlineIcon className={classes.plusIcon} />
+                      <RemoveCircleOutlineIcon className={classes.minusIcon} />
+                    </Grid> */}
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        className="spacerRight buttonStyle"
+                        disableElevation
+                        onClick={handleSendComments}
+                      >
+                        Respond
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        className="custmCancelBtn buttonStyle"
+                        disableElevation
+                        onClick={handleCommentsClose}
+                      >
+                        Cancel
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+
         {/* <div>
           <Dialog
             open={openAttachment}
@@ -1162,14 +1259,30 @@ function ComplianceListNew(props) {
                   <AllCardData value={value} />
                 ))
               ) : (
-                <Typography
-                  className={classes.sorryTitle}
-                  variant="h6"
-                  color="primary"
-                  noWrap
-                >
-                  Sorry, no matching records found
-                </Typography>
+                <>
+                  <Typography
+                    className={classes.sorryTitle}
+                    variant="h6"
+                    color="primary"
+                    noWrap
+                  >
+                    Sorry, no matching records found
+                  </Typography>
+                  <div className={classes.pagination}>
+                    {totalData != 0
+                      ? Number.isInteger(pageData) !== true
+                        ? totalData < 25 * page
+                          ? `${page * 25 - 24} - ${totalData} of ${totalData}`
+                          : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                        : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                      : null}
+                    <Pagination
+                      count={pageCount}
+                      page={page}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </>
               )}
 
               <div>
@@ -1319,20 +1432,6 @@ function ComplianceListNew(props) {
                             </Button>
                           </DialogActions> */}
                 </Dialog>
-                <div className={classes.pagination}>
-                  {totalData != 0
-                    ? Number.isInteger(pageData) !== true
-                      ? totalData < 25 * page
-                        ? `${page * 25 - 24} - ${totalData} of ${totalData}`
-                        : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                      : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                    : null}
-                  <Pagination
-                    count={pageCount}
-                    page={page}
-                    onChange={handleChange}
-                  />
-                </div>
               </div>
             </div>
           </div>

@@ -689,7 +689,7 @@ function JhaPackage(props) {
     localStorage.removeItem("JSAlessonsLearned");
     history.push({
       pathname: `/app/pages/jha/jha-summary/${jha.id}`,
-      state: commentPayload
+      state: {commentPayload, redirectUrl: '/app/pages/jha/assessments/Job-hazards'}
     });
   };
 

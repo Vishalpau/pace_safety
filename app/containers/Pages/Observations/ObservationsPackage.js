@@ -511,8 +511,9 @@ function Actions(props) {
       localStorage.removeItem("action");
     }
     history.push({
-      pathname: `/app/icare/details/${id}`,
-      state: commentPayload,
+      pathname:`/app/icare/details/${id}`,
+      // state: commentPayload
+      state: {commentPayload, redirectUrl: '/app/icare-initial-notification'}
     });
   };
 

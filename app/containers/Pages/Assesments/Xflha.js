@@ -730,7 +730,7 @@ function xflha(props) {
     localStorage.setItem("flhaId", id);
     history.push({
       pathname: `/app/pages/assesments/flhasummary/${id}`,
-      state: commentPayload,
+      state: {commentPayload, redirectUrl: '/app/pages/assesments/flhaadd'}
     });
   };
   const handleClickOpenAttachment = () => {
