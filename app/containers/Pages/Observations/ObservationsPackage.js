@@ -551,7 +551,8 @@ function Actions(props) {
     }
     history.push({
       pathname:`/app/icare/details/${id}`,
-      state: commentPayload
+      // state: commentPayload
+      state: {commentPayload, redirectUrl: '/app/icare-initial-notification'}
     });
   };
 

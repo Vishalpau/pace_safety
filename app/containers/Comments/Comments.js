@@ -64,8 +64,20 @@ const useStyles = makeStyles((theme) => ({}));
 function Comments() {
   const history = useHistory();
   const { module } = useParams();
+  let moduleName = module;
+  if (module === "observations") {
+    moduleName = "icare";
+  }
+  else if (module === 'jha' || module === 'aha' || module === 'flha'){
+    moduleName = module.toUpperCase();
+  }
+  else {
+    moduleName = module.charAt(0).toUpperCase() + module.slice(1);
+  }
+  console.log(moduleName, 'moduleName');
   const { moduleId } = useParams();
   const commentPayload = history.location.state;
+  console.log(commentPayload, 'commentPayload');
   const userId = JSON.parse(localStorage.getItem("userDetails"));
 
   const [commentData, setCommentData] = useState([]);
@@ -139,7 +151,7 @@ function Comments() {
   },[childPresentData])
 
   const handleModulePush = async () => {
-    console.log("push the data");
+    history.push(commentPayload.redirectUrl)
   };
 
   useEffect(() => {
@@ -563,13 +575,12 @@ function Comments() {
                       <Edit />
                     </ListItemIcon>
                     <Link
-                      onClick={(e) => handleModulePush(e)}
+                      onClick={() => handleModulePush()}
                       to="#"
                       variant="subtitle"
                     >
                       <ListItemText
-                        primary={`Update ${module.charAt(0).toUpperCase() +
-                          module.slice(1)}`}
+                        primary={`Update ${moduleName}`}
                       />
                     </Link>
                   </ListItem>

@@ -516,7 +516,7 @@ function ComplianceListNew(props) {
     localStorage.setItem("fkComplianceId", id);
     history.push({
       pathname:`/app/pages/compliance/compliance-summary/${id}`,
-      state: commentPayload
+      state: {commentPayload, redirectUrl: '/app/pages/compliance/compliance-details'}
     });
   };
 
