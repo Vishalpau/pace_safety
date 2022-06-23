@@ -42,6 +42,7 @@ import CardView from "../../Card/CardView";
 const UserDetailsView = lazy(() => import("../../UserDetails/UserDetail"));
 const Loader = lazy(() => import("../Loader"));
 import Delete from "../../Delete/Delete";
+import Attachment from "../../Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -511,9 +512,9 @@ function Actions(props) {
       localStorage.removeItem("action");
     }
     history.push({
-      pathname:`/app/icare/details/${id}`,
+      pathname: `/app/icare/details/${id}`,
       // state: commentPayload
-      state: {commentPayload, redirectUrl: '/app/icare-initial-notification'}
+      state: { commentPayload, redirectUrl: "/app/icare-initial-notification" },
     });
   };
 
@@ -888,6 +889,7 @@ function Actions(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
+    console.log(item, "iteeeeeeeee");
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
@@ -972,258 +974,6 @@ function Actions(props) {
 
     return (
       <>
-        {/* <Card variant="outlined" className={classes.card}>
-          <CardContent>
-            <Grid container spacing={3} className={classes.cardContentSection}>
-              <Grid
-                item
-                md={2}
-                sm={4}
-                xs={12}
-                className={classes.userPictureBox}
-              >
-                <Button
-                  className={classes.floatR}
-                  onClick={(e) => handleMyUserPClickOpen(e)}
-                >
-                  <img
-                    src={item.avatar !== null ? item.avatar : paceLogoSymbol}
-                    className={classes.userImage}
-                  />{" "}
-                  {item.username ? item.username : "Admin"}
-                </Button>
-              </Grid>
-              <Link
-                onClick={() => handleSummaryPush(index, commentPayload)}
-                className={classes.cardLinkAction}
-              >
-                <Grid item xs={12}>
-                  <Grid container spacing={3} alignItems="flex-start">
-                    <Grid
-                      item
-                      sm={12}
-                      xs={12}
-                      className={classes.listHeadColor}
-                    >
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid
-                          item
-                          md={10}
-                          sm={8}
-                          xs={12}
-                          className={classes.pr0}
-                        >
-                          <Typography className={classes.title} variant="h6">
-                            {item.observationDetails}
-                          </Typography>
-                          <Typography
-                            display="inline"
-                            className={classes.listingLabelName}
-                          >
-                            Number:{" "}
-                            <span>
-                              <Link
-                                onClick={() => handleSummaryPush(index)}
-                                variant="h6"
-                                className={classes.mLeftfont}
-                              >
-                                <span className={classes.listingLabelValue}>
-                                  {item.observationNumber}
-                                </span>
-                              </Link>
-                            </span>
-                          </Typography>
-                          <span item xs={1} className={classes.sepHeightOne} />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Assignee:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {item.assigneeName ? item.assigneeName : "-"}
-                            </span>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            Stage:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {item.observationStage
-                                ? item.observationStage
-                                : "-"}{" "}
-                              {item.observationStage === "Completed" && (
-                                <img
-                                  src={completed_small}
-                                  className={classes.smallImage}
-                                />
-                              )}
-                              {item.observationStage === "Planned" && (
-                                <img
-                                  src={in_progress_small}
-                                  className={classes.smallImage}
-                                />
-                              )}{" "}
-                              {item.observationStage === "Open" && (
-                                <img
-                                  src={preplanning}
-                                  className={classes.smallImage}
-                                />
-                              )}{" "}
-                            </span>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            Status:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {item.observationStatus
-                                ? item.observationStatus
-                                : "-"}
-                            </span>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item sm={12} xs={12}>
-                  <Grid container spacing={3}>
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        gutterBottom
-                        color="textPrimary"
-                        className={classes.listingLabelName}
-                      >
-                        Type:
-                      </Typography>
-
-                      <Typography
-                        gutterBottom
-                        className={classes.listingLabelValue}
-                      >
-                        {item.observationType}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Location:
-                      </Typography>
-                      <Typography className={classes.listingLabelValue}>
-                        {item.location ? item.location : "-"}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Reported on:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {moment(item.createdAt).format(
-                          "Do MMMM YYYY, h:mm:ss a"
-                        )}{" "}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Observed By:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {item.reportedByName ? item.reportedByName : "Admin"}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Link>
-            </Grid>
-          </CardContent>
-          <Divider />
-          <CardActions className={Incidents.cardActions}>
-            <Grid container spacing={2} justify="flex-end" alignItems="left">
-              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                <span className={classes.margT10}>
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                  >
-                    <AttachmentIcon className={classes.mright5} />
-                    Attachments:
-                  </Typography>
-
-                  <Link
-                    onClick={item.attachmentCount && handleVisibility}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={
-                      item.attachmentCount ? classes.commentLink : classes.mLeft
-                    }
-                  >
-                    {item.attachmentCount}
-                  </Link>
-                  <span item xs={1} className={classes.sepHeightTen} />
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                    className={classes.mLeft}
-                  >
-                    <InsertCommentOutlinedIcon className={classes.mright5} />
-                    Comments:
-                  </Typography>
-                  <Link
-                    onClick={handleVisibilityComments}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={classes.commentLink}
-                  >
-                    {item.commentsCount}
-                  </Link>
-                </span>
-              </Grid>
-
-              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                <span item xs={1} className={classes.sepHeightTen} />
-                <Typography variant="body1" display="inline">
-                  <Delete
-                    deleteUrl={`/api/v1/observations/${item.id}/`}
-                    afterDelete={fetchInitialiObservation}
-                    axiosObj={api}
-                    item={deleteItem}
-                    loader={setIsLoading}
-                    loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this iCare?"
-                    yesBtn="Yes"
-                    noBtn="No"
-                  />
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardActions>
-        </Card> */}
         <CardView
           ifdifferent={
             item.source === "Paper" &&
@@ -1263,13 +1013,15 @@ function Actions(props) {
             yesBtn: "Yes",
             noBtn: "No",
           }}
+          handleVisibility={() => handleVisibility()}
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
+          // files={item.attachmentCount}
           commentsCount={item.commentsCount}
           handleSummaryPush={() => handleSummaryPush(index, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
-        {/* {item.attachmentCount !== null ? (
+        {item.files && item.files.length ? (
           <Grid
             item
             md={12}
@@ -1291,12 +1043,11 @@ function Actions(props) {
                   <List>
                     <ListItem>
                       <Grid item md={12} sm={12} xs={12}>
-                        <div className="attachFileThumb">
-                          <Attachment
-                            src={item.attachment}
-                            value={item.attachment}
-                          />
-                        </div>
+                        {item.files.map((a) => (
+                          <div className="attachFileThumb">
+                            <Attachment src={a.fileName} value={a.fileName} />
+                          </div>
+                        ))}
                       </Grid>
                     </ListItem>
                   </List>
@@ -1306,7 +1057,7 @@ function Actions(props) {
           </Grid>
         ) : (
           ""
-        )} */}
+        )}
 
         <div>
           <Grid

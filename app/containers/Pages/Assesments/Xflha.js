@@ -85,7 +85,7 @@ import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 import Delete from "../../Delete/Delete";
 import Attachment from "../../Attachment/Attachment";
-import CardView from '../../Card/CardView';
+import CardView from "../../Card/CardView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -730,7 +730,7 @@ function xflha(props) {
     localStorage.setItem("flhaId", id);
     history.push({
       pathname: `/app/pages/assesments/flhasummary/${id}`,
-      state: {commentPayload, redirectUrl: '/app/pages/assesments/flhaadd'}
+      state: { commentPayload, redirectUrl: "/app/pages/assesments/flhaadd" },
     });
   };
   const handleClickOpenAttachment = () => {
@@ -794,8 +794,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -828,7 +828,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function () {
+    function() {
       clearTimeout(timer);
 
       timer = setTimeout(() => setSeacrhFlha(v), d);
@@ -972,9 +972,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => { });
+          .catch((error) => {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   // useEffect(() => {
@@ -990,8 +990,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1056,23 +1056,23 @@ function xflha(props) {
   const SetDataOrder = () => {
     let newdata;
     if (order === "ascDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         return moment(a.createdAt) - moment(b.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "descDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         return moment(b.createdAt) - moment(a.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "ascAppDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
       setFlhas(newdata);
     } else if (order === "descAppDate") {
-      newdata = flhas.slice().sort(function (a, b) {
+      newdata = flhas.slice().sort(function(a, b) {
         if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
@@ -1162,6 +1162,7 @@ function xflha(props) {
   /*********************all card data***************************************/
 
   const AllCardData = ({ item, index }) => {
+    console.log(item, "itemmmmmmmmm");
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
 
@@ -1249,223 +1250,6 @@ function xflha(props) {
       // <Box>
       <Grid className={classes.marginTopBottom}>
         <div className="gridView">
-          {/* <Card variant="outlined" className={classes.card}>
-            <CardContent>
-              <Grid
-                container
-                spacing={3}
-                className={classes.cardContentSection}
-              >
-                <Grid
-                  item
-                  md={2}
-                  sm={4}
-                  xs={12}
-                  className={classes.userPictureBox}
-                >
-                  <Button className={classNames(classes.floatR)}>
-                    <img
-                      src={item.avatar !== null ? item.avatar : paceLogoSymbol}
-                      className={classes.userImage}
-                    />{" "}
-                    {item.username}
-                  </Button>
-                </Grid>
-                <Link
-                  onClick={() => handleFlhaSummaryPush(item.id, commentPayload)}
-                  className={classes.cardLinkAction}
-                >
-                  <Grid item xs={12}>
-                    <Grid container spacing={3} alignItems="flex-start">
-                      <Grid
-                        item
-                        sm={12}
-                        xs={12}
-                        className={classes.listHeadColor}
-                      >
-                        <Grid container spacing={3} alignItems="flex-start">
-                          <Grid
-                            item
-                            md={10}
-                            sm={12}
-                            xs={12}
-                            className={classes.pr0}
-                          >
-                            <Typography className={classes.title} variant="h6">
-                              {item.jobTitle}
-                            </Typography>
-                            <Typography
-                              display="inline"
-                              className={classes.listingLabelName}
-                            >
-                              Number:{" "}
-                              <span>
-                                <Link
-                                  href={`/app/pages/assesments/flhasummary/${item.id
-                                    }`}
-                                  variant="h6"
-                                  className={classes.mLeftfont}
-                                >
-                                  <span className={classes.listingLabelValue}>
-                                    {item.flhaNumber}
-                                  </span>
-                                </Link>
-                              </span>
-                            </Typography>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            <Typography
-                              variant="body1"
-                              gutterBottom
-                              display="inline"
-                              color="textPrimary"
-                              className={classes.listingLabelName}
-                            >
-                              Category:{" "}
-                              <span className={classes.listingLabelValue}>
-                                FLHA
-                              </span>
-                            </Typography>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            <Typography
-                              variant="body1"
-                              gutterBottom
-                              display="inline"
-                              color="textPrimary"
-                              className={classes.listingLabelName}
-                            >
-                              Stage:{" "}
-                              <span className={classes.listingLabelValue}>
-                                {item.flhaStage}{" "}
-                                <img
-                                  src={draft_small}
-                                  className={classes.smallImage}
-                                />
-                              </span>
-                              <span
-                                item
-                                xs={1}
-                                className={classes.sepHeightOne}
-                              />
-                              Status:{" "}
-                              <span className="listingLabelValue statusColor_complete">
-                                {item.flhaStatus}
-                              </span>
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item sm={12} xs={12}>
-                    <Grid container spacing={3}>
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Created on:
-                        </Typography>
-
-                        <Typography className={classes.listingLabelValue}>
-                          {moment(item.createdAt).format(
-                            "Do MMMM YYYY, h:mm:ss a"
-                          )}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Created by:
-                        </Typography>
-
-                        <Typography className={classes.listingLabelValue}>
-                          {item.createdByName}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Link>
-              </Grid>
-            </CardContent>
-            <Divider />
-            <CardActions className={Incidents.cardActions}>
-              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                <span className={classes.margT10}>
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                  >
-                    <AttachmentIcon className={classes.mright5} />
-                    Attachments:
-                  </Typography>
-
-                  <Link
-                    onClick={item.attachmentCount && handleVisibility}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={
-                      item.attachmentCount ? classes.commentLink : classes.mLeft
-                    }
-                  >
-                    {item.attachmentCount}
-                  </Link>
-
-                  <span item xs={1} className={classes.sepHeightTen} />
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                    className={classes.mLeft}
-                  >
-                    <InsertCommentOutlinedIcon className={classes.mright5} />
-                    Comments:
-                  </Typography>
-                  <Link
-                    onClick={handleVisibilityComments}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={classes.commentLink}
-                  >
-                    {item.commentsCount}
-                  </Link>
-                </span>
-              </Grid>
-              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                <span item xs={1} className={classes.sepHeightTen} />
-                <Typography variant="body1" display="inline">
-                  <Delete
-                    deleteUrl={`/api/v1/flhas/${item.id}/`}
-                    afterDelete={fetchData}
-                    axiosObj={api}
-                    item={deleteItem}
-                    loader={setIsLoading}
-                    loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this FLHA?"
-                    yesBtn="Yes"
-                    noBtn="No"
-                  />
-                </Typography>
-              </Grid>
-            </CardActions>
-          </Card> */}
-
           <CardView
             cardTitle={item.jobTitle}
             avatar={item.avatar}
@@ -1497,14 +1281,17 @@ function xflha(props) {
               yesBtn: "Yes",
               noBtn: "No",
             }}
+            handleVisibility={() => handleVisibility()}
             handleVisibilityComments={() => handleVisibilityComments()}
-            files={item.attachmentCount}
+            files={item.files !== null ? item.files.length : 0}
             commentsCount={item.commentsCount}
-            handleSummaryPush={() => handleFlhaSummaryPush(item.id, commentPayload)}
+            handleSummaryPush={() =>
+              handleFlhaSummaryPush(item.id, commentPayload)
+            }
             checkDeletePermission={checkDeletePermission}
           />
 
-          {item.attachmentCount ? (
+          {item.files && item.files.length ? (
             <Grid
               item
               md={12}
@@ -1526,12 +1313,14 @@ function xflha(props) {
                     <List>
                       <ListItem>
                         <Grid item md={12} sm={12} xs={12}>
-                          <div className="attachFileThumb">
-                            <Attachment
-                              src={item.attachment}
-                              value={item.attachment}
-                            />
-                          </div>
+                          {item.files.map((a) => (
+                            <div className="attachFileThumb">
+                              <Attachment
+                                src={a.fileName}
+                                value={a.fileName}
+                              />
+                            </div>
+                          ))}
                         </Grid>
                       </ListItem>
                     </List>
@@ -2485,8 +2274,9 @@ function xflha(props) {
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
                     <MUIDataTable
-                      className={`${classes.dataTableSectionDesign
-                        } dataTableSectionDesign`}
+                      className={`${
+                        classes.dataTableSectionDesign
+                      } dataTableSectionDesign`}
                       title="FLHA's"
                       data={Object.entries(flhas).map((item) => [
                         item[1].flhaNumber,

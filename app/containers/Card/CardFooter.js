@@ -86,6 +86,7 @@ const CardFooter = (props) => {
             </Typography>
             <Typography variant="body2" display="inline">
               <Link
+                onClick={() => props.handleVisibility()}
                 color="secondary"
                 aria-haspopup="true"
                 className={classes.commentLink}

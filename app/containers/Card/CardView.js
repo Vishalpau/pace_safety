@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CardView = (props) => {
+  console.log(props, 'rfhdshfhkldslkjfdhs');
   const classes = useStyles();
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
@@ -89,6 +90,7 @@ const CardView = (props) => {
           handleVisibilityComments={() => {
             props.handleVisibilityComments();
           }}
+          handleVisibility={() => props.handleVisibility()}
         />
         <UserProfile
           ifJsa={
