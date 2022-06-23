@@ -566,7 +566,7 @@ function Application(props) {
 
         <Route path="/app/pages/aha" exact component={AhaMain} />
         <Route path="/app/pages/aha/aha-summary/:id" exact component={AhaSummary} />
-        <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} />
+        {/* <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} /> */}
         <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetailsAndHazard} />
         <Route path="/app/pages/aha/assessments/project-details/:id" exact component={ProjectDetailsAndHazard} />
         <Route path="/app/pages/aha/assessments/assessment" exact component={AssessmentAndNotification} />

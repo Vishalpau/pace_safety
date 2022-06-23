@@ -57,7 +57,7 @@ import paceComment from "dan-images/paceComment.png";
 
 import api from "../../utils/axios";
 import Delete from "../Delete/Delete";
-const Loader = lazy(() => import("../pages/Loader"));
+const Loader = lazy(() => import("../Pages/Loader.js"));
 
 const useStyles = makeStyles((theme) => ({
   commentMore: {
@@ -382,9 +382,8 @@ function Comments() {
                   </span>
                   <span item xs={1} className="verticalSepareterLine" />
                   <Delete
-                    deleteUrl={`/api/v1/comments/${module}/${moduleId}/${
-                      item.id
-                    }/`}
+                    deleteUrl={`/api/v1/comments/${module}/${moduleId}/${item.id
+                      }/`}
                     afterDelete={getComments}
                     axiosObj={api}
                     loader={setIsLoading}
