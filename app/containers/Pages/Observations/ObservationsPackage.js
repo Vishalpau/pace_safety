@@ -543,25 +543,24 @@ function Actions(props) {
         const allLogInUserData = await api.get(
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`
         );
-        console.log(allLogInUserData);
         const result = allLogInUserData.data.data.results.results;
-        await setAllInitialData(result);
-        await setTotalData(allLogInUserData.data.data.results.count);
-        await setPageData(allLogInUserData.data.data.results.count / 25);
+        setAllInitialData(result);
+        setTotalData(allLogInUserData.data.data.results.count);
+        setPageData(allLogInUserData.data.data.results.count / 25);
         const pageCount = Math.ceil(
           allLogInUserData.data.data.results.count / 25
         );
-        await setPageCount(pageCount);
+        setPageCount(pageCount);
       } else {
         const res = await api.get(
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`
         );
         const result = res.data.data.results.results;
-        await setAllInitialData(result);
-        await setTotalData(res.data.data.results.count);
-        await setPageData(res.data.data.results.count / 25);
+        setAllInitialData(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
         const pageCount = Math.ceil(res.data.data.results.count / 25);
-        await setPageCount(pageCount);
+        setPageCount(pageCount);
       }
     } else {
       if (props.type == "Risk") {
@@ -570,25 +569,25 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setTotalData(allLogInUserData.data.data.results.count);
-          await setPageData(allLogInUserData.data.data.results.count / 25);
+          setAllInitialData(result);
+          setTotalData(allLogInUserData.data.data.results.count);
+          setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          await setPageCount(pageCount);
+          setPageCount(pageCount);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setTotalData(allLogInUserData.data.data.results.count);
-          await setPageData(allLogInUserData.data.data.results.count / 25);
+          setAllInitialData(result);
+          setTotalData(allLogInUserData.data.data.results.count);
+          setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          await setPageCount(pageCount);
+          setPageCount(pageCount);
         }
       }
       if (props.type == "Comments") {
@@ -597,25 +596,25 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setTotalData(allLogInUserData.data.data.results.count);
-          await setPageData(allLogInUserData.data.data.results.count / 25);
+          setAllInitialData(result);
+          setTotalData(allLogInUserData.data.data.results.count);
+          setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          await setPageCount(pageCount);
+          setPageCount(pageCount);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setTotalData(allLogInUserData.data.data.results.count);
-          await setPageData(allLogInUserData.data.data.results.count / 25);
+          setAllInitialData(result);
+          setTotalData(allLogInUserData.data.data.results.count);
+          setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          await setPageCount(pageCount);
+          setPageCount(pageCount);
         }
       }
       if (props.type == "Positive behavior") {
@@ -624,29 +623,29 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setTotalData(allLogInUserData.data.data.results.count);
+          setAllInitialData(result);
+          setTotalData(allLogInUserData.data.data.results.count);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          await setPageData(allLogInUserData.data.data.results.count / 25);
-          await setPageCount(pageCount);
+          setPageData(allLogInUserData.data.data.results.count / 25);
+          setPageCount(pageCount);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setTotalData(allLogInUserData.data.data.results.count);
-          await setPageData(allLogInUserData.data.data.results.count / 25);
+          setAllInitialData(result);
+          setTotalData(allLogInUserData.data.data.results.count);
+          setPageData(allLogInUserData.data.data.results.count / 25);
           const pageCount = Math.ceil(
             allLogInUserData.data.data.results.count / 25
           );
-          await setPageCount(pageCount);
+          setPageCount(pageCount);
         }
       }
     }
-    await setIsLoading(true);
+    setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -673,15 +672,15 @@ function Actions(props) {
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`
         );
         const result = allLogInUserData.data.data.results.results;
-        await setAllInitialData(result);
-        await setPage(value);
+        setAllInitialData(result);
+        setPage(value);
       } else {
         const res = await api.get(
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&observationStage=${status}`
         );
         const result = res.data.data.results.results;
-        await setAllInitialData(result);
-        await setPage(value);
+        setAllInitialData(result);
+        setPage(value);
       }
     } else {
       if (props.type == "Risk") {
@@ -690,15 +689,15 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setPage(value);
+          setAllInitialData(result);
+          setPage(value);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setPage(value);
+          setAllInitialData(result);
+          setPage(value);
         }
       }
       if (props.type == "Comments") {
@@ -707,15 +706,15 @@ function Actions(props) {
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setPage(value);
+          setAllInitialData(result);
+          setPage(value);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`
           );
           const result = allLogInUserData.data.data.results.results;
-          await setAllInitialData(result);
-          await setPage(value);
+          setAllInitialData(result);
+          setPage(value);
         }
       }
       if (props.type == "Positive behavior") {
@@ -853,7 +852,7 @@ function Actions(props) {
       const data = item[1];
       data.status = "Delete";
       delete data.attachment;
-      await setIsLoading(false);
+       setIsLoading(false);
       await api
         .put(`/api/v1/observations/${data.id}/`, data)
         .then((response) => fetchInitialiObservation())
@@ -889,7 +888,6 @@ function Actions(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
-    console.log(item, "iteeeeeeeee");
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);

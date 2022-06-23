@@ -717,18 +717,22 @@ function AhaPackage(props) {
     const handleSendComments = async () => {
       if (commentData) {
         console.log(api, "apiiiiiiii");
+        setIsLoading(true);
         await api
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             // handleCommentsClose()
+            setIsLoading(false);
             fetchAllAHAData();
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+          });
       }
     };
 
     function handleVisibility() {
-      console.log("hfdskfdskfkds");
       setShowGrid(true);
       setHidden(!hidden);
     }
@@ -841,10 +845,7 @@ function AhaPackage(props) {
                       <Grid item md={12} sm={12} xs={12}>
                         {item.files.map((a) => (
                           <div className="attachFileThumb">
-                            <Attachment
-                              src={a.fileName}
-                              value={a.fileName}
-                            />
+                            <Attachment src={a.fileName} value={a.fileName} />
                           </div>
                         ))}
                       </Grid>

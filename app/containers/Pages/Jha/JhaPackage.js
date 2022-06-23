@@ -475,12 +475,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JhaPackage(props) {
-  const [cardView, setCardView] = useState(true);
+  // const [cardView, setCardView] = useState(true);
   const [allJHAData, setAllJHAData] = useState([]);
   const search = props.search;
   const status = props.status;
   const history = useHistory();
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
@@ -502,8 +502,8 @@ function JhaPackage(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
-    await setIsLoading(false);
-    await setPage(1);
+    setIsLoading(false);
+    setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -532,11 +532,11 @@ function JhaPackage(props) {
       );
 
       const result = res.data.data.results.results;
-      await setAllJHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setAllJHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${
@@ -545,15 +545,15 @@ function JhaPackage(props) {
       );
 
       const result = res.data.data.results.results;
-      await setAllJHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setAllJHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     }
     // handelTableView(result)
 
-    await setIsLoading(true);
+    setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -581,14 +581,14 @@ function JhaPackage(props) {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`
       );
-      await setAllJHAData(res.data.data.results.results);
-      await setPage(value);
+      setAllJHAData(res.data.data.results.results);
+      setPage(value);
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`
       );
-      await setAllJHAData(res.data.data.results.results);
-      await setPage(value);
+      setAllJHAData(res.data.data.results.results);
+      setPage(value);
     }
   };
 
@@ -603,12 +603,12 @@ function JhaPackage(props) {
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
 
-  const handelView = (e) => {
-    setListToggle(false);
-  };
-  const handelViewTabel = (e) => {
-    setListToggle(true);
-  };
+  // const handelView = (e) => {
+  //   setListToggle(false);
+  // };
+  // const handelViewTabel = (e) => {
+  //   setListToggle(true);
+  // };
 
   const [value, setValue] = React.useState(2);
 
@@ -635,10 +635,10 @@ function JhaPackage(props) {
 
   const classes = useStyles();
 
-  const handleVisibility = () => {
-    setAttachOpen(true);
-    setHidden(!hidden);
-  };
+  // const handleVisibility = () => {
+  //   setAttachOpen(true);
+  //   setHidden(!hidden);
+  // };
   const handleAttachClick = () => {
     setAttachOpen(!open);
   };
@@ -652,13 +652,13 @@ function JhaPackage(props) {
   };
 
   //view comments
-  const [commentsOpen, setCommentsOpen] = useState(false);
-  const [hiddenn, setHiddenn] = useState(false);
+  // const [commentsOpen, setCommentsOpen] = useState(false);
+  // const [hiddenn, setHiddenn] = useState(false);
 
-  const handleVisibilityComments = () => {
-    setCommentsOpen(true);
-    setHiddenn(!hiddenn);
-  };
+  // const handleVisibilityComments = () => {
+  //   setCommentsOpen(true);
+  //   setHiddenn(!hiddenn);
+  // };
   const handleCommentsClick = () => {
     setCommentsOpen(!open);
   };
@@ -698,18 +698,6 @@ function JhaPackage(props) {
     });
   };
 
-  const handleDelete = async (item) => {
-    let data = item[1];
-    let id = data.id;
-    data.status = "Delete";
-    delete data.jhaAssessmentAttachment;
-    await setIsLoading(false);
-    await api
-      .delete(`/api/v1/jhas/${id}/`, data)
-      .then((response) => fetchData())
-      .catch((err) => console.log(err));
-  };
-
   useEffect(() => {
     fetchData();
     setCheckDeletePermission(checkACL("safety-jha", "delete_jha"));
@@ -747,7 +735,6 @@ function JhaPackage(props) {
     };
 
     const addComments = (event) => {
-      console.log(event.target.value);
       setCommentData(event.target.value);
     };
 
@@ -765,17 +752,20 @@ function JhaPackage(props) {
     };
 
     const handleSendComments = async () => {
-      // console.log(commentsData, 'comments')
-
       if (commentData) {
+        setIsLoading(true);
         console.log(api, "apiiiiiiii");
         await api
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             // handleCommentsClose();
+            setIsLoading(false);
             fetchData();
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            setIsLoading(false);
+            console.log(err);
+          });
       }
     };
 
@@ -898,10 +888,7 @@ function JhaPackage(props) {
                         <Grid item md={12} sm={12} xs={12}>
                           {item.files.map((a) => (
                             <div className="attachFileThumb">
-                              <Attachment
-                                src={a.fileName}
-                                value={a.fileName}
-                              />
+                              <Attachment src={a.fileName} value={a.fileName} />
                             </div>
                           ))}
                         </Grid>

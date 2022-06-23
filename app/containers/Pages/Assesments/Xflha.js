@@ -717,13 +717,13 @@ function xflha(props) {
   const handleChangeOne = (event, newValue) => {
     setValue(newValue);
   };
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
+  // const handleMyUserPClickOpen = () => {
+  //   setMyUserPOpen(true);
+  // };
 
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
+  // const handleMyUserPClose = () => {
+  //   setMyUserPOpen(false);
+  // };
 
   const handleFlhaSummaryPush = async (id, commentPayload) => {
     // console.log(id, "iddddddddd");
@@ -785,7 +785,7 @@ function xflha(props) {
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
   const fetchData = async () => {
-    await setPage(1);
+     setPage(1);
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
     const fkProjectId =
       props.projectName.projectId ||
@@ -806,24 +806,24 @@ function xflha(props) {
         `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}&createdBy=${createdBy}`
       );
       const result = res.data.data.results.results;
-      await setFlhas(result);
+      setFlhas(result);
 
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       const pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}`
       );
       const result = res.data.data.results.results;
-      await setFlhas(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setFlhas(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       const pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     }
-    await setIsLoading(false);
+    setIsLoading(false);
   };
 
   let timer;
@@ -847,30 +847,39 @@ function xflha(props) {
   //   const res1 = await api.put(`/api/v1/flha/${data.id}/`, data).then(response => fetchData()).catch(err => console.log(err))
   // }
 
-  const handleVisibility = () => {
-    setAttachOpen(true);
-    setHidden(!hidden);
+  // const handleVisibility = () => {
+  //   setAttachOpen(true);
+  //   setHidden(!hidden);
+  // };
+  // const handleAttachClick = () => {
+  //   setAttachOpen(!open);
+  // };
+  // const handleAttachOpen = () => {
+  //   if (!hidden) {
+  //     setAttachOpen(true);
+  //   }
+  // };
+  // const handleVisibilityComments = () => {
+  //   setCommentsOpen(true);
+  //   setHiddenn(!hiddenn);
+  // };
+  // const handleCommentsClick = () => {
+  //   setCommentsOpen(!open);
+  // };
+  // const handleCommentsOpen = () => {
+  //   if (!hiddenn) {
+  //     setCommentsOpen(true);
+  //   }
+  // };
+
+  const handleMyUserPClickOpen = () => {
+    setMyUserPOpen(true);
   };
-  const handleAttachClick = () => {
-    setAttachOpen(!open);
+
+  const handleMyUserPClose = () => {
+    setMyUserPOpen(false);
   };
-  const handleAttachOpen = () => {
-    if (!hidden) {
-      setAttachOpen(true);
-    }
-  };
-  const handleVisibilityComments = () => {
-    setCommentsOpen(true);
-    setHiddenn(!hiddenn);
-  };
-  const handleCommentsClick = () => {
-    setCommentsOpen(!open);
-  };
-  const handleCommentsOpen = () => {
-    if (!hiddenn) {
-      setCommentsOpen(true);
-    }
-  };
+
   const handleAssment = (event, newValue) => {
     setValueTwo(newValue);
     if (newValue === 0) {
@@ -882,9 +891,9 @@ function xflha(props) {
     }
   };
 
-  const handleCommentsClose = () => {
-    setCommentsOpen(false);
-  };
+  // const handleCommentsClose = () => {
+  //   setCommentsOpen(false);
+  // };
   const handelSearchFlha = async (e) => {
     const allSeacrh = [];
     if (e.target.value.length === 0) {
@@ -1162,7 +1171,7 @@ function xflha(props) {
   /*********************all card data***************************************/
 
   const AllCardData = ({ item, index }) => {
-    console.log(item, "itemmmmmmmmm");
+    // console.log(item, "itemmmmmmmmm");
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
 
@@ -1238,13 +1247,19 @@ function xflha(props) {
       setHiddenn(!hiddenn);
     }
 
-    const handleMyUserPClickOpen = () => {
-      setMyUserPOpen(true);
-    };
+    function handleCommentsOpen() {
+      if (!hiddenn) {
+        setCommentsOpen(true);
+      }
+    }
 
-    const handleMyUserPClose = () => {
-      setMyUserPOpen(false);
-    };
+    function handleCommentsClose() {
+      setCommentsOpen(false);
+    }
+
+    function handleCommentsClick() {
+      setCommentsOpen(!open);
+    }
 
     return (
       // <Box>
@@ -1304,7 +1319,7 @@ function xflha(props) {
               onFocus={handleAttachOpen}
               onMouseEnter={handleAttachOpen}
               onMouseLeave={handleAttachClose}
-              open={attachOpen}
+              open={showGrid}
               className="paddTBRemove attactmentShowSection"
             >
               <Paper elevation={1} className="cardSectionBottom">
@@ -1315,10 +1330,7 @@ function xflha(props) {
                         <Grid item md={12} sm={12} xs={12}>
                           {item.files.map((a) => (
                             <div className="attachFileThumb">
-                              <Attachment
-                                src={a.fileName}
-                                value={a.fileName}
-                              />
+                              <Attachment src={a.fileName} value={a.fileName} />
                             </div>
                           ))}
                         </Grid>
@@ -1692,7 +1704,7 @@ function xflha(props) {
                       <Grid className={classes.marginTopBottom}>
                         <div className="gridView">
                           <AllCardData item={item[1]} index={index} />
-                          <Grid
+                          {/* <Grid
                             item
                             md={12}
                             sm={12}
@@ -1764,9 +1776,9 @@ function xflha(props) {
                                 </Grid>
                               </Grid>
                             </Paper>
-                          </Grid>
+                          </Grid> */}
                         </div>
-                        <div>
+                        {/* <div>
                           <Grid
                             item
                             md={12}
@@ -1834,7 +1846,7 @@ function xflha(props) {
                               </Grid>
                             </Paper>
                           </Grid>
-                        </div>
+                        </div> */}
                         <div>
                           <Dialog
                             open={openAttachment}

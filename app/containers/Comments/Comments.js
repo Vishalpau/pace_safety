@@ -83,7 +83,9 @@ function Comments() {
     moduleName = module.charAt(0).toUpperCase() + module.slice(1);
   }
   const { moduleId } = useParams();
-  const commentPayload = history.location.state.commentPayload;
+
+  console.log(history.location, 'history and location');
+  const commentPayload = history.location.state && history.location.state.commentPayload;
   const userId = JSON.parse(localStorage.getItem("userDetails"));
 
   const [commentData, setCommentData] = useState([]);
@@ -146,10 +148,6 @@ function Comments() {
         setCommentData(res.data.data.results);
       })
       .catch((err) => console.log(err));
-  };
-
-  const handleSortData = (event) => {
-    setSortData(event.target.value);
   };
 
   const handleModulePush = async () => {

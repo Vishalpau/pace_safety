@@ -451,31 +451,16 @@ const useStyles = makeStyles((theme) => ({
 function ComplianceListNew(props) {
   // states
   const history = useHistory();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [allComplianceData, setAllComplianceData] = useState([]);
-  const [attachOpen, setAttachOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  const [deleteValue, setDeleteValue] = useState("");
-  const [deleteQ, setDeleteQ] = useState(false);
 
   const handleChangeOne = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const handleClickDeleteAlert = (value) => {
-    setDeleteQ(true);
-    setDeleteValue(value);
-    // handleDelete(value);
-  };
-
-  const handleCloseDeleteAlert = () => {
-    setDeleteQ(false);
-    setDeleteValue("");
   };
 
   const options = {
@@ -526,7 +511,7 @@ function ComplianceListNew(props) {
     if (props.search) {
       setAllComplianceData([]);
     }
-    await setPage(1);
+    setPage(1);
     // get all the ids (fkCompanyId,fkProjectId, selectBreakdown,fkProjectStructureIds, createdBy )
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
@@ -557,11 +542,11 @@ function ComplianceListNew(props) {
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
-        await setAllComplianceData(result);
-        await setTotalData(res.data.data.results.count);
-        await setPageData(res.data.data.results.count / 25);
+        setAllComplianceData(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
-        await setPageCount(pageCount);
+        setPageCount(pageCount);
         setIsLoading(false);
       } else {
         const res = await api.get(
@@ -570,11 +555,11 @@ function ComplianceListNew(props) {
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
-        await setAllComplianceData(result);
-        await setTotalData(res.data.data.results.count);
-        await setPageData(res.data.data.results.count / 25);
+        setAllComplianceData(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
-        await setPageCount(pageCount);
+        setPageCount(pageCount);
         setIsLoading(false);
       }
     } else {
@@ -588,11 +573,11 @@ function ComplianceListNew(props) {
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
-        await setAllComplianceData(result);
-        await setTotalData(res.data.data.results.count);
-        await setPageData(res.data.data.results.count / 25);
+        setAllComplianceData(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
-        await setPageCount(pageCount);
+        setPageCount(pageCount);
         setIsLoading(false);
       } else {
         const res = await api.get(
@@ -603,19 +588,15 @@ function ComplianceListNew(props) {
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
-        await setAllComplianceData(result);
-        await setTotalData(res.data.data.results.count);
-        await setPageData(res.data.data.results.count / 25);
+        setAllComplianceData(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
-        await setPageCount(pageCount);
+        setPageCount(pageCount);
         setIsLoading(false);
       }
     }
   };
-
-  // useEffect(() => {
-  //   console.log(isLoading, "loadinggggggggg");
-  // }, [isLoading]);
 
   //method for  all the filters
   const handleChange = async (event, value) => {
@@ -647,16 +628,16 @@ function ComplianceListNew(props) {
             props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
-        await setAllComplianceData(res.data.data.results.results);
-        await setPage(value);
+        setAllComplianceData(res.data.data.results.results);
+        setPage(value);
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${
             props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
-        await setAllComplianceData(res.data.data.results.results);
-        await setPage(value);
+        setAllComplianceData(res.data.data.results.results);
+        setPage(value);
       }
     } else {
       if (props.compliance === "My Inspections") {
@@ -667,8 +648,8 @@ function ComplianceListNew(props) {
             props.type
           }&createdBy=${createdBy}&page=${value}`
         );
-        await setAllComplianceData(res.data.data.results.results);
-        await setPage(value);
+        setAllComplianceData(res.data.data.results.results);
+        setPage(value);
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${
@@ -677,27 +658,10 @@ function ComplianceListNew(props) {
             props.type
           }&page=${value}`
         );
-        await setAllComplianceData(res.data.data.results.results);
-        await setPage(value);
+        setAllComplianceData(res.data.data.results.results);
+        setPage(value);
       }
     }
-  };
-
-  //method to delete a compliance
-  const handleDelete = async () => {
-    let temp = { ...deleteValue };
-    // let temp = { ...item };
-    temp.status = "Delete";
-    let id = deleteValue.id;
-    setIsLoading(true);
-    const res = await api
-      .put(`api/v1/audits/${id}/`, temp)
-      .then((response) => {
-        fetchAllComplianceData();
-        handleCloseDeleteAlert();
-        // setIsLoading(true);
-      })
-      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
@@ -716,7 +680,6 @@ function ComplianceListNew(props) {
 
   // separate card component
   const AllCardData = ({ value, index }) => {
-    console.log(value, "value");
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
@@ -759,12 +722,17 @@ function ComplianceListNew(props) {
 
     const handleSendComments = async () => {
       if (commentData) {
+        setIsLoading(true);
         await api
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             fetchAllComplianceData();
+            setIsLoading(false);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+          });
       }
     };
 
@@ -894,10 +862,7 @@ function ComplianceListNew(props) {
                       <Grid item md={12} sm={12} xs={12}>
                         {value.attachmentLinks.links.map((a) => (
                           <div className="attachFileThumb">
-                            <Attachment
-                              src={a}
-                              value={a}
-                            />
+                            <Attachment src={a} value={a} />
                           </div>
                         ))}
                       </Grid>
@@ -1166,50 +1131,6 @@ function ComplianceListNew(props) {
           </div>
         </Grid>
       </Box>
-      <Dialog
-        open={deleteQ}
-        onClose={handleCloseDeleteAlert}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <Grid container spacing={3}>
-              <Grid item md={12} xs={12}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend" className="checkRadioLabel">
-                    Are you sure you want to delete this question?
-                  </FormLabel>
-                </FormControl>
-              </Grid>
-              <Grid
-                item
-                md={12}
-                sm={12}
-                xs={12}
-                className={classes.popUpButton}
-              >
-                <Button
-                  color="primary"
-                  variant="contained"
-                  className="spacerRight buttonStyle"
-                  onClick={() => handleDelete()}
-                >
-                  Yes
-                </Button>
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  className="buttonStyle custmCancelBtn"
-                  onClick={() => handleCloseDeleteAlert()}
-                >
-                  No
-                </Button>
-              </Grid>
-            </Grid>
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
