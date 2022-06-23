@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CardView = (props) => {
-  console.log(props, 'rfhdshfhkldslkjfdhs');
+  // console.log(props, 'rfhdshfhkldslkjfdhs');
   const classes = useStyles();
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
