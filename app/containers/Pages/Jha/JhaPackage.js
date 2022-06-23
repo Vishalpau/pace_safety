@@ -637,7 +637,7 @@ function JhaPackage(props) {
       "commonObject",
       "jha",
       "projectStruct",
-      fkProjectStructureIds
+      jha.fkProjectStructureIds
     );
     localStorage.removeItem("JSAAssessments");
     localStorage.removeItem("JSAApproval");
@@ -662,7 +662,6 @@ function JhaPackage(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
-    console.log(item, "itemmmmmmmm");
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
 
