@@ -57,7 +57,7 @@ import paceComment from "dan-images/paceComment.png";
 
 import api from "../../utils/axios";
 import Delete from "../Delete/Delete";
-const Loader = lazy(() => import("../pages/Loader"));
+const Loader = lazy(() => import("../Pages/Loader.js"));
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -393,9 +393,8 @@ function Comments() {
                   </span>
                   <span item xs={1} className="verticalSepareterLine" />
                   <Delete
-                    deleteUrl={`/api/v1/comments/${module}/${moduleId}/${
-                      item.id
-                    }/`}
+                    deleteUrl={`/api/v1/comments/${module}/${moduleId}/${item.id
+                      }/`}
                     afterDelete={getComments}
                     axiosObj={api}
                     loader={setIsLoading}
@@ -631,9 +630,8 @@ function Comments() {
                               className="verticalSepareterLine"
                             />
                             <Delete
-                              deleteUrl={`/api/v1/comments/${module}/${moduleId}/${
-                                ad.id
-                              }/`}
+                              deleteUrl={`/api/v1/comments/${module}/${moduleId}/${ad.id
+                                }/`}
                               afterDelete={getComments}
                               axiosObj={api}
                               loader={setIsLoading}
@@ -738,10 +736,10 @@ function Comments() {
               </Grid>
               {commentData.length
                 ? commentData.map((cd, index) => {
-                    return (
-                      <SingleCardData key={cd.id} item={cd} index={index} />
-                    );
-                  })
+                  return (
+                    <SingleCardData key={cd.id} item={cd} index={index} />
+                  );
+                })
                 : "No Comments "}
               {/* </Grid> */}
               <Grid item md={3} sm={4} xs={12} className="commentMoreLink">
