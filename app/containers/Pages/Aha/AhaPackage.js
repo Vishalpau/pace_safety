@@ -505,40 +505,11 @@ function AhaPackage(props) {
   //dialog
   const [MyFavopen, setMyFavOpen] = React.useState(false);
 
-  // const handleMyUserPClickOpen = (val) => {
-  //   setMyUserPOpen(val);
-  // };
-
   useEffect(() => {
     console.log(myUserPOpen, "myUserPOpen");
   }, [myUserPOpen]);
 
-  // const handleMyUserPClose = () => {
-  //   setMyUserPOpen(false);
-  // }
-
-  // const [incidents] = useState([]);
-  // const [listToggle, setListToggle] = useState(false);
-
-  // const handelView = (e) => {
-  //   setListToggle(false);
-  // };
-  // const handelViewTabel = (e) => {
-  //   setListToggle(true);
-  // };
-
-  // const [value, setValue] = React.useState(2);
-
-  //dialog
-  // const [MyFavopen, setMyFavOpen] = React.useState(false);
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
 
   const handleSummaryPush = async (selectedJha, commentPayload) => {
     const aha = selectedJha;
@@ -575,7 +546,7 @@ function AhaPackage(props) {
   // }
 
   const fetchAllAHAData = async () => {
-    await setPage(1);
+     setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -600,24 +571,24 @@ function AhaPackage(props) {
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`
       );
       const result = res.data.data.results.results;
-      await setAllAHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+       setAllAHAData(result);
+       setTotalData(res.data.data.results.count);
+       setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+       setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`
       );
       const result = res.data.data.results.results;
-      await setAllAHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+       setAllAHAData(result);
+       setTotalData(res.data.data.results.count);
+       setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+       setPageCount(pageCount);
     }
 
-    await setIsLoading(true);
+     setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -647,16 +618,16 @@ function AhaPackage(props) {
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
-      await setAllAHAData(res.data.data.results.results);
-      await setPage(value);
+       setAllAHAData(res.data.data.results.results);
+       setPage(value);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
-      await setAllAHAData(res.data.data.results.results);
-      await setPage(value);
+       setAllAHAData(res.data.data.results.results);
+       setPage(value);
     }
   };
 
@@ -736,14 +707,6 @@ function AhaPackage(props) {
       setShowGrid(true);
       setHidden(!hidden);
     }
-
-    // useEffect(() => {
-    //   console.log(showGrid, 'showGrid');
-    // },[showGrid])
-
-    // useEffect(() => {
-    //   console.log(hidden, 'hidden');
-    // }, [hidden])
 
     function handleAttachClose() {
       setShowGrid(false);

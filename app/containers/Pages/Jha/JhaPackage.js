@@ -617,59 +617,12 @@ function JhaPackage(props) {
   };
 
   //dialog
-  const [MyFavopen, setMyFavOpen] = React.useState(false);
-
-  const handleMyFavClickOpen = () => {
-    setMyFavOpen(true);
-  };
-
-  const handleMyFavClose = () => {
-    setMyFavOpen(false);
-  };
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
-
   const classes = useStyles();
 
-  // const handleVisibility = () => {
-  //   setAttachOpen(true);
-  //   setHidden(!hidden);
-  // };
-  const handleAttachClick = () => {
-    setAttachOpen(!open);
-  };
-  const handleAttachOpen = () => {
-    if (!hidden) {
-      setAttachOpen(true);
-    }
-  };
-  const handleAttachClose = () => {
-    setAttachOpen(false);
-  };
-
   //view comments
-  // const [commentsOpen, setCommentsOpen] = useState(false);
-  // const [hiddenn, setHiddenn] = useState(false);
-
-  // const handleVisibilityComments = () => {
-  //   setCommentsOpen(true);
-  //   setHiddenn(!hiddenn);
-  // };
-  const handleCommentsClick = () => {
-    setCommentsOpen(!open);
-  };
-  const handleCommentsOpen = () => {
-    if (!hiddenn) {
-      setCommentsOpen(true);
-    }
-  };
-  const handleCommentsClose = () => {
-    setCommentsOpen(false);
-  };
 
   // const handleSummaryPush = async (index) => {
   //   const itemid = index;
