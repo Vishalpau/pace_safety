@@ -203,8 +203,9 @@ const AssessmentAndDocument = (props) => {
     additionalRemarks: "",
     humanPerformanceAspects: [],
     workStopCondition: [],
+    files: undefined,
   });
-  const fkJHAId = JSON.parse(localStorage.getItem('fkJHAId'));
+  const fkJHAId = JSON.parse(localStorage.getItem("fkJHAId"));
   const [risk, setRisk] = useState([]);
   const [updatePage, setUpdatePage] = useState(false);
   const [projectData, setProjectData] = useState({
@@ -253,14 +254,14 @@ const AssessmentAndDocument = (props) => {
       tempPerformance[value.checkListGroupName] = checkList;
       return tempPerformance;
     });
-     setPerformance(tempPerformance);
-     setDocument(apiCondition);
+    setPerformance(tempPerformance);
+    setDocument(apiCondition);
     const temp = [];
     apiData.map((value) => {
       temp.push({ id: value.id });
     });
     handelCommonObject("commonObject", "jha", "assessmentIds", temp);
-     setForm(apiData);
+    setForm(apiData);
   };
 
   const handelActionTracker = async () => {
@@ -417,7 +418,8 @@ const AssessmentAndDocument = (props) => {
 
   const handelNext = async () => {
     setSubmitLoader(true);
-    await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form)
+    await api
+      .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form)
 
       .catch(() => handelApiError());
     setSubmitLoader(false);
@@ -454,13 +456,13 @@ const AssessmentAndDocument = (props) => {
   let pickListValues = JSON.parse(localStorage.getItem("pickList"));
 
   const handelCallBack = async () => {
-     setLoading(true);
+    setLoading(true);
     await handelCheckList();
     await handelJobDetailsDocument();
-     handelActionLink();
+    handelActionLink();
     setRisk(pickListValues["78"]);
     await handelActionTracker();
-     setLoading(false);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -557,10 +559,10 @@ const AssessmentAndDocument = (props) => {
 
   const handelNextDocument = async () => {
     setsubmitLoaderDocumentDocument(true);
-    console.log('hiiiiiiiiiiiiiiiiiiiiiii');
+    console.log("hiiiiiiiiiiiiiiiiiiiiiii");
     if (
-      typeof formDocument.jhaAssessmentAttachment === "object" &&
-      formDocument.jhaAssessmentAttachment != null
+      typeof additinalJobDetails.files === "object" &&
+      additinalJobDetails.files !== null
     ) {
       const data = new FormData();
       data.append("fkCompanyId", formDocument.fkCompanyId);
@@ -622,8 +624,8 @@ const AssessmentAndDocument = (props) => {
         .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, formDocument)
         .catch(() => handelApiErrorDocument());
     }
-    console.log('hhhhhhhhh, shfdsfkds');
-    console.log(fkJHAId, 'fkJhasdfds');
+    console.log("hhhhhhhhh, shfdsfkds");
+    console.log(fkJHAId, "fkJhasdfds");
     history.push(`/app/pages/jha/jha-summary/${fkJHAId}`);
     localStorage.setItem("Jha Status", JSON.stringify({ assessment: "done" }));
     setsubmitLoaderDocumentDocument(false);
@@ -931,10 +933,12 @@ const AssessmentAndDocument = (props) => {
               ) : null}
 
               <MultiAttachment
-                attachmentHandler={(files) => ({
-                  ...setFormDocument,
-                  files: files,
-                })}
+                attachmentHandler={(files) =>
+                  setAdditionalJobDetails({
+                    ...additinalJobDetails,
+                    files: files,
+                  })
+                }
               />
 
               {notificationSentValue.length > 0 ? (
