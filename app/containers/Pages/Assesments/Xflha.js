@@ -717,13 +717,6 @@ function xflha(props) {
   const handleChangeOne = (event, newValue) => {
     setValue(newValue);
   };
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
-
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
 
   const handleFlhaSummaryPush = async (id, commentPayload) => {
     // console.log(id, "iddddddddd");
@@ -733,13 +726,7 @@ function xflha(props) {
       state: { commentPayload, redirectUrl: "/app/pages/assesments/flhaadd" },
     });
   };
-  const handleClickOpenAttachment = () => {
-    setopenAttachment(true);
-  };
 
-  const handleCloseAttachment = () => {
-    setopenAttachment(false);
-  };
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -785,7 +772,8 @@ function xflha(props) {
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
   const fetchData = async () => {
-    await setPage(1);
+    setIsLoading(true);
+    setPage(1);
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
     const fkProjectId =
       props.projectName.projectId ||
@@ -806,24 +794,23 @@ function xflha(props) {
         `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}&createdBy=${createdBy}`
       );
       const result = res.data.data.results.results;
-      await setFlhas(result);
-
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setFlhas(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       const pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}`
       );
       const result = res.data.data.results.results;
-      await setFlhas(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setFlhas(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       const pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     }
-    await setIsLoading(false);
+    setIsLoading(false);
   };
 
   let timer;
@@ -833,44 +820,14 @@ function xflha(props) {
 
       timer = setTimeout(() => setSeacrhFlha(v), d);
     };
-  const handleSearch = (e) =>
+  const handleSearch = (e) => {
     debounce(fetchData, e.target.value.toLowerCase(), 500)();
+  }
 
-  // const handleDelete = async (item) => {
-  //   console.log(item[1].id)
-  //   let data = item[1]
-  //   // let id = item[1].id
-  //   data.status = "Delete"
-  //   delete data.ahaAssessmentAttachment
-  //   console.log(data, "!!!!!!!!!")
-  //   await setIsLoading(false)
-  //   const res1 = await api.put(`/api/v1/flha/${data.id}/`, data).then(response => fetchData()).catch(err => console.log(err))
-  // }
+  const handleMyUserPClose = () => {
+    setMyUserPOpen(false);
+  };
 
-  const handleVisibility = () => {
-    setAttachOpen(true);
-    setHidden(!hidden);
-  };
-  const handleAttachClick = () => {
-    setAttachOpen(!open);
-  };
-  const handleAttachOpen = () => {
-    if (!hidden) {
-      setAttachOpen(true);
-    }
-  };
-  const handleVisibilityComments = () => {
-    setCommentsOpen(true);
-    setHiddenn(!hiddenn);
-  };
-  const handleCommentsClick = () => {
-    setCommentsOpen(!open);
-  };
-  const handleCommentsOpen = () => {
-    if (!hiddenn) {
-      setCommentsOpen(true);
-    }
-  };
   const handleAssment = (event, newValue) => {
     setValueTwo(newValue);
     if (newValue === 0) {
@@ -882,9 +839,10 @@ function xflha(props) {
     }
   };
 
-  const handleCommentsClose = () => {
-    setCommentsOpen(false);
-  };
+  // const handleCommentsClose = () => {
+  //   setCommentsOpen(false);
+  // };
+
   const handelSearchFlha = async (e) => {
     const allSeacrh = [];
     if (e.target.value.length === 0) {
@@ -977,10 +935,6 @@ function xflha(props) {
     } catch (error) {}
   };
 
-  // useEffect(() => {
-  //   console.log(flhas, "flhas");
-  // }, [flhas]);
-
   const handleChange = async (event, value) => {
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
     const fkProjectId =
@@ -1020,7 +974,6 @@ function xflha(props) {
   }, []);
 
   useEffect(() => {
-    // console.log(status, "statussss");
     fetchData();
   }, [status]);
 
@@ -1162,7 +1115,7 @@ function xflha(props) {
   /*********************all card data***************************************/
 
   const AllCardData = ({ item, index }) => {
-    console.log(item, "itemmmmmmmmm");
+    // console.log(item, "itemmmmmmmmm");
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
 
@@ -1170,8 +1123,6 @@ function xflha(props) {
     const [hiddenn, setHiddenn] = useState(false);
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
     const [commentData, setCommentData] = useState("");
-
-    // console.log(item, index, "iiiiteeeeeem");
 
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
@@ -1200,13 +1151,18 @@ function xflha(props) {
 
     const handleSendComments = async () => {
       if (commentData) {
+        setIsLoading(true);
         await api
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             // handleCommentsClose()
+            setIsLoading(false);
             fetchData();
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+          });
       }
     };
 
@@ -1238,13 +1194,19 @@ function xflha(props) {
       setHiddenn(!hiddenn);
     }
 
-    const handleMyUserPClickOpen = () => {
-      setMyUserPOpen(true);
-    };
+    function handleCommentsOpen() {
+      if (!hiddenn) {
+        setCommentsOpen(true);
+      }
+    }
 
-    const handleMyUserPClose = () => {
-      setMyUserPOpen(false);
-    };
+    function handleCommentsClose() {
+      setCommentsOpen(false);
+    }
+
+    function handleCommentsClick() {
+      setCommentsOpen(!open);
+    }
 
     return (
       // <Box>
@@ -1304,7 +1266,7 @@ function xflha(props) {
               onFocus={handleAttachOpen}
               onMouseEnter={handleAttachOpen}
               onMouseLeave={handleAttachClose}
-              open={attachOpen}
+              open={showGrid}
               className="paddTBRemove attactmentShowSection"
             >
               <Paper elevation={1} className="cardSectionBottom">
@@ -1315,10 +1277,7 @@ function xflha(props) {
                         <Grid item md={12} sm={12} xs={12}>
                           {item.files.map((a) => (
                             <div className="attachFileThumb">
-                              <Attachment
-                                src={a.fileName}
-                                value={a.fileName}
-                              />
+                              <Attachment src={a.fileName} value={a.fileName} />
                             </div>
                           ))}
                         </Grid>
@@ -1684,7 +1643,10 @@ function xflha(props) {
                 </Grid>
               </Grid>
             </Grid>
-            {listToggle == false ? (
+            
+            {!isLoading ? 
+            // <>
+            listToggle == false ? (
               <div>
                 <div className="gridView">
                   {Object.entries(flhas).map((item, index) => (
@@ -1692,343 +1654,7 @@ function xflha(props) {
                       <Grid className={classes.marginTopBottom}>
                         <div className="gridView">
                           <AllCardData item={item[1]} index={index} />
-                          <Grid
-                            item
-                            md={12}
-                            sm={12}
-                            xs={12}
-                            hidden={!hidden}
-                            onBlur={handleAttachClose}
-                            onClick={handleAttachClick}
-                            onClose={handleAttachClose}
-                            onFocus={handleAttachOpen}
-                            onMouseEnter={handleAttachOpen}
-                            onMouseLeave={handleAttachClose}
-                            open={attachOpen}
-                            className="paddTBRemove attactmentShowSection"
-                          >
-                            <Paper elevation={1} className="paperSection">
-                              <Grid container spacing={3}>
-                                <Grid item md={12} sm={12} xs={12}>
-                                  <List>
-                                    <ListItem>
-                                      <img
-                                        src={projectpj}
-                                        onClick={handleClickOpenAttachment}
-                                        className="hoverIcon"
-                                      />
-                                    </ListItem>
-                                    <ListItem>
-                                      <img
-                                        src={projectpj}
-                                        onClick={handleClickOpenAttachment}
-                                        className="hoverIcon"
-                                      />
-                                    </ListItem>
-                                    <ListItem>
-                                      <img
-                                        src={projectpj}
-                                        onClick={handleClickOpenAttachment}
-                                        className="hoverIcon"
-                                      />
-                                    </ListItem>
-                                    <ListItem>
-                                      <img
-                                        src={projectpj}
-                                        onClick={handleClickOpenAttachment}
-                                        className="hoverIcon"
-                                      />
-                                    </ListItem>
-                                    <ListItem>
-                                      <img
-                                        src={projectpj}
-                                        onClick={handleClickOpenAttachment}
-                                        className="hoverIcon"
-                                      />
-                                    </ListItem>
-                                    <ListItem>
-                                      <img
-                                        src={projectpj}
-                                        onClick={handleClickOpenAttachment}
-                                        className="hoverIcon"
-                                      />
-                                    </ListItem>
-                                    <ListItem>
-                                      <img
-                                        src={projectpj}
-                                        onClick={handleClickOpenAttachment}
-                                        className="hoverIcon"
-                                      />
-                                    </ListItem>
-                                  </List>
-                                </Grid>
-                              </Grid>
-                            </Paper>
-                          </Grid>
                         </div>
-                        <div>
-                          <Grid
-                            item
-                            md={12}
-                            sm={12}
-                            xs={12}
-                            hidden={!hiddenn}
-                            onBlur={handleCommentsClose}
-                            onClick={handleCommentsClick}
-                            onClose={handleCommentsClose}
-                            onFocus={handleCommentsOpen}
-                            onMouseEnter={handleCommentsOpen}
-                            onMouseLeave={handleCommentsClose}
-                            open={commentsOpen}
-                            className="commentsShowSection"
-                          >
-                            <Paper elevation={1} className="paperSection">
-                              <Grid container spacing={3}>
-                                <Grid item md={12} xs={12}>
-                                  <Box padding={3}>
-                                    <Grid container spacing={2}>
-                                      <Grid item xs={12}>
-                                        <TextField
-                                          multiline
-                                          variant="outlined"
-                                          rows="1"
-                                          id="JobTitle"
-                                          label="Add your comments here"
-                                          className="formControl"
-                                        />
-                                      </Grid>
-                                      <Grid item xs={3}>
-                                        <input type="file" />
-                                      </Grid>
-                                      <Grid item xs={9}>
-                                        <AddCircleOutlineIcon
-                                          className={classes.plusIcon}
-                                        />
-                                        <RemoveCircleOutlineIcon
-                                          className={classes.minusIcon}
-                                        />
-                                      </Grid>
-                                      <Grid item xs={12}>
-                                        <Button
-                                          variant="contained"
-                                          color="primary"
-                                          size="small"
-                                          className="spacerRight buttonStyle"
-                                          disableElevation
-                                        >
-                                          Respond
-                                        </Button>
-                                        <Button
-                                          variant="contained"
-                                          color="secondary"
-                                          size="small"
-                                          className="buttonStyle custmCancelBtn"
-                                          disableElevation
-                                        >
-                                          Cancel
-                                        </Button>
-                                      </Grid>
-                                    </Grid>
-                                  </Box>
-                                </Grid>
-                              </Grid>
-                            </Paper>
-                          </Grid>
-                        </div>
-                        <div>
-                          <Dialog
-                            open={openAttachment}
-                            onClose={handleCloseAttachment}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                            classNames={classes.viewAttachmentDialog}
-                          >
-                            <DialogTitle id="alert-dialog-title">
-                              Viw Attachment
-                            </DialogTitle>
-                            <DialogContent
-                              classNames={classes.imageSectionHeight}
-                            >
-                              <Grid
-                                container
-                                spacing={3}
-                                classNames={classes.viewImageSection}
-                              >
-                                <Grid
-                                  item
-                                  md={12}
-                                  sm={12}
-                                  xs={12}
-                                  classNames={classes.mb10}
-                                >
-                                  <ul classNames={classes.viewImageSection}>
-                                    <li className={classes.viewattch1}>
-                                      View Attachment
-                                    </li>
-                                    <li className={classes.viewattch2}>
-                                      Download Attachment
-                                    </li>
-                                  </ul>
-                                </Grid>
-                              </Grid>
-                            </DialogContent>
-                            <DialogActions>
-                              <Button
-                                onClick={handleCloseAttachment}
-                                color="primary"
-                                autoFocus
-                              >
-                                Close
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </div>
-                        <Dialog
-                          open={myUserPOpen}
-                          onClose={handleMyUserPClose}
-                          aria-labelledby="alert-dialog-title"
-                          aria-describedby="alert-dialog-description"
-                          fullWidth
-                          maxWidth="sm"
-                        >
-                          <DialogTitle
-                            classNames={classes.mb10}
-                            id="alert-dialog-title"
-                          >
-                            <img
-                              src={paceLogoSymbol}
-                              className={classes.userImage}
-                            />{" "}
-                            {"Admin"}
-                          </DialogTitle>
-                          <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                              <Grid
-                                item
-                                md={12}
-                                sm={12}
-                                xs={12}
-                                className={classes.usrProfileListBox}
-                              >
-                                <h6>Change ownership</h6>
-                                <FormControl
-                                  variant="outlined"
-                                  className={classes.formControlOwnership}
-                                >
-                                  <InputLabel id="demo-simple-select-outlined-label">
-                                    Ownership
-                                  </InputLabel>
-                                  <Select
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value="Ashutosh"
-                                    onChange={handleChangeOne}
-                                    label="Ownership"
-                                  >
-                                    <MenuItem value={10}>Self</MenuItem>
-                                    <MenuItem value={10}>Prakash</MenuItem>
-                                    <MenuItem value={20}>Ashutosh</MenuItem>
-                                    <MenuItem value={30}>Saddam</MenuItem>
-                                    <MenuItem value={30}>Sunil</MenuItem>
-                                  </Select>
-                                </FormControl>
-                              </Grid>
-                              <Grid
-                                item
-                                md={12}
-                                sm={12}
-                                xs={12}
-                                className={classes.usrProfileListBox}
-                              >
-                                <h3>Basic information</h3>
-                                <List>
-                                  <ListItem>
-                                    {/* <ListItemAvatar>
-                      <Avatar>
-                        <ImageIcon />
-                      </Avatar>
-                    </ListItemAvatar> */}
-                                    <ListItemText
-                                      primary="Full Name:"
-                                      secondary="Prakash"
-                                    />
-                                  </ListItem>
-                                  <ListItem>
-                                    <ListItemText
-                                      primary="Organization Type:"
-                                      secondary="Epc ORGANIZATION"
-                                    />
-                                  </ListItem>
-                                  <ListItem>
-                                    <ListItemText
-                                      primary="Organization Role:"
-                                      secondary="N/A"
-                                    />
-                                  </ListItem>
-                                  <ListItem>
-                                    <ListItemText
-                                      primary="Role Title:"
-                                      secondary="N/A"
-                                    />
-                                  </ListItem>
-                                  <ListItem>
-                                    <ListItemText
-                                      primary="Current Location:"
-                                      secondary="Delhi » NCT » India"
-                                    />
-                                  </ListItem>
-                                </List>
-                              </Grid>
-
-                              <Grid
-                                item
-                                md={12}
-                                sm={12}
-                                xs={12}
-                                className={classes.usrProfileListBox}
-                              >
-                                <h3>Company information</h3>
-                                <List>
-                                  <ListItem>
-                                    <ListItemText
-                                      primary="Company Name:"
-                                      secondary="JWIL"
-                                    />
-                                  </ListItem>
-                                  <ListItem>
-                                    <ListItemText
-                                      primary="Location:"
-                                      secondary="Italy"
-                                    />
-                                  </ListItem>
-                                </List>
-                              </Grid>
-                            </DialogContentText>
-                          </DialogContent>
-                          <Grid
-                            item
-                            md={12}
-                            sm={12}
-                            xs={12}
-                            className={classes.popUpButton}
-                          >
-                            <DialogActions align="left" className="marginB10">
-                              <Button
-                                onClick={handleMyUserPClose}
-                                color="secondary"
-                                variant="contained"
-                                className="buttonStyle custmCancelBtn"
-                              >
-                                Close
-                              </Button>
-                            </DialogActions>
-                          </Grid>
-                          {/* <DialogActions>
-            <Button onClick={handleMyUserPClose} className="buttonStyle custmCancelBtn" variant="contained" autoFocus>
-              Close
-            </Button>
-          </DialogActions> */}
-                        </Dialog>
                       </Grid>
                     </Box>
                   ))}
@@ -2268,8 +1894,6 @@ function xflha(props) {
                 </div>
               </div>
             ) : (
-              // listview end
-
               <Box>
                 <TableContainer component={Paper}>
                   <Grid component={Paper}>
@@ -2297,7 +1921,12 @@ function xflha(props) {
                   </Grid>
                 </TableContainer>
               </Box>
-            )}
+            )
+            // </>
+            : 
+            <Loader />
+
+          }
             <div className={classes.pagination}>
               {totalData != 0
                 ? Number.isInteger(pageData) !== true

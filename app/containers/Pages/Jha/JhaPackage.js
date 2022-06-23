@@ -475,12 +475,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JhaPackage(props) {
-  const [cardView, setCardView] = useState(true);
+  // const [cardView, setCardView] = useState(true);
   const [allJHAData, setAllJHAData] = useState([]);
   const search = props.search;
   const status = props.status;
   const history = useHistory();
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
@@ -502,8 +502,8 @@ function JhaPackage(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
-    await setIsLoading(false);
-    await setPage(1);
+    setIsLoading(false);
+    setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -532,11 +532,11 @@ function JhaPackage(props) {
       );
 
       const result = res.data.data.results.results;
-      await setAllJHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setAllJHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${
@@ -545,15 +545,15 @@ function JhaPackage(props) {
       );
 
       const result = res.data.data.results.results;
-      await setAllJHAData(result);
-      await setTotalData(res.data.data.results.count);
-      await setPageData(res.data.data.results.count / 25);
+      setAllJHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      await setPageCount(pageCount);
+      setPageCount(pageCount);
     }
     // handelTableView(result)
 
-    await setIsLoading(true);
+    setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -581,14 +581,14 @@ function JhaPackage(props) {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`
       );
-      await setAllJHAData(res.data.data.results.results);
-      await setPage(value);
+      setAllJHAData(res.data.data.results.results);
+      setPage(value);
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`
       );
-      await setAllJHAData(res.data.data.results.results);
-      await setPage(value);
+      setAllJHAData(res.data.data.results.results);
+      setPage(value);
     }
   };
 
@@ -603,12 +603,12 @@ function JhaPackage(props) {
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
 
-  const handelView = (e) => {
-    setListToggle(false);
-  };
-  const handelViewTabel = (e) => {
-    setListToggle(true);
-  };
+  // const handelView = (e) => {
+  //   setListToggle(false);
+  // };
+  // const handelViewTabel = (e) => {
+  //   setListToggle(true);
+  // };
 
   const [value, setValue] = React.useState(2);
 
@@ -617,59 +617,12 @@ function JhaPackage(props) {
   };
 
   //dialog
-  const [MyFavopen, setMyFavOpen] = React.useState(false);
-
-  const handleMyFavClickOpen = () => {
-    setMyFavOpen(true);
-  };
-
-  const handleMyFavClose = () => {
-    setMyFavOpen(false);
-  };
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
-
   const classes = useStyles();
 
-  const handleVisibility = () => {
-    setAttachOpen(true);
-    setHidden(!hidden);
-  };
-  const handleAttachClick = () => {
-    setAttachOpen(!open);
-  };
-  const handleAttachOpen = () => {
-    if (!hidden) {
-      setAttachOpen(true);
-    }
-  };
-  const handleAttachClose = () => {
-    setAttachOpen(false);
-  };
-
   //view comments
-  const [commentsOpen, setCommentsOpen] = useState(false);
-  const [hiddenn, setHiddenn] = useState(false);
-
-  const handleVisibilityComments = () => {
-    setCommentsOpen(true);
-    setHiddenn(!hiddenn);
-  };
-  const handleCommentsClick = () => {
-    setCommentsOpen(!open);
-  };
-  const handleCommentsOpen = () => {
-    if (!hiddenn) {
-      setCommentsOpen(true);
-    }
-  };
-  const handleCommentsClose = () => {
-    setCommentsOpen(false);
-  };
 
   // const handleSummaryPush = async (index) => {
   //   const itemid = index;
@@ -696,18 +649,6 @@ function JhaPackage(props) {
         redirectUrl: "/app/pages/jha/assessments/Job-hazards",
       },
     });
-  };
-
-  const handleDelete = async (item) => {
-    let data = item[1];
-    let id = data.id;
-    data.status = "Delete";
-    delete data.jhaAssessmentAttachment;
-    await setIsLoading(false);
-    await api
-      .delete(`/api/v1/jhas/${id}/`, data)
-      .then((response) => fetchData())
-      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -747,7 +688,6 @@ function JhaPackage(props) {
     };
 
     const addComments = (event) => {
-      console.log(event.target.value);
       setCommentData(event.target.value);
     };
 
@@ -765,17 +705,20 @@ function JhaPackage(props) {
     };
 
     const handleSendComments = async () => {
-      // console.log(commentsData, 'comments')
-
       if (commentData) {
+        setIsLoading(true);
         console.log(api, "apiiiiiiii");
         await api
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             // handleCommentsClose();
+            setIsLoading(false);
             fetchData();
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            setIsLoading(false);
+            console.log(err);
+          });
       }
     };
 
@@ -898,10 +841,7 @@ function JhaPackage(props) {
                         <Grid item md={12} sm={12} xs={12}>
                           {item.files.map((a) => (
                             <div className="attachFileThumb">
-                              <Attachment
-                                src={a.fileName}
-                                value={a.fileName}
-                              />
+                              <Attachment src={a.fileName} value={a.fileName} />
                             </div>
                           ))}
                         </Grid>
@@ -1113,339 +1053,8 @@ function JhaPackage(props) {
               <Grid className={classes.marginTopBottom}>
                 <div className="gridView">
                   <AllCardData item={singleitem[1]} index={index} />
-                  <Grid
-                    item
-                    md={12}
-                    sm={12}
-                    xs={12}
-                    hidden={!hidden}
-                    onBlur={handleAttachClose}
-                    onClick={handleAttachClick}
-                    onClose={handleAttachClose}
-                    onFocus={handleAttachOpen}
-                    onMouseEnter={handleAttachOpen}
-                    onMouseLeave={handleAttachClose}
-                    open={attachOpen}
-                    className="paddTBRemove attactmentShowSection"
-                  >
-                    <Paper elevation={1} className="paperSection">
-                      <Grid container spacing={3}>
-                        <Grid item md={12} sm={12} xs={12}>
-                          <List>
-                            <ListItem>
-                              <img
-                                src={projectpj}
-                                onClick={handleClickOpenAttachment}
-                                className="hoverIcon"
-                              />
-                            </ListItem>
-                            <ListItem>
-                              <img
-                                src={projectpj}
-                                onClick={handleClickOpenAttachment}
-                                className="hoverIcon"
-                              />
-                            </ListItem>
-                            <ListItem>
-                              <img
-                                src={projectpj}
-                                onClick={handleClickOpenAttachment}
-                                className="hoverIcon"
-                              />
-                            </ListItem>
-                            <ListItem>
-                              <img
-                                src={projectpj}
-                                onClick={handleClickOpenAttachment}
-                                className="hoverIcon"
-                              />
-                            </ListItem>
-                            <ListItem>
-                              <img
-                                src={projectpj}
-                                onClick={handleClickOpenAttachment}
-                                className="hoverIcon"
-                              />
-                            </ListItem>
-                            <ListItem>
-                              <img
-                                src={projectpj}
-                                onClick={handleClickOpenAttachment}
-                                className="hoverIcon"
-                              />
-                            </ListItem>
-                            <ListItem>
-                              <img
-                                src={projectpj}
-                                onClick={handleClickOpenAttachment}
-                                className="hoverIcon"
-                              />
-                            </ListItem>
-                          </List>
-                        </Grid>
-                      </Grid>
-                    </Paper>
-                  </Grid>
                 </div>
-                <div>
-                  <Grid
-                    item
-                    md={12}
-                    sm={12}
-                    xs={12}
-                    hidden={!hiddenn}
-                    onBlur={handleCommentsClose}
-                    onClick={handleCommentsClick}
-                    onClose={handleCommentsClose}
-                    onFocus={handleCommentsOpen}
-                    onMouseEnter={handleCommentsOpen}
-                    onMouseLeave={handleCommentsClose}
-                    open={commentsOpen}
-                    className="commentsShowSection"
-                  >
-                    <Paper elevation={1} className="paperSection">
-                      <Grid container spacing={3}>
-                        <Grid item md={12} xs={12}>
-                          <Box padding={3}>
-                            <Grid container spacing={2}>
-                              <Grid item xs={12}>
-                                <TextField
-                                  multiline
-                                  variant="outlined"
-                                  rows="1"
-                                  id="JobTitle"
-                                  label="Add your comments here"
-                                  className="formControl"
-                                />
-                              </Grid>
-                              <Grid item xs={3}>
-                                <input type="file" />
-                              </Grid>
-                              <Grid item xs={9}>
-                                <AddCircleOutlineIcon
-                                  className={classes.plusIcon}
-                                />
-                                <RemoveCircleOutlineIcon
-                                  className={classes.minusIcon}
-                                />
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  size="small"
-                                  className="spacerRight buttonStyle"
-                                  disableElevation
-                                >
-                                  Respond
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  color="secondary"
-                                  size="small"
-                                  className="buttonStyle custmCancelBtn"
-                                  disableElevation
-                                >
-                                  Cancel
-                                </Button>
-                              </Grid>
-                            </Grid>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                </div>
-                <div>
-                  <Dialog
-                    open={openAttachment}
-                    onClose={handleCloseAttachment}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    classNames={classes.viewAttachmentDialog}
-                  >
-                    <DialogTitle id="alert-dialog-title">
-                      Viw Attachment
-                    </DialogTitle>
-                    <DialogContent classNames={classes.imageSectionHeight}>
-                      <Grid
-                        container
-                        spacing={3}
-                        classNames={classes.viewImageSection}
-                      >
-                        <Grid
-                          item
-                          md={12}
-                          sm={12}
-                          xs={12}
-                          classNames={classes.mb10}
-                        >
-                          <ul classNames={classes.viewImageSection}>
-                            <li className={classes.viewattch1}>
-                              View Attachment
-                            </li>
-                            <li className={classes.viewattch2}>
-                              Download Attachment
-                            </li>
-                          </ul>
-                        </Grid>
-                      </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button
-                        onClick={handleCloseAttachment}
-                        color="primary"
-                        autoFocus
-                      >
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </div>
-                <Dialog
-                  open={myUserPOpen}
-                  onClose={handleMyUserPClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                  fullWidth={true}
-                  maxWidth={"sm"}
-                >
-                  <DialogTitle
-                    classNames={classes.mb10}
-                    id="alert-dialog-title"
-                  >
-                    <img src={paceLogoSymbol} className={classes.userImage} />{" "}
-                    {"Admin"}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h6>Change ownership</h6>
-                        <FormControl
-                          variant="outlined"
-                          className={classes.formControlOwnership}
-                        >
-                          <InputLabel id="demo-simple-select-outlined-label">
-                            Ownership
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            value="Ashutosh"
-                            onChange={handleChangeOne}
-                            label="Ownership"
-                          >
-                            <MenuItem value={10}>Self</MenuItem>
-                            <MenuItem value={10}>Prakash</MenuItem>
-                            <MenuItem value={20}>Ashutosh</MenuItem>
-                            <MenuItem value={30}>Saddam</MenuItem>
-                            <MenuItem value={30}>Sunil</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Basic information</h3>
-                        <List>
-                          <ListItem>
-                            {/* <ListItemAvatar>
-                            <Avatar>
-                              <ImageIcon />
-                            </Avatar>
-                          </ListItemAvatar> */}
-                            <ListItemText
-                              primary="Full Name:"
-                              secondary="Prakash"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Organization Type:"
-                              secondary="Epc ORGANIZATION"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Organization Role:"
-                              secondary="N/A"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Role Title:"
-                              secondary="N/A"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Current Location:"
-                              secondary="Delhi » NCT » India"
-                            />
-                          </ListItem>
-                        </List>
-                      </Grid>
-
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Company information</h3>
-                        <List>
-                          <ListItem>
-                            <ListItemText
-                              primary="Company Name:"
-                              secondary="JWIL"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Location:"
-                              secondary="Italy"
-                            />
-                          </ListItem>
-                        </List>
-                      </Grid>
-                    </DialogContentText>
-                  </DialogContent>
-                  <Grid
-                    item
-                    md={12}
-                    sm={12}
-                    xs={12}
-                    className={classes.popUpButton}
-                  >
-                    <DialogActions align="left" className="marginB10">
-                      <Button
-                        onClick={handleMyUserPClose}
-                        color="secondary"
-                        variant="contained"
-                        className="buttonStyle custmCancelBtn"
-                      >
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Grid>
-
-                  {/* <DialogActions>
-                  <Button onClick={handleMyUserPClose} className="custmCancelBtn" variant="contained" autoFocus>
-                    Close
-                  </Button>
-                </DialogActions> */}
-                </Dialog>
+                
               </Grid>
             ))
           ) : (
