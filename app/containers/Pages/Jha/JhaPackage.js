@@ -512,8 +512,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -526,7 +526,8 @@ function JhaPackage(props) {
 
     if (props.assessment === "My Assessments") {
       const res = await api.get(
-        `api/v1/jhas/?search=${props.search
+        `api/v1/jhas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`
       );
 
@@ -538,7 +539,8 @@ function JhaPackage(props) {
       await setPageCount(pageCount);
     } else {
       const res = await api.get(
-        `api/v1/jhas/?search=${props.search
+        `api/v1/jhas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
       );
 
@@ -563,8 +565,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -689,7 +691,10 @@ function JhaPackage(props) {
     localStorage.removeItem("JSAlessonsLearned");
     history.push({
       pathname: `/app/pages/jha/jha-summary/${jha.id}`,
-      state: {commentPayload, redirectUrl: '/app/pages/jha/assessments/Job-hazards'}
+      state: {
+        commentPayload,
+        redirectUrl: "/app/pages/jha/assessments/Job-hazards",
+      },
     });
   };
 
@@ -716,6 +721,7 @@ function JhaPackage(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
+    console.log(item, "itemmmmmmmm");
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
 
@@ -826,229 +832,6 @@ function JhaPackage(props) {
     return (
       <Grid className={classes.marginTopBottom}>
         <div className="gridView">
-          {/* <Card variant="outlined" className={classes.card}>
-            <CardContent>
-              <Grid
-                container
-                spacing={3}
-                className={classes.cardContentSection}
-              >
-                <Grid
-                  item
-                  md={2}
-                  sm={4}
-                  xs={12}
-                  className={classes.userPictureBox}
-                >
-                  <Button
-                    className={classNames(classes.floatR)}
-                    onClick={(e) => handleMyUserPClickOpen(e)}
-                  >
-                    <img src={item.avatar} className={classes.userImage} />{" "}
-                    {item.username}
-                  </Button>
-                </Grid>
-                <Link
-                  onClick={() => handleSummaryPush(item, commentPayload)}
-                  className={classes.cardLinkAction}
-                >
-                  <Grid item xs={12}>
-                    <Grid container spacing={3} alignItems="flex-start">
-                      <Grid
-                        item
-                        sm={12}
-                        xs={12}
-                        className={classes.listHeadColor}
-                      >
-                        <Grid container spacing={3} alignItems="flex-start">
-                          <Grid
-                            item
-                            md={10}
-                            sm={12}
-                            xs={12}
-                            className={classes.pr0}
-                          >
-                            <Typography className={classes.title} variant="h6">
-                              {item.description}
-                            </Typography>
-                            <Typography
-                              display="inline"
-                              className={classes.listingLabelName}
-                            >
-                              Number: 
-                              <span className={classes.listingLabelValue}>
-                                {item.jhaNumber}
-                              </span>
-                            </Typography>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            <Typography
-                              variant="body1"
-                              gutterBottom
-                              display="inline"
-                              color="textPrimary"
-                              className={classes.listingLabelName}
-                            >
-                              Category:{" "}
-                              <span className={classes.listingLabelValue}>
-                                {item.jhaNumber.split("-")[0]}
-                              </span>
-                            </Typography>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            <Typography
-                              variant="body1"
-                              gutterBottom
-                              display="inline"
-                              color="textPrimary"
-                              className={classes.listingLabelName}
-                            >
-                              Stage:{" "}
-                              <span className={classes.listingLabelValue}>
-                                {item.jhaStage}
-                                <img
-                                  src={in_progress_small}
-                                  className={classes.smallImage}
-                                />
-                              </span>
-                              <span
-                                item
-                                xs={1}
-                                className={classes.sepHeightOne}
-                              />
-                              Status:{" "}
-                              <span className="listingLabelValue statusColor_complete">
-                                {item.jhaStatus}
-                              </span>
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item sm={12} xs={12}>
-                    <Grid container spacing={3}>
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Location:
-                        </Typography>
-                        <Typography className={classes.listingLabelValue}>
-                          {item.location}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Created on:
-                        </Typography>
-
-                        <Typography className={classes.listingLabelValue}>
-                          {item.jhaAssessmentDate}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Created by:
-                        </Typography>
-
-                        <Typography className={classes.listingLabelValue}>
-                          {item.createdByName}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Link>
-              </Grid>
-            </CardContent>
-            <Divider />
-            <CardActions className={Incidents.cardActions}>
-              <Grid container spacing={2} justify="flex-end" alignItems="left">
-                <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                  <span className={classes.margT10}>
-                    <Typography
-                      variant="body1"
-                      display="inline"
-                      color="textPrimary"
-                    >
-                      <AttachmentIcon className={classes.mright5} />
-                      Attachments:
-                    </Typography>
-                    <Link
-                      onClick={item.attachmentCount && handleVisibility}
-                      color="secondary"
-                      aria-haspopup="true"
-                      className={
-                        item.attachmentCount
-                          ? classes.commentLink
-                          : classes.mLeft
-                      }
-                    >
-                      {item.attachmentCount}
-                    </Link>
-
-                    <span item xs={1} className={classes.sepHeightTen} />
-                    <Typography
-                      variant="body1"
-                      display="inline"
-                      color="textPrimary"
-                      className={classes.mLeft}
-                    >
-                      <InsertCommentOutlinedIcon className={classes.mright5} />
-                      Comments:
-                    </Typography>
-                    <Link
-                      onClick={handleVisibilityComments}
-                      color="secondary"
-                      aria-haspopup="true"
-                      className={classes.commentLink}
-                    >
-                      {item.commentsCount}
-                    </Link>
-                  </span>
-                </Grid>
-
-                <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                  <span item xs={1} className={classes.sepHeightTen} />
-                  <Typography variant="body1" display="inline">
-                    <Delete
-                      deleteUrl={`/api/v1/jhas/${item.id}/`}
-                      afterDelete={fetchData}
-                      axiosObj={api}
-                      item={deleteItem}
-                      loader={setIsLoading}
-                      loadingFlag={false}
-                      deleteMsg="Are you sure you want to delete this JHA"
-                      yesBtn="Yes"
-                      noBtn="No"
-                    />
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardActions>
-          </Card> */}
           <CardView
             cardTitle={item.description}
             avatar={item.avatar}
@@ -1084,13 +867,14 @@ function JhaPackage(props) {
               yesBtn: "Yes",
               noBtn: "No",
             }}
+            handleVisibility={() => handleVisibility()}
             handleVisibilityComments={() => handleVisibilityComments()}
             handleSummaryPush={() => handleSummaryPush(item, commentPayload)}
             files={item.files !== null ? item.files.length : 0}
             commentsCount={item.commentsCount}
             checkDeletePermission={checkDeletePermission}
           />
-          {item.attachmentCount ? (
+          {item.files && item.files.length ? (
             <Grid
               item
               md={12}
@@ -1112,12 +896,14 @@ function JhaPackage(props) {
                     <List>
                       <ListItem>
                         <Grid item md={12} sm={12} xs={12}>
-                          <div className="attachFileThumb">
-                            <Attachment
-                              src={item.jhaAssessmentAttachment}
-                              value={item.jhaAssessmentAttachment}
-                            />
-                          </div>
+                          {item.files.map((a) => (
+                            <div className="attachFileThumb">
+                              <Attachment
+                                src={a.fileName}
+                                value={a.fileName}
+                              />
+                            </div>
+                          ))}
                         </Grid>
                       </ListItem>
                     </List>
@@ -1130,7 +916,6 @@ function JhaPackage(props) {
           )}
         </div>
 
-        {/* <div> */}
         <Grid
           item
           md={12}
@@ -1192,7 +977,6 @@ function JhaPackage(props) {
             </Grid>
           </Paper>
         </Grid>
-        {/* </div> */}
 
         <Dialog
           open={myUserPOpen}

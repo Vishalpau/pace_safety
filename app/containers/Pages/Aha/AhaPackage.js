@@ -554,7 +554,10 @@ function AhaPackage(props) {
     localStorage.removeItem("JSAlessonsLearned");
     history.push({
       pathname: `/app/pages/aha/aha-summary/${aha.id}`,
-      state: {commentPayload, redirectUrl: '/app/pages/aha/assessments/project-details'}
+      state: {
+        commentPayload,
+        redirectUrl: "/app/pages/aha/assessments/project-details",
+      },
     });
   };
 
@@ -581,8 +584,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -626,8 +629,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -640,14 +643,16 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${props.search
+        `api/v1/ahas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       await setAllAHAData(res.data.data.results.results);
       await setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${props.search
+        `api/v1/ahas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       await setAllAHAData(res.data.data.results.results);
@@ -723,9 +728,18 @@ function AhaPackage(props) {
     };
 
     function handleVisibility() {
+      console.log("hfdskfdskfkds");
       setShowGrid(true);
       setHidden(!hidden);
     }
+
+    // useEffect(() => {
+    //   console.log(showGrid, 'showGrid');
+    // },[showGrid])
+
+    // useEffect(() => {
+    //   console.log(hidden, 'hidden');
+    // }, [hidden])
 
     function handleAttachClose() {
       setShowGrid(false);
@@ -762,250 +776,6 @@ function AhaPackage(props) {
 
     return (
       <>
-        {/* <Card variant="outlined" className={classes.card}>
-          <CardContent>
-            <Grid container spacing={3} className={classes.cardContentSection}>
-              <Grid
-                item
-                md={2}
-                sm={4}
-                xs={12}
-                className={classes.userPictureBox}
-              >
-                <Button
-                  className={classes.floatR}
-                  onClick={(e) => handleMyUserPClickOpen(e)}
-                >
-                  <img
-                    src={item.avatar !== null ? item.avatar : paceLogoSymbol}
-                    className={classes.userImage}
-                  />{" "}
-                  {item.username}
-                </Button>
-              </Grid>
-              <Link
-                onClick={(e) => handleSummaryPush(item, commentPayload)}
-                className={classes.cardLinkAction}
-              >
-                <Grid item xs={12}>
-                  <Grid container spacing={3} alignItems="flex-start">
-                    <Grid
-                      item
-                      sm={12}
-                      xs={12}
-                      className={classes.listHeadColor}
-                    >
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item md={10} sm={12} xs={12}>
-                          <Typography className={classes.title} variant="h6">
-                            {item.description}
-                          </Typography>
-                          <Typography
-                            display="inline"
-                            className={classes.listingLabelName}
-                          >
-                            Number:{" "}
-                            <span>
-                              <Link
-                                onClick={(e) => handleSummaryPush(item.index)}
-                                variant="h6"
-                                className={classes.mLeftfont}
-                              >
-                                <span className={classes.listingLabelValue}>
-                                  {item.ahaNumber}
-                                </span>
-                              </Link>
-                            </span>
-                          </Typography>
-                          <span item xs={1} className={classes.sepHeightOne} />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Category:{" "}
-                            <span className={classes.listingLabelValue}>
-                              AHA
-                            </span>
-                          </Typography>
-                          <span item xs={1} className={classes.sepHeightOne} />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Stage:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {item.ahaStage}{" "}
-                              <img
-                                src={
-                                  item.ahaStage === "Open"
-                                    ? preplanning
-                                    : completed_small
-                                }
-                                className={classes.smallImage}
-                              />
-                            </span>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            Status:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {item.ahaStatus}{" "}
-                              <img
-                                src={
-                                  item.ahaStatus === "Open"
-                                    ? preplanning
-                                    : completed_small
-                                }
-                                className={classes.smallImage}
-                              />
-                            </span>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item sm={12} xs={12}>
-                  <Grid container spacing={3}>
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        gutterBottom
-                        color="textPrimary"
-                        className={classes.listingLabelName}
-                      >
-                        Work area:
-                      </Typography>
-
-                      <Typography
-                        gutterBottom
-                        className={classes.listingLabelValue}
-                      >
-                        {item.workArea}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Location:
-                      </Typography>
-                      <Typography className={classes.listingLabelValue}>
-                        {item.location}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Created on:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {moment(item.createdAt).format(
-                          "Do MMMM YYYY, h:mm:ss a"
-                        )}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Created by:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {item.createdByName}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Link>
-            </Grid>
-          </CardContent>
-          <Divider />
-          <CardActions className={Incidents.cardActions}>
-            <Grid container spacing={2} justify="flex-end" alignItems="left">
-              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                <span className={classes.margT10}>
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                  >
-                    <AttachmentIcon className={classes.mright5} />
-                    Attachments:
-                  </Typography>
-                  <Link
-                    onClick={item.attachmentCount && handleVisibility}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={
-                      item.attachmentCount ? classes.commentLink : classes.mLeft
-                    }
-                  >
-                    {item.attachmentCount}
-                  </Link>
-                  <span item xs={1} className={classes.sepHeightTen} />
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                    className={classes.mLeft}
-                  >
-                    <InsertCommentOutlinedIcon className={classes.mright5} />
-                    Comments:
-                  </Typography>
-                  <Link
-                    onClick={handleVisibilityComments}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={classes.commentLink}
-                  >
-                    {item.commentsCount}
-                  </Link>
-                </span>
-              </Grid>
-
-              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                <Typography variant="body1" display="inline">
-
-                  <Delete
-                    deleteUrl={`/api/v1/ahas/${item.id}/`}
-                    afterDelete={fetchAllAHAData}
-                    axiosObj={api}
-                    item={deleteItem}
-                    loader={setIsLoading}
-                    loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this AHA?"
-                    yesBtn="Yes"
-                    noBtn="No"
-                  />
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardActions>
-        </Card> */}
-
         <CardView
           cardTitle={item.description}
           avatar={item.avatar}
@@ -1039,6 +809,7 @@ function AhaPackage(props) {
             yesBtn: "Yes",
             noBtn: "No",
           }}
+          handleVisibility={() => handleVisibility()}
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
           commentsCount={item.commentsCount}
@@ -1046,7 +817,7 @@ function AhaPackage(props) {
           checkDeletePermission={checkDeletePermission}
         />
 
-        {item.attachmentCount ? (
+        {item.files && item.files.length ? (
           <Grid
             item
             md={12}
@@ -1068,12 +839,14 @@ function AhaPackage(props) {
                   <List>
                     <ListItem>
                       <Grid item md={12} sm={12} xs={12}>
-                        <div className="attachFileThumb">
-                          <Attachment
-                            src={item.ahaAssessmentAttachment}
-                            value={item.ahaAssessmentAttachment}
-                          />
-                        </div>
+                        {item.files.map((a) => (
+                          <div className="attachFileThumb">
+                            <Attachment
+                              src={a.fileName}
+                              value={a.fileName}
+                            />
+                          </div>
+                        ))}
                       </Grid>
                     </ListItem>
                   </List>

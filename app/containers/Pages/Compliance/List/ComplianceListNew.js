@@ -536,8 +536,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -552,7 +552,8 @@ function ComplianceListNew(props) {
       setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -563,9 +564,9 @@ function ComplianceListNew(props) {
         await setPageCount(pageCount);
         setIsLoading(false);
       } else {
-
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -580,8 +581,10 @@ function ComplianceListNew(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -593,8 +596,10 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
+            props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -622,8 +627,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -638,14 +643,16 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -654,16 +661,20 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -705,12 +716,12 @@ function ComplianceListNew(props) {
 
   // separate card component
   const AllCardData = ({ value, index }) => {
+    console.log(value, "value");
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [commentData, setCommentData] = useState("");
-    // const [openAttachment, setopenAttachment] = React.useState(false);
 
     const deleteItem = {
       fkCompanyId: value.fkCompanyId,
@@ -816,216 +827,6 @@ function ComplianceListNew(props) {
 
     return (
       <>
-        {/* <Card variant="outlined" className={classes.card}>
-          <CardContent>
-            <Grid container spacing={3} className={classes.cardContentSection}>
-              <Grid
-                item
-                md={2}
-                sm={4}
-                xs={12}
-                className={classes.userPictureBox}
-              >
-                <Button
-                  className={classes.floatR}
-                  onClick={(e) => handleMyUserPClickOpen(e)}
-                >
-                  <img
-                    src={
-                      value["avatar"] !== null
-                        ? value["avatar"]
-                        : paceLogoSymbol
-                    }
-                    className={classes.userImage}
-                  />{" "}
-                  {value["username"]}
-                </Button>
-              </Grid>
-              <Link
-                onClick={() => handleSummaryPush(value["id"], commentPayload)}
-                className={classes.cardLinkAction}
-              >
-                <Grid item xs={12}>
-                  <Grid container spacing={3} alignItems="flex-start">
-                    <Grid
-                      item
-                      sm={12}
-                      xs={12}
-                      className={classes.listHeadColor}
-                    >
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item md={10} sm={12} xs={12}>
-                          <Typography className={classes.title} variant="h6">
-                            {value["auditType"] !== null
-                              ? value["auditType"]
-                              : "-"}
-                          </Typography>
-                          <Typography
-                            className={classes.listingLabelName}
-                            display="inline"
-                          >
-                            Number:{" "}
-                            <span>
-                              <Link
-                                onClick={() => handleSummaryPush()}
-                                //href="/app/pages/actions/actionsummary"
-                                variant="h6"
-                                className={classes.mLeftfont}
-                              >
-                                <span className={classes.listingLabelValue}>
-                                  {value["auditNumber"] !== null
-                                    ? value["auditNumber"]
-                                    : "-"}
-                                </span>
-                              </Link>
-                            </span>
-                          </Typography>
-                          <span item xs={1} className={classes.sepHeightOne} />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Group name:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {value["groups"].length > 0
-                                ? value["groups"]
-                                  .map((data) => data.checkListGroupName)
-                                  .join(", ")
-                                : "-"}
-                            </span>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid item sm={12} xs={12}>
-                  <Grid container spacing={3}>
-                    <Grid item sm={3} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Location:
-                      </Typography>
-                      <Typography className={classes.listingLabelValue}>
-                        {value["area"] !== null ? value["area"] : "-"}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item sm={3} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Audited on:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {moment(value["createdAt"]).format("Do MMMM YYYY")}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item sm={3} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Audited by:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {value["createdByName"] !== null
-                          ? value["createdByName"]
-                          : "-"}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Link>
-            </Grid>
-          </CardContent>
-          <Divider />
-
-          <CardActions className={Incidents.cardActions}>
-            <Grid container spacing={2} justify="flex-end" alignItems="left">
-              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                <span className={classes.margT10}>
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                  >
-                    <AttachmentIcon className={classes.mright5} />
-                    Attachments:
-                  </Typography>
-
-                  <Link
-                    onClick={
-                      value.attachmentLinks.attachmentCount && handleVisibility
-                    }
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={
-                      value.attachmentLinks.attachmentCount
-                        ? classes.commentLink
-                        : classes.mLeft
-                    }
-                  >
-                    {value.attachmentLinks.attachmentCount}
-                  </Link>
-
-                  <span item xs={1} className={classes.sepHeightTen} />
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                    className={classes.mLeft}
-                  >
-                    <InsertCommentOutlinedIcon className={classes.mright5} />
-                    Comments:
-                  </Typography>
-                  <Link
-                    onClick={handleVisibilityComments}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={classes.commentLink}
-                  >
-                    {value.commentsCount}
-                  </Link>
-                </span>
-              </Grid>
-
-              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                <span item xs={1} className={classes.sepHeightTen} />
-                <Typography variant="body1" display="inline">
-                  <Delete
-                    deleteUrl={`api/v1/audits/${value.id}/`}
-                    afterDelete={fetchAllComplianceData}
-                    axiosObj={api}
-                    item={deleteItem}
-                    loader={setIsLoading}
-                    loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this Compliance?"
-                    yesBtn="Yes"
-                    noBtn="No"
-                  />
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardActions>
-        </Card> */}
-
         <CardView
           cardTitle={value.auditType}
           avatar={value.avatar}
@@ -1060,11 +861,15 @@ function ComplianceListNew(props) {
             noBtn: "No",
           }}
           handleVisibilityComments={() => handleVisibilityComments()}
-          files={value.attachmentLinks.attachmentCount}
+          handleVisibility={() => handleVisibility()}
+          files={
+            value.attachmentLinks ? value.attachmentLinks.attachmentCount : 0
+          }
           commentsCount={value.commentsCount}
           handleSummaryPush={() => handleSummaryPush(value.id, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
+
         {value.attachmentLinks.attachmentCount ? (
           <Grid
             item
@@ -1087,9 +892,14 @@ function ComplianceListNew(props) {
                   <List>
                     <ListItem>
                       <Grid item md={12} sm={12} xs={12}>
-                        <div className="attachFileThumb">
-                          <Attachment src={value.avatar} value={value.avatar} />
-                        </div>
+                        {value.attachmentLinks.links.map((a) => (
+                          <div className="attachFileThumb">
+                            <Attachment
+                              src={a}
+                              value={a}
+                            />
+                          </div>
+                        ))}
                       </Grid>
                     </ListItem>
                   </List>
@@ -1133,13 +943,6 @@ function ComplianceListNew(props) {
                         onChange={(e) => addComments(e)}
                       />
                     </Grid>
-                    {/* <Grid item xs={3}>
-                      <input type="file" />
-                    </Grid>
-                    <Grid item xs={9}>
-                      <AddCircleOutlineIcon className={classes.plusIcon} />
-                      <RemoveCircleOutlineIcon className={classes.minusIcon} />
-                    </Grid> */}
                     <Grid item xs={12}>
                       <Button
                         variant="contained"
@@ -1168,53 +971,6 @@ function ComplianceListNew(props) {
             </Grid>
           </Paper>
         </Grid>
-
-        {/* <div>
-          <Dialog
-            open={openAttachment}
-            onClose={handleCloseAttachment}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-            classNames={classes.viewAttachmentDialog}
-          >
-            <DialogTitle id="alert-dialog-title">
-              Viw Attachment
-            </DialogTitle>
-            <DialogContent classNames={classes.imageSectionHeight}>
-              <Grid
-                container
-                spacing={3}
-                classNames={classes.viewImageSection}
-              >
-                <Grid
-                  item
-                  md={12}
-                  sm={12}
-                  xs={12}
-                  classNames={classes.mb10}
-                >
-                  <ul classNames={classes.viewImageSection}>
-                    <li className={classes.viewattch1}>
-                      View Attachment
-                    </li>
-                    <li className={classes.viewattch2}>
-                      Download Attachment
-                    </li>
-                  </ul>
-                </Grid>
-              </Grid>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={handleCloseAttachment}
-                color="primary"
-                autoFocus
-              >
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div> */}
       </>
     );
   };
@@ -1225,22 +981,6 @@ function ComplianceListNew(props) {
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
-              {/* {isLoading ? (
-                allComplianceData.length > 0 ? (
-                  allComplianceData.map((value, index) => <AllCardData value={value} />)
-                ) : (
-                  <Typography
-                    className={classes.sorryTitle}
-                    variant="h6"
-                    color="primary"
-                    noWrap
-                  >
-                    Sorry, no matching records found
-                  </Typography>
-                )
-              ) : (
-                <Loader />
-              )} */}
               {isLoading ? (
                 <Loader />
               ) : allComplianceData.length > 0 ? (
