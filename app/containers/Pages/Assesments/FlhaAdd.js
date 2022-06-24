@@ -1772,10 +1772,10 @@ const FlhaDetails = (props) => {
                 </Box>
               </Grid>
 
-              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+              {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Paper elevation={1} className="paperSection">
                   <Grid container spacing={3}>
-                    {/* <Grid item md={6} sm={6} xs={12}>
+                    <Grid item md={6} sm={6} xs={12}>
                       <FormLabel className="checkRadioLabel" component="legend">Attach files </FormLabel>
                       <Typography className="viewLabelValue">
                         <input
@@ -1787,39 +1787,12 @@ const FlhaDetails = (props) => {
                           }}
                         />
                       </Typography>
-                    </Grid> */}
-
-                    <MultiAttachment
-                      attachmentHandler={(files) => {
-                        setJobForm({ ...jobForm, files: files });
-                      }}
-                    />
-
-                    <Grid item md={6} sm={6} xs={6}>
-                      <MuiPickersUtilsProvider
-                        variant="outlined"
-                        utils={DateFnsUtils}
-                        className="formControl"
-                      >
-                        <KeyboardDateTimePicker
-                          label="Date & time"
-                          value={jobForm.dateTimeFlha || null}
-                          onChange={(e) => {
-                            setJobForm({
-                              ...jobForm,
-                              dateTimeFlha: moment(e).toISOString(),
-                            });
-                          }}
-                          InputProps={{ readOnly: true }}
-                          format="MM/dd/yyyy HH:mm"
-                          inputVariant="outlined"
-                          disableFuture="true"
-                        />
-                      </MuiPickersUtilsProvider>
                     </Grid>
+
+                    
                   </Grid>
                 </Paper>
-              </Grid>
+              </Grid> */}
 
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Typography variant="h6" className="sectionHeading">
@@ -2209,6 +2182,35 @@ const FlhaDetails = (props) => {
                         </Grid>
                       </>
                     ) : null}
+
+                    <Grid item md={6} sm={6} xs={6}>
+                      <MuiPickersUtilsProvider
+                        variant="outlined"
+                        utils={DateFnsUtils}
+                        className="formControl"
+                      >
+                        <KeyboardDateTimePicker
+                          label="Date & time"
+                          value={jobForm.dateTimeFlha || null}
+                          onChange={(e) => {
+                            setJobForm({
+                              ...jobForm,
+                              dateTimeFlha: moment(e).toISOString(),
+                            });
+                          }}
+                          InputProps={{ readOnly: true }}
+                          format="MM/dd/yyyy HH:mm"
+                          inputVariant="outlined"
+                          disableFuture="true"
+                        />
+                      </MuiPickersUtilsProvider>
+                    </Grid>
+
+                    <MultiAttachment
+                      attachmentHandler={(files) => {
+                        setJobForm({ ...jobForm, files: files });
+                      }}
+                    />
                   </Grid>
                 </Paper>
               </Grid>
