@@ -198,7 +198,8 @@ const useStyles = makeStyles((theme) => ({
     color: "#ffffff",
   },
   ratioColororange: {
-    backgroundColor: "orange",
+    // backgroundColor: "orange",
+    border: '1px solid #c4c4c4',
     padding: "15px!important",
     height: "55px",
     borderRadius: "5px",
@@ -537,7 +538,7 @@ const FlhaDetails = (props) => {
   const [taskForm, setTaskForm] = useState([taskData]);
   const [flha, setFlha] = useState("");
   const [departments, setDepartments] = useState([]);
-  const [companyUser, setCompanyUser] = useState([]);
+  // const [companyUser, setCompanyUser] = useState([]);
 
   const [expanded, setExpanded] = useState("panel");
   const [expanded1, setExpanded1] = useState(false);
@@ -558,7 +559,7 @@ const FlhaDetails = (props) => {
       hazardStatus: "",
       controlStatus: "",
     });
-    await setTaskForm(temp);
+     setTaskForm(temp);
   };
 
   const [jobConfirmation, setJobConfirmation] = useState([
@@ -587,7 +588,7 @@ const FlhaDetails = (props) => {
     }
     const temp = [...jobConfirmation];
     temp[index][fieldname] = fieldvalue;
-    await setJobConfirmation(temp);
+     setJobConfirmation(temp);
   };
 
   const handleHazardForm = (e, key, taskIndex, fieldname) => {
@@ -613,8 +614,8 @@ const FlhaDetails = (props) => {
       temp[index].hazards[0].control = task.control;
       return temp;
     });
-    await setTaskForm(temp);
-    await setHazardForm(temp1.hazards);
+     setTaskForm(temp);
+     setHazardForm(temp1.hazards);
   };
 
   const handleSelectedJobHazardForm = async (tasks) => {
@@ -624,8 +625,8 @@ const FlhaDetails = (props) => {
       temp.hazards = task.hazards;
       return temp;
     });
-    await setTaskForm(temp);
-    await setHazardForm(temp1.hazards);
+     setTaskForm(temp);
+     setHazardForm(temp1.hazards);
   };
 
   const handleJobFormSubmit = async () => {
@@ -633,7 +634,7 @@ const FlhaDetails = (props) => {
     if (isValid) {
       await createFlha();
     } else {
-      await setError(error);
+       setError(error);
     }
   };
 
@@ -679,12 +680,12 @@ const FlhaDetails = (props) => {
     formDataPost.append("firstAid", jobForm.firstAid);
     formDataPost.append("jhaReviewed", jobForm.jhaReviewed);
     formDataPost.append("accessToJobProcedure", jobForm.accessToJobProcedure);
-    await setDisableForm(true);
-    await setLoading(true);
+     setDisableForm(true);
+     setLoading(true);
     const res = await api.post("/api/v1/flhas/", formDataPost, {
       headers: { "content-type": "multipart/form-data" },
     });
-    await setFlha(res.data.data.results.id);
+     setFlha(res.data.data.results.id);
     await createCriticalTask(res.data.data.results.id);
   };
 
@@ -807,7 +808,7 @@ const FlhaDetails = (props) => {
     const res = await api.get(
       `api/v1/configflhas/department/${id}/jobtitles/?companyId=${fkCompanyId}&projectId=${fkProjectId}`
     );
-    await setjobTitles(res.data.data.results);
+     setjobTitles(res.data.data.results);
   };
 
   const handleJobSelection = async (jobTitleId) => {
@@ -815,9 +816,9 @@ const FlhaDetails = (props) => {
       "api/v1/configflhas/jobtitles/" + jobTitleId + "/"
     );
     const selectedJobTitle = res.data.data.results;
-    await setIsSelectedJob(true);
-    await setOpen(false);
-    await setJobForm({
+     setIsSelectedJob(true);
+     setOpen(false);
+     setJobForm({
       jobTitle: selectedJobTitle.jobTitle,
       jobDetails: selectedJobTitle.jobDetail,
       location: jobForm.location,
@@ -937,7 +938,7 @@ const FlhaDetails = (props) => {
   const handelRemoveHazards = async (index, indexHazard) => {
     const temp = [...taskForm];
     temp[index].hazards.splice(indexHazard, 1);
-    await setTaskForm(temp);
+     setTaskForm(temp);
   };
 
   useEffect(() => {
@@ -1374,7 +1375,9 @@ const FlhaDetails = (props) => {
                                 disabled={disableForm}
                               />
                             </Grid>
-                            {taskValue.hazards.map((item, indexHazard) => (
+                            {taskValue.hazards.map((item, indexHazard) => {
+                              console.log(item, 'itemmm');
+                              return(
                               <Accordion
                                 expanded1={expanded1 === "panell"}
                                 onChange={handleOneChange("panell")}
@@ -1726,7 +1729,7 @@ const FlhaDetails = (props) => {
                                                 item.riskRatingColour,
                                             }}
                                           >
-                                            {item.riskRatingLevel}
+                                            {item.riskRatingLevel || <span style={{color: 'grey'}}>Please select Risk severity or Risk probability</span>}
                                           </div>
                                         </Grid>
                                         {/* </Grid> */}
@@ -1735,7 +1738,8 @@ const FlhaDetails = (props) => {
                                   </Grid>
                                 </AccordionDetails>
                               </Accordion>
-                            ))}
+                            )}
+                            )}
                             <Grid item xs={12} className="formFieldBTNSection">
                               <Button
                                 variant="contained"
