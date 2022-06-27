@@ -7,26 +7,35 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
+import Share from "@material-ui/icons/Share";
 import Divider from "@material-ui/core/Divider";
 import Link from "@material-ui/core/Link";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import Box from "@material-ui/core/Box";
+import Chip from "@material-ui/core/Chip";
+import TableContainer from "@material-ui/core/TableContainer";
 import { makeStyles } from "@material-ui/core/styles";
 import Incidents from "dan-styles/IncidentsList.scss";
+import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
+import MUIDataTable from "mui-datatables";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
-import FormLabel from "@material-ui/core/FormLabel";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
+import completed_small from "dan-images/completed-small.png";
+import projectpj from "dan-images/projectpj.png";
 import in_progress_small from "dan-images/in_progress_small.png";
 import "../../../styles/custom/customheader.css";
+import StarsIcon from "@material-ui/icons/Stars";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
-import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-
+import WifiTetheringIcon from "@material-ui/icons/WifiTethering";
+import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import { useHistory, useParams } from "react-router";
 
 import List from "@material-ui/core/List";
@@ -36,9 +45,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 
 import TextField from "@material-ui/core/TextField";
+import Menu from "@material-ui/core/Menu";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import InputLabel from "@material-ui/core/InputLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import Pagination from "@material-ui/lab/Pagination";
@@ -133,9 +146,6 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: "2px",
-    "&:hover": {
-      cursor: "pointer",
-    },
   },
   mLeftR5: {
     marginLeft: "5px",
@@ -382,6 +392,7 @@ const useStyles = makeStyles((theme) => ({
       padding: "8px !important",
     },
   },
+
   fullWidth: {
     width: "100%",
     margin: ".5rem 0",
@@ -409,16 +420,6 @@ const useStyles = makeStyles((theme) => ({
         },
       },
     },
-  },
-
-  commentLink: {
-    marginLeft: "2px",
-    cursor: "pointer",
-  },
-
-  margT10: {
-    marginTop: "6px",
-    display: "block",
   },
 
   viewAttachmentDialog: {
@@ -474,38 +475,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JhaPackage(props) {
-  const classes = useStyles();
-
   // const [cardView, setCardView] = useState(true);
-  // const [data, setData] = useState([]);
   const [allJHAData, setAllJHAData] = useState([]);
   const search = props.search;
   const status = props.status;
   const history = useHistory();
+  // const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
+  const [openAttachment, setopenAttachment] = React.useState(false);
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  // const [deleteValue, setDeleteValue] = useState("");
-  // const [deleteQ, setDeleteQ] = useState(false);
 
-  // const handleClickDeleteAlert = (value) => {
-  //   setDeleteQ(true);
-  //   setDeleteValue(value);
-  //   // handleDelete(value);
-  // };
+  const handleClickOpenAttachment = () => {
+    setopenAttachment(true);
+  };
 
-  // const handleCloseDeleteAlert = () => {
-  //   setDeleteQ(false);
-  //   setDeleteValue("");
-  // };
+  const handleCloseAttachment = () => {
+    setopenAttachment(false);
+  };
 
-  // const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
-    setIsLoading(true);
+    setIsLoading(false);
     setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
@@ -546,6 +543,7 @@ function JhaPackage(props) {
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
       );
+
       const result = res.data.data.results.results;
       setAllJHAData(result);
       setTotalData(res.data.data.results.count);
@@ -554,7 +552,8 @@ function JhaPackage(props) {
       setPageCount(pageCount);
     }
     // handelTableView(result)
-    setIsLoading(false);
+
+    setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -593,16 +592,16 @@ function JhaPackage(props) {
     }
   };
 
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  // const [incidents] = useState([]);
-  // const [listToggle, setListToggle] = useState(false);
+  const [incidents] = useState([]);
+  const [listToggle, setListToggle] = useState(false);
 
   // const handelView = (e) => {
   //   setListToggle(false);
@@ -611,41 +610,25 @@ function JhaPackage(props) {
   //   setListToggle(true);
   // };
 
+  const [value, setValue] = React.useState(2);
+
+  const handleChangeOne = (event, newValue) => {
+    setValue(newValue);
+  };
+
   //dialog
-  // const [MyFavopen, setMyFavOpen] = React.useState(false);
 
-  // const handleMyFavClickOpen = () => {
-  //   setMyFavOpen(true);
-  // };
+  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-  // const handleMyFavClose = () => {
-  //   setMyFavOpen(false);
-  // };
-
-  // const handleVisibility = () => {
-  //   setAttachOpen(true);
-  //   setHidden(!hidden);
-  // };
-  // const handleAttachClick = () => {
-  //   setAttachOpen(!open);
-  // };
-  // const handleAttachOpen = () => {
-  //   if (!hidden) {
-  //     setAttachOpen(true);
-  //   }
-  // };
-  // const handleAttachClose = () => {
-  //   setAttachOpen(false);
-  // };
+  const classes = useStyles();
 
   //view comments
-  // const [commentsOpen, setCommentsOpen] = useState(false);
-  // const [hiddenn, setHiddenn] = useState(false);
 
-  // const handleVisibilityComments = () => {
-  //   setCommentsOpen(true);
-  //   setHiddenn(!hiddenn);
-  // };
+  // const handleSummaryPush = async (index) => {
+  //   const itemid = index;
+
+  //   const filtered = allJHAData.filter((one) => one.id === index);
+  //   const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
 
   const handleSummaryPush = async (selectedJha, commentPayload) => {
     const jha = selectedJha;
@@ -661,43 +644,12 @@ function JhaPackage(props) {
     localStorage.removeItem("JSAlessonsLearned");
     history.push({
       pathname: `/app/pages/jha/jha-summary/${jha.id}`,
-      state: commentPayload
+      state: {
+        commentPayload,
+        redirectUrl: "/app/pages/jha/assessments/Job-hazards",
+      },
     });
   };
-
-  // const handleDelete = async () => {
-  //   let data = { ...deleteValue }
-  //   data.status = "Delete"
-  //   const res1 = await api.put(`/api/v1/jhas/${data.id}/`, data)
-  //   .then(response => fetchData())
-  //   .catch(err => console.log(err))
-  // }
-
-  // const handleDelete = async () => {
-  //   let temp = {
-  //     fkCompanyId: deleteValue.fkCompanyId,
-  //     fkProjectId: deleteValue.fkProjectId,
-  //     fkProjectStructureIds: deleteValue.fkProjectStructureIds,
-  //     location: deleteValue.location,
-  //     jhaAssessmentDate: deleteValue.jhaAssessmentDate,
-  //     permitToPerform: deleteValue.permitToPerform,
-  //     jobTitle: deleteValue.jobTitle,
-  //     description: deleteValue.description,
-  //     classification: deleteValue.classification,
-  //     createdBy: deleteValue.createdBy,
-  //     status: "Delete",
-  //   };
-  //   let id = deleteValue.id;
-  //   setIsLoading(false);
-  //   const res = await api
-  //     .put(`/api/v1/jhas/${id}/`, temp)
-  //     .then((response) => {
-  //       fetchData();
-  //       handleCloseDeleteAlert();
-  //       // setIsLoading(true);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
 
   useEffect(() => {
     fetchData();
@@ -735,7 +687,6 @@ function JhaPackage(props) {
     };
 
     const addComments = (event) => {
-      console.log(event.target.value);
       setCommentData(event.target.value);
     };
 
@@ -753,17 +704,20 @@ function JhaPackage(props) {
     };
 
     const handleSendComments = async () => {
-      // console.log(commentsData, 'comments')
-      
       if (commentData) {
+        setIsLoading(true);
         console.log(api, "apiiiiiiii");
         await api
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             // handleCommentsClose();
+            setIsLoading(false);
             fetchData();
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            setIsLoading(false);
+            console.log(err);
+          });
       }
     };
 
@@ -820,229 +774,6 @@ function JhaPackage(props) {
     return (
       <Grid className={classes.marginTopBottom}>
         <div className="gridView">
-          {/* <Card variant="outlined" className={classes.card}>
-            <CardContent>
-              <Grid
-                container
-                spacing={3}
-                className={classes.cardContentSection}
-              >
-                <Grid
-                  item
-                  md={2}
-                  sm={4}
-                  xs={12}
-                  className={classes.userPictureBox}
-                >
-                  <Button
-                    className={classNames(classes.floatR)}
-                    onClick={(e) => handleMyUserPClickOpen(e)}
-                  >
-                    <img src={item.avatar} className={classes.userImage} />{" "}
-                    {item.username}
-                  </Button>
-                </Grid>
-                <Link
-                  onClick={() => handleSummaryPush(item, commentPayload)}
-                  className={classes.cardLinkAction}
-                >
-                  <Grid item xs={12}>
-                    <Grid container spacing={3} alignItems="flex-start">
-                      <Grid
-                        item
-                        sm={12}
-                        xs={12}
-                        className={classes.listHeadColor}
-                      >
-                        <Grid container spacing={3} alignItems="flex-start">
-                          <Grid
-                            item
-                            md={10}
-                            sm={12}
-                            xs={12}
-                            className={classes.pr0}
-                          >
-                            <Typography className={classes.title} variant="h6">
-                              {item.description}
-                            </Typography>
-                            <Typography
-                              display="inline"
-                              className={classes.listingLabelName}
-                            >
-                              Number: 
-                              <span className={classes.listingLabelValue}>
-                                {item.jhaNumber}
-                              </span>
-                            </Typography>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            <Typography
-                              variant="body1"
-                              gutterBottom
-                              display="inline"
-                              color="textPrimary"
-                              className={classes.listingLabelName}
-                            >
-                              Category:{" "}
-                              <span className={classes.listingLabelValue}>
-                                {item.jhaNumber.split("-")[0]}
-                              </span>
-                            </Typography>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            <Typography
-                              variant="body1"
-                              gutterBottom
-                              display="inline"
-                              color="textPrimary"
-                              className={classes.listingLabelName}
-                            >
-                              Stage:{" "}
-                              <span className={classes.listingLabelValue}>
-                                {item.jhaStage}
-                                <img
-                                  src={in_progress_small}
-                                  className={classes.smallImage}
-                                />
-                              </span>
-                              <span
-                                item
-                                xs={1}
-                                className={classes.sepHeightOne}
-                              />
-                              Status:{" "}
-                              <span className="listingLabelValue statusColor_complete">
-                                {item.jhaStatus}
-                              </span>
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item sm={12} xs={12}>
-                    <Grid container spacing={3}>
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Location:
-                        </Typography>
-                        <Typography className={classes.listingLabelValue}>
-                          {item.location}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Created on:
-                        </Typography>
-
-                        <Typography className={classes.listingLabelValue}>
-                          {item.jhaAssessmentDate}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Created by:
-                        </Typography>
-
-                        <Typography className={classes.listingLabelValue}>
-                          {item.createdByName}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Link>
-              </Grid>
-            </CardContent>
-            <Divider />
-            <CardActions className={Incidents.cardActions}>
-              <Grid container spacing={2} justify="flex-end" alignItems="left">
-                <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                  <span className={classes.margT10}>
-                    <Typography
-                      variant="body1"
-                      display="inline"
-                      color="textPrimary"
-                    >
-                      <AttachmentIcon className={classes.mright5} />
-                      Attachments:
-                    </Typography>
-                    <Link
-                      onClick={item.attachmentCount && handleVisibility}
-                      color="secondary"
-                      aria-haspopup="true"
-                      className={
-                        item.attachmentCount
-                          ? classes.commentLink
-                          : classes.mLeft
-                      }
-                    >
-                      {item.attachmentCount}
-                    </Link>
-
-                    <span item xs={1} className={classes.sepHeightTen} />
-                    <Typography
-                      variant="body1"
-                      display="inline"
-                      color="textPrimary"
-                      className={classes.mLeft}
-                    >
-                      <InsertCommentOutlinedIcon className={classes.mright5} />
-                      Comments:
-                    </Typography>
-                    <Link
-                      onClick={handleVisibilityComments}
-                      color="secondary"
-                      aria-haspopup="true"
-                      className={classes.commentLink}
-                    >
-                      {item.commentsCount}
-                    </Link>
-                  </span>
-                </Grid>
-
-                <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                  <span item xs={1} className={classes.sepHeightTen} />
-                  <Typography variant="body1" display="inline">
-                    <Delete
-                      deleteUrl={`/api/v1/jhas/${item.id}/`}
-                      afterDelete={fetchData}
-                      axiosObj={api}
-                      item={deleteItem}
-                      loader={setIsLoading}
-                      loadingFlag={false}
-                      deleteMsg="Are you sure you want to delete this JHA"
-                      yesBtn="Yes"
-                      noBtn="No"
-                    />
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardActions>
-          </Card> */}
           <CardView
             cardTitle={item.description}
             avatar={item.avatar}
@@ -1078,13 +809,14 @@ function JhaPackage(props) {
               yesBtn: "Yes",
               noBtn: "No",
             }}
+            handleVisibility={() => handleVisibility()}
             handleVisibilityComments={() => handleVisibilityComments()}
             handleSummaryPush={() => handleSummaryPush(item, commentPayload)}
             files={item.files !== null ? item.files.length : 0}
             commentsCount={item.commentsCount}
             checkDeletePermission={checkDeletePermission}
           />
-          {item.attachmentCount ? (
+          {item.files && item.files.length ? (
             <Grid
               item
               md={12}
@@ -1106,12 +838,11 @@ function JhaPackage(props) {
                     <List>
                       <ListItem>
                         <Grid item md={12} sm={12} xs={12}>
-                          <div className="attachFileThumb">
-                            <Attachment
-                              src={item.jhaAssessmentAttachment}
-                              value={item.jhaAssessmentAttachment}
-                            />
-                          </div>
+                          {item.files.map((a) => (
+                            <div className="attachFileThumb">
+                              <Attachment src={a.fileName} value={a.fileName} />
+                            </div>
+                          ))}
                         </Grid>
                       </ListItem>
                     </List>
@@ -1124,7 +855,6 @@ function JhaPackage(props) {
           )}
         </div>
 
-        {/* <div> */}
         <Grid
           item
           md={12}
@@ -1186,7 +916,6 @@ function JhaPackage(props) {
             </Grid>
           </Paper>
         </Grid>
-        {/* </div> */}
 
         <Dialog
           open={myUserPOpen}
@@ -1316,11 +1045,16 @@ function JhaPackage(props) {
 
   return (
     <>
-      {!isLoading ? (
+      {isLoading ? (
         <Box>
           {allJHAData.length > 0 ? (
-            allJHAData.map((value, index) => (
-              <AllCardData item={value} index={index} />
+            Object.entries(allJHAData).map((singleitem, index) => (
+              <Grid className={classes.marginTopBottom}>
+                <div className="gridView">
+                  <AllCardData item={singleitem[1]} index={index} />
+                </div>
+                
+              </Grid>
             ))
           ) : (
             <Typography

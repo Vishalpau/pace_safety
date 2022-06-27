@@ -132,7 +132,6 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: "2px",
-    cursor: "pointer",
   },
   mLeftR5: {
     marginLeft: "5px",
@@ -254,7 +253,7 @@ const useStyles = makeStyles((theme) => ({
     borderLeft: "3px solid #cccccc",
     height: "8px",
     verticalAlign: "middle",
-    margin: "15px 15px 15px 8px",
+    margin: "0px 10px 0px 0px",
     fontSize: "10px",
     ["@media (max-width:480px)"]: {
       margin: "10px 5px 10px 5px",
@@ -358,20 +357,6 @@ const useStyles = makeStyles((theme) => ({
       right: "auto",
     },
   },
-  mLeft: {
-    marginLeft: "2px",
-    "&:hover": {
-      cursor: "pointer",
-    },
-  },
-  commentLink: {
-    marginLeft: "2px",
-    cursor: "pointer",
-  },
-  margT10: {
-    marginTop: "6px",
-    display: "block",
-  },
   cardContentSection: {
     position: "relative",
     "&:hover": {
@@ -466,32 +451,17 @@ const useStyles = makeStyles((theme) => ({
 function ComplianceListNew(props) {
   // states
   const history = useHistory();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [allComplianceData, setAllComplianceData] = useState([]);
-  // const [attachOpen, setAttachOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  // const [deleteValue, setDeleteValue] = useState("");
-  // const [deleteQ, setDeleteQ] = useState(false);
 
   const handleChangeOne = (event, newValue) => {
     setValue(newValue);
   };
-
-  // const handleClickDeleteAlert = (value) => {
-  //   setDeleteQ(true);
-  //   setDeleteValue(value);
-  //   // handleDelete(value);
-  // };
-
-  // const handleCloseDeleteAlert = () => {
-  //   setDeleteQ(false);
-  //   setDeleteValue("");
-  // };
 
   const options = {
     filterType: "dropdown",
@@ -515,8 +485,11 @@ function ComplianceListNew(props) {
     let id = item;
     localStorage.setItem("fkComplianceId", id);
     history.push({
-      pathname:`/app/pages/compliance/compliance-summary/${id}`,
-      state: commentPayload
+      pathname: `/app/pages/compliance/compliance-summary/${id}`,
+      state: {
+        commentPayload,
+        redirectUrl: "/app/pages/compliance/compliance-details",
+      },
     });
   };
 
@@ -538,7 +511,6 @@ function ComplianceListNew(props) {
     if (props.search) {
       setAllComplianceData([]);
     }
-    setIsLoading(true);
     setPage(1);
     // get all the ids (fkCompanyId,fkProjectId, selectBreakdown,fkProjectStructureIds, createdBy )
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -562,22 +534,21 @@ function ComplianceListNew(props) {
         : null;
     // for types filter
     if (props.type === "Categories" || props.type === "All") {
-      // setIsLoading(true);
+      setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
           `api/v1/audits/?search=${
             props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
-        // setIsLoading(false);
         const result = res.data.data.results.results;
         setAllComplianceData(result);
         setTotalData(res.data.data.results.count);
         setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         setPageCount(pageCount);
+        setIsLoading(false);
       } else {
-        // setIsLoading(false);
         const res = await api.get(
           `api/v1/audits/?search=${
             props.search
@@ -589,10 +560,11 @@ function ComplianceListNew(props) {
         setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         setPageCount(pageCount);
+        setIsLoading(false);
       }
     } else {
-      // setIsLoading(true);
       if (props.compliance === "My Inspections") {
+        setIsLoading(true);
         const res = await api.get(
           `api/v1/audits/?search=${
             props.search
@@ -600,16 +572,14 @@ function ComplianceListNew(props) {
             props.type
           }&createdBy=${createdBy}`
         );
-        // setIsLoading(false);
         const result = res.data.data.results.results;
         setAllComplianceData(result);
         setTotalData(res.data.data.results.count);
         setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         setPageCount(pageCount);
+        setIsLoading(false);
       } else {
-        console.log("aaaaaaaaaaaaaaa");
-        // setIsLoading(false);
         const res = await api.get(
           `api/v1/audits/?search=${
             props.search
@@ -623,14 +593,10 @@ function ComplianceListNew(props) {
         setPageData(res.data.data.results.count / 25);
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         setPageCount(pageCount);
+        setIsLoading(false);
       }
     }
-    setIsLoading(false);
   };
-
-  // useEffect(() => {
-  //   console.log(isLoading, "loadinggggggggg");
-  // }, [isLoading]);
 
   //method for  all the filters
   const handleChange = async (event, value) => {
@@ -698,23 +664,6 @@ function ComplianceListNew(props) {
     }
   };
 
-  //method to delete a compliance
-  // const handleDelete = async () => {
-  //   let temp = { ...deleteValue };
-  //   // let temp = { ...item };
-  //   temp.status = "Delete";
-  //   let id = deleteValue.id;
-  //   setIsLoading(true);
-  //   const res = await api
-  //     .put(`api/v1/audits/${id}/`, temp)
-  //     .then((response) => {
-  //       fetchAllComplianceData();
-  //       handleCloseDeleteAlert();
-  //       // setIsLoading(true);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
-
   useEffect(() => {
     fetchAllComplianceData();
     setCheckDeletePermission(
@@ -738,8 +687,24 @@ function ComplianceListNew(props) {
     const [commentData, setCommentData] = useState("");
 
     const deleteItem = {
-      ...value,
-      status: "Delete",
+      fkCompanyId: value.fkCompanyId,
+      fkProjectId: value.fkProjectId,
+      fkProjectStructureIds: value.fkProjectStructureIds,
+      location: value.location,
+      assessmentDate: value.assessmentDate,
+      permitToPerform: value.permitToPerform,
+      description: value.description,
+      classification: value.classification,
+      createdBy: value.createdBy,
+    };
+    // const [openAttachment, setopenAttachment] = React.useState(false);
+
+    // useEffect(() => {
+    //   console.log(commentsOpen, "commnentspjeo");
+    // }, [commentsOpen]);
+
+    const addComments = (event) => {
+      setCommentData(event.target.value);
     };
 
     const commentPayload = {
@@ -754,25 +719,20 @@ function ComplianceListNew(props) {
       status: "Active",
       createdBy: value.createdBy,
     };
-    // const [openAttachment, setopenAttachment] = React.useState(false);
-
-    useEffect(() => {
-      console.log(commentsOpen, "commnentspjeo");
-    }, [commentsOpen]);
-
-    const addComments = (event) => {
-      console.log(event.target.value);
-      setCommentData(event.target.value);
-    };
 
     const handleSendComments = async () => {
       if (commentData) {
+        setIsLoading(true);
         await api
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             fetchAllComplianceData();
+            setIsLoading(false);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+          });
       }
     };
 
@@ -781,10 +741,9 @@ function ComplianceListNew(props) {
       setHidden(!hidden);
     }
 
-    function handleAttachOpen() {
-      if (!hidden) {
-        setShowGrid(true);
-      }
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
     }
 
     function handleAttachClose() {
@@ -795,9 +754,10 @@ function ComplianceListNew(props) {
       setShowGrid(!open);
     }
 
-    function handleVisibilityComments() {
-      setCommentsOpen(true);
-      setHiddenn(!hiddenn);
+    function handleAttachOpen() {
+      if (!hidden) {
+        setShowGrid(true);
+      }
     }
 
     function handleCommentsOpen() {
@@ -814,228 +774,27 @@ function ComplianceListNew(props) {
       setCommentsOpen(!open);
     }
 
-    // function handleClickOpenAttachment() {
-    //   setopenAttachment(true);
-    // };
+    function handleClickOpenAttachment() {
+      setopenAttachment(true);
+    }
 
-    // function handleCloseAttachment() {
-    //   setopenAttachment(false);
-    // };
+    function handleCloseAttachment() {
+      setopenAttachment(false);
+    }
 
     // console.log(showGrid);
 
+    const groupNames = value.groups.map((one) => {
+      return (
+        <>
+          {one.checkListGroupName}
+          {one !== value.groups[value.groups.length - 1] ? ", " : ""}
+        </>
+      );
+    });
+
     return (
       <>
-        {/* <Card variant="outlined" className={classes.card}>
-          <CardContent>
-            <Grid container spacing={3} className={classes.cardContentSection}>
-              <Grid
-                item
-                md={2}
-                sm={4}
-                xs={12}
-                className={classes.userPictureBox}
-              >
-                <Button
-                  className={classes.floatR}
-                  onClick={(e) => handleMyUserPClickOpen(e)}
-                >
-                  <img
-                    src={
-                      value["avatar"] !== null
-                        ? value["avatar"]
-                        : paceLogoSymbol
-                    }
-                    className={classes.userImage}
-                  />{" "}
-                  {value["username"]}
-                </Button>
-              </Grid>
-              <Link
-                onClick={() => handleSummaryPush(value["id"], commentPayload)}
-                className={classes.cardLinkAction}
-              >
-                <Grid item xs={12}>
-                  <Grid container spacing={3} alignItems="flex-start">
-                    <Grid
-                      item
-                      sm={12}
-                      xs={12}
-                      className={classes.listHeadColor}
-                    >
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item md={10} sm={12} xs={12}>
-                          <Typography className={classes.title} variant="h6">
-                            {value["auditType"] !== null
-                              ? value["auditType"]
-                              : "-"}
-                          </Typography>
-                          <Typography
-                            className={classes.listingLabelName}
-                            display="inline"
-                          >
-                            Number:{" "}
-                            <span>
-                              <Link
-                                onClick={() => handleSummaryPush()}
-                                //href="/app/pages/actions/actionsummary"
-                                variant="h6"
-                                className={classes.mLeftfont}
-                              >
-                                <span className={classes.listingLabelValue}>
-                                  {value["auditNumber"] !== null
-                                    ? value["auditNumber"]
-                                    : "-"}
-                                </span>
-                              </Link>
-                            </span>
-                          </Typography>
-                          <span item xs={1} className={classes.sepHeightOne} />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Group name:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {value["groups"].length > 0
-                                ? value["groups"]
-                                  .map((data) => data.checkListGroupName)
-                                  .join(", ")
-                                : "-"}
-                            </span>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid item sm={12} xs={12}>
-                  <Grid container spacing={3}>
-                    <Grid item sm={3} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Location:
-                      </Typography>
-                      <Typography className={classes.listingLabelValue}>
-                        {value["area"] !== null ? value["area"] : "-"}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item sm={3} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Audited on:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {moment(value["createdAt"]).format("Do MMMM YYYY")}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item sm={3} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Audited by:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {value["createdByName"] !== null
-                          ? value["createdByName"]
-                          : "-"}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Link>
-            </Grid>
-          </CardContent>
-          <Divider />
-
-          <CardActions className={Incidents.cardActions}>
-            <Grid container spacing={2} justify="flex-end" alignItems="left">
-              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                <span className={classes.margT10}>
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                  >
-                    <AttachmentIcon className={classes.mright5} />
-                    Attachments:
-                  </Typography>
-
-                  <Link
-                    onClick={
-                      value.attachmentLinks.attachmentCount && handleVisibility
-                    }
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={
-                      value.attachmentLinks.attachmentCount
-                        ? classes.commentLink
-                        : classes.mLeft
-                    }
-                  >
-                    {value.attachmentLinks.attachmentCount}
-                  </Link>
-
-                  <span item xs={1} className={classes.sepHeightTen} />
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                    className={classes.mLeft}
-                  >
-                    <InsertCommentOutlinedIcon className={classes.mright5} />
-                    Comments:
-                  </Typography>
-                  <Link
-                    onClick={handleVisibilityComments}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={classes.commentLink}
-                  >
-                    {value.commentsCount}
-                  </Link>
-                </span>
-              </Grid>
-
-              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                <span item xs={1} className={classes.sepHeightTen} />
-                <Typography variant="body1" display="inline">
-                  <Delete
-                    deleteUrl={`api/v1/audits/${value.id}/`}
-                    afterDelete={fetchAllComplianceData}
-                    axiosObj={api}
-                    item={deleteItem}
-                    loader={setIsLoading}
-                    loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this Compliance?"
-                    yesBtn="Yes"
-                    noBtn="No"
-                  />
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardActions>
-        </Card> */}
-
         <CardView
           cardTitle={value.auditType}
           avatar={value.avatar}
@@ -1045,7 +804,7 @@ function ComplianceListNew(props) {
             { label: "Number", value: value.auditNumber },
             {
               label: "Group Name",
-              value: value.groups.length > 0 ? value.groups.name : "-",
+              value: value.groups.length > 0 ? groupNames : "-",
             },
           ]}
           bodyFields={[
@@ -1070,11 +829,15 @@ function ComplianceListNew(props) {
             noBtn: "No",
           }}
           handleVisibilityComments={() => handleVisibilityComments()}
-          files={value.attachmentLinks.attachmentCount}
+          handleVisibility={() => handleVisibility()}
+          files={
+            value.attachmentLinks ? value.attachmentLinks.attachmentCount : 0
+          }
           commentsCount={value.commentsCount}
           handleSummaryPush={() => handleSummaryPush(value.id, commentPayload)}
           checkDeletePermission={checkDeletePermission}
         />
+
         {value.attachmentLinks.attachmentCount ? (
           <Grid
             item
@@ -1097,13 +860,11 @@ function ComplianceListNew(props) {
                   <List>
                     <ListItem>
                       <Grid item md={12} sm={12} xs={12}>
-                        {value.attachmentLinks.links.map((dt) => {
-                          return (
-                            <div className="attachFileThumb">
-                              <Attachment src={dt} value={dt} />
-                            </div>
-                          );
-                        })}
+                        {value.attachmentLinks.links.map((a) => (
+                          <div className="attachFileThumb">
+                            <Attachment src={a} value={a} />
+                          </div>
+                        ))}
                       </Grid>
                     </ListItem>
                   </List>
@@ -1147,13 +908,6 @@ function ComplianceListNew(props) {
                         onChange={(e) => addComments(e)}
                       />
                     </Grid>
-                    {/* <Grid item xs={3}>
-                      <input type="file" />
-                    </Grid>
-                    <Grid item xs={9}>
-                      <AddCircleOutlineIcon className={classes.plusIcon} />
-                      <RemoveCircleOutlineIcon className={classes.minusIcon} />
-                    </Grid> */}
                     <Grid item xs={12}>
                       <Button
                         variant="contained"
@@ -1192,10 +946,14 @@ function ComplianceListNew(props) {
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
-              {/* {isLoading ? (
-                allComplianceData.length > 0 ? (
-                  allComplianceData.map((value, index) => <AllCardData value={value} />)
-                ) : (
+              {isLoading ? (
+                <Loader />
+              ) : allComplianceData.length > 0 ? (
+                allComplianceData.map((value, index) => (
+                  <AllCardData value={value} />
+                ))
+              ) : (
+                <>
                   <Typography
                     className={classes.sorryTitle}
                     variant="h6"
@@ -1204,25 +962,21 @@ function ComplianceListNew(props) {
                   >
                     Sorry, no matching records found
                   </Typography>
-                )
-              ) : (
-                <Loader />
-              )} */}
-              {isLoading ? (
-                <Loader />
-              ) : allComplianceData.length > 0 ? (
-                allComplianceData.map((value, index) => (
-                  <AllCardData value={value} />
-                ))
-              ) : (
-                <Typography
-                  className={classes.sorryTitle}
-                  variant="h6"
-                  color="primary"
-                  noWrap
-                >
-                  Sorry, no matching records found
-                </Typography>
+                  <div className={classes.pagination}>
+                    {totalData != 0
+                      ? Number.isInteger(pageData) !== true
+                        ? totalData < 25 * page
+                          ? `${page * 25 - 24} - ${totalData} of ${totalData}`
+                          : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                        : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                      : null}
+                    <Pagination
+                      count={pageCount}
+                      page={page}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </>
               )}
 
               <div>
@@ -1286,6 +1040,11 @@ function ComplianceListNew(props) {
                         <h3>Basic information</h3>
                         <List>
                           <ListItem>
+                            {/* <ListItemAvatar>
+                                <Avatar>
+                                  <ImageIcon />
+                                </Avatar>
+                              </ListItemAvatar> */}
                             <ListItemText
                               primary="Full Name:"
                               secondary="Prakash"
@@ -1361,21 +1120,12 @@ function ComplianceListNew(props) {
                       </Button>
                     </DialogActions>
                   </Grid>
+                  {/* <DialogActions>
+                            <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
+                              Close
+                            </Button>
+                          </DialogActions> */}
                 </Dialog>
-                <div className={classes.pagination}>
-                  {totalData != 0
-                    ? Number.isInteger(pageData) !== true
-                      ? totalData < 25 * page
-                        ? `${page * 25 - 24} - ${totalData} of ${totalData}`
-                        : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                      : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                    : null}
-                  <Pagination
-                    count={pageCount}
-                    page={page}
-                    onChange={handleChange}
-                  />
-                </div>
               </div>
             </div>
           </div>

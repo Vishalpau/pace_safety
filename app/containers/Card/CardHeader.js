@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import progress from "dan-images/progress.png";
 import preplanning from "dan-images/preplanning.png";
 import completed from "dan-images/completed.png";
-import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -16,6 +16,15 @@ const useStyles = makeStyles((theme) => ({
     color: "rgba(0, 0, 0, 0.87)",
     fontWeight: "500",
     lineHeight: "1.6",
+  },
+  titlespan: {
+    fontSize: "11px",
+    marginLeft: "10px",
+    color: "#fff",
+    padding: "4px 5px",
+    background: "#ff6e0c",
+    borderRadius: "3px",
+    textTransform: "uppercase",
   },
   listHeadColor: { backgroundColor: "#fafafa" },
   marginTopBottom: {
@@ -96,8 +105,10 @@ const CardHeader = (props) => {
           {one.label}:{" "}
           <span
             className={
-              (one.label === "Status" && one.value === "Closed") || (one.label === "Stage" && one.value === "Closed") || 
-              (one.label === "Status" && one.value === "Close") || (one.label === "Stage" && one.value === "Close")
+              (one.label === "Status" && one.value === "Closed") ||
+              (one.label === "Stage" && one.value === "Closed") ||
+              (one.label === "Status" && one.value === "Close") ||
+              (one.label === "Stage" && one.value === "Close")
                 ? `${classes.listingLabelValue} green`
                 : `${classes.listingLabelValue}`
             }
@@ -105,14 +116,16 @@ const CardHeader = (props) => {
             {one.value}{" "}
             {one.label === "Stage" && one.value === "Open" ? (
               <img src={preplanning} alt="preplaning" />
-            ) : (one.label === "Stage" && one.value === "Closed") || (one.label === "Stage" && one.value === "Close") ? (
+            ) : (one.label === "Stage" && one.value === "Closed") ||
+              (one.label === "Stage" && one.value === "Close") ? (
               <img src={completed} alt="completed" />
             ) : (
               ""
             )}
             {one.label === "Status" && one.value === "Open" ? (
               <img src={preplanning} alt="preplaning" />
-            ) : (one.label === "Status" && one.value === "Closed") || (one.label === "Status" && one.value === "Close") ? (
+            ) : (one.label === "Status" && one.value === "Closed") ||
+              (one.label === "Status" && one.value === "Close") ? (
               <img src={completed} alt="completed" />
             ) : (
               ""
@@ -152,6 +165,13 @@ const CardHeader = (props) => {
                 <Grid item md={10} sm={12} xs={12}>
                   <Typography className={classes.title} variant="h6">
                     {props.cardTitle}
+                    {props.ifdifferent ? (
+                      <span className={classes.titlespan}>
+                        {props.ifdifferent}
+                      </span>
+                    ) : (
+                      ""
+                    )}
                   </Typography>
                   {mappedHeader}
                 </Grid>
@@ -164,4 +184,4 @@ const CardHeader = (props) => {
   );
 };
 
-export default CardHeader; 
+export default CardHeader;

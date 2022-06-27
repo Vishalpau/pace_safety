@@ -793,6 +793,7 @@ const Checks = (props) => {
           }
         }
         temp[i]["check"] = false;
+        console.log(value, 'value');
         temp[i][field] = value;
       }
     }
@@ -862,6 +863,7 @@ const Checks = (props) => {
       }
       let arr_op = { ...ratingData };
       arr_op[index] = ratingValue;
+      // console.log(arr_op[index], ratingValue, 'superrrrrrrrrrr');
       setRatingData(arr_op);
       let temp = [...checkData];
       for (let i = 0; i < temp.length; i++) {
@@ -907,6 +909,10 @@ const Checks = (props) => {
     }
     setOpen(false);
   };
+
+  useEffect(() => {
+    console.log(showCheckData, 'showCheckData');
+  },[showCheckData])
 
   useEffect(() => {
     fetchFectorData();
@@ -1827,15 +1833,14 @@ const Checks = (props) => {
                                                 </Grid>
                                                 <Grid item md={4} xs={12}>
                                                   {/* {console.log(ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ''),'pppppppppppp')} */}
+                                                  {console.log(ratingData, 'ratingData')}
                                                   <TextField
                                                     label="Performance rating %"
                                                     //margin="dense"
                                                     name="performancerating"
                                                     id="performancerating"
                                                     value={
-                                                      ratingData[
-                                                        catI + "-" + index
-                                                      ]
+                                                      ratingData[catI + "-" + index] >= 0
                                                         ? ratingData[
                                                             catI + "-" + index
                                                           ]

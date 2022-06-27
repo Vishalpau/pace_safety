@@ -947,6 +947,7 @@ ul.MuiMenu-list a ul li.userName {
   color: #06425C;
   line-height: 26px !important;
   text-decoration: underline;
+  cursor: pointer;
 }
 .commentThanksRightSection {
   vertical-align: text-top;

@@ -26,10 +26,15 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0px 0px 2px #ccc",
     borderRadius: "10px",
     marginBottom: "30px",
+
+    "&.latest": {
+      borderColor: "#818181",
+    },
   },
 }));
 
 const CardView = (props) => {
+  // console.log(props, 'rfhdshfhkldslkjfdhs');
   const classes = useStyles();
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
@@ -47,7 +52,12 @@ const CardView = (props) => {
 
   return (
     <>
-      <Card variant="outlined" className={classes.card}>
+      <Card
+        variant="outlined"
+        className={`${classes.card} ${
+          props.ifdifferent ? props.ifdifferent : ""
+        }`}
+      >
         <CardContent>
           <Grid container spacing={3} className={classes.cardContentSection}>
             <CardHeader
@@ -61,6 +71,7 @@ const CardView = (props) => {
               handleSummaryPush={() => {
                 handleSummaryPush();
               }}
+              ifdifferent={props.ifdifferent ? props.ifdifferent : ""}
             />
             <CardBody
               handleSummaryPush={() => {
@@ -79,6 +90,7 @@ const CardView = (props) => {
           handleVisibilityComments={() => {
             props.handleVisibilityComments();
           }}
+          handleVisibility={() => props.handleVisibility()}
         />
         <UserProfile
           ifJsa={

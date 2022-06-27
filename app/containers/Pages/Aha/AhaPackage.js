@@ -37,15 +37,13 @@ import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import WifiTetheringIcon from "@material-ui/icons/WifiTethering";
 import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import { useHistory, useParams } from "react-router";
+import { TextField } from "@material-ui/core";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
-import TextField from "@material-ui/core/TextField";
 
 import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
@@ -141,15 +139,6 @@ const useStyles = makeStyles((theme) => ({
   },
   mLeft: {
     marginLeft: "2px",
-    textDecoration: "none !important",
-  },
-  commentLink: {
-    marginLeft: "2px",
-    cursor: "pointer",
-  },
-  margT10: {
-    marginTop: "6px",
-    display: "block",
   },
   mLeftR5: {
     marginLeft: "5px",
@@ -157,9 +146,6 @@ const useStyles = makeStyles((theme) => ({
     ["@media (max-width:480px)"]: {
       marginLeft: "3px",
       marginRight: "3px",
-    },
-    "&:hover": {
-      cursor: "pointer",
     },
   },
   pLeft5: {
@@ -478,80 +464,52 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     marginTop: "-10px",
   },
-  margT10: {
-    marginTop: "6px",
-    display: "block",
-  },
 }));
 
 function AhaPackage(props) {
-  // const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
-  // const [cardView, setCardView] = useState(true);
-  // const [tableView, setTableView] = useState(false);
+  const [cardView, setCardView] = useState(true);
+  const [tableView, setTableView] = useState(false);
   const [allAHAData, setAllAHAData] = useState([]);
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  // const [deleteQ, setDeleteQ] = useState(false);
-  // const [deleteValue, setDeleteValue] = useState("");
 
   const search = props.search;
   const status = props.status;
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  // const handleClickDeleteAlert = (value) => {
-  //   console.log(value, "value");
-  //   setDeleteQ(true);
-  //   setDeleteValue(value);
-  //   // handleDelete(value);
-  // };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  // const getFromChid = (value) => {
-  //   setDeleteValue(value);
-  // };
+  const [incidents] = useState([]);
+  const [listToggle, setListToggle] = useState(false);
 
-  // const handleCloseDeleteAlert = () => {
-  //   setDeleteQ(false);
-  //   setDeleteValue("");
-  // };
+  const handelView = (e) => {
+    setListToggle(false);
+  };
+  const handelViewTabel = (e) => {
+    setListToggle(true);
+  };
 
-  useEffect(() => {
-    console.log(allAHAData, "allAHahData");
-  }, [allAHAData]);
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
-  // const [incidents] = useState([]);
-  // const [listToggle, setListToggle] = useState(false);
-
-  // const handelView = (e) => {
-  //   setListToggle(false);
-  // };
-  // const handelViewTabel = (e) => {
-  //   setListToggle(true);
-  // };
-
-  // const [value, setValue] = React.useState(2);
+  const [value, setValue] = React.useState(2);
 
   //dialog
-  // const [MyFavopen, setMyFavOpen] = React.useState(false);
-  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+  const [MyFavopen, setMyFavOpen] = React.useState(false);
 
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
+  useEffect(() => {
+    console.log(myUserPOpen, "myUserPOpen");
+  }, [myUserPOpen]);
+
+  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
   const handleSummaryPush = async (selectedJha, commentPayload) => {
     const aha = selectedJha;
@@ -567,14 +525,17 @@ function AhaPackage(props) {
     localStorage.removeItem("JSAlessonsLearned");
     history.push({
       pathname: `/app/pages/aha/aha-summary/${aha.id}`,
-      state: commentPayload
+      state: {
+        commentPayload,
+        redirectUrl: "/app/pages/aha/assessments/project-details",
+      },
     });
   };
 
-  // const handleNewAhaPush = async () => {
-  //   localStorage.removeItem("fkAHAId");
-  //   history.push("/app/pages/aha/assessments/project-details");
-  // };
+  const handleNewAhaPush = async () => {
+    localStorage.removeItem("fkAHAId");
+    history.push("/app/pages/aha/assessments/project-details");
+  };
 
   // const fetchAllAHAData = async () => {
   //   const res = await api.get("/api/v1/ahas/")
@@ -585,7 +546,7 @@ function AhaPackage(props) {
   // }
 
   const fetchAllAHAData = async () => {
-    setPage(1);
+     setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -610,24 +571,24 @@ function AhaPackage(props) {
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`
       );
       const result = res.data.data.results.results;
-      setAllAHAData(result);
-      setTotalData(res.data.data.results.count);
-      setPageData(res.data.data.results.count / 25);
+       setAllAHAData(result);
+       setTotalData(res.data.data.results.count);
+       setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      setPageCount(pageCount);
+       setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`
       );
       const result = res.data.data.results.results;
-      setAllAHAData(result);
-      setTotalData(res.data.data.results.count);
-      setPageData(res.data.data.results.count / 25);
+       setAllAHAData(result);
+       setTotalData(res.data.data.results.count);
+       setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-      setPageCount(pageCount);
+       setPageCount(pageCount);
     }
 
-    setIsLoading(true);
+     setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -657,16 +618,16 @@ function AhaPackage(props) {
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
-      setAllAHAData(res.data.data.results.results);
-      setPage(value);
+       setAllAHAData(res.data.data.results.results);
+       setPage(value);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
-      setAllAHAData(res.data.data.results.results);
-      setPage(value);
+       setAllAHAData(res.data.data.results.results);
+       setPage(value);
     }
   };
 
@@ -727,13 +688,18 @@ function AhaPackage(props) {
     const handleSendComments = async () => {
       if (commentData) {
         console.log(api, "apiiiiiiii");
+        setIsLoading(true);
         await api
           .post("/api/v1/comments/", commentPayload)
           .then((res) => {
             // handleCommentsClose()
+            setIsLoading(false);
             fetchAllAHAData();
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+          });
       }
     };
 
@@ -777,250 +743,6 @@ function AhaPackage(props) {
 
     return (
       <>
-        {/* <Card variant="outlined" className={classes.card}>
-          <CardContent>
-            <Grid container spacing={3} className={classes.cardContentSection}>
-              <Grid
-                item
-                md={2}
-                sm={4}
-                xs={12}
-                className={classes.userPictureBox}
-              >
-                <Button
-                  className={classes.floatR}
-                  onClick={(e) => handleMyUserPClickOpen(e)}
-                >
-                  <img
-                    src={item.avatar !== null ? item.avatar : paceLogoSymbol}
-                    className={classes.userImage}
-                  />{" "}
-                  {item.username}
-                </Button>
-              </Grid>
-              <Link
-                onClick={(e) => handleSummaryPush(item, commentPayload)}
-                className={classes.cardLinkAction}
-              >
-                <Grid item xs={12}>
-                  <Grid container spacing={3} alignItems="flex-start">
-                    <Grid
-                      item
-                      sm={12}
-                      xs={12}
-                      className={classes.listHeadColor}
-                    >
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item md={10} sm={12} xs={12}>
-                          <Typography className={classes.title} variant="h6">
-                            {item.description}
-                          </Typography>
-                          <Typography
-                            display="inline"
-                            className={classes.listingLabelName}
-                          >
-                            Number:{" "}
-                            <span>
-                              <Link
-                                onClick={(e) => handleSummaryPush(item.index)}
-                                variant="h6"
-                                className={classes.mLeftfont}
-                              >
-                                <span className={classes.listingLabelValue}>
-                                  {item.ahaNumber}
-                                </span>
-                              </Link>
-                            </span>
-                          </Typography>
-                          <span item xs={1} className={classes.sepHeightOne} />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Category:{" "}
-                            <span className={classes.listingLabelValue}>
-                              AHA
-                            </span>
-                          </Typography>
-                          <span item xs={1} className={classes.sepHeightOne} />
-                          <Typography
-                            variant="body1"
-                            gutterBottom
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.listingLabelName}
-                          >
-                            Stage:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {item.ahaStage}{" "}
-                              <img
-                                src={
-                                  item.ahaStage === "Open"
-                                    ? preplanning
-                                    : completed_small
-                                }
-                                className={classes.smallImage}
-                              />
-                            </span>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightOne}
-                            />
-                            Status:{" "}
-                            <span className={classes.listingLabelValue}>
-                              {item.ahaStatus}{" "}
-                              <img
-                                src={
-                                  item.ahaStatus === "Open"
-                                    ? preplanning
-                                    : completed_small
-                                }
-                                className={classes.smallImage}
-                              />
-                            </span>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item sm={12} xs={12}>
-                  <Grid container spacing={3}>
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        gutterBottom
-                        color="textPrimary"
-                        className={classes.listingLabelName}
-                      >
-                        Work area:
-                      </Typography>
-
-                      <Typography
-                        gutterBottom
-                        className={classes.listingLabelValue}
-                      >
-                        {item.workArea}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Location:
-                      </Typography>
-                      <Typography className={classes.listingLabelValue}>
-                        {item.location}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Created on:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {moment(item.createdAt).format(
-                          "Do MMMM YYYY, h:mm:ss a"
-                        )}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Created by:
-                      </Typography>
-
-                      <Typography className={classes.listingLabelValue}>
-                        {item.createdByName}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Link>
-            </Grid>
-          </CardContent>
-          <Divider />
-          <CardActions className={Incidents.cardActions}>
-            <Grid container spacing={2} justify="flex-end" alignItems="left">
-              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                <span className={classes.margT10}>
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                  >
-                    <AttachmentIcon className={classes.mright5} />
-                    Attachments:
-                  </Typography>
-                  <Link
-                    onClick={item.attachmentCount && handleVisibility}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={
-                      item.attachmentCount ? classes.commentLink : classes.mLeft
-                    }
-                  >
-                    {item.attachmentCount}
-                  </Link>
-                  <span item xs={1} className={classes.sepHeightTen} />
-                  <Typography
-                    variant="body1"
-                    display="inline"
-                    color="textPrimary"
-                    className={classes.mLeft}
-                  >
-                    <InsertCommentOutlinedIcon className={classes.mright5} />
-                    Comments:
-                  </Typography>
-                  <Link
-                    onClick={handleVisibilityComments}
-                    color="secondary"
-                    aria-haspopup="true"
-                    className={classes.commentLink}
-                  >
-                    {item.commentsCount}
-                  </Link>
-                </span>
-              </Grid>
-
-              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
-                <Typography variant="body1" display="inline">
-
-                  <Delete
-                    deleteUrl={`/api/v1/ahas/${item.id}/`}
-                    afterDelete={fetchAllAHAData}
-                    axiosObj={api}
-                    item={deleteItem}
-                    loader={setIsLoading}
-                    loadingFlag={false}
-                    deleteMsg="Are you sure you want to delete this AHA?"
-                    yesBtn="Yes"
-                    noBtn="No"
-                  />
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardActions>
-        </Card> */}
-
         <CardView
           cardTitle={item.description}
           avatar={item.avatar}
@@ -1054,6 +776,7 @@ function AhaPackage(props) {
             yesBtn: "Yes",
             noBtn: "No",
           }}
+          handleVisibility={() => handleVisibility()}
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
           commentsCount={item.commentsCount}
@@ -1061,7 +784,7 @@ function AhaPackage(props) {
           checkDeletePermission={checkDeletePermission}
         />
 
-        {item.attachmentCount ? (
+        {item.files && item.files.length ? (
           <Grid
             item
             md={12}
@@ -1083,12 +806,11 @@ function AhaPackage(props) {
                   <List>
                     <ListItem>
                       <Grid item md={12} sm={12} xs={12}>
-                        <div className="attachFileThumb">
-                          <Attachment
-                            src={item.ahaAssessmentAttachment}
-                            value={item.ahaAssessmentAttachment}
-                          />
-                        </div>
+                        {item.files.map((a) => (
+                          <div className="attachFileThumb">
+                            <Attachment src={a.fileName} value={a.fileName} />
+                          </div>
+                        ))}
                       </Grid>
                     </ListItem>
                   </List>
@@ -1179,10 +901,9 @@ function AhaPackage(props) {
             <div>
               <div className="gridView">
                 {allAHAData.length > 0 ? (
-                  allAHAData.map((item, index) => {
-                    // console.log(item);
-                    return <AllCardData item={item} index={index} />;
-                  })
+                  Object.entries(allAHAData).map((item, index) => (
+                    <AllCardData item={item[1]} index={index} />
+                  ))
                 ) : (
                   <Typography
                     className={classes.sorryTitle}
@@ -1193,103 +914,6 @@ function AhaPackage(props) {
                     Sorry, no matching records found
                   </Typography>
                 )}
-
-                {/* <div> */}
-                <Dialog
-                  open={myUserPOpen}
-                  onClose={handleMyUserPClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                  fullWidth={true}
-                  maxWidth={"sm"}
-                >
-                  <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Basic Information</h3>
-                        <List>
-                          <ListItem>
-                            {/* <ListItemAvatar>
-                              <Avatar>
-                                <ImageIcon />
-                              </Avatar>
-                            </ListItemAvatar> */}
-                            <ListItemText
-                              primary="Full Name:"
-                              secondary="Prakash"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Organization Type:"
-                              secondary="Epc ORGANIZATION"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Organization Role:"
-                              secondary="N/A"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Role Title:"
-                              secondary="N/A"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Current Location:"
-                              secondary="Delhi » NCT » India"
-                            />
-                          </ListItem>
-                        </List>
-                      </Grid>
-
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Company Information</h3>
-                        <List>
-                          <ListItem>
-                            <ListItemText
-                              primary="Company Name:"
-                              secondary="JWIL"
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="Location:"
-                              secondary="Italy"
-                            />
-                          </ListItem>
-                        </List>
-                      </Grid>
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={handleMyUserPClose}
-                      color="primary"
-                      variant="contained"
-                      autoFocus
-                    >
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                {/* </div> */}
               </div>
             </div>
             <div className={classes.pagination}>
