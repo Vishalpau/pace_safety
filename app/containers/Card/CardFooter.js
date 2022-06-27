@@ -9,19 +9,20 @@ import { makeStyles } from "@material-ui/core/styles";
 import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
 import Delete from "../Delete/Delete";
 import Bookmark from "../Bookmark/Bookmark";
+import BookmarkList from "../Bookmark/BookmarkList";
 
 const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: "5px",
     marginRight: "15px",
-    ["@media (max-width:480px)"]: {
+    "@media (max-width:480px)": {
       marginLeft: "3px",
       marginRight: "3px",
     },
   },
   textRight: {
     textAlign: "right",
-    ["@media (max-width:480px)"]: {
+    "@media (max-width:480px)": {
       textAlign: "left",
       padding: "0px 8px 15px 8px !important",
     },
@@ -32,14 +33,14 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: "middle",
     margin: "15px 15px 15px 8px",
     fontSize: "10px",
-    ["@media (max-width:480px)"]: {
+    "@media (max-width:480px)": {
       margin: "10px 5px 10px 5px",
     },
   },
   floatR: {
     float: "right",
     textTransform: "capitalize",
-    ["@media (max-width:480px)"]: {
+    "@media (max-width:480px)": {
       float: "left",
     },
   },
@@ -120,7 +121,12 @@ const CardFooter = (props) => {
             >
               <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
-                <Bookmark />
+                {/* <Bookmark /> */}
+
+                {/* <Switch>
+                <Route exact path="/bookmarklist" component={BookmarkList} />
+              </Switch> */}
+                {/* <BookmarkList /> */}
               </Typography>
               <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
