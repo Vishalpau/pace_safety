@@ -113,7 +113,7 @@ const CardHeader = (props) => {
                 : `${classes.listingLabelValue}`
             }
           >
-            {one.value}{" "}
+            {one.value ? one.value : "-"}{" "}
             {one.label === "Stage" && one.value === "Open" ? (
               <img src={preplanning} alt="preplaning" />
             ) : (one.label === "Stage" && one.value === "Closed") ||
