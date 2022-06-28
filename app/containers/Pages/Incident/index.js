@@ -240,7 +240,7 @@ function BlankPage(props) {
           let pageCount = Math.ceil(res.data.data.results.count / 25);
           setPageCount(pageCount);
         })
-        .catch((err) => history.push("/app/pages/error"));
+        // .catch((err) => history.push("/app/pages/error"));
       // handleTimeOutError(res)
     }
     const viewMode = {

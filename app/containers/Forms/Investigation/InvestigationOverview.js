@@ -79,26 +79,30 @@ const InvestigationOverview = () => {
       if (putId.current == "") {
         const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
 
-        try {
+        // try {
           const temp = incidentsListData
           temp.updatedAt = new Date().toISOString();
 
           temp.incidentStage = "Investigation"
           temp.incidentStatus = "pending"
-          const res = await api.put(
-            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-            temp
-          );
-        } catch (error) {
-          history.push("/app/pages/error")
-        }
-        await history.push(`${INVESTIGATION_FORM["Severity consequences"]}${localStorage.getItem("fkincidentId")}`);
+          api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,temp)
+          .then(res => {
+            console.log(res)
+            history.push(`${INVESTIGATION_FORM["Severity consequences"]}${localStorage.getItem("fkincidentId")}`);
+          })
+          .catch(err => {
+            console.log(err);
+            history.push('app/pages/error');
+          })
+        // } catch (error) {
+        //   history.push("/app/pages/error")
+        // }
 
       } else if (putId.current !== "") {
 
         form["updatedBy"] = "0";
         const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-        await history.push(`${INVESTIGATION_FORM["Severity consequences"]}${putId.current}`
+        history.push(`${INVESTIGATION_FORM["Severity consequences"]}${putId.current}`
         );
       }
       localStorage.setItem("WorkerDataFetched", "");

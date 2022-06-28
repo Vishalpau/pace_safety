@@ -1,43 +1,43 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import DateFnsUtils from '@date-io/date-fns';
+import React, { useState, useEffect, useRef } from "react";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker,
-} from '@material-ui/pickers';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import IconButton from '@material-ui/core/IconButton';
-import InputLabel from '@material-ui/core/InputLabel';
-import Box from '@material-ui/core/Box';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { PapperBlock } from 'dan-components';
-import Paper from '@material-ui/core/Paper';
-import AddIcon from '@material-ui/icons/Add';
-import Tooltip from '@material-ui/core/Tooltip';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import FormLabel from '@material-ui/core/FormLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import moment from 'moment';
-import { useHistory, useParams } from 'react-router';
-import { Row, Col } from 'react-grid-system';
-import axios from 'axios';
-import CircularProgress from '@material-ui/core/CircularProgress';
+} from "@material-ui/pickers";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import Box from "@material-ui/core/Box";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import { PapperBlock } from "dan-components";
+import Paper from "@material-ui/core/Paper";
+import AddIcon from "@material-ui/icons/Add";
+import Tooltip from "@material-ui/core/Tooltip";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import FormLabel from "@material-ui/core/FormLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import moment from "moment";
+import { useHistory, useParams } from "react-router";
+import { Row, Col } from "react-grid-system";
+import axios from "axios";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { connect } from "react-redux";
 
-import { useDispatch } from 'react-redux';
-import FormSideBar from '../FormSideBar';
+import { useDispatch } from "react-redux";
+import FormSideBar from "../FormSideBar";
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -46,22 +46,22 @@ import {
   SUMMERY_FORM,
   LOGIN_URL,
   SSO_URL,
-} from '../../../utils/constants';
+} from "../../../utils/constants";
 
-import ReportingValidation from '../../Validator/ReportingValidation';
-import InitialEvidenceValidate from '../../Validator/InitialEvidance';
-import api from '../../../utils/axios';
-import Attachment from '../../Attachment/Attachment';
-import { handelCommonObject } from '../../../utils/CheckerValue';
+import ReportingValidation from "../../Validator/ReportingValidation";
+import InitialEvidenceValidate from "../../Validator/InitialEvidance";
+import api from "../../../utils/axios";
+import Attachment from "../../Attachment/Attachment";
+import { handelCommonObject } from "../../../utils/CheckerValue";
 
 // Redux
-import { tabViewMode } from '../../../redux/actions/initialDetails';
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 import Loader from "../Loader";
-import MultiAttachment from '../../MultiAttachment/MultiAttachment';
+import MultiAttachment from "../../MultiAttachment/MultiAttachment";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    minWidth: '100%',
+    minWidth: "100%",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -70,20 +70,20 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 0,
   },
   textButton: {
-    color: '#3498db',
+    color: "#3498db",
     padding: 0,
-    textDecoration: 'underline',
-    display: 'inlineBlock',
-    marginBlock: '1.5rem',
-    backgroundColor: 'transparent',
+    textDecoration: "underline",
+    display: "inlineBlock",
+    marginBlock: "1.5rem",
+    backgroundColor: "transparent",
   },
   button: {
     margin: theme.spacing(1),
   },
   labelOverflow: {
-    '& .MuiInputLabel-outlined': {
-      right: '20px',
-      lineHeight: '1.2',
+    "& .MuiInputLabel-outlined": {
+      right: "20px",
+      lineHeight: "1.2",
     },
   },
 }));
@@ -99,36 +99,37 @@ const ReportingAndNotification = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [lateReport, SetLateReport] = useState(false);
   const [reportedTo, setReportableTo] = useState([]);
-  const [reportOtherData, setReportOtherData] = useState('');
+  const [reportOtherData, setReportOtherData] = useState("");
   const [reportedToObj, setReportedToObj] = useState([]);
   const [superVisorNameList, setSuperVisorNameList] = useState([]);
   const [reportedByNameList, setReportedByNameList] = useState([]);
   const [evidence, setEvidence] = useState([]);
   const [notificationSentValue, setNotificationSentValue] = useState([]);
-  const [supervisorName, setSupervisorName] = useState('');
-  const [reportedByName, setReportedByName] = useState('');
+  const [supervisorName, setSupervisorName] = useState("");
+  const [reportedByName, setReportedByName] = useState("");
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState('');
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
   const [isNext, setIsnext] = useState(true);
   const [evidanceId, setEvidanceId] = useState([]);
   const [notifyToList, setNotifyToList] = useState([]);
   const [isDateShow, setIsDateShow] = useState(false);
-  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const [evidanceForm, setEvidanceForm] = useState([
     {
-      evidenceCheck: 'Yes',
-      evidenceNumber: 'string',
-      evidenceCategory: 'Initial Evidence',
-      evidenceRemark: '',
+      evidenceCheck: "Yes",
+      evidenceNumber: "string",
+      evidenceCategory: "Initial Evidence",
+      evidenceRemark: "",
       evidenceDocument: null,
-      status: 'Active',
+      status: "Active",
       createdBy: parseInt(userId),
       updatedBy: parseInt(userId),
-      fkIncidentId: localStorage.getItem(''),
+      fkIncidentId: localStorage.getItem(""),
     },
   ]);
 
@@ -141,52 +142,63 @@ const ReportingAndNotification = (props) => {
 
   const [form, setForm] = useState({
     reportedto: [],
-    others: '',
-    latereporting: '',
-    additionaldetails: '',
-    supervisorOtherName: '',
-    reportedByOtherName: '',
+    others: "",
+    latereporting: "",
+    additionaldetails: "",
+    supervisorOtherName: "",
+    reportedByOtherName: "",
   });
 
   // handle update incident
   const handleUpdateIncidentDetails = async () => {
-    const fkid = localStorage.getItem('fkincidentId');
+    const fkid = localStorage.getItem("fkincidentId");
     const temp = incidentsListData;
-    if (supervisorName === 'other') {
-      temp.supervisorByName = form.supervisorOtherName || incidentsListData.supervisorByName;
+    if (supervisorName === "other") {
+      temp.supervisorByName =
+        form.supervisorOtherName || incidentsListData.supervisorByName;
     } else {
-      temp.supervisorByName = supervisorName || incidentsListData.supervisorByName;
+      temp.supervisorByName =
+        supervisorName || incidentsListData.supervisorByName;
     }
 
     temp.supervisorById = 1;
-    temp.incidentReportedOn = moment(form.reportingdate).toISOString()
-      || incidentsListData.incidentReportedOn;
-    if (reportedByName === 'other') {
-      temp.incidentReportedByName = form.reportedByOtherName || incidentsListData.incidentReportedByName;
+    temp.incidentReportedOn =
+      moment(form.reportingdate).toISOString() ||
+      incidentsListData.incidentReportedOn;
+    if (reportedByName === "other") {
+      temp.incidentReportedByName =
+        form.reportedByOtherName || incidentsListData.incidentReportedByName;
     } else {
-      temp.incidentReportedByName = reportedByName || incidentsListData.incidentReportedByName;
+      temp.incidentReportedByName =
+        reportedByName || incidentsListData.incidentReportedByName;
     }
 
     temp.incidentReportedById = 1;
-    temp.reasonLateReporting = form.latereporting || incidentsListData.reasonLateReporting;
-    temp.notificationComments = form.additionaldetails || incidentsListData.notificationComments;
+    temp.reasonLateReporting =
+      form.latereporting || incidentsListData.reasonLateReporting;
+    temp.notificationComments =
+      form.additionaldetails || incidentsListData.notificationComments;
     temp.updatedAt = new Date().toISOString();
     temp.updatedBy = parseInt(userId);
 
-    if (incidentsListData.incidentStage === 'Initial notification') {
-      temp.incidentStatus = 'Done';
+    if (incidentsListData.incidentStage === "Initial notification") {
+      temp.incidentStatus = "Done";
     }
 
     // put call for update incident Details
-    try {
-      const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
-        temp
-      );
-    } catch (error) {
-      setIsnext(true);
-      history.push('/app/pages/error');
-    }
+    // try {
+    api
+      .put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`, temp)
+      .catch((err) => {
+        setIsnext(true);
+        history.push("/app/pages/error");
+      });
+
+    // }
+    // .catch (error) {
+    //   setIsnext(true);
+    //   history.push('/app/pages/error');
+    // }
   };
 
   const handleRemoveExitingReport = async () => {
@@ -194,36 +206,48 @@ const ReportingAndNotification = (props) => {
     if (reportedToObj.length > 0) {
       for (const key in reportedToObj) {
         const reportId = reportedToObj[key].id;
-
-        try {
-          setIsnext(false);
-          const res = await api.delete(
-            `/api/v1/incidents/${id}/reports/${reportId}/`
-          );
-        } catch (err) {
-          setIsnext(true);
-          history.push('/app/pages/error');
-        }
+        setIsnext(false);
+        // try {
+        api
+          .delete(`/api/v1/incidents/${id}/reports/${reportId}/`)
+          .catch((err) => {
+            setIsnext(true);
+            history.push("/app/pages/error");
+          });
+        // }
+        // catch (err) {
+        //   setIsnext(true);
+        //   history.push('/app/pages/error');
+        // }
       }
     }
   };
 
   // send request other data in report to
   const setOtherDataReportTo = async (notifyto) => {
-    if (reportOtherData !== '') {
-      if (form.reportedto.includes('Others')) {
-        try {
-          await setIsnext(false);
-          const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
+    if (reportOtherData !== "") {
+      if (form.reportedto.includes("Others")) {
+        // try {
+        setIsnext(false);
+        api
+          .post(`/api/v1/incidents/${id}/reports/`, {
             reportTo: reportOtherData,
             createdBy: parseInt(userId),
             notifyTo: notifyto,
-            fkIncidentId: localStorage.getItem('fkincidentId') || id,
+            fkIncidentId: localStorage.getItem("fkincidentId") || id,
+          })
+          .then(res => {
+            return res;
+          })
+          .catch((err) => {
+            setIsnext(true);
+            history.push("/app/pages/error");
           });
-        } catch (err) {
-          await setIsnext(true);
-          history.push('/app/pages/error');
-        }
+        // }
+        // .catch (err) {
+        //   setIsnext(true);
+        //   history.push("/app/pages/error");
+        // }
       }
     }
   };
@@ -241,78 +265,90 @@ const ReportingAndNotification = (props) => {
       if (evidanceChecked === true) {
         for (var key in evidanceForm) {
           if (evidanceForm[key].evidenceDocument !== null) {
-            if (typeof evidanceForm[key].evidenceDocument === 'string') {
+            if (typeof evidanceForm[key].evidenceDocument === "string") {
               if (evidanceId.length > 0) {
                 for (let i = 0; i < evidanceId.length; i++) {
-                  await api.delete(
-                    `api/v1/incidents/${localStorage.getItem(
-                      'fkincidentId'
-                    )}/evidences/${evidanceId[i]}/`
-                  );
+                  const res = await api
+                    .delete(
+                      `api/v1/incidents/${localStorage.getItem(
+                        "fkincidentId"
+                      )}/evidences/${evidanceId[i]}/`
+                    )
+                    .then();
                 }
               }
-              try {
-                await api.put(
+              // try {
+              api
+                .put(
                   `api/v1/incidents/${localStorage.getItem(
-                    'fkincidentId'
+                    "fkincidentId"
                   )}/evidences/${evidanceForm[key].id}/`,
                   {
-                    evidenceCategory: 'Initial Evidence',
-                    evidenceCheck: 'Yes',
-                    evidenceNumber: 'string',
+                    evidenceCategory: "Initial Evidence",
+                    evidenceCheck: "Yes",
+                    evidenceNumber: "string",
                     evidenceRemark: evidanceForm[key].evidenceRemark,
-                    status: 'Active',
+                    status: "Active",
                     createdBy: parseInt(userId),
-                    fkIncidentId: localStorage.getItem('fkincidentId'),
+                    fkIncidentId: localStorage.getItem("fkincidentId"),
                     id: evidanceForm[key].id,
                   }
-                );
-              } catch (error) {
-                setIsnext(true);
-                history.push('/app/pages/error');
-              }
+                )
+                .catch((err) => {
+                  setIsnext(true);
+                  history.push("/app/pages/error");
+                });
+              // } catch (error) {
+              // }
             } else {
               if (evidanceId.length > 0) {
                 for (let i = 0; i < evidanceId.length; i++) {
                   await api.delete(
                     `api/v1/incidents/${localStorage.getItem(
-                      'fkincidentId'
+                      "fkincidentId"
                     )}/evidences/${evidanceId[i]}/`
                   );
                 }
               }
-              try {
-                const formData = new FormData();
-                formData.append(
-                  'evidenceDocument',
-                  evidanceForm[key].evidenceDocument
-                );
-                formData.append(
-                  'evidenceRemark',
-                  evidanceForm[key].evidenceRemark
-                );
-                formData.append('evidenceCheck', 'Yes');
-                formData.append('evidenceCategory', 'Initial Evidence');
-                formData.append('createdBy', parseInt(userId));
-                formData.append('status', 'Active');
-                formData.append(
-                  'fkIncidentId',
-                  localStorage.getItem('fkincidentId')
-                );
-                const evidanceResponse = await api.post(
+              // try {
+              const formData = new FormData();
+              formData.append(
+                "evidenceDocument",
+                evidanceForm[key].evidenceDocument
+              );
+              formData.append(
+                "evidenceRemark",
+                evidanceForm[key].evidenceRemark
+              );
+              formData.append("evidenceCheck", "Yes");
+              formData.append("evidenceCategory", "Initial Evidence");
+              formData.append("createdBy", parseInt(userId));
+              formData.append("status", "Active");
+              formData.append(
+                "fkIncidentId",
+                localStorage.getItem("fkincidentId")
+              );
+              api
+                .post(
                   `api/v1/incidents/${localStorage.getItem(
-                    'fkincidentId'
+                    "fkincidentId"
                   )}/evidences/`,
                   formData
-                );
-              } catch (error) {
-                setIsnext(true);
-                history.push('/app/pages/error');
-              }
+                )
+                .catch((err) => {
+                  setIsnext(true);
+                  history.push("/app/pages/error");
+                });
+              // }
+              // catch (error) {
+              // setIsnext(true);
+              // history.push('/app/pages/error');
+              // }
             }
           }
         }
       } else {
+        console.log("trueeee");
         setIsnext(true);
       }
       // check initial evidance
@@ -353,40 +389,58 @@ const ReportingAndNotification = (props) => {
           for (const key in unique) {
             const name = unique[key];
 
-            try {
-              const res = await api.post(
+            // try {
+            api
+              .post(
                 `/api/v1/incidents/${localStorage.getItem(
-                  'fkincidentId'
+                  "fkincidentId"
                 )}/reports/`,
                 {
                   reportTo: name,
                   createdBy: parseInt(userId),
                   notifyTo: stringNotifyList,
-                  fkIncidentId: localStorage.getItem('fkincidentId') || id,
+                  fkIncidentId: localStorage.getItem("fkincidentId") || id,
                 }
-              );
-              status = res.status;
-            } catch (err) {
-              setIsnext(true);
-              history.push('/app/pages/error');
-            }
+              )
+              .then((res) => {
+                const viewMode = {
+                  initialNotification: true,
+                  investigation: false,
+                  evidence: false,
+                  rootcauseanalysis: false,
+                  lessionlearn: false,
+                };
+                dispatch(tabViewMode(viewMode));
+                const resFromData = setOtherDataReportTo(stringNotifyList);
+                if (resFromData) {
+                  history.push(`${SUMMERY_FORM.Summary}${id}/`);
+                }
+              })
+              // }
+              .catch((err) => {
+                setIsnext(true);
+                history.push("/app/pages/error");
+              });
+            // .catch (err) {
+            // }
           }
 
           // set in reportTo otherData
-          await setOtherDataReportTo(stringNotifyList);
+          await 
 
-          if (status === 201) {
-            const viewMode = {
-              initialNotification: true,
-              investigation: false,
-              evidence: false,
-              rootcauseanalysis: false,
-              lessionlearn: false,
-            };
-            dispatch(tabViewMode(viewMode));
+          console.log(status, "status");
 
-            history.push(`${SUMMERY_FORM.Summary}${id}/`);
-          }
+          // if (status === 201) {
+          //   const viewMode = {
+          //     initialNotification: true,
+          //     investigation: false,
+          //     evidence: false,
+          //     rootcauseanalysis: false,
+          //     lessionlearn: false,
+          //   };
+          //   dispatch(tabViewMode(viewMode));
+          //   history.push(`${SUMMERY_FORM.Summary}${id}/`);
+          // }
         } else {
           setIsnext(true);
         }
@@ -395,7 +449,7 @@ const ReportingAndNotification = (props) => {
   };
 
   // handle notify to
-  const handelNotifyTo = async (e,value) => {
+  const handelNotifyTo = async (e, value) => {
     if (e.target.checked === true) {
       const temp = [...notifyToList];
 
@@ -414,18 +468,18 @@ const ReportingAndNotification = (props) => {
 
   // handle checkbox reported to
   const handelReportedTo = async (e, value, type) => {
-    if ((type = 'option')) {
+    if ((type = "option")) {
       if (e.target.checked == false) {
         const newData = form.reportedto.filter((item) => item !== value);
 
-        await setForm({
+        setForm({
           ...form,
           reportedto: newData,
         });
 
         // let newReportedTo = [];
       } else {
-        await setForm({
+        setForm({
           ...form,
           reportedto: [...form.reportedto, value],
         });
@@ -439,22 +493,22 @@ const ReportingAndNotification = (props) => {
     setEvidanceForm([
       ...evidanceForm,
       {
-        evidenceCheck: 'Yes',
-        evidenceNumber: 'string',
-        evidenceCategory: 'Initial Evidence',
-        evidenceRemark: '',
+        evidenceCheck: "Yes",
+        evidenceNumber: "string",
+        evidenceCategory: "Initial Evidence",
+        evidenceRemark: "",
         evidenceDocument: null,
-        status: 'Active',
+        status: "Active",
         createdBy: parseInt(userId),
         updatedBy: parseInt(userId),
-        fkIncidentId: localStorage.getItem(''),
+        fkIncidentId: localStorage.getItem(""),
       },
     ]);
   };
 
   // handle close snackbar
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpen(false);
@@ -464,19 +518,19 @@ const ReportingAndNotification = (props) => {
     const temp = [...evidanceForm];
     const { value } = e.target;
 
-    if (fieldname === 'evidenceDocument') {
-      const file = e.target.files[0].name.split('.');
+    if (fieldname === "evidenceDocument") {
+      const file = e.target.files[0].name.split(".");
 
       if (
-        file[1].toLowerCase() === 'jpg'
-        || file[1].toLowerCase() === 'jpeg'
-        || file[1].toLowerCase() === 'png'
-        || file[1].toLowerCase() === 'xls'
-        || file[1].toLowerCase() === 'xlsx'
-        || file[1].toLowerCase() === 'pdf'
-        || file[1].toLowerCase() === 'doc'
-        || file[1].toLowerCase() === 'word'
-        || file[1].toLowerCase() === 'ppt'
+        file[1].toLowerCase() === "jpg" ||
+        file[1].toLowerCase() === "jpeg" ||
+        file[1].toLowerCase() === "png" ||
+        file[1].toLowerCase() === "xls" ||
+        file[1].toLowerCase() === "xlsx" ||
+        file[1].toLowerCase() === "pdf" ||
+        file[1].toLowerCase() === "doc" ||
+        file[1].toLowerCase() === "word" ||
+        file[1].toLowerCase() === "ppt"
       ) {
         if (e.target.files[0].size <= 1024 * 1024 * 25) {
           temp[key][fieldname] = e.target.files[0];
@@ -486,30 +540,28 @@ const ReportingAndNotification = (props) => {
             setEvidanceId([...evidanceId, evdId]);
           }
 
-          await setMessage('File uploaded successfully!');
-          await setMessageType('success');
-          await setOpen(true);
+          setMessage("File uploaded successfully!");
+          setMessageType("success");
+          setOpen(true);
         } else {
-          ref.current.value = '';
-          await setMessage(
-            'File uploading failed! Select file less than 25MB!'
-          );
-          await setMessageType('error');
-          await setOpen(true);
+          ref.current.value = "";
+          setMessage("File uploading failed! Select file less than 25MB!");
+          setMessageType("error");
+          setOpen(true);
         }
       } else {
-        ref.current.value = '';
-        await setMessage(
-          'Only pdf, jpg, jpeg, xlx, xlsx, doc, word,ppt, png allowed!'
+        ref.current.value = "";
+        setMessage(
+          "Only pdf, jpg, jpeg, xlx, xlsx, doc, word,ppt, png allowed!"
         );
-        await setMessageType('error');
-        await setOpen(true);
+        setMessageType("error");
+        setOpen(true);
       }
     } else {
       temp[key][fieldname] = value;
     }
 
-    await setEvidanceForm(temp);
+    setEvidanceForm(temp);
   };
 
   // handle remove evidance
@@ -517,24 +569,25 @@ const ReportingAndNotification = (props) => {
     if (id) {
       const res = await api.delete(
         `api/v1/incidents/${localStorage.getItem(
-          'fkincidentId'
+          "fkincidentId"
         )}/evidences/${id}/`
       );
       if (res.status === 200) {
         const temp = [...evidanceForm];
         const newData = temp.filter((item, index) => index !== key);
-        await setEvidanceForm(newData);
+        setEvidanceForm(newData);
       }
     } else {
       const temp = [...evidanceForm];
       const newData = temp.filter((item, index) => index !== key);
-      await setEvidanceForm(newData);
+      setEvidanceForm(newData);
     }
   };
 
   //  Fetch checkbox value
   const fetchReportableTo = async () => {
-    const res = await api.get('/api/v1/lists/20/value')
+    const res = await api
+      .get("/api/v1/lists/20/value")
       .then((res) => {
         const result = res.data.data.results;
 
@@ -543,21 +596,23 @@ const ReportingAndNotification = (props) => {
         }
 
         setReportableTo(result);
-      }).catch(error => {
-        history.push('/app/pages/error');
+      })
+      .catch((error) => {
+        history.push("/app/pages/error");
       });
   };
 
   // fetch reportList
   const fetchReportsDataList = async () => {
     await fetchReportableTo();
-    await api.get(`/api/v1/incidents/${id}/reports/`)
+    await api
+      .get(`/api/v1/incidents/${id}/reports/`)
       .then((res) => {
         const result = res.data.data.results;
 
         if (result.length > 0) {
           if (result[0].notifyTo) {
-            const getNotifyTo = result[0].notifyTo.split(',');
+            const getNotifyTo = result[0].notifyTo.split(",");
             setNotifyToList(getNotifyTo);
           }
 
@@ -580,20 +635,24 @@ const ReportingAndNotification = (props) => {
 
         setIsLoading(true);
       })
-      .catch(error => {
-        history.push('/app/pages/error');
+      .catch((error) => {
+        history.push("/app/pages/error");
       });
   };
 
   // fetch incident data
   const fetchIncidentsData = async () => {
-    const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
-    )
+    const res = await api
+      .get(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`)
       .then((res) => {
         if (res.status === 200) {
           const result = res.data.data.results;
-          localStorage.setItem('commonObject', JSON.stringify({ incident: { projectStruct: result.fkProjectStructureIds } }));
+          localStorage.setItem(
+            "commonObject",
+            JSON.stringify({
+              incident: { projectStruct: result.fkProjectStructureIds },
+            })
+          );
           const { incidentOccuredOn } = result;
           const start_time = new Date(incidentOccuredOn);
           const { incidentReportedOn } = result;
@@ -616,17 +675,17 @@ const ReportingAndNotification = (props) => {
         }
       })
 
-      .catch(error => {
-        history.push('/app/pages/error');
+      .catch((error) => {
+        history.push("/app/pages/error");
       });
   };
 
   // fetch supervisor name
 
   const fetchSuperVisorName = () => {
-    const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    const companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const config = {
-      method: 'get',
+      method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/roles/4/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -638,18 +697,18 @@ const ReportingAndNotification = (props) => {
         if (response.status === 200) {
           const result = response.data.data.results[0].roles[0].users;
 
-          setSuperVisorNameList([...result, { name: 'other' }]);
+          setSuperVisorNameList([...result, { name: "other" }]);
         }
       })
-      .catch(error => {
-        history.push('/app/pages/error');
+      .catch((error) => {
+        history.push("/app/pages/error");
       });
   };
 
   const fetchReportedBy = () => {
-    const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    const companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const config = {
-      method: 'get',
+      method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/company-users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -666,21 +725,22 @@ const ReportingAndNotification = (props) => {
           for (const i in result) {
             filterReportedByName.push(result[i].name);
           }
-          setReportedByNameList([...result, { name: 'other' }]);
+          setReportedByNameList([...result, { name: "other" }]);
         }
       })
       .catch((error) => {
-        history.push('/app/pages/error');
+        history.push("/app/pages/error");
       });
   };
 
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
-    await api.get(`/api/v1/incidents/${id}/evidences/`)
+    await api
+      .get(`/api/v1/incidents/${id}/evidences/`)
       .then((allEvidence) => {
         if (allEvidence.status === 200) {
           const data = allEvidence.data.data.results.filter(
-            (item) => item.evidenceCategory === 'Initial Evidence'
+            (item) => item.evidenceCategory === "Initial Evidence"
           );
           if (data.length > 0) {
             let temp = [...evidanceForm];
@@ -690,19 +750,22 @@ const ReportingAndNotification = (props) => {
           setEvidence(data);
         }
       })
-      .catch(error => {
-        history.push('/app/pages/error');
+      .catch((error) => {
+        history.push("/app/pages/error");
       });
   };
 
   // fetch value noticefication sent
   const fetchNotificationSent = async () => {
     try {
-      const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-      const { projectId } = JSON.parse(localStorage.getItem('projectName'))
-        .projectName;
-        const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      const companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+      const { projectId } = JSON.parse(
+        localStorage.getItem("projectName")
+      ).projectName;
+      const selectBreakdown =
+        props.projectName.breakDown.length > 0
+          ? props.projectName.breakDown
+          : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
           ? JSON.parse(localStorage.getItem("selectBreakDown"))
           : null;
       let struct = "";
@@ -711,7 +774,7 @@ const ReportingAndNotification = (props) => {
       }
       const fkProjectStructureIds = struct.slice(0, -1);
       const config = {
-        method: 'get',
+        method: "get",
         url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom&projectStructure=${fkProjectStructureIds}`,
         headers: HEADER_AUTH,
       };
@@ -721,35 +784,28 @@ const ReportingAndNotification = (props) => {
             const result = res.data.data.results;
             setNotificationSentValue(result);
           }
-        }).catch(error => {
-          history.push('/app/pages/error');
+        })
+        .catch((error) => {
+          history.push("/app/pages/error");
         });
-    } catch (error) { history.push('/app/pages/error'); }
+    } catch (error) {
+      history.push("/app/pages/error");
+    }
   };
 
   // handle go back
   const handleGoBack = () => {
-    const nextPath = JSON.parse(localStorage.getItem('nextPath'));
-    if (nextPath.environmentAffect === 'Yes') {
-      history.push(
-        `/incident/${id}/modify/environment-affected/`
-      );
-    } else if (nextPath.equipmentAffect === 'Yes') {
-      history.push(
-        `/incident/${id}/modify/equipment-affected/`
-      );
-    } else if (nextPath.propertyAffect === 'Yes') {
-      history.push(
-        `/incident/${id}/modify/property-affected/`
-      );
-    } else if (nextPath.personAffect === 'Yes') {
-      history.push(
-        `/incident/${id}/modify/peoples-afftected/`
-      );
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
+    if (nextPath.environmentAffect === "Yes") {
+      history.push(`/incident/${id}/modify/environment-affected/`);
+    } else if (nextPath.equipmentAffect === "Yes") {
+      history.push(`/incident/${id}/modify/equipment-affected/`);
+    } else if (nextPath.propertyAffect === "Yes") {
+      history.push(`/incident/${id}/modify/property-affected/`);
+    } else if (nextPath.personAffect === "Yes") {
+      history.push(`/incident/${id}/modify/peoples-afftected/`);
     } else {
-      history.push(
-        `/incident/${id}/modify/`
-      );
+      history.push(`/incident/${id}/modify/`);
     }
   };
 
@@ -767,7 +823,7 @@ const ReportingAndNotification = (props) => {
   }, []);
 
   const classes = useStyles();
-  const isDesktop = useMediaQuery('(min-width:992px)');
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Reporting and Notification" icon="ion-md-list-box">
       {isLoading ? (
@@ -792,7 +848,7 @@ const ReportingAndNotification = (props) => {
                         label={value.inputLabel}
                         checked={!!form.reportedto.includes(value.inputValue)}
                         onChange={(e) => {
-                          handelReportedTo(e, value.inputValue, 'option');
+                          handelReportedTo(e, value.inputValue, "option");
                         }}
                       />
                     ))}
@@ -803,7 +859,7 @@ const ReportingAndNotification = (props) => {
                 </FormControl>
               </Grid>
 
-              {form.reportedto.includes('Others') ? (
+              {form.reportedto.includes("Others") ? (
                 <Grid item xs={12}>
                   <TextField
                     id="Other"
@@ -821,48 +877,52 @@ const ReportingAndNotification = (props) => {
                   />
                 </Grid>
               ) : null}
-              {notificationSentValue.length > 0
-                && (
-                  <Grid item xs={12}>
-                    <FormControl
-                      error={error && error.notifyTo}
-                      required
-                      component="fieldset"
-                    >
-                      <FormLabel component="legend">
-                        Notification to be sent?
-                      </FormLabel>
-                      <FormGroup>
-                        {console.log(notificationSentValue,'notificationSentValue')}
-                      {notificationSentValue.length != 0 ? notificationSentValue.map((value) => (
-                          <FormControlLabel
-                            // id={index}
-                            // key={index}
-                            value={value.id}
-                            control={<Checkbox name={value.roleName} />}
-                            checked={notifyToList.includes(value.id.toString())}
-                            label={value.roleName}
-                            onChange={(e) => {
-                              handelNotifyTo(e, value.id.toString());
-                            }}
-                          />
-                      //     <FormControlLabel
-                      //     className="selectLabel"
-                      //     control={<Checkbox name={value.roleName} />}
-                      //     label={value.roleName}
-                      //     checked={notifyToList.notifyTo && notifyToList.notifyTo !== null && notifyToList.notifyTo.includes(value.id.toString())}
-                      //     onChange={async (e) => handelNotifyTo(e, value.id.toString())}
-                      // />
-
-                          )) : null}
-                      </FormGroup>
-                      {error && error.notifyTo && (
-                        <FormHelperText>{error.notifyTo}</FormHelperText>
+              {notificationSentValue.length > 0 && (
+                <Grid item xs={12}>
+                  <FormControl
+                    error={error && error.notifyTo}
+                    required
+                    component="fieldset"
+                  >
+                    <FormLabel component="legend">
+                      Notification to be sent?
+                    </FormLabel>
+                    <FormGroup>
+                      {console.log(
+                        notificationSentValue,
+                        "notificationSentValue"
                       )}
-                    </FormControl>
-                  </Grid>
-                )
-              }
+                      {notificationSentValue.length != 0
+                        ? notificationSentValue.map((value) => (
+                            <FormControlLabel
+                              // id={index}
+                              // key={index}
+                              value={value.id}
+                              control={<Checkbox name={value.roleName} />}
+                              checked={notifyToList.includes(
+                                value.id.toString()
+                              )}
+                              label={value.roleName}
+                              onChange={(e) => {
+                                handelNotifyTo(e, value.id.toString());
+                              }}
+                            />
+                            //     <FormControlLabel
+                            //     className="selectLabel"
+                            //     control={<Checkbox name={value.roleName} />}
+                            //     label={value.roleName}
+                            //     checked={notifyToList.notifyTo && notifyToList.notifyTo !== null && notifyToList.notifyTo.includes(value.id.toString())}
+                            //     onChange={async (e) => handelNotifyTo(e, value.id.toString())}
+                            // />
+                          ))
+                        : null}
+                    </FormGroup>
+                    {error && error.notifyTo && (
+                      <FormHelperText>{error.notifyTo}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <Box marginTop={3} marginBottom={4}>
                   <Typography variant="h6" gutterBottom>
@@ -878,7 +938,7 @@ const ReportingAndNotification = (props) => {
                     <Grid container spacing={3} alignItems="center">
                       <Grid
                         item
-                        md={typeof item.evidenceDocument === 'string' ? 2 : 6}
+                        md={typeof item.evidenceDocument === "string" ? 2 : 6}
                       >
                         {/* <input
                           ref={ref}
@@ -892,9 +952,13 @@ const ReportingAndNotification = (props) => {
                           }}
                           onChange={(e) => handleEvidanceForm(e, index, 'evidenceDocument')}
                         /> */}
-                        <MultiAttachment attachmentHandler={(files) => handleEvidanceForm(files, index, 'evidenceDocument')} />
+                        <MultiAttachment
+                          attachmentHandler={(files) =>
+                            handleEvidanceForm(files, index, "evidenceDocument")
+                          }
+                        />
                       </Grid>
-                      {typeof item.evidenceDocument === 'string' ? (
+                      {typeof item.evidenceDocument === "string" ? (
                         <Grid item md={4}>
                           <Tooltip title="fileName">
                             <Attachment value={item.evidenceDocument} />
@@ -920,7 +984,8 @@ const ReportingAndNotification = (props) => {
                           disabled={!item.evidenceDocument}
                           className={classes.formControl}
                           value={item.evidenceRemark}
-                          onChange={(e) => handleEvidanceForm(e, index, 'evidenceRemark')
+                          onChange={(e) =>
+                            handleEvidanceForm(e, index, "evidenceRemark")
                           }
                         />
                       </Grid>
@@ -940,7 +1005,8 @@ const ReportingAndNotification = (props) => {
                           <IconButton
                             variant="contained"
                             color="primary"
-                            onClick={() => handleRemoveEvidance(index, item.id && item.id)
+                            onClick={() =>
+                              handleRemoveEvidance(index, item.id && item.id)
                             }
                           >
                             <DeleteForeverIcon />
@@ -971,13 +1037,14 @@ const ReportingAndNotification = (props) => {
                     id="supervisorname"
                     label="Supervisor name"
                     defaultValue={
-                      incidentsListData.supervisorByName === ''
-                        ? ''
+                      incidentsListData.supervisorByName === ""
+                        ? ""
                         : superVisorNameList.filter(
-                          (item) => item.name === incidentsListData.supervisorByName
-                        ).length > 0
-                          ? incidentsListData.supervisorByName
-                          : 'other'
+                            (item) =>
+                              item.name === incidentsListData.supervisorByName
+                          ).length > 0
+                        ? incidentsListData.supervisorByName
+                        : "other"
                     }
                     onChange={async (e) => {
                       await setSupervisorName(e.target.value);
@@ -999,21 +1066,22 @@ const ReportingAndNotification = (props) => {
                   defaultValue={
                     superVisorNameList.length > 0
                       ? superVisorNameList
-                        .slice(0, -1)
-                        .filter(
-                          (item) => item.name === incidentsListData.supervisorByName
-                        ).length > 0
-                        ? ''
+                          .slice(0, -1)
+                          .filter(
+                            (item) =>
+                              item.name === incidentsListData.supervisorByName
+                          ).length > 0
+                        ? ""
                         : incidentsListData.supervisorByName
-                      : ''
+                      : ""
                   }
                   disabled={
-                    supervisorName === ''
+                    supervisorName === ""
                       ? true
                       : superVisorNameList
-                        .slice(0, -1)
-                        .filter((item) => item.name === supervisorName)
-                        .length > 0
+                          .slice(0, -1)
+                          .filter((item) => item.name === supervisorName)
+                          .length > 0
                   }
                   className={classes.formControl}
                   onChange={(e) => {
@@ -1035,10 +1103,11 @@ const ReportingAndNotification = (props) => {
                     label="Reported by"
                     defaultValue={
                       reportedByNameList.filter(
-                        (item) => item.name === incidentsListData.incidentReportedByName
+                        (item) =>
+                          item.name === incidentsListData.incidentReportedByName
                       ).length > 0
                         ? incidentsListData.incidentReportedByName
-                        : 'other'
+                        : "other"
                     }
                     onChange={(e) => {
                       setReportedByName(e.target.value);
@@ -1060,18 +1129,19 @@ const ReportingAndNotification = (props) => {
                   label="Others"
                   defaultValue={
                     reportedByNameList.filter(
-                      (item) => item.name === incidentsListData.incidentReportedByName
+                      (item) =>
+                        item.name === incidentsListData.incidentReportedByName
                     ).length > 0
-                      ? ''
+                      ? ""
                       : incidentsListData.incidentReportedByName
                   }
                   className={classes.formControl}
                   disabled={
                     reportedByNameList.length > 0
                       ? reportedByNameList
-                        .slice(0, -1)
-                        .filter((item) => item.name === reportedByName)
-                        .length > 0
+                          .slice(0, -1)
+                          .filter((item) => item.name === reportedByName)
+                          .length > 0
                       : true
                   }
                   onChange={(e) => {
@@ -1092,7 +1162,7 @@ const ReportingAndNotification = (props) => {
                     label="Reporting date"
                     value={incidentsListData.incidentReportedOn}
                     KeyboardButtonProps={{
-                      'aria-label': 'change date',
+                      "aria-label": "change date",
                     }}
                     disableFuture
                     disabled
@@ -1169,7 +1239,7 @@ const ReportingAndNotification = (props) => {
           {isDesktop && (
             <Col md={3}>
               <FormSideBar
-                deleteForm={localStorage.getItem('deleteForm')}
+                deleteForm={localStorage.getItem("deleteForm")}
                 listOfItems={INITIAL_NOTIFICATION_FORM}
                 selectedItem="Reporting and notification"
                 id={id}
@@ -1184,14 +1254,12 @@ const ReportingAndNotification = (props) => {
   );
 };
 
-
 const mapStateToProps = (state) => {
   return {
     projectName: state.getIn(["InitialDetailsReducer"]),
     todoIncomplete: state,
   };
 };
-
 
 export default connect(
   mapStateToProps,
