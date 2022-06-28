@@ -200,8 +200,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -265,7 +265,7 @@ function BlankPage(props) {
         };
 
         await api(config)
-          .then(function(response) {
+          .then(function (response) {
             console.log(response);
             if (response.status === 200) {
               let hosting = response.data.data.results.data.companies
@@ -318,9 +318,9 @@ function BlankPage(props) {
               });
             }
           })
-          .catch(function(error) {});
+          .catch(function (error) { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handlePush = async () => {
@@ -390,8 +390,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -406,13 +406,37 @@ function BlankPage(props) {
         setIncidents(res.data.data.results.results);
         setPage(value);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const handleDelete = async (item) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const userDetails = JSON.parse(localStorage.getItem("userDetails")).id;
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
     // console.log(item);
     if (checkACL("safety-incident", "delete_incidents")) {
       const data = {
+        fkCompanyId: fkCompanyId,
+        fkProjectId: fkProjectId,
+        fkProjectStructureIds: fkProjectStructureIds,
+        // incidentStatus: 'Done',
+        // incidentStage: '',
+        // updatedBy: userDetails,
+        // createdBy: userDetails,
         status: "Delete",
       };
       // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
@@ -440,8 +464,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -666,9 +690,8 @@ function BlankPage(props) {
                                       <ILink
                                         onClick={(e) =>
                                           history.push({
-                                            pathname: `/incident/details/${
-                                              item[1].id
-                                            }/`,
+                                            pathname: `/incident/details/${item[1].id
+                                              }/`,
                                             state: "change_incident",
                                           })
                                         }
@@ -785,7 +808,7 @@ function BlankPage(props) {
                                   variant="body2"
                                   display="inline"
                                   className={Fonts.listingLabelName}
-                                  // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
+                                // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                                 >
                                   <MessageIcon fontSize="small" /> Comments:
                                   {item[1]["commentsCount"]}
