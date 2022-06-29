@@ -690,12 +690,9 @@ function ComplianceListNew(props) {
       fkCompanyId: value.fkCompanyId,
       fkProjectId: value.fkProjectId,
       fkProjectStructureIds: value.fkProjectStructureIds,
-      location: value.location,
-      assessmentDate: value.assessmentDate,
-      permitToPerform: value.permitToPerform,
-      description: value.description,
-      classification: value.classification,
       createdBy: value.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
+      status: "Delete",
     };
     // const [openAttachment, setopenAttachment] = React.useState(false);
 
@@ -962,22 +959,23 @@ function ComplianceListNew(props) {
                   >
                     Sorry, no matching records found
                   </Typography>
-                  <div className={classes.pagination}>
-                    {totalData != 0
-                      ? Number.isInteger(pageData) !== true
-                        ? totalData < 25 * page
-                          ? `${page * 25 - 24} - ${totalData} of ${totalData}`
-                          : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                        : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                      : null}
-                    <Pagination
-                      count={pageCount}
-                      page={page}
-                      onChange={handleChange}
-                    />
-                  </div>
                 </>
               )}
+
+              <div className={classes.pagination}>
+                {totalData != 0
+                  ? Number.isInteger(pageData) !== true
+                    ? totalData < 25 * page
+                      ? `${page * 25 - 24} - ${totalData} of ${totalData}`
+                      : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                    : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                  : null}
+                <Pagination
+                  count={pageCount}
+                  page={page}
+                  onChange={handleChange}
+                />
+              </div>
 
               <div>
                 <Dialog

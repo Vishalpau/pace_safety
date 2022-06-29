@@ -91,7 +91,7 @@ const CardHeader = (props) => {
   const classes = useStyles();
 
   const handleMyUserPClickOpen = () => {
-    props.handleMyUserPClickOpen(true);
+    // props.handleMyUserPClickOpen(true);
   };
 
   const handleSummaryPush = () => {
