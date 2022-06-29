@@ -119,10 +119,10 @@ const CardFooter = (props) => {
               className={classes.floatR}
               style={{ display: "flex", alignItems: "center" }}
             >
-              <span item xs={1} className={classes.sepHeightTen} />
+              {/* <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
                 <Bookmark />
-              </Typography>
+              </Typography> */}
               <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
                 <Delete

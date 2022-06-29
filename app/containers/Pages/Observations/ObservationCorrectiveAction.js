@@ -831,9 +831,9 @@ function ObservationCorrectiveAction() {
             </Button>
             {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
             <Button
-              variant="outlined"
               onClick={(e) => handleCancle()}
-              size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
+              size="medium"
+              variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
               style={{ marginLeft: "2px" }}
             >
               Cancel
