@@ -1917,8 +1917,10 @@ function ComplianceSummary(props) {
                       className="quickActionSectionLink"
                       variant="subtitle"
                       name="Comments"
+                      disabled={"true"}
                       to={{
-                        pathname: `/app/comments/compliance/${id}`,
+                        // pathname: `/app/comments/compliance/${id}`,
+                        pathname: history.location.pathname,
                         state: commentPayload,
                       }}
                     >

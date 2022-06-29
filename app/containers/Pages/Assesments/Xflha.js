@@ -1108,7 +1108,6 @@ function xflha(props) {
   };
 
   useEffect(() => {
-    console.log(order, "order");
     SetDataOrder();
   }, [order]);
 
