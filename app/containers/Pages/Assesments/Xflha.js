@@ -822,7 +822,7 @@ function xflha(props) {
     };
   const handleSearch = (e) => {
     debounce(fetchData, e.target.value.toLowerCase(), 500)();
-  }
+  };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
@@ -1127,8 +1127,9 @@ function xflha(props) {
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
-      jobTitle: item.jobTitle,
-      jobDetails: item.jobDetails,
+      fkProjectStructureIds: item.fkProjectStructureIds,
+      createdBy: item.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
     };
 
@@ -1643,213 +1644,220 @@ function xflha(props) {
                 </Grid>
               </Grid>
             </Grid>
-            
-            {!isLoading ? 
-            // <>
-            listToggle == false ? (
-              <div>
-                <div className="gridView">
-                  {Object.entries(flhas).map((item, index) => (
-                    <Box>
-                      <Grid className={classes.marginTopBottom}>
-                        <div className="gridView">
-                          <AllCardData item={item[1]} index={index} />
-                        </div>
-                      </Grid>
-                    </Box>
-                  ))}
-                  {Object.keys(flhas).length === 0 &&
-                    "Sorry, no matching records found"}
-                </div>
+            {!isLoading ? (
+              // <>
+              listToggle == false ? (
+                <div>
+                  <div className="gridView">
+                    {Object.entries(flhas).map((item, index) => (
+                      <Box>
+                        <Grid className={classes.marginTopBottom}>
+                          <div className="gridView">
+                            <AllCardData item={item[1]} index={index} />
+                          </div>
+                        </Grid>
+                      </Box>
+                    ))}
+                    {Object.keys(flhas).length === 0 &&
+                      "Sorry, no matching records found"}
+                  </div>
 
-                <div className="gridView">
-                  {Object.entries(incidents).map((item, index) => (
-                    <Card
-                      variant="outlined"
-                      className={Incidents.card}
-                      key={index}
-                    >
-                      {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
-                      <CardContent>
-                        {/* {console.log(item[index].incidentTitle)} */}
-                        <Grid container spacing={3}>
-                          <Grid item xs={12}>
-                            <Grid container spacing={3} alignItems="flex-start">
-                              <Grid item xs={9} className={classes.chipAction}>
-                                <Chip
-                                  avatar={<Avatar src="/images/pp_boy.svg" />}
-                                  label={item[1].username}
-                                />
-                              </Grid>
-                              <Grid item md={3} sm={6} xs={12}>
-                                <Typography>
-                                  Work fell down in site
-                                  {/* {item[index]["incidentTitle"]} */}
-                                </Typography>
+                  <div className="gridView">
+                    {Object.entries(incidents).map((item, index) => (
+                      <Card
+                        variant="outlined"
+                        className={Incidents.card}
+                        key={index}
+                      >
+                        {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
+                        <CardContent>
+                          {/* {console.log(item[index].incidentTitle)} */}
+                          <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                              <Grid
+                                container
+                                spacing={3}
+                                alignItems="flex-start"
+                              >
+                                <Grid
+                                  item
+                                  xs={9}
+                                  className={classes.chipAction}
+                                >
+                                  <Chip
+                                    avatar={<Avatar src="/images/pp_boy.svg" />}
+                                    label={item[1].username}
+                                  />
+                                </Grid>
+                                <Grid item md={3} sm={6} xs={12}>
+                                  <Typography>
+                                    Work fell down in site
+                                    {/* {item[index]["incidentTitle"]} */}
+                                  </Typography>
+                                </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
 
-                          <Grid item xs={12}>
-                            <div className={Incidents.statusRow}>
+                            <Grid item xs={12}>
+                              <div className={Incidents.statusRow}>
+                                <Typography
+                                  display="inline"
+                                  className={classes.listingLabelName}
+                                >
+                                  Number
+                                  {""}
+                                  <Link
+                                    href="/app/ActionSummary"
+                                    variant="subtitle"
+                                    className={Incidents.incidentNumber}
+                                    style={{ textDecoration: "underline" }}
+                                  >
+                                    {item[1].flhaNumber}
+                                  </Link>
+                                </Typography>
+
+                                <Chip
+                                  variant="outlined"
+                                  label={item[1].flhaStage}
+                                  color="primary"
+                                  size="small"
+                                />
+
+                                <Typography
+                                  variant="body1"
+                                  // color="textSecondary"
+                                  display="inline"
+                                >
+                                  <i className="ion-ios-calendar-outline" />
+                                  <span className={Incidents.dateValue}>
+                                    24 june 2021
+                                  </span>
+                                </Typography>
+                              </div>
+                            </Grid>
+
+                            <Grid item md={3} sm={6} xs={12}>
                               <Typography
-                                display="inline"
+                                gutterBottom
                                 className={classes.listingLabelName}
                               >
-                                Number
-                                {""}
-                                <Link
-                                  href="/app/ActionSummary"
-                                  variant="subtitle"
-                                  className={Incidents.incidentNumber}
-                                  style={{ textDecoration: "underline" }}
-                                >
-                                  {item[1].flhaNumber}
-                                </Link>
+                                Type
                               </Typography>
-
-                              <Chip
-                                variant="outlined"
-                                label={item[1].flhaStage}
-                                color="primary"
-                                size="small"
-                              />
 
                               <Typography
                                 variant="body1"
-                                // color="textSecondary"
-                                display="inline"
+                                color="textSecondary"
+                                className={classes.listingLabelValue}
                               >
-                                <i className="ion-ios-calendar-outline" />
-                                <span className={Incidents.dateValue}>
-                                  24 june 2021
-                                </span>
+                                {/* {item[1]["incidentReportedByName"]} */}
+                                Not found
                               </Typography>
-                            </div>
-                          </Grid>
+                            </Grid>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                gutterBottom
+                                className={classes.listingLabelName}
+                              >
+                                Location
+                              </Typography>
+                              <Typography
+                                variant="body1"
+                                color="textSecondary"
+                                className={classes.listingLabelValue}
+                              >
+                                Delhi
+                              </Typography>
+                            </Grid>
 
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Type
-                            </Typography>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                gutterBottom
+                                className={classes.listingLabelName}
+                              >
+                                Reported on
+                              </Typography>
 
-                            <Typography
-                              variant="body1"
-                              color="textSecondary"
-                              className={classes.listingLabelValue}
-                            >
-                              {/* {item[1]["incidentReportedByName"]} */}
-                              Not found
-                            </Typography>
-                          </Grid>
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Location
-                            </Typography>
-                            <Typography
-                              variant="body1"
-                              color="textSecondary"
-                              className={classes.listingLabelValue}
-                            >
-                              Delhi
-                            </Typography>
-                          </Grid>
+                              <Typography
+                                variant="body1"
+                                color="textSecondary"
+                                className={classes.listingLabelValue}
+                              >
+                                24 june 2021
+                              </Typography>
+                            </Grid>
 
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Reported on
-                            </Typography>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                gutterBottom
+                                className={classes.listingLabelName}
+                              >
+                                Reported By
+                              </Typography>
 
-                            <Typography
-                              variant="body1"
-                              color="textSecondary"
-                              className={classes.listingLabelValue}
-                            >
-                              24 june 2021
-                            </Typography>
+                              <Typography
+                                variant="body1"
+                                color="textSecondary"
+                                className={classes.listingLabelValue}
+                              >
+                                Person
+                              </Typography>
+                            </Grid>
                           </Grid>
+                        </CardContent>
+                        <Divider />
+                        <CardActions className={Incidents.cardActions}>
+                          <Grid
+                            container
+                            spacing={2}
+                            justify="flex-end"
+                            alignItems="center"
+                          >
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                variant="body2"
+                                display="inline"
+                                className={Incidents.actionsLabel}
+                              >
+                                <AttachmentIcon /> Comments:
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                display="inline"
+                                className={classes.mLeft}
+                              >
+                                <Link href="#">3</Link>
+                              </Typography>
+                            </Grid>
 
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Reported By
-                            </Typography>
-
-                            <Typography
-                              variant="body1"
-                              color="textSecondary"
-                              className={classes.listingLabelValue}
-                            >
-                              Person
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <Divider />
-                      <CardActions className={Incidents.cardActions}>
-                        <Grid
-                          container
-                          spacing={2}
-                          justify="flex-end"
-                          alignItems="center"
-                        >
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={Incidents.actionsLabel}
-                            >
-                              <AttachmentIcon /> Comments:
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={classes.mLeft}
-                            >
-                              <Link href="#">3</Link>
-                            </Typography>
-                          </Grid>
-
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={Incidents.actionsLabel}
-                            >
-                              <AttachmentIcon /> Actions:
-                            </Typography>
-                            <Typography variant="body2" display="inline">
-                              <Link href="#" className={classes.mLeft}>
-                                3
-                              </Link>
-                            </Typography>
-                          </Grid>
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={Incidents.actionsLabel}
-                            >
-                              <AttachmentIcon /> Evidences:
-                            </Typography>
-                            <Typography variant="body2" display="inline">
-                              <Link href="#" className={classes.mLeft}>
-                                3
-                              </Link>
-                            </Typography>
-                          </Grid>
-                          {/* <Grid item xs={6} md={3} lg={3}>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                variant="body2"
+                                display="inline"
+                                className={Incidents.actionsLabel}
+                              >
+                                <AttachmentIcon /> Actions:
+                              </Typography>
+                              <Typography variant="body2" display="inline">
+                                <Link href="#" className={classes.mLeft}>
+                                  3
+                                </Link>
+                              </Typography>
+                            </Grid>
+                            <Grid item md={3} sm={6} xs={12}>
+                              <Typography
+                                variant="body2"
+                                display="inline"
+                                className={Incidents.actionsLabel}
+                              >
+                                <AttachmentIcon /> Evidences:
+                              </Typography>
+                              <Typography variant="body2" display="inline">
+                                <Link href="#" className={classes.mLeft}>
+                                  3
+                                </Link>
+                              </Typography>
+                            </Grid>
+                            {/* <Grid item xs={6} md={3} lg={3}>
           <Typography
             variant="body2"
             display="inline"
@@ -1866,7 +1874,7 @@ function xflha(props) {
            Initial Action
           </Typography>
         </Grid> */}
-                          {/* <Grid item md={3} sm={6} xs={12}>
+                            {/* <Grid item md={3} sm={6} xs={12}>
                           <Button
                             size="small"
                             color="secondary"
@@ -1887,46 +1895,45 @@ function xflha(props) {
                             Share
                           </Button>
                         </Grid> */}
-                        </Grid>
-                      </CardActions>
-                    </Card>
-                  ))}
+                          </Grid>
+                        </CardActions>
+                      </Card>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <Box>
+                  <TableContainer component={Paper}>
+                    <Grid component={Paper}>
+                      <MUIDataTable
+                        className={`${
+                          classes.dataTableSectionDesign
+                        } dataTableSectionDesign`}
+                        title="FLHA's"
+                        data={Object.entries(flhas).map((item) => [
+                          item[1].flhaNumber,
+                          item[1].jobTitle,
+                          item[1].flhaStage,
+                          item[1].flhaStatus,
+                          item[1].createdByName,
+                          // item[1].dateTimeFlha,
+                          moment(item[1].createdAt).format("Do MMMM YYYY"),
+                          item[1].closedDate !== null
+                            ? moment(item[1].closedDate).format("Do MMMM YYYY")
+                            : "-",
+                          item[1].closedByName ? item[1].closedByName : "-",
+                        ])}
+                        columns={columns}
+                        options={options}
+                      />
+                    </Grid>
+                  </TableContainer>
+                </Box>
+              )
             ) : (
-              <Box>
-                <TableContainer component={Paper}>
-                  <Grid component={Paper}>
-                    <MUIDataTable
-                      className={`${
-                        classes.dataTableSectionDesign
-                      } dataTableSectionDesign`}
-                      title="FLHA's"
-                      data={Object.entries(flhas).map((item) => [
-                        item[1].flhaNumber,
-                        item[1].jobTitle,
-                        item[1].flhaStage,
-                        item[1].flhaStatus,
-                        item[1].createdByName,
-                        // item[1].dateTimeFlha,
-                        moment(item[1].createdAt).format("Do MMMM YYYY"),
-                        item[1].closedDate !== null
-                          ? moment(item[1].closedDate).format("Do MMMM YYYY")
-                          : "-",
-                        item[1].closedByName ? item[1].closedByName : "-",
-                      ])}
-                      columns={columns}
-                      options={options}
-                    />
-                  </Grid>
-                </TableContainer>
-              </Box>
-            )
-            // </>
-            : 
-            <Loader />
-
-          }
+              // </>
+              <Loader />
+            )}
             <div className={classes.pagination}>
               {totalData != 0
                 ? Number.isInteger(pageData) !== true

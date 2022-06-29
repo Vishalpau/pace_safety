@@ -546,7 +546,7 @@ function AhaPackage(props) {
   // }
 
   const fetchAllAHAData = async () => {
-     setPage(1);
+    setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -571,24 +571,24 @@ function AhaPackage(props) {
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`
       );
       const result = res.data.data.results.results;
-       setAllAHAData(result);
-       setTotalData(res.data.data.results.count);
-       setPageData(res.data.data.results.count / 25);
+      setAllAHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-       setPageCount(pageCount);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`
       );
       const result = res.data.data.results.results;
-       setAllAHAData(result);
-       setTotalData(res.data.data.results.count);
-       setPageData(res.data.data.results.count / 25);
+      setAllAHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-       setPageCount(pageCount);
+      setPageCount(pageCount);
     }
 
-     setIsLoading(true);
+    setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -618,16 +618,16 @@ function AhaPackage(props) {
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
-       setAllAHAData(res.data.data.results.results);
-       setPage(value);
+      setAllAHAData(res.data.data.results.results);
+      setPage(value);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
-       setAllAHAData(res.data.data.results.results);
-       setPage(value);
+      setAllAHAData(res.data.data.results.results);
+      setPage(value);
     }
   };
 
@@ -658,12 +658,8 @@ function AhaPackage(props) {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
       fkProjectStructureIds: item.fkProjectStructureIds,
-      location: item.location,
-      assessmentDate: item.assessmentDate,
-      permitToPerform: item.permitToPerform,
-      description: item.description,
-      classification: item.classification,
       createdBy: item.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
     };
 

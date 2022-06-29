@@ -52,7 +52,7 @@ const CardBody = (props) => {
             {one.label}
           </Typography>
           <Typography gutterBottom className={classes.listingLabelValue}>
-            {one.value}
+            {one.value ? one.value : "-"}
           </Typography>
         </Grid>
       </>
