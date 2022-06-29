@@ -1,161 +1,170 @@
-import { Typography } from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
+import { Typography } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
 // import EditIcon from "@material-ui/icons/Edit";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import CloseIcon from "@material-ui/icons/Close";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
-import Slide from "@material-ui/core/Slide";
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import Slide from '@material-ui/core/Slide';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import Paper from '@material-ui/core/Paper';
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 
 // import { Helmet } from "react-helmet";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Tooltip from "@material-ui/core/Tooltip";
-import ImageIcon from "@material-ui/icons/Image";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import axios from "axios";
-import brand from "dan-api/dummy/brand";
-import { PapperBlock } from "dan-components";
-import cTower from "dan-images/projectImages/cTower.png";
-import ProjectImg from "dan-images/projectImages/projectimg.jpg";
-import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+import ImageIcon from '@material-ui/icons/Image';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import axios from 'axios';
+import brand from 'dan-api/dummy/brand';
+import { PapperBlock } from 'dan-components';
+import cTower from 'dan-images/projectImages/cTower.png';
+import ProjectImg from 'dan-images/projectImages/projectimg.jpg';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 // redux
-import { connect, useDispatch } from "react-redux";
-import { useHistory } from "react-router";
-import { company, projectName, breakDownDetails, appAcl } from "../../redux/actions/initialDetails";
-import "../../styles/custom/hexagon.css";
-import api from "../../utils/axios";
+import { connect, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import {
-  ACCOUNT_API_URL, API_VERSION, HEADER_AUTH, SELF_API, APPCODE, SSO_URL
-} from "../../utils/constants";
-import styles from "./dashboard-jss";
+  company,
+  projectName,
+  breakDownDetails,
+  appAcl,
+} from '../../redux/actions/initialDetails';
+import '../../styles/custom/hexagon.css';
+import api from '../../utils/axios';
+import {
+  ACCOUNT_API_URL,
+  API_VERSION,
+  HEADER_AUTH,
+  SELF_API,
+  APPCODE,
+  SSO_URL,
+} from '../../utils/constants';
+import styles from './dashboard-jss';
 import './style.css';
 import Loading from 'dan-components/Loading';
 import paceLogo from 'dan-images/paceLogo.png';
 
-
 const useStyles = makeStyles((theme) => ({
-  //Project selections
+  // Project selections
   cardContentBox: {
-    minWidth: "260px",
+    minWidth: '260px',
   },
   cardActionAreaBox: {
-    "&:hover .MuiCardMedia-root": {
-      webkitTransform: "scale(1.2)",
-      mozTransform: "scale(1.2)",
-      mozTransform: "scale(1.2)",
-      transform: "scale(1.2)",
-      webkitFilter: "grayscale(0%)",
-      filter: "grayscale(0%)",
+    '&:hover .MuiCardMedia-root': {
+      webkitTransform: 'scale(1.2)',
+      mozTransform: 'scale(1.2)',
+      mozTransform: 'scale(1.2)',
+      transform: 'scale(1.2)',
+      webkitFilter: 'grayscale(0%)',
+      filter: 'grayscale(0%)',
     },
   },
   cardMediaBox: {
-    overflow: "hidden",
-    height: "300px",
+    overflow: 'hidden',
+    height: '300px',
   },
   media: {
-    height: "300px",
-    webkitTransition: "all 1.5s ease",
-    mozTransition: "all 1.5s ease",
-    msTransition: "all 1.5s ease",
-    oTransition: "all 1.5s ease",
-    transition: "all 1.5s ease",
-    webkitFilter: "grayscale(100%)",
-    filter: "grayscale(100%)",
+    height: '300px',
+    webkitTransition: 'all 1.5s ease',
+    mozTransition: 'all 1.5s ease',
+    msTransition: 'all 1.5s ease',
+    oTransition: 'all 1.5s ease',
+    transition: 'all 1.5s ease',
+    webkitFilter: 'grayscale(100%)',
+    filter: 'grayscale(100%)',
   },
   projectSelectionTitle: {
-    fontSize: "14px",
-    color: "#06425c",
-    fontWeight: "600",
-    whiteSpace: "normal",
-    lineHeight: "22px",
+    fontSize: '14px',
+    color: '#06425c',
+    fontWeight: '600',
+    whiteSpace: 'normal',
+    lineHeight: '22px',
   },
   projectSelectionCode: {
-    fontSize: "13px",
+    fontSize: '13px',
   },
   actionBttmArea: {
-    float: "right",
-    "& button svg": {
-      color: "#06425c",
+    float: 'right',
+    '& button svg': {
+      color: '#06425c',
     },
   },
   projectName: {
-    fontSize: "13px",
-    paddingLeft: "0px",
-    paddingRight: "0px",
-    color: "#ffffff",
-    "& .MuiSvgIcon-root": {
-      marginLeft: "4px",
-      fontSize: "15px",
+    fontSize: '13px',
+    paddingLeft: '0px',
+    paddingRight: '0px',
+    color: '#ffffff',
+    '& .MuiSvgIcon-root': {
+      marginLeft: '4px',
+      fontSize: '15px',
     },
   },
   cTowerIcon: {
-    width: "22px",
-    height: "22px",
-    "& img": {
-      width: "12px",
-      objectFit: "contain",
+    width: '22px',
+    height: '22px',
+    '& img': {
+      width: '12px',
+      objectFit: 'contain',
     },
   },
 
-  //company selections
+  // company selections
   companyNameList: {
-    "& .MuiListItemText-primary": {
-      fontSize: "14px",
-      fontFamily: "Montserrat-Medium",
-      color: "#054D69",
+    '& .MuiListItemText-primary': {
+      fontSize: '14px',
+      fontFamily: 'Montserrat-Medium',
+      color: '#054D69',
     },
-    "& .MuiListItemText-secondary": {
-      fontSize: "12px",
-      fontFamily: "Montserrat-Medium",
-      color: "#054D69",
+    '& .MuiListItemText-secondary': {
+      fontSize: '12px',
+      fontFamily: 'Montserrat-Medium',
+      color: '#054D69',
     },
   },
 
   root: {
-    width: "100%",
+    width: '100%',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
   modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   paper: {
-    position: "absolute",
+    position: 'absolute',
     width: 650,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     padding: theme.spacing(4),
   },
   centeredDialogContent: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cardContentBox: {
     minWidth: '260px',
@@ -197,14 +206,14 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
   },
   media: {
-    height: "300px",
-    webkitTransition: "all 1.5s ease",
-    mozTransition: "all 1.5s ease",
-    msTransition: "all 1.5s ease",
-    oTransition: "all 1.5s ease",
-    transition: "all 1.5s ease",
-    webkitFilter: "grayscale(100%)",
-    filter: "grayscale(100%)",
+    height: '300px',
+    webkitTransition: 'all 1.5s ease',
+    mozTransition: 'all 1.5s ease',
+    msTransition: 'all 1.5s ease',
+    oTransition: 'all 1.5s ease',
+    transition: 'all 1.5s ease',
+    webkitFilter: 'grayscale(100%)',
+    filter: 'grayscale(100%)',
   },
   projectTitleSection: {
     width: '100%',
@@ -260,17 +269,17 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '8px !important',
   },
   actionBttmArea: {
-    float: "right",
+    float: 'right',
   },
   projectName: {
-    fontSize: "13px",
-    paddingLeft: "0px",
-    paddingRight: "0px",
-    color: "#ffffff !important",
+    fontSize: '13px',
+    paddingLeft: '0px',
+    paddingRight: '0px',
+    color: '#ffffff !important',
     opacity: 1,
-    "& .MuiSvgIcon-root": {
-      marginLeft: "4px",
-      fontSize: "15px",
+    '& .MuiSvgIcon-root': {
+      marginLeft: '4px',
+      fontSize: '15px',
     },
   },
   mainProjectMenuList: {
@@ -295,7 +304,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '8px',
     marginRight: '3px',
     marginBottom: '5px',
-    //paddingRight: '5px',
+    // paddingRight: '5px',
     '& .MuiAccordion-root.Mui-expanded': {
       margin: '0px 0',
       boxShadow: 'none',
@@ -322,7 +331,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '8px',
     marginRight: '3px',
     marginBottom: '5px',
-    //paddingRight: '5px',
+    // paddingRight: '5px',
     '& .MuiAccordion-root.Mui-expanded': {
       margin: '0px 0',
       boxShadow: 'none',
@@ -443,21 +452,21 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  //company selections
+  // company selections
   companyNameList: {
-    "& .MuiListItemText-primary": {
-      fontSize: "14px",
-      fontFamily: "Montserrat-Medium",
-      color: "#054D69",
+    '& .MuiListItemText-primary': {
+      fontSize: '14px',
+      fontFamily: 'Montserrat-Medium',
+      color: '#054D69',
     },
-    "& .MuiListItemText-secondary": {
-      fontSize: "12px",
-      fontFamily: "Montserrat-Medium",
-      color: "#054D69",
+    '& .MuiListItemText-secondary': {
+      fontSize: '12px',
+      fontFamily: 'Montserrat-Medium',
+      color: '#054D69',
     },
   },
   projectCloseButton: {
-    position: "absolute",
+    position: 'absolute',
     right: theme.spacing(2),
     top: theme.spacing(2),
   },
@@ -483,20 +492,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 function getModalStyle() {
   return {
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
   };
 }
 
 function PersonalDashboard(props) {
-  const title = brand.name + " - Personal Dashboard";
+  const title = brand.name + ' - Personal Dashboard';
   const description = brand.desc;
   const { classes } = props;
   const style = useStyles();
@@ -505,7 +512,7 @@ function PersonalDashboard(props) {
   // define props
   const [userData, setUserData] = useState([]);
   const [companyListData, setCompanyListData] = useState([]);
-  const [companyId, setCompanyId] = useState(0)
+  const [companyId, setCompanyId] = useState(0);
   const [projectListData, setProjectListData] = useState([]);
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
@@ -514,8 +521,8 @@ function PersonalDashboard(props) {
   const [user, setUser] = useState([]);
   const [applications, setApplications] = useState([]);
   const [modules, setModules] = useState([]);
-  const [codes, setCode] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
+  const [codes, setCode] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentCompany, setCurrentCompany] = useState({});
   const [currentProjectId, setCurrentProjectId] = useState(null);
 
@@ -528,7 +535,9 @@ function PersonalDashboard(props) {
   const [openSubUnit, setOpenSubUnit] = React.useState();
 
   const DialogTitle = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
+    const {
+      children, classes, onClose, ...other
+    } = props;
     return (
       <MuiDialogTitle disableTypography className={classes.root} {...other}>
         <Typography variant="h6">{children}</Typography>
@@ -546,21 +555,28 @@ function PersonalDashboard(props) {
   });
 
   const getSubscriptions = async (compId) => {
-    const companyId = compId ||
-      JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
+    const companyId = compId
+      || (JSON.parse(localStorage.getItem('company')) !== null
+        && JSON.parse(localStorage.getItem('company')).fkCompanyId);
 
     if (companyId) {
       try {
-        let data = await api.get(`${SELF_API}${companyId}/`)
-          .then(function (res) {
-            let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode.toLowerCase() == APPCODE)[0].roles[0].aclUrl
-            api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`).then(d => {
-              localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0]))
+        const data = await api
+          .get(`${SELF_API}${companyId}/`)
+          .then((res) => {
+            const rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(
+              (sub) => sub.appCode.toLowerCase() == APPCODE
+            )[0].roles[0].aclUrl;
+            api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`).then((d) => {
+              localStorage.setItem(
+                'app_acl',
+                JSON.stringify(d.data.data.results.permissions[0])
+              );
             });
             return res.data.data.results.data.companies[0].subscriptions;
           })
 
-          .catch(function (error) {
+          .catch((error) => {
             console.log(error);
           });
 
@@ -570,84 +586,102 @@ function PersonalDashboard(props) {
 
         // redirectionAccount()
 
-        const modules = data.map(subscription => subscription.modules)
-        var modulesState = []
-        var temp = []
-        modules.map(module => {
-          modulesState = [...modulesState]
-          temp = [...temp]
+        const modules = data.map((subscription) => subscription.modules);
+        let modulesState = [];
+        let temp = [];
+        modules.map((module) => {
+          modulesState = [...modulesState];
+          temp = [...temp];
           if (module.length > 0) {
-            module.map(mod => {
-              modulesState.push(mod)
+            module.map((mod) => {
+              modulesState.push(mod);
               // this.setState({modules: module})
               if (mod.subscriptionStatus == 'active') {
-                temp.push(mod.moduleCode)
+                temp.push(mod.moduleCode);
                 // this.setState({ codes: temp })
-                return temp
+                return temp;
               }
-            }
-            )
+            });
             // this.setState({ codes: codes })
           }
-        })
+        });
         // let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
-        setCode(temp)
-        await getModules(apps)
-
-      } catch (error) { }
+        setCode(temp);
+        await getModules(apps);
+      } catch (error) {}
     }
     // getAllPickList()
-  }
+  };
 
   const redirectionAccount = () => {
-    if (localStorage.getItem('lastState') != null && localStorage.getItem('projectName') != null) {
-      let laststate = localStorage.getItem('lastState');
+    if (
+      localStorage.getItem('lastState') != null
+      && localStorage.getItem('projectName') != null
+    ) {
+      const laststate = localStorage.getItem('lastState');
       localStorage.removeItem('lastState');
-      history.push(laststate)
+      history.push(laststate);
     }
     if (localStorage.getItem('projectName') != null) {
-      setTimeout(() => history.push('app/icare'), 1000)
+      setTimeout(() => history.push('app/icare'), 1000);
     }
-  }
+  };
 
   const getModules = async (apps) => {
-    let data = await api
-      .post(`${ACCOUNT_API_URL}${API_VERSION}applications/modules/`, { "fkAppId": apps })
-      .then(function (res) {
-        return res.data.data.results;
+    const data = await api
+      .post(`${ACCOUNT_API_URL}${API_VERSION}applications/modules/`, {
+        fkAppId: apps,
       })
-      .catch(function (error) {
+      .then((res) => res.data.data.results)
+      .catch((error) => {
         console.log(error);
       });
-    await setModules(data)
+    await setModules(data);
     // let data1 = apps.filter(item => item.appId === 1)
 
-    const codes = data.map(module => module.moduleCode)
+    const codes = data.map((module) => module.moduleCode);
 
-    await setCode(codes)
-  }
+    await setCode(codes);
+  };
 
   const handleClick = async (appCode) => {
     const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-    const projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const { projectId } = JSON.parse(localStorage.getItem('projectName'))
+      .projectName;
 
-    let data = await api
-      .get(ACCOUNT_API_URL + API_VERSION + 'applications/modules/' + appCode + '/' + companyId + '/')
-      .then(function (res) {
-        return res.data.data.results;
-      })
-      .catch(function (error) {
+    const data = await api
+      .get(
+        ACCOUNT_API_URL
+          + API_VERSION
+          + 'applications/modules/'
+          + appCode
+          + '/'
+          + companyId
+          + '/'
+      )
+      .then((res) => res.data.data.results)
+      .catch((error) => {
         console.log(error);
       });
 
     if (data.hostings != undefined) {
-      const targetPage = (data.modules ? data.modules.targetPage : "")
+      const targetPage = data.modules ? data.modules.targetPage : '';
       // alert(localStorage.getItem('companyId'))
-      const clientId = data.hostings.clientId
-      window.open(ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + companyId + '&projectId=' + projectId,
-      ) // <- This is what makes it open in a new window.
+      const { clientId } = data.hostings;
+      window.open(
+        ACCOUNT_API_URL
+          + API_VERSION
+          + 'user/auth/authorize/?client_id='
+          + clientId
+          + '&response_type=code&targetPage='
+          + targetPage
+          + '&companyId='
+          + companyId
+          + '&projectId='
+          + projectId
+      ); // <- This is what makes it open in a new window.
     }
-  }
+  };
 
   // const handleDisableModule = (appcode) => {
   //   let moduleDisable = modules.map(module => {
@@ -677,24 +711,25 @@ function PersonalDashboard(props) {
 
   // compney name get
   const handleCompanyName = async (e, key, name) => {
-    let hosting = companyListData.filter(company => company.companyId === e)[0]
-      .subscriptions
-      .filter(subscription => subscription.appCode.toLowerCase() == APPCODE)[0]
-      .hostings[0].apiDomain
-    let config = {
-      method: "get",
+    const hosting = companyListData
+      .filter((company) => company.companyId === e)[0]
+      .subscriptions.filter(
+        (subscription) => subscription.appCode.toLowerCase() == APPCODE
+      )[0].hostings[0].apiDomain;
+    const config = {
+      method: 'get',
       url: `${hosting}/api/v1/core/companies/select/${e}/`,
       headers: HEADER_AUTH,
     };
-    axios(config)
-    let companeyDetails = {};
+    axios(config);
+    const companeyDetails = {};
     companeyDetails.fkCompanyId = e;
-    await getSubscriptions(e)
+    await getSubscriptions(e);
     companeyDetails.fkCompanyName = name;
-    dispatch(company(companeyDetails))
-    setCompanyId(e)
-    localStorage.setItem("company", JSON.stringify(companeyDetails));
-    let newData = companyListData[key];
+    dispatch(company(companeyDetails));
+    setCompanyId(e);
+    localStorage.setItem('company', JSON.stringify(companeyDetails));
+    const newData = companyListData[key];
     // if (newData.projects.length === 1) {
     //   setProjectListData(newData.projects[0]);
     //   setOpen(false);
@@ -706,42 +741,46 @@ function PersonalDashboard(props) {
       // setProjectListData(newData.projects);
       handleProjectOpen(newData.projects);
       setOpen(false);
-    }
-    else {
+    } else {
       setOpen(false);
     }
   };
 
   const fetchPhaseData = async (projects) => {
-    const data = []
+    const data = [];
     for (let i = 0; i < projects.length; i++) {
-      if (projects[i].breakdown && projects[i].breakdown.length > 0 && projects[i].breakdown[0].structure && projects[i].breakdown[0].structure[0].url) {
+      if (
+        projects[i].breakdown
+        && projects[i].breakdown.length > 0
+        && projects[i].breakdown[0].structure
+        && projects[i].breakdown[0].structure[0].url
+      ) {
         const config = {
-          method: "get",
+          method: 'get',
           url: `${SSO_URL}/${projects[i].breakdown[0].structure[0].url}`,
           headers: HEADER_AUTH,
         };
         const res = await axios(config);
         if (res && res.status && res.status === 200) {
-          projects[i].firstBreakdown = res.data.data.results
+          projects[i].firstBreakdown = res.data.data.results;
           data.push(projects[i]);
         } else {
-          projects[i].firstBreakdown = []
+          projects[i].firstBreakdown = [];
           data.push(projects[i]);
         }
       } else {
-        projects[i].firstBreakdown = []
+        projects[i].firstBreakdown = [];
         data.push(projects[i]);
       }
     }
-    return data
-  }
+    return data;
+  };
 
-  //Project selections
+  // Project selections
   const handleProjectOpen = async (projects) => {
     if (projects) {
       const data = await fetchPhaseData(projects);
-      setProjectListData([...data])
+      setProjectListData([...data]);
     }
     setProjectOpen(true);
   };
@@ -752,236 +791,316 @@ function PersonalDashboard(props) {
 
   // handle project Name
   const handleProjectName = async (key) => {
-    let data = projectListData[key];
+    const data = projectListData[key];
     await dispatch(projectName(data));
-    localStorage.setItem("projectName", JSON.stringify(data));
+    localStorage.setItem('projectName', JSON.stringify(data));
     setProjectOpen(false);
-    redirectionAccount()
+    redirectionAccount();
   };
 
   // fecthing project structure with name and label
   const handelProjectStruct = async (compId, proId, tarProjectStruct) => {
-    let breakDownData = JSON.parse(tarProjectStruct)
-    localStorage.setItem("selectBreakDown", JSON.stringify(breakDownData))
-    dispatch(breakDownDetails(breakDownData))
-    redirectionAccount()
-  }
+    const breakDownData = JSON.parse(tarProjectStruct);
+    localStorage.setItem('selectBreakDown', JSON.stringify(breakDownData));
+    dispatch(breakDownDetails(breakDownData));
+    redirectionAccount();
+  };
   // end fetching name and label
 
   // fetch user data
-  const userDetails = async (comId = 0, proId = 0, redback = '', tarPage = '', tarId) => {
-    let config = {
-      method: "get",
+  const userDetails = async (
+    comId = 0,
+    proId = 0,
+    redback = '',
+    tarPage = '',
+    tarId
+  ) => {
+    const config = {
+      method: 'get',
       url: `${SELF_API}`,
       headers: HEADER_AUTH,
     };
-    await axios(config)
-      .then(function (response) {
-        localStorage.setItem('companiesCount', response.data.data.results.data.companies.length)
-        // setIsLoading(true)
-        if (response.status === 200) {
-          if (comId != 0) {
-            response.data.data.results.data.companies = response.data.data.results.data.companies.filter(comp => comp.companyId == comId)
-          }
-          if (response.data.data.results.data.companies.length === 1) {
-            console.log(response.data.data.results.data.companies.filter(company => company.companyId === response.data.data.results.data.companies[0].companyId)[0], 'ppppppppppppppppppppppppppp')
-            let hosting = response.data.data.results.data.companies.filter(company => company.companyId === response.data.data.results.data.companies[0].companyId)[0]
-              .subscriptions
-              .filter(subscription => subscription.appCode.toLowerCase() == APPCODE)[0]
-              .hostings[0].apiDomain
-            let config = {
-              method: "get",
-              url: `${hosting}/api/v1/core/companies/select/${response.data.data.results.data.companies[0].companyId}/`,
-              headers: HEADER_AUTH,
-            };
-            axios(config)
-            let companeyDetails = {};
-            companeyDetails.fkCompanyId =
-              response.data.data.results.data.companies[0].companyId;
-
-            // const subscriptionData = 
-            getSubscriptions(response.data.data.results.data.companies[0].companyId)
-            setCompanyId(response.data.data.results.data.companies[0].companyId)
-            companeyDetails.fkCompanyName =
-              response.data.data.results.data.companies[0].companyName;
-            localStorage.setItem("company", JSON.stringify(companeyDetails));
-            dispatch(company(companeyDetails))
-            let newData = response.data.data.results.data.companies[0];
-            if (newData) {
-              if (proId != 0) {
-                newData.projects = newData.projects.filter(proj => proj.projectId == proId)
-              }
-              if (newData.projects.length === 1) {
-                dispatch(projectName(newData.projects[0]));
-                localStorage.setItem(
-                  "projectName",
-                  JSON.stringify(newData.projects[0])
-                );
-                redirectionAccount()
-              }
-              if (newData.projects.length > 1) {
-                if (JSON.parse(localStorage.getItem('projectName') === null)) {
-                  setProjectListData(newData.projects);
-                  setProjectOpen(true);
-                }
-                // setOpen(true);
-              }
-            }
-          } else {
-            if (response.data.data.results.data.companies.length > 1) {
-              const companey = JSON.parse(localStorage.getItem("company"));
-              if (companey === null) {
-                setCompanyListData(response.data.data.results.data.companies);
-                setOpen(true);
-              }
-            }
-          }
-          setUserData(response.data.data.results);
+    await axios(config).then((response) => {
+      localStorage.setItem(
+        'companiesCount',
+        response.data.data.results.data.companies.length
+      );
+      // setIsLoading(true)
+      if (response.status === 200) {
+        if (comId != 0) {
+          response.data.data.results.data.companies = response.data.data.results.data.companies.filter(
+            (comp) => comp.companyId == comId
+          );
         }
-      })
+        if (response.data.data.results.data.companies.length === 1) {
+          console.log(
+            response.data.data.results.data.companies.filter(
+              (company) => company.companyId
+                === response.data.data.results.data.companies[0].companyId
+            )[0],
+            'ppppppppppppppppppppppppppp'
+          );
+          const hosting = response.data.data.results.data.companies
+            .filter(
+              (company) => company.companyId
+                === response.data.data.results.data.companies[0].companyId
+            )[0]
+            .subscriptions.filter(
+              (subscription) => subscription.appCode.toLowerCase() == APPCODE
+            )[0].hostings[0].apiDomain;
+          const config = {
+            method: 'get',
+            url: `${hosting}/api/v1/core/companies/select/${
+              response.data.data.results.data.companies[0].companyId
+            }/`,
+            headers: HEADER_AUTH,
+          };
+          axios(config);
+          const companeyDetails = {};
+          companeyDetails.fkCompanyId = response.data.data.results.data.companies[0].companyId;
+
+          // const subscriptionData =
+          getSubscriptions(
+            response.data.data.results.data.companies[0].companyId
+          );
+          setCompanyId(response.data.data.results.data.companies[0].companyId);
+          companeyDetails.fkCompanyName = response.data.data.results.data.companies[0].companyName;
+          localStorage.setItem('company', JSON.stringify(companeyDetails));
+          dispatch(company(companeyDetails));
+          const newData = response.data.data.results.data.companies[0];
+          if (newData) {
+            if (proId != 0) {
+              newData.projects = newData.projects.filter(
+                (proj) => proj.projectId == proId
+              );
+            }
+            if (newData.projects.length === 1) {
+              dispatch(projectName(newData.projects[0]));
+              localStorage.setItem(
+                'projectName',
+                JSON.stringify(newData.projects[0])
+              );
+              redirectionAccount();
+            }
+            if (newData.projects.length > 1) {
+              if (JSON.parse(localStorage.getItem('projectName') === null)) {
+                setProjectListData(newData.projects);
+                setProjectOpen(true);
+              }
+              // setOpen(true);
+            }
+          }
+        } else if (response.data.data.results.data.companies.length > 1) {
+          const companey = JSON.parse(localStorage.getItem('company'));
+          if (companey === null) {
+            setCompanyListData(response.data.data.results.data.companies);
+            setOpen(true);
+          }
+        }
+        setUserData(response.data.data.results);
+      }
+    });
   };
 
-  const fetchUserDetails = async (compId, proId, targetPage, tarProjectStruct, tarId) => {
+  const fetchUserDetails = async (
+    compId,
+    proId,
+    targetPage,
+    tarProjectStruct,
+    tarId
+  ) => {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
-        let config = {
-          method: "get",
+        const config = {
+          method: 'get',
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
 
-        await api(config)
-          .then(async function (response) {
-            if (response.status === 200) {
-              // localStorage.setItem('companiesCount', response.data.data.results.data.companies.length);
-              // setIsLoading(true)
-              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
-                .subscriptions.filter(subs => subs.appCode.toLowerCase() === APPCODE)[0]
-                .hostings[0].apiDomain
+        await api(config).then(async (response) => {
+          if (response.status === 200) {
+            // localStorage.setItem('companiesCount', response.data.data.results.data.companies.length);
+            // setIsLoading(true)
+            const hosting = response.data.data.results.data.companies
+              .filter((company) => company.companyId == compId)[0]
+              .subscriptions.filter(
+                (subs) => subs.appCode.toLowerCase() === APPCODE
+              )[0].hostings[0].apiDomain;
 
-              localStorage.setItem("apiBaseUrl", hosting)
-              let data1 = {
-                method: "get",
-                url: `${hosting}/api/v1/core/companies/select/${compId}/`,
-                headers: HEADER_AUTH,
-              };
-              axios(data1).then(async (res) => {
-                let responseData = JSON.stringify(response.data.data.results.data);
-                localStorage.setItem('userDetails', responseData)
+            localStorage.setItem('apiBaseUrl', hosting);
+            const data1 = {
+              method: 'get',
+              url: `${hosting}/api/v1/core/companies/select/${compId}/`,
+              headers: HEADER_AUTH,
+            };
+            axios(data1).then(async (res) => {
+              const responseData = JSON.stringify(
+                response.data.data.results.data
+              );
+              localStorage.setItem('userDetails', responseData);
 
-                if (compId) {
-                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
-                  localStorage.setItem('company', JSON.stringify(companeyData))
-                  dispatch(company(companeyData))
-                }
+              if (compId) {
+                const companies = response.data.data.results.data.companies.filter(
+                  (item) => item.companyId == compId
+                );
+                const companeyData = {
+                  fkCompanyId: companies[0].companyId,
+                  fkCompanyName: companies[0].companyName,
+                };
+                localStorage.setItem('company', JSON.stringify(companeyData));
+                dispatch(company(companeyData));
+              }
 
-                if (proId) {
-                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-                  let project = companies[0].projects.filter(item => item.projectId == proId)
-                  localStorage.setItem("projectName", JSON.stringify(project[0]))
-                  dispatch(projectName(project[0]))
-                }
+              if (proId) {
+                const companies = response.data.data.results.data.companies.filter(
+                  (item) => item.companyId == compId
+                );
+                const project = companies[0].projects.filter(
+                  (item) => item.projectId == proId
+                );
+                localStorage.setItem('projectName', JSON.stringify(project[0]));
+                dispatch(projectName(project[0]));
+              }
 
-                // fetchPermissionData(); 
-                if (res.status === 200) {
-                  await getSubscriptions()
-                    .then(res => {
-                      setTimeout(() => {
-                        // localStorage.removeItem("direct_loading");
-                        history.push('/app/' + targetPage + tarId)
-                      }, 1000)
-                    })
-                }
-              })
-            }
-          })
+              // fetchPermissionData();
+              if (res.status === 200) {
+                await getSubscriptions().then((res) => {
+                  setTimeout(() => {
+                    // localStorage.removeItem("direct_loading");
+                    history.push('/app/' + targetPage + tarId);
+                  }, 1000);
+                });
+              }
+            });
+          }
+        });
       }
-    } catch (error) {
-    }
-    handelProjectStruct(compId, proId, tarProjectStruct)
-  }
+    } catch (error) {}
+    handelProjectStruct(compId, proId, tarProjectStruct);
+  };
 
   const handelCallBack = async () => {
-    let state = JSON.parse(localStorage.getItem('direct_loading'));
-    let comId = 0
-    let proId = 0
-    let redback = ''
-    let tarPage = ''
-    let tarId = 0
+    const state = JSON.parse(localStorage.getItem('direct_loading'));
+    const comId = 0;
+    const proId = 0;
+    const redback = '';
+    const tarPage = '';
+    const tarId = 0;
     if (state !== null) {
-      await fetchUserDetails(state.comId, state.proId, state.tarPage, state.tarProjectStruct, state.tarId)
+      await fetchUserDetails(
+        state.comId,
+        state.proId,
+        state.tarPage,
+        state.tarProjectStruct,
+        state.tarId
+      );
     } else {
       await userDetails(comId, proId, redback, tarPage, tarId);
     }
     await getSubscriptions();
-  }
+  };
 
   useEffect(() => {
-    handelCallBack()
+    handelCallBack();
     // redirectionAccount()
     if (localStorage.getItem('projectName') != null) {
-      setTimeout(() => history.push('app/icare'), 1000)
+      setTimeout(() => history.push('app/icare'), 1000);
     }
   }, [props.initialValues.companyListData]);
 
-  const handlePhaseChange = (panel, phases, index, id) => async (event, isExpanded) => {
-    if (openPhase !== panel && projectListData[index].breakdown && projectListData[index].breakdown.length > 1 && projectListData[index].breakdown[1].structure && projectListData[index].breakdown[1].structure[0].url) {
+  const handlePhaseChange = (panel, phases, index, id) => async (
+    event,
+    isExpanded
+  ) => {
+    if (
+      openPhase !== panel
+      && projectListData[index].breakdown
+      && projectListData[index].breakdown.length > 1
+      && projectListData[index].breakdown[1].structure
+      && projectListData[index].breakdown[1].structure[0].url
+    ) {
       const config = {
-        method: "get",
-        url: `${SSO_URL}/${projectListData[index].breakdown[1].structure[0].url}${id}`,
+        method: 'get',
+        url: `${SSO_URL}/${
+          projectListData[index].breakdown[1].structure[0].url
+        }${id}`,
         headers: HEADER_AUTH,
       };
       const res = await axios(config);
       if (res && res.status === 200) {
-        setSecondBreakdown([...res.data.data.results])
+        setSecondBreakdown([...res.data.data.results]);
       }
     } else {
-      setSecondBreakdown(null)
+      setSecondBreakdown(null);
     }
-    setChangeClass(isExpanded ? true : false);
+    setChangeClass(!!isExpanded);
     setPhaseSelect([phases]);
     setOpenPhase(isExpanded ? panel : false);
   };
 
   const [openUnit, setOpenUnit] = React.useState();
   const handleUnitChange = (panel, index, id) => async (event, isExpanded) => {
-    if (openUnit !== panel && projectListData[index].breakdown && projectListData[index].breakdown.length > 2 && projectListData[index].breakdown[2].structure && projectListData[index].breakdown[2].structure[0].url) {
+    if (
+      openUnit !== panel
+      && projectListData[index].breakdown
+      && projectListData[index].breakdown.length > 2
+      && projectListData[index].breakdown[2].structure
+      && projectListData[index].breakdown[2].structure[0].url
+    ) {
       const config = {
-        method: "get",
-        url: `${SSO_URL}/${projectListData[index].breakdown[2].structure[0].url}${id}`,
+        method: 'get',
+        url: `${SSO_URL}/${
+          projectListData[index].breakdown[2].structure[0].url
+        }${id}`,
         headers: HEADER_AUTH,
       };
       const res = await axios(config);
       if (res && res.status === 200) {
-        setThirdBreakdown([...res.data.data.results])
+        setThirdBreakdown([...res.data.data.results]);
       }
     } else {
-      setThirdBreakdown(null)
+      setThirdBreakdown(null);
     }
     setOpenUnit(isExpanded ? panel : false);
   };
 
-
-  const handleSubUnitChange = (panel, index, id) => async (event, isExpanded) => {
-    if (openUnit !== panel && projectListData[index].breakdown && projectListData[index].breakdown.length > 3 && projectListData[index].breakdown[2].structure && projectListData[index].breakdown[3].structure[0].url) {
+  const handleSubUnitChange = (panel, index, id) => async (
+    event,
+    isExpanded
+  ) => {
+    if (
+      openUnit !== panel
+      && projectListData[index].breakdown
+      && projectListData[index].breakdown.length > 3
+      && projectListData[index].breakdown[2].structure
+      && projectListData[index].breakdown[3].structure[0].url
+    ) {
       const config = {
-        method: "get",
-        url: `${SSO_URL}/${projectListData[index].breakdown[3].structure[0].url}${id}`,
+        method: 'get',
+        url: `${SSO_URL}/${
+          projectListData[index].breakdown[3].structure[0].url
+        }${id}`,
         headers: HEADER_AUTH,
       };
       const res = await axios(config);
       if (res && res.status === 200) {
-        setFourthBreakdown([...res.data.data.results])
+        setFourthBreakdown([...res.data.data.results]);
       }
     } else {
-      setFourthBreakdown(null)
+      setFourthBreakdown(null);
     }
     setOpenSubUnit(isExpanded ? panel : false);
   };
 
-  const handleProjectBreakdown = (index, phaseIndex, unitIndex, subUnitIndex, subSubUnitIndex, depth) => {
+  const handleProjectBreakdown = (
+    index,
+    phaseIndex,
+    unitIndex,
+    subUnitIndex,
+    subSubUnitIndex,
+    depth
+  ) => {
     const data = [];
     const temp = [];
 
@@ -989,114 +1108,122 @@ function PersonalDashboard(props) {
       depth: '1L',
       id: projectListData[index].firstBreakdown[phaseIndex].id,
       label: projectListData[index].breakdown[0].structure[0].name,
-      name: projectListData[index].firstBreakdown[phaseIndex].structureName
+      name: projectListData[index].firstBreakdown[phaseIndex].structureName,
     });
     temp.push({
       breakdownLabel: projectListData[index].breakdown[0].structure[0].name,
       breakdownValue: projectListData[index].firstBreakdown,
-      selectValue: ""
-    })
+      selectValue: '',
+    });
 
     if (depth === '4L') {
       data.push({
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
         label: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].structureName
+        name: secondBreakdown[unitIndex].structureName,
       });
       data.push({
         depth: '3L',
         id: thirdBreakdown[subUnitIndex].id,
         label: projectListData[index].breakdown[2].structure[0].name,
-        name: thirdBreakdown[subUnitIndex].structureName
-      })
+        name: thirdBreakdown[subUnitIndex].structureName,
+      });
       data.push({
         depth: '4L',
         id: fourthBreakdown[subSubUnitIndex].id,
         label: projectListData[index].breakdown[2].structure[0].name,
-        name: fourthBreakdown[subSubUnitIndex].structureName
-      })
+        name: fourthBreakdown[subSubUnitIndex].structureName,
+      });
       temp.push({
         breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
         breakdownValue: secondBreakdown,
-        selectValue: ""
-      })
+        selectValue: '',
+      });
       temp.push({
         breakdownLabel: projectListData[index].breakdown[2].structure[0].name,
         breakdownValue: thirdBreakdown,
-        selectValue: ""
-      })
+        selectValue: '',
+      });
       temp.push({
         breakdownLabel: projectListData[index].breakdown[3].structure[0].name,
         breakdownValue: fourthBreakdown,
-        selectValue: ""
-      })
+        selectValue: '',
+      });
     }
     if (depth === '3L') {
       data.push({
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
         label: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].structureName
-      })
+        name: secondBreakdown[unitIndex].structureName,
+      });
       data.push({
         depth: '3L',
         id: thirdBreakdown[subUnitIndex].id,
         label: projectListData[index].breakdown[2].structure[0].name,
-        name: thirdBreakdown[subUnitIndex].structureName
-      })
+        name: thirdBreakdown[subUnitIndex].structureName,
+      });
       temp.push({
         breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
         breakdownValue: secondBreakdown,
-        selectValue: ""
-      })
+        selectValue: '',
+      });
       temp.push({
         breakdownLabel: projectListData[index].breakdown[2].structure[0].name,
         breakdownValue: thirdBreakdown,
-        selectValue: ""
-      })
+        selectValue: '',
+      });
     }
     if (depth === '2L') {
       data.push({
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
         label: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].structureName
+        name: secondBreakdown[unitIndex].structureName,
       });
       temp.push({
         breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
         breakdownValue: secondBreakdown,
-        selectValue: ""
-      })
+        selectValue: '',
+      });
     }
 
     localStorage.setItem('selectBreakDown', JSON.stringify(data));
-    localStorage.setItem('projectName', JSON.stringify(projectListData[index]))
-    dispatch(projectName(projectListData[index]))
-    dispatch(breakDownDetails(data))
-    setProjectOpen(false)
-    redirectionAccount()
-  }
-
+    localStorage.setItem('projectName', JSON.stringify(projectListData[index]));
+    dispatch(projectName(projectListData[index]));
+    dispatch(breakDownDetails(data));
+    setProjectOpen(false);
+    redirectionAccount();
+  };
 
   return (
     <>
       <>
         {/* <PapperBlock title="Home" icon="ion-md-list-box"> */}
-        <CustomPapperBlock title="Home" icon='customDropdownPageIcon homePageIcon' whiteBg>
+        <CustomPapperBlock
+          title="Home"
+          icon="customDropdownPageIcon homePageIcon"
+          whiteBg
+        >
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
               <Paper elevation={1} className="paperSection">
-                {isLoading ?
+                {isLoading ? (
                   <div className="seven_hexagon_row">
                     <div className="honeycomb">
                       <div className="ibws-fix hexagon_row1">
-
                         <div className="hexagon hide_responsiv">
                           <div className="hexagontent hexagon_content_box" />
                         </div>
 
-                        <div className={!(codes.includes('HSE')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                        <div
+                          className={
+                            !codes.includes('HSE')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
                             <a
                               className="hse_health_safety_environment_mgmt_new"
@@ -1111,10 +1238,22 @@ function PersonalDashboard(props) {
                           <div className="hexagontent hexagon_content_box" />
                         </div>
 
-                        <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                        <div
+                          className={
+                            !codes.includes('controltower')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
-                            <a className="hse_digital_control_tower" onClick={() => history.push('/app/pages/control-tower/controltower-icare')}>
-                              <p>Control Tower</p>
+                            <a
+                              className="hse_digital_control_tower"
+                              onClick={() => history.push(
+                                '/app/pages/control-tower/controltower-icare'
+                              )
+                              }
+                            >
+                              <p>Control Tower </p>
                             </a>
                           </div>
                         </div>
@@ -1123,7 +1262,13 @@ function PersonalDashboard(props) {
                           <div className="hexagontent hexagon_content_box" />
                         </div>
 
-                        <div className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                        <div
+                          className={
+                            !codes.includes('incidents')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
                             <a
                               className="hse_incident_reporting_management"
@@ -1140,9 +1285,18 @@ function PersonalDashboard(props) {
                       </div>
 
                       <div className="ibws-fix hexagon_row2">
-                        <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                        <div
+                          className={
+                            !codes.includes('ProjectInfo')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
-                            <a className="project_information_hub" onClick={() => handleClick('ProjectInfo')}>
+                            <a
+                              className="project_information_hub"
+                              onClick={() => handleClick('ProjectInfo')}
+                            >
                               <p>Project Information Hub</p>
                             </a>
                           </div>
@@ -1151,40 +1305,81 @@ function PersonalDashboard(props) {
                         {/* <div className="hexagon hide_responsiv">
               <div className="hexagontent hexagon_content_box" />
             </div> */}
-                        <div className={!(codes.includes('compliances')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
+                        <div
+                          className={
+                            !codes.includes('compliances')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
-                            <a className="hse_compliance_protocols" onClick={() => history.push('/app/pages/compliance')}>
+                            <a
+                              className="hse_compliance_protocols"
+                              onClick={() => history.push('/app/pages/compliance')
+                              }
+                            >
                               <p>Compliance</p>
                             </a>
                           </div>
                         </div>
 
-
-                        <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                        <div
+                          className={
+                            !codes.includes('observations')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
-                            <a className="hse_observations" onClick={() => history.push('/app/icare')}>
+                            <a
+                              className="hse_observations"
+                              onClick={() => history.push('/app/icare')}
+                            >
                               <p>iCare</p>
                             </a>
                           </div>
                         </div>
-                        <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                        <div
+                          className={
+                            !codes.includes('assessments')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
-                            <a className="hse_assessments_development" onClick={() => history.push('/app/pages/assesments/xflha')}>
+                            <a
+                              className="hse_assessments_development"
+                              onClick={() => history.push('/app/pages/assesments/xflha')
+                              }
+                            >
                               <p>Assessments</p>
                             </a>
                           </div>
                         </div>
 
-                        <div className={!(codes.includes('actions')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                        <div
+                          className={
+                            !codes.includes('actions')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
-                            <a className="hse_action_tracker_new"
+                            <a
+                              className="hse_action_tracker_new"
                               onClick={() => handleClick('actions')}
                             >
                               <p>Action Tracker</p>
                             </a>
                           </div>
                         </div>
-                        <div className={!(codes.includes('permits')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                        <div
+                          className={
+                            !codes.includes('permits')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
                             <a
                               className="hse_intelligent_permit_management_new"
@@ -1195,16 +1390,22 @@ function PersonalDashboard(props) {
                           </div>
                         </div>
 
-                        <div className={!(codes.includes('gis')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                        <div
+                          className={
+                            !codes.includes('gis')
+                              ? 'hexagon hexagon_fullcontnt inactive_hexagon'
+                              : 'hexagon hexagon_fullcontnt'
+                          }
+                        >
                           <div className="hexagontent hexagon_content_box">
-                            <a className="hse_safety_plot_manager"
+                            <a
+                              className="hse_safety_plot_manager"
                               onClick={() => handleClick('gis')}
                             >
                               <p>Safety plot manager</p>
                             </a>
                           </div>
                         </div>
-
                       </div>
 
                       <div className="ibws-fix hexagon_row1">
@@ -1238,12 +1439,12 @@ function PersonalDashboard(props) {
                       </div>
                     </div>
                   </div>
-                  :
+                ) : (
                   <Loading />
-                }
+                )}
                 <Dialog
                   className={classes.projectDialog}
-                  maxWidth='md'
+                  maxWidth="md"
                   open={open}
                   onClose={(event, reason) => {
                     if (reason !== 'backdropClick') {
@@ -1257,43 +1458,85 @@ function PersonalDashboard(props) {
                         <Grid item md={12} sm={12}>
                           {/* className={classNames(classes.groupSection, classes.companySelection)} */}
                           <Grid item xs={12} sm={12} md={12} align="center">
-                            <img className={classes.pacelogonBox} src={paceLogo} title="Pace OS" alt="Pace OS" />
+                            <img
+                              className={classes.pacelogonBox}
+                              src={paceLogo}
+                              title="Pace OS"
+                              alt="Pace OS"
+                            />
                           </Grid>
-                          <Grid item xs={12} sm={12} md={12} align="center" className={classes.loginTopDetailSection}>
-                            <Typography variant="h1" gutterBottom className={classes.selectCompTitle}>Select Company</Typography>
+                          <Grid
+                            item
+                            xs={12}
+                            sm={12}
+                            md={12}
+                            align="center"
+                            className={classes.loginTopDetailSection}
+                          >
+                            <Typography
+                              variant="h1"
+                              gutterBottom
+                              className={classes.selectCompTitle}
+                            >
+                              Select Company
+                            </Typography>
                           </Grid>
-                          <Grid item xs={12} sm={12} md={12} className={classes.companyListBox}>
-
+                          <Grid
+                            item
+                            xs={12}
+                            sm={12}
+                            md={12}
+                            className={classes.companyListBox}
+                          >
                             {companyListData.length > 0 && (
                               <Grid container spacing={3}>
-                                {
-                                  companyListData.map((selectValues, key) => (
-                                    <Grid item xs={12} sm={6} md={6} className={classes.companyList}
-                                      key={key}
-                                      onClick={() =>
-                                        handleCompanyName(
-                                          selectValues.companyId,
-                                          key,
-                                          selectValues.companyName
-                                        )
-                                      }>
-                                      <Card className={classes.companyCardBox}>
-                                        <CardMedia className={classes.companyLogo}>
-                                          {selectValues.logo && (
-                                            <img className={classes.companyLogoIcon} src={selectValues.logo} title="Pace OS" alt={selectValues.companyName} />
-                                          )}
-                                        </CardMedia>
-                                        <CardContent>
-                                          <Typography className={classes.companyTag}>
-                                            {selectValues.businessVertical}
-                                          </Typography>
-                                          <Typography className={classes.companyName}>
-                                            Company: <span>{selectValues.companyName}</span>
-                                          </Typography>
-                                        </CardContent>
-                                      </Card>
-                                    </Grid>
-                                  ))}
+                                {companyListData.map((selectValues, key) => (
+                                  <Grid
+                                    item
+                                    xs={12}
+                                    sm={6}
+                                    md={6}
+                                    className={classes.companyList}
+                                    key={key}
+                                    onClick={() => handleCompanyName(
+                                      selectValues.companyId,
+                                      key,
+                                      selectValues.companyName
+                                    )
+                                    }
+                                  >
+                                    <Card className={classes.companyCardBox}>
+                                      <CardMedia
+                                        className={classes.companyLogo}
+                                      >
+                                        {selectValues.logo && (
+                                          <img
+                                            className={classes.companyLogoIcon}
+                                            src={selectValues.logo}
+                                            title="Pace OS"
+                                            alt={selectValues.companyName}
+                                          />
+                                        )}
+                                      </CardMedia>
+                                      <CardContent>
+                                        <Typography
+                                          className={classes.companyTag}
+                                        >
+                                          {selectValues.businessVertical}
+                                        </Typography>
+                                        <Typography
+                                          className={classes.companyName}
+                                        >
+                                          Company:
+                                          {' '}
+                                          <span>
+                                            {selectValues.companyName}
+                                          </span>
+                                        </Typography>
+                                      </CardContent>
+                                    </Card>
+                                  </Grid>
+                                ))}
                               </Grid>
                             )}
                           </Grid>
@@ -1366,19 +1609,56 @@ function PersonalDashboard(props) {
                   onClose={handleProjectClose}
                 >
                   <DialogTitle className={classesm.projecDialogHeadTitle}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="40"
+                      height="40"
+                      viewBox="0 0 40 40"
+                    >
                       <g id="Select-Project-40" transform="translate(-0.985)">
                         <g id="Layer_1_22_" transform="translate(0.985)">
                           <g id="Group_6914" data-name="Group 6914">
-                            <path id="Path_6934" data-name="Path 6934" d="M5.372,32.774V4.37H28.409V28.224l4.389-3.61V2.185A2.189,2.189,0,0,0,30.6,0H3.178A2.189,2.189,0,0,0,.985,2.185V34.958a2.189,2.189,0,0,0,2.193,2.185H22.324l-3.1-4.369Z" transform="translate(-0.985)" fill="#e5e9ec" />
-                            <path id="Path_6935" data-name="Path 6935" d="M42.225,27.558a1.1,1.1,0,0,0-1.451-.049L30.711,35.826,24,31.8a1.1,1.1,0,0,0-1.46,1.574l7.268,10.284a1.1,1.1,0,0,0,.886.464h.01a1.093,1.093,0,0,0,.884-.449L42.358,29A1.1,1.1,0,0,0,42.225,27.558Z" transform="translate(-2.569 -4.125)" fill="#e5e9ec" />
-                            <path id="Path_6936" data-name="Path 6936" d="M24.689,8.988H11.523a2.194,2.194,0,0,0,0,4.388H24.688a2.194,2.194,0,0,0,0-4.388Z" transform="translate(-1.68 -1.342)" fill="#e5e9ec" />
-                            <path id="Path_6937" data-name="Path 6937" d="M24.689,16.691H11.523a2.194,2.194,0,0,0,0,4.388H24.688a2.194,2.194,0,0,0,0-4.388Z" transform="translate(-1.68 -2.492)" fill="#e5e9ec" />
-                            <path id="Path_6938" data-name="Path 6938" d="M24.689,24.4H11.523a2.194,2.194,0,0,0,0,4.388H24.688a2.194,2.194,0,0,0,0-4.388Z" transform="translate(-1.68 -3.643)" fill="#e5e9ec" />
+                            <path
+                              id="Path_6934"
+                              data-name="Path 6934"
+                              d="M5.372,32.774V4.37H28.409V28.224l4.389-3.61V2.185A2.189,2.189,0,0,0,30.6,0H3.178A2.189,2.189,0,0,0,.985,2.185V34.958a2.189,2.189,0,0,0,2.193,2.185H22.324l-3.1-4.369Z"
+                              transform="translate(-0.985)"
+                              fill="#e5e9ec"
+                            />
+                            <path
+                              id="Path_6935"
+                              data-name="Path 6935"
+                              d="M42.225,27.558a1.1,1.1,0,0,0-1.451-.049L30.711,35.826,24,31.8a1.1,1.1,0,0,0-1.46,1.574l7.268,10.284a1.1,1.1,0,0,0,.886.464h.01a1.093,1.093,0,0,0,.884-.449L42.358,29A1.1,1.1,0,0,0,42.225,27.558Z"
+                              transform="translate(-2.569 -4.125)"
+                              fill="#e5e9ec"
+                            />
+                            <path
+                              id="Path_6936"
+                              data-name="Path 6936"
+                              d="M24.689,8.988H11.523a2.194,2.194,0,0,0,0,4.388H24.688a2.194,2.194,0,0,0,0-4.388Z"
+                              transform="translate(-1.68 -1.342)"
+                              fill="#e5e9ec"
+                            />
+                            <path
+                              id="Path_6937"
+                              data-name="Path 6937"
+                              d="M24.689,16.691H11.523a2.194,2.194,0,0,0,0,4.388H24.688a2.194,2.194,0,0,0,0-4.388Z"
+                              transform="translate(-1.68 -2.492)"
+                              fill="#e5e9ec"
+                            />
+                            <path
+                              id="Path_6938"
+                              data-name="Path 6938"
+                              d="M24.689,24.4H11.523a2.194,2.194,0,0,0,0,4.388H24.688a2.194,2.194,0,0,0,0-4.388Z"
+                              transform="translate(-1.68 -3.643)"
+                              fill="#e5e9ec"
+                            />
                           </g>
                         </g>
                       </g>
-                    </svg> Switch to a different project
+                    </svg>
+                    {' '}
+                    Switch to a different project
                   </DialogTitle>
                   {/* <DialogTitle onClose={handleProjectClose}>
                 Select a Project
@@ -1386,14 +1666,24 @@ function PersonalDashboard(props) {
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                       <Grid container spacing={4}>
-                        <Grid item md={12} sm={12} xs={12} className={classesm.companyNamePsl}>
+                        <Grid
+                          item
+                          md={12}
+                          sm={12}
+                          xs={12}
+                          className={classesm.companyNamePsl}
+                        >
                           <List>
                             <ListItem>
                               <ListItemAvatar>
                                 <CardMedia src={company.logo} />
                               </ListItemAvatar>
                               <ListItemText
-                                primary={currentCompany ? currentCompany.companyName : ""}
+                                primary={
+                                  currentCompany
+                                    ? currentCompany.companyName
+                                    : ''
+                                }
                               />
                             </ListItem>
                           </List>
@@ -1405,41 +1695,119 @@ function PersonalDashboard(props) {
                               md={4}
                               sm={6}
                               xs={12}
-                              className={changeClass && phaseSelect.includes('phase1') ? classesm.cardContentBoxIndexHigh : classesm.cardContentBox}
+                              className={
+                                changeClass && phaseSelect.includes('phase1')
+                                  ? classesm.cardContentBoxIndexHigh
+                                  : classesm.cardContentBox
+                              }
                               key={index}
                             >
                               <Card>
-                                <CardContent className={classesm.cardActionAreaBox}>
-                                  <div className={classesm.cardMediaBox} onClick={() => { (value.breakdown && value.breakdown.length > 0) ? null : handleProjectName(index) }}>
-                                    {(currentProjectId && currentProjectId === value.projectId) && (
-                                      <span className={classesm.pinBoardIconSection}>
-                                        <Tooltip title="Click here to go to pinned area" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
+                                <CardContent
+                                  className={classesm.cardActionAreaBox}
+                                >
+                                  <div
+                                    className={classesm.cardMediaBox}
+                                    onClick={() => {
+                                      value.breakdown
+                                        && value.breakdown.length > 0
+                                        ? null
+                                        : handleProjectName(index);
+                                    }}
+                                  >
+                                    {currentProjectId
+                                        && currentProjectId
+                                          === value.projectId && (
+                                      <span
+                                            className={
+                                          classesm.pinBoardIconSection
+                                        }
+                                          >
+                                            <Tooltip
+                                          title="Click here to go to pinned area"
+                                          arrow
+                                          placement="bottom-end"
+                                          classes={{
+                                            tooltip: classesm.customTooltip,
+                                            arrow: classesm.customArrow,
+                                          }}
+                                        >
                                           <IconButton aria-label="pinboard">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" viewBox="0 0 28.551 30.854">
-                                              <g id="Pin-board-Icon" transform="translate(-573.303 -183.304)">
-                                                <g id="pin-svgrepo-com_1_" data-name="pin-svgrepo-com (1)" transform="matrix(0.819, 0.574, -0.574, 0.819, 585.892, 182.279)" fill="#fff">
-                                                  <path d="M 10.81800174713135 25.26760864257812 C 10.48860168457031 25.26760864257812 10.24362182617188 24.8985481262207 10.02366161346436 24.07095909118652 C 9.876991271972656 23.51911926269531 9.786201477050781 22.91523742675781 9.786201477050781 22.67220878601074 L 9.786201477050781 15.88600826263428 L 3.781801700592041 15.88600826263428 C 3.212861776351929 15.88600826263428 2.750001668930054 15.4231481552124 2.750001668930054 14.85420799255371 C 2.750001668930054 13.58863830566406 3.412101745605469 12.34002876281738 4.664731979370117 11.24337863922119 C 5.043968677520752 10.91408729553223 5.451108932495117 10.61365985870361 5.877201557159424 10.34851551055908 L 5.877201557159424 3.687326192855835 C 5.707998752593994 3.560086011886597 5.54697322845459 3.420594453811646 5.397281646728516 3.271508455276489 C 4.902551651000977 2.775158405303955 4.313601970672607 1.940958380699158 4.313601970672607 0.7817983627319336 C 4.313111782073975 0.5064383745193481 4.420111656188965 0.2469983547925949 4.61488151550293 0.05173835530877113 C 4.810121536254883 -0.1430016458034515 5.068901538848877 -0.2500016391277313 5.344001770019531 -0.2500016391277313 L 16.29060173034668 -0.2500016391277313 C 16.85954093933105 -0.2500016391277313 17.32240104675293 0.2128583490848541 17.32240104675293 0.7817983627319336 C 17.32240104675293 1.940948367118835 16.73345184326172 2.775158405303955 16.2393913269043 3.270848274230957 C 16.08903121948242 3.420022010803223 15.92799377441406 3.559428691864014 15.75880146026611 3.687040090560913 L 15.75880146026611 10.34893798828125 L 15.76179218292236 10.35077857971191 C 16.20144081115723 10.62581825256348 16.60735130310059 10.9258279800415 16.96980094909668 11.24345874786377 C 18.22330093383789 12.33880805969238 18.88600158691406 13.58746814727783 18.88600158691406 14.85420799255371 C 18.88600158691406 15.4231481552124 18.42314147949219 15.88600826263428 17.85420227050781 15.88600826263428 L 11.84980201721191 15.88600826263428 L 11.84980201721191 22.67220878601074 C 11.84980201721191 22.91523742675781 11.75901222229004 23.51911926269531 11.61234188079834 24.07095909118652 C 11.39238166809082 24.8985481262207 11.14740180969238 25.26760864257812 10.81800174713135 25.26760864257812 Z M 5.131830215454102 13.82240867614746 L 16.5041675567627 13.82240867614746 C 16.29999160766602 13.48112297058105 16.00108909606934 13.13755989074707 15.6116418838501 12.79709815979004 C 15.20903968811035 12.44766330718994 14.76706314086914 12.14070606231689 14.29824447631836 11.88505172729492 L 14.26475143432617 11.86920833587646 C 13.91267204284668 11.69277858734131 13.69443130493164 11.33852863311768 13.6952018737793 10.94471836090088 L 13.6952018737793 3.127198457717896 C 13.69363117218018 2.725996494293213 13.92673015594482 2.359151124954224 14.29030895233154 2.189306259155273 C 14.46654796600342 2.084347009658813 14.62969207763672 1.958009958267212 14.77545547485352 1.813598394393921 L 6.860558032989502 1.813598394393921 C 7.015889644622803 1.967246174812317 7.189934253692627 2.099895238876343 7.37856912612915 2.208495378494263 C 7.726963043212891 2.388191938400269 7.940791606903076 2.7387855052948 7.940801620483398 3.127188444137573 L 7.940801620483398 10.94520854949951 C 7.940801620483398 11.33813858032227 7.722571849822998 11.69158840179443 7.37127161026001 11.86762809753418 L 7.353760242462158 11.87640285491943 L 7.274331569671631 11.92052841186523 C 6.829561710357666 12.16862869262695 6.408641815185547 12.46383857727051 6.023621559143066 12.79774856567383 C 5.634727001190186 13.13772392272949 5.335971355438232 13.4811544418335 5.131830215454102 13.82240867614746 Z" stroke="none" />
-                                                  <path d="M 5.344005584716797 -1.9073486328125e-06 C 5.137022018432617 -1.9073486328125e-06 4.938459396362305 0.08208847045898438 4.791881561279297 0.2282886505126953 C 4.645351409912109 0.3751888275146484 4.563232421875 0.5743083953857422 4.563602447509766 0.7817974090576172 C 4.563602447509766 1.843488693237305 5.098352432250977 2.617467880249023 5.573692321777344 3.094367980957031 C 5.744872093200684 3.264848709106445 5.930021286010742 3.420707702636719 6.127202033996582 3.560317993164062 L 6.127202033996582 10.48862838745117 C 5.66814136505127 10.76476860046387 5.233921051025391 11.08023834228516 4.829412460327148 11.43147850036621 C 4.000701904296875 12.15699863433838 3.000001907348633 13.33281803131104 3.000001907348633 14.85420799255371 C 3.000001907348633 15.28597831726074 3.350021362304688 15.63600826263428 3.781801223754883 15.63600826263428 L 10.03620147705078 15.63600826263428 L 10.03620147705078 22.67220878601074 C 10.03620147705078 23.10375785827637 10.38645172119141 25.01760864257812 10.81800174713135 25.01760864257812 C 11.24955177307129 25.01760864257812 11.59980201721191 23.10375785827637 11.59980201721191 22.67220878601074 L 11.59980201721191 15.63600826263428 L 17.85420227050781 15.63600826263428 C 18.28598213195801 15.63600826263428 18.63600158691406 15.28597831726074 18.63600158691406 14.85420799255371 C 18.63600158691406 13.33281803131104 17.63530158996582 12.15699863433838 16.80503082275391 11.43147850036621 C 16.37504196166992 11.05465793609619 15.94817161560059 10.76225852966309 15.63076210021973 10.56368827819824 L 15.50880241394043 10.48862838745117 L 15.50880241394043 3.560317993164062 C 15.67142105102539 3.444608688354492 15.86530113220215 3.289817810058594 16.06232070922852 3.094367980957031 C 16.53765106201172 2.617467880249023 17.07240104675293 1.845048904418945 17.07240104675293 0.7817974090576172 C 17.07240104675293 0.3500289916992188 16.72238159179688 -1.9073486328125e-06 16.29060173034668 -1.9073486328125e-06 L 5.345401763916016 -1.9073486328125e-06 C 5.344932556152344 -1.9073486328125e-06 5.344474792480469 -1.9073486328125e-06 5.344005584716797 -1.9073486328125e-06 M 16.90979194641113 14.07240867614746 L 4.726211547851562 14.07240867614746 C 4.945121765136719 13.54077816009521 5.362602233886719 13.04355812072754 5.859821319580078 12.60887813568115 C 6.258611679077148 12.26302814483643 6.69193172454834 11.95913791656494 7.152921676635742 11.70198822021484 L 7.259271621704102 11.644118309021 C 7.523781776428223 11.51156806945801 7.690801620483398 11.24104881286621 7.690801620483398 10.94520854949951 L 7.690801620483398 3.127199172973633 C 7.690792083740234 2.832588195800781 7.525171279907227 2.562997817993164 7.262372016906738 2.429838180541992 L 7.259242057800293 2.428268432617188 C 7.047942161560059 2.30723762512207 6.853442192077637 2.158988952636719 6.68071174621582 1.987339019775391 C 6.554061889648438 1.862247467041016 6.439921379089355 1.719959259033203 6.346101760864258 1.5635986328125 L 15.28990173339844 1.5635986328125 C 15.19764137268066 1.721529006958008 15.08037185668945 1.862247467041016 14.95529174804688 1.987339019775391 C 14.79078197479248 2.150968551635742 14.60640144348145 2.293317794799805 14.40646171569824 2.411067962646484 C 14.12475204467773 2.537708282470703 13.94399166107178 2.818328857421875 13.9452018737793 3.127199172973633 L 13.9452018737793 10.94520854949951 C 13.94462203979492 11.24163818359375 14.11174201965332 11.51289844512939 14.37675189971924 11.64569854736328 L 14.37988185882568 11.64569854736328 L 14.39864158630371 11.65507793426514 C 14.89121150970459 11.92185878753662 15.3531322479248 12.24168872833252 15.77618217468262 12.60887813568115 C 16.27340126037598 13.04355812072754 16.69088172912598 13.54077816009521 16.90979194641113 14.07240867614746 M 7.262372016906738 2.429838180541992 L 7.259242057800293 2.428268432617188 L 7.262372016906738 2.429838180541992 M 5.344001770019531 -0.5000019073486328 L 16.29060173034668 -0.5000019073486328 C 16.99739074707031 -0.5000019073486328 17.57240104675293 0.07500839233398438 17.57240104675293 0.7817974090576172 C 17.57240104675293 2.026338577270508 16.94379234313965 2.918258666992188 16.41646194458008 3.447338104248047 C 16.28717422485352 3.575601577758789 16.15091323852539 3.696640014648438 16.00880241394043 3.809608459472656 L 16.00880241394043 10.21146583557129 C 16.41672134399414 10.47408485412598 16.79411506652832 10.75708961486816 17.13457107543945 11.05543804168701 C 18.4437313079834 12.19943809509277 19.13600158691406 13.51318836212158 19.13600158691406 14.85420799255371 C 19.13600158691406 15.56099796295166 18.56099128723145 16.13600921630859 17.85420227050781 16.13600921630859 L 12.09980201721191 16.13600921630859 L 12.09980201721191 22.67220878601074 C 12.09980201721191 22.9738883972168 11.99181175231934 23.61649894714355 11.8539514541626 24.13517761230469 C 11.67226219177246 24.81877899169922 11.40710163116455 25.51760864257812 10.81800174713135 25.51760864257812 C 10.22890186309814 25.51760864257812 9.963741302490234 24.81877899169922 9.782052040100098 24.13517761230469 C 9.644191741943359 23.61649894714355 9.536201477050781 22.9738883972168 9.536201477050781 22.67220878601074 L 9.536201477050781 16.13600921630859 L 3.781801223754883 16.13600921630859 C 3.07501220703125 16.13600921630859 2.500001907348633 15.56099796295166 2.500001907348633 14.85420799255371 C 2.500001907348633 13.51444816589355 3.191612243652344 12.20079803466797 4.50006103515625 11.05527877807617 C 4.854766845703125 10.74728012084961 5.232664108276367 10.46425342559814 5.627201080322266 10.21081256866455 L 5.627201080322266 3.810070037841797 C 5.485071182250977 3.697265625 5.349029541015625 3.576290130615234 5.220861434936523 3.448648452758789 C 4.692222595214844 2.918268203735352 4.063602447509766 2.026348114013672 4.063602447509766 0.7817974090576172 C 4.062992095947266 0.4400577545166016 4.195911407470703 0.1177577972412109 4.437881469726562 -0.1248207092285156 C 4.680770874023438 -0.3670825958251953 5.002252578735352 -0.5000019073486328 5.344001770019531 -0.5000019073486328 Z M 14.00709915161133 2.0635986328125 L 7.624673843383789 2.0635986328125 C 7.977375030517578 2.299890518188477 8.190783500671387 2.694652557373047 8.190801620483398 3.127178192138672 L 8.190801620483398 10.94520854949951 C 8.190801620483398 11.43334865570068 7.919692039489746 11.87243843078613 7.483282089233398 12.0911283493042 L 7.470568656921387 12.09749889373779 L 7.39574146270752 12.13906860351562 C 6.966301918029785 12.37861824035645 6.559501647949219 12.66391849517822 6.187411308288574 12.98661804199219 C 5.966859817504883 13.17942714691162 5.774895668029785 13.37626647949219 5.615266799926758 13.57240867614746 L 16.02066612243652 13.57240867614746 C 15.86079788208008 13.37601184844971 15.66841697692871 13.17879295349121 15.44709205627441 12.98530864715576 C 15.06220436096191 12.65125179290771 14.63926696777344 12.35692691802979 14.19073867797852 12.11119937896729 L 14.15275192260742 12.09270858764648 C 13.71536159515381 11.87352848052979 13.44424152374268 11.43345832824707 13.4452018737793 10.94422817230225 L 13.4452018737793 3.127199172973633 C 13.44351577758789 2.698196411132812 13.6584529876709 2.30036735534668 14.00709915161133 2.0635986328125 Z" stroke="none" fill="#fff" />
+                                                <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="20"
+                                              height="22"
+                                              viewBox="0 0 28.551 30.854"
+                                            >
+                                              <g
+                                                    id="Pin-board-Icon"
+                                                    transform="translate(-573.303 -183.304)"
+                                                  >
+                                                    <g
+                                                  id="pin-svgrepo-com_1_"
+                                                  data-name="pin-svgrepo-com (1)"
+                                                  transform="matrix(0.819, 0.574, -0.574, 0.819, 585.892, 182.279)"
+                                                  fill="#fff"
+                                                >
+                                                  <path
+                                                        d="M 10.81800174713135 25.26760864257812 C 10.48860168457031 25.26760864257812 10.24362182617188 24.8985481262207 10.02366161346436 24.07095909118652 C 9.876991271972656 23.51911926269531 9.786201477050781 22.91523742675781 9.786201477050781 22.67220878601074 L 9.786201477050781 15.88600826263428 L 3.781801700592041 15.88600826263428 C 3.212861776351929 15.88600826263428 2.750001668930054 15.4231481552124 2.750001668930054 14.85420799255371 C 2.750001668930054 13.58863830566406 3.412101745605469 12.34002876281738 4.664731979370117 11.24337863922119 C 5.043968677520752 10.91408729553223 5.451108932495117 10.61365985870361 5.877201557159424 10.34851551055908 L 5.877201557159424 3.687326192855835 C 5.707998752593994 3.560086011886597 5.54697322845459 3.420594453811646 5.397281646728516 3.271508455276489 C 4.902551651000977 2.775158405303955 4.313601970672607 1.940958380699158 4.313601970672607 0.7817983627319336 C 4.313111782073975 0.5064383745193481 4.420111656188965 0.2469983547925949 4.61488151550293 0.05173835530877113 C 4.810121536254883 -0.1430016458034515 5.068901538848877 -0.2500016391277313 5.344001770019531 -0.2500016391277313 L 16.29060173034668 -0.2500016391277313 C 16.85954093933105 -0.2500016391277313 17.32240104675293 0.2128583490848541 17.32240104675293 0.7817983627319336 C 17.32240104675293 1.940948367118835 16.73345184326172 2.775158405303955 16.2393913269043 3.270848274230957 C 16.08903121948242 3.420022010803223 15.92799377441406 3.559428691864014 15.75880146026611 3.687040090560913 L 15.75880146026611 10.34893798828125 L 15.76179218292236 10.35077857971191 C 16.20144081115723 10.62581825256348 16.60735130310059 10.9258279800415 16.96980094909668 11.24345874786377 C 18.22330093383789 12.33880805969238 18.88600158691406 13.58746814727783 18.88600158691406 14.85420799255371 C 18.88600158691406 15.4231481552124 18.42314147949219 15.88600826263428 17.85420227050781 15.88600826263428 L 11.84980201721191 15.88600826263428 L 11.84980201721191 22.67220878601074 C 11.84980201721191 22.91523742675781 11.75901222229004 23.51911926269531 11.61234188079834 24.07095909118652 C 11.39238166809082 24.8985481262207 11.14740180969238 25.26760864257812 10.81800174713135 25.26760864257812 Z M 5.131830215454102 13.82240867614746 L 16.5041675567627 13.82240867614746 C 16.29999160766602 13.48112297058105 16.00108909606934 13.13755989074707 15.6116418838501 12.79709815979004 C 15.20903968811035 12.44766330718994 14.76706314086914 12.14070606231689 14.29824447631836 11.88505172729492 L 14.26475143432617 11.86920833587646 C 13.91267204284668 11.69277858734131 13.69443130493164 11.33852863311768 13.6952018737793 10.94471836090088 L 13.6952018737793 3.127198457717896 C 13.69363117218018 2.725996494293213 13.92673015594482 2.359151124954224 14.29030895233154 2.189306259155273 C 14.46654796600342 2.084347009658813 14.62969207763672 1.958009958267212 14.77545547485352 1.813598394393921 L 6.860558032989502 1.813598394393921 C 7.015889644622803 1.967246174812317 7.189934253692627 2.099895238876343 7.37856912612915 2.208495378494263 C 7.726963043212891 2.388191938400269 7.940791606903076 2.7387855052948 7.940801620483398 3.127188444137573 L 7.940801620483398 10.94520854949951 C 7.940801620483398 11.33813858032227 7.722571849822998 11.69158840179443 7.37127161026001 11.86762809753418 L 7.353760242462158 11.87640285491943 L 7.274331569671631 11.92052841186523 C 6.829561710357666 12.16862869262695 6.408641815185547 12.46383857727051 6.023621559143066 12.79774856567383 C 5.634727001190186 13.13772392272949 5.335971355438232 13.4811544418335 5.131830215454102 13.82240867614746 Z"
+                                                        stroke="none"
+                                                      />
+                                                  <path
+                                                        d="M 5.344005584716797 -1.9073486328125e-06 C 5.137022018432617 -1.9073486328125e-06 4.938459396362305 0.08208847045898438 4.791881561279297 0.2282886505126953 C 4.645351409912109 0.3751888275146484 4.563232421875 0.5743083953857422 4.563602447509766 0.7817974090576172 C 4.563602447509766 1.843488693237305 5.098352432250977 2.617467880249023 5.573692321777344 3.094367980957031 C 5.744872093200684 3.264848709106445 5.930021286010742 3.420707702636719 6.127202033996582 3.560317993164062 L 6.127202033996582 10.48862838745117 C 5.66814136505127 10.76476860046387 5.233921051025391 11.08023834228516 4.829412460327148 11.43147850036621 C 4.000701904296875 12.15699863433838 3.000001907348633 13.33281803131104 3.000001907348633 14.85420799255371 C 3.000001907348633 15.28597831726074 3.350021362304688 15.63600826263428 3.781801223754883 15.63600826263428 L 10.03620147705078 15.63600826263428 L 10.03620147705078 22.67220878601074 C 10.03620147705078 23.10375785827637 10.38645172119141 25.01760864257812 10.81800174713135 25.01760864257812 C 11.24955177307129 25.01760864257812 11.59980201721191 23.10375785827637 11.59980201721191 22.67220878601074 L 11.59980201721191 15.63600826263428 L 17.85420227050781 15.63600826263428 C 18.28598213195801 15.63600826263428 18.63600158691406 15.28597831726074 18.63600158691406 14.85420799255371 C 18.63600158691406 13.33281803131104 17.63530158996582 12.15699863433838 16.80503082275391 11.43147850036621 C 16.37504196166992 11.05465793609619 15.94817161560059 10.76225852966309 15.63076210021973 10.56368827819824 L 15.50880241394043 10.48862838745117 L 15.50880241394043 3.560317993164062 C 15.67142105102539 3.444608688354492 15.86530113220215 3.289817810058594 16.06232070922852 3.094367980957031 C 16.53765106201172 2.617467880249023 17.07240104675293 1.845048904418945 17.07240104675293 0.7817974090576172 C 17.07240104675293 0.3500289916992188 16.72238159179688 -1.9073486328125e-06 16.29060173034668 -1.9073486328125e-06 L 5.345401763916016 -1.9073486328125e-06 C 5.344932556152344 -1.9073486328125e-06 5.344474792480469 -1.9073486328125e-06 5.344005584716797 -1.9073486328125e-06 M 16.90979194641113 14.07240867614746 L 4.726211547851562 14.07240867614746 C 4.945121765136719 13.54077816009521 5.362602233886719 13.04355812072754 5.859821319580078 12.60887813568115 C 6.258611679077148 12.26302814483643 6.69193172454834 11.95913791656494 7.152921676635742 11.70198822021484 L 7.259271621704102 11.644118309021 C 7.523781776428223 11.51156806945801 7.690801620483398 11.24104881286621 7.690801620483398 10.94520854949951 L 7.690801620483398 3.127199172973633 C 7.690792083740234 2.832588195800781 7.525171279907227 2.562997817993164 7.262372016906738 2.429838180541992 L 7.259242057800293 2.428268432617188 C 7.047942161560059 2.30723762512207 6.853442192077637 2.158988952636719 6.68071174621582 1.987339019775391 C 6.554061889648438 1.862247467041016 6.439921379089355 1.719959259033203 6.346101760864258 1.5635986328125 L 15.28990173339844 1.5635986328125 C 15.19764137268066 1.721529006958008 15.08037185668945 1.862247467041016 14.95529174804688 1.987339019775391 C 14.79078197479248 2.150968551635742 14.60640144348145 2.293317794799805 14.40646171569824 2.411067962646484 C 14.12475204467773 2.537708282470703 13.94399166107178 2.818328857421875 13.9452018737793 3.127199172973633 L 13.9452018737793 10.94520854949951 C 13.94462203979492 11.24163818359375 14.11174201965332 11.51289844512939 14.37675189971924 11.64569854736328 L 14.37988185882568 11.64569854736328 L 14.39864158630371 11.65507793426514 C 14.89121150970459 11.92185878753662 15.3531322479248 12.24168872833252 15.77618217468262 12.60887813568115 C 16.27340126037598 13.04355812072754 16.69088172912598 13.54077816009521 16.90979194641113 14.07240867614746 M 7.262372016906738 2.429838180541992 L 7.259242057800293 2.428268432617188 L 7.262372016906738 2.429838180541992 M 5.344001770019531 -0.5000019073486328 L 16.29060173034668 -0.5000019073486328 C 16.99739074707031 -0.5000019073486328 17.57240104675293 0.07500839233398438 17.57240104675293 0.7817974090576172 C 17.57240104675293 2.026338577270508 16.94379234313965 2.918258666992188 16.41646194458008 3.447338104248047 C 16.28717422485352 3.575601577758789 16.15091323852539 3.696640014648438 16.00880241394043 3.809608459472656 L 16.00880241394043 10.21146583557129 C 16.41672134399414 10.47408485412598 16.79411506652832 10.75708961486816 17.13457107543945 11.05543804168701 C 18.4437313079834 12.19943809509277 19.13600158691406 13.51318836212158 19.13600158691406 14.85420799255371 C 19.13600158691406 15.56099796295166 18.56099128723145 16.13600921630859 17.85420227050781 16.13600921630859 L 12.09980201721191 16.13600921630859 L 12.09980201721191 22.67220878601074 C 12.09980201721191 22.9738883972168 11.99181175231934 23.61649894714355 11.8539514541626 24.13517761230469 C 11.67226219177246 24.81877899169922 11.40710163116455 25.51760864257812 10.81800174713135 25.51760864257812 C 10.22890186309814 25.51760864257812 9.963741302490234 24.81877899169922 9.782052040100098 24.13517761230469 C 9.644191741943359 23.61649894714355 9.536201477050781 22.9738883972168 9.536201477050781 22.67220878601074 L 9.536201477050781 16.13600921630859 L 3.781801223754883 16.13600921630859 C 3.07501220703125 16.13600921630859 2.500001907348633 15.56099796295166 2.500001907348633 14.85420799255371 C 2.500001907348633 13.51444816589355 3.191612243652344 12.20079803466797 4.50006103515625 11.05527877807617 C 4.854766845703125 10.74728012084961 5.232664108276367 10.46425342559814 5.627201080322266 10.21081256866455 L 5.627201080322266 3.810070037841797 C 5.485071182250977 3.697265625 5.349029541015625 3.576290130615234 5.220861434936523 3.448648452758789 C 4.692222595214844 2.918268203735352 4.063602447509766 2.026348114013672 4.063602447509766 0.7817974090576172 C 4.062992095947266 0.4400577545166016 4.195911407470703 0.1177577972412109 4.437881469726562 -0.1248207092285156 C 4.680770874023438 -0.3670825958251953 5.002252578735352 -0.5000019073486328 5.344001770019531 -0.5000019073486328 Z M 14.00709915161133 2.0635986328125 L 7.624673843383789 2.0635986328125 C 7.977375030517578 2.299890518188477 8.190783500671387 2.694652557373047 8.190801620483398 3.127178192138672 L 8.190801620483398 10.94520854949951 C 8.190801620483398 11.43334865570068 7.919692039489746 11.87243843078613 7.483282089233398 12.0911283493042 L 7.470568656921387 12.09749889373779 L 7.39574146270752 12.13906860351562 C 6.966301918029785 12.37861824035645 6.559501647949219 12.66391849517822 6.187411308288574 12.98661804199219 C 5.966859817504883 13.17942714691162 5.774895668029785 13.37626647949219 5.615266799926758 13.57240867614746 L 16.02066612243652 13.57240867614746 C 15.86079788208008 13.37601184844971 15.66841697692871 13.17879295349121 15.44709205627441 12.98530864715576 C 15.06220436096191 12.65125179290771 14.63926696777344 12.35692691802979 14.19073867797852 12.11119937896729 L 14.15275192260742 12.09270858764648 C 13.71536159515381 11.87352848052979 13.44424152374268 11.43345832824707 13.4452018737793 10.94422817230225 L 13.4452018737793 3.127199172973633 C 13.44351577758789 2.698196411132812 13.6584529876709 2.30036735534668 14.00709915161133 2.0635986328125 Z"
+                                                        stroke="none"
+                                                        fill="#fff"
+                                                      />
                                                 </g>
-                                              </g>
+                                                  </g>
                                             </svg>
-                                          </IconButton>
+                                              </IconButton>
                                         </Tooltip>
-                                      </span>
+                                          </span>
                                     )}
                                     <CardMedia
                                       className={classesm.media}
-                                      image={value.projectImage === null ? ProjectImg : value.projectImage}
+                                      image={
+                                        value.projectImage === null
+                                          ? ProjectImg
+                                          : value.projectImage
+                                      }
                                     />
-                                    <span className={classesm.projectTitleSection}>
-                                      <Typography gutterBottom variant="body1" component="h5" className={classesm.projectSelectionTitle}>
+                                    <span
+                                      className={classesm.projectTitleSection}
+                                    >
+                                      <Typography
+                                        gutterBottom
+                                        variant="body1"
+                                        component="h5"
+                                        className={
+                                          classesm.projectSelectionTitle
+                                        }
+                                      >
                                         {value.projectName}
                                       </Typography>
-                                      <Typography variant="body2" color="textSecondary" component="p" className={classesm.projectSelectionCode}>
-                                        <span className={classesm.projectCodeTitle}>
-                                          Code: {value.projectCode}
+                                      <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                        component="p"
+                                        className={
+                                          classesm.projectSelectionCode
+                                        }
+                                      >
+                                        <span
+                                          className={
+                                            classesm.projectCodeTitle
+                                          }
+                                        >
+                                            Code:
+                                          {' '}
+                                          {value.projectCode}
                                         </span>
-                                        <span className={classesm.externalLinkSection}>
+                                        <span
+                                          className={
+                                            classesm.externalLinkSection
+                                          }
+                                        >
                                           {/* <Tooltip title="Control tower" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
                                             <IconButton aria-label="delete" className={classesm.margin}>
                                               <svg id="Control-Tower-32" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -1494,96 +1862,290 @@ function PersonalDashboard(props) {
                                       </Typography>
                                     </span>
                                   </div>
-                                  <div className={changeClass && phaseSelect.includes(`phase${index}`) ? classesm.sectionScrollingMax : classesm.sectionScrolling}>
+                                  <div
+                                    className={
+                                      changeClass
+                                        && phaseSelect.includes(`phase${index}`)
+                                        ? classesm.sectionScrollingMax
+                                        : classesm.sectionScrolling
+                                    }
+                                  >
                                     {value.firstBreakdown && (
-                                      <>
-                                        {value.firstBreakdown.map((phase, phaseIndex) => {
-                                          return (
-                                            <Accordion expanded={openPhase === `panel${index}${phaseIndex}`} onChange={handlePhaseChange(`panel${index}${phaseIndex}`, `phase${index}${phaseIndex}`, index, phase.id)} defaultExpanded className={classesm.mainProjectMenuList}>
-                                              <AccordionSummary
-                                                aria-controls="panel1bh-content"
-                                                id="panel1bh-header"
+                                    <>
+                                      {value.firstBreakdown.map(
+                                        (phase, phaseIndex) => (
+                                          <Accordion
+                                            expanded={
+                                              openPhase
+                                                    === `panel${index}${phaseIndex}`
+                                            }
+                                            onChange={handlePhaseChange(
+                                              `panel${index}${phaseIndex}`,
+                                              `phase${index}${phaseIndex}`,
+                                              index,
+                                              phase.id
+                                            )}
+                                            defaultExpanded
+                                            className={
+                                              classesm.mainProjectMenuList
+                                            }
+                                          >
+                                            <AccordionSummary
+                                              aria-controls="panel1bh-content"
+                                              id="panel1bh-header"
+                                            >
+                                              <List
+                                                className={
+                                                  classesm.listSection
+                                                }
                                               >
-                                                <List className={classesm.listSection}>
-                                                  <ListItem button className={classesm.phaseMenuList} onClick={
-                                                    (value.breakdown && !value.breakdown[1]) ? () => handleProjectBreakdown(index, phaseIndex, null, null, null, '1L') : null
-                                                  }>
-                                                    <ListItemText primary={phase.structureName} />
-                                                    {value.breakdown && value.breakdown[1] && (
-                                                      <>
-                                                        {openPhase === `panel${index}${phaseIndex}` ? <RemoveIcon /> : <AddIcon />}
-                                                      </>
-                                                    )}
-                                                  </ListItem>
-                                                </List>
-                                              </AccordionSummary>
+                                                <ListItem
+                                                  button
+                                                  className={
+                                                    classesm.phaseMenuList
+                                                  }
+                                                  onClick={
+                                                    value.breakdown
+                                                          && !value.breakdown[1]
+                                                      ? () => handleProjectBreakdown(
+                                                        index,
+                                                        phaseIndex,
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        '1L'
+                                                      )
+                                                      : null
+                                                  }
+                                                >
+                                                  <ListItemText
+                                                    primary={
+                                                      phase.structureName
+                                                    }
+                                                  />
+                                                  {value.breakdown
+                                                          && value
+                                                            .breakdown[1] && (
+                                                            <>
+                                                              {openPhase
+                                                              === `panel${index}${phaseIndex}` ? (
+                                                                <RemoveIcon />
+                                                                ) : (
+                                                                  <AddIcon />
+                                                                )}
+                                                            </>
+                                                  )}
+                                                </ListItem>
+                                              </List>
+                                            </AccordionSummary>
 
-                                              <AccordionDetails className={classesm.subUnitSection}>
-                                                {(openPhase === `panel${index}${phaseIndex}` && secondBreakdown && secondBreakdown.length > 0) && (
-                                                  <>
-                                                    {secondBreakdown.map((unit, unitIndex) => (
-
-                                                      <Accordion expanded={openUnit === `panel${index}${phaseIndex}${unitIndex}`} onChange={handleUnitChange(`panel${index}${phaseIndex}${unitIndex}`, index, unit.id)}>
-                                                        <AccordionSummary
-                                                          aria-controls="panel1bh-content"
-                                                          id="panel1bh-header"
-                                                        >
-                                                          <List className={classesm.listSection}>
-                                                            <ListItem button className={classesm.unitMenuList} onClick={
-                                                              (value.breakdown && !value.breakdown[2]) ? () => handleProjectBreakdown(index, phaseIndex, unitIndex, null, null, '2L') : null
-                                                            }>
-                                                              <ListItemText primary={unit.structureName} />
-                                                              {value.breakdown && value.breakdown[2] && (
-                                                                <>
-                                                                  {openUnit === `panel${index}${phaseIndex}${unitIndex}` ? <RemoveIcon /> : <AddIcon />}
-                                                                </>
-                                                              )}
-                                                            </ListItem>
-                                                          </List>
-                                                        </AccordionSummary>
-                                                        {(openUnit === `panel${index}${phaseIndex}${unitIndex}` && thirdBreakdown && thirdBreakdown.length > 0) && (
-                                                          <AccordionDetails className={classesm.subUnitSection}>
-                                                            {thirdBreakdown.map((subUnit, subUnitIndex) => (
-                                                              <Accordion expanded={openSubUnit === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`} onChange={handleSubUnitChange(`panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`, index, subUnit.id)}>
+                                            <AccordionDetails
+                                              className={
+                                                classesm.subUnitSection
+                                              }
+                                            >
+                                              {openPhase
+                                                      === `panel${index}${phaseIndex}`
+                                                      && secondBreakdown
+                                                      && secondBreakdown.length
+                                                        > 0 && (
+                                                        <>
+                                                          {secondBreakdown.map(
+                                                            (
+                                                              unit,
+                                                              unitIndex
+                                                            ) => (
+                                                              <Accordion
+                                                                expanded={
+                                                                  openUnit
+                                                                  === `panel${index}${phaseIndex}${unitIndex}`
+                                                                }
+                                                                onChange={handleUnitChange(
+                                                                  `panel${index}${phaseIndex}${unitIndex}`,
+                                                                  index,
+                                                                  unit.id
+                                                                )}
+                                                              >
                                                                 <AccordionSummary
                                                                   aria-controls="panel1bh-content"
                                                                   id="panel1bh-header"
                                                                 >
-                                                                  <List className={classesm.listSection}>
-                                                                    <ListItem button className={classesm.unitMenuList} onClick={
-                                                                      (value.breakdown && !value.breakdown[3]) ? () => handleProjectBreakdown(index, phaseIndex, unitIndex, subUnitIndex, null, '3L') : null
-                                                                    }>
-                                                                      <ListItemText primary={subUnit.structureName} />
-                                                                      {value.breakdown && value.breakdown[3] && (
-                                                                        <>
-                                                                          {openSubUnit === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}` ? <RemoveIcon /> : <AddIcon />}
-                                                                        </>
+                                                                  <List
+                                                                    className={
+                                                                      classesm.listSection
+                                                                    }
+                                                                  >
+                                                                    <ListItem
+                                                                      button
+                                                                      className={
+                                                                        classesm.unitMenuList
+                                                                      }
+                                                                      onClick={
+                                                                        value.breakdown
+                                                                        && !value
+                                                                          .breakdown[2]
+                                                                          ? () => handleProjectBreakdown(
+                                                                            index,
+                                                                            phaseIndex,
+                                                                            unitIndex,
+                                                                            null,
+                                                                            null,
+                                                                            '2L'
+                                                                          )
+                                                                          : null
+                                                                      }
+                                                                    >
+                                                                      <ListItemText
+                                                                        primary={
+                                                                          unit.structureName
+                                                                        }
+                                                                      />
+                                                                      {value.breakdown
+                                                                        && value
+                                                                          .breakdown[2] && (
+                                                                          <>
+                                                                            {openUnit
+                                                                            === `panel${index}${phaseIndex}${unitIndex}` ? (
+                                                                              <RemoveIcon />
+                                                                              ) : (
+                                                                                <AddIcon />
+                                                                              )}
+                                                                          </>
                                                                       )}
                                                                     </ListItem>
                                                                   </List>
                                                                 </AccordionSummary>
-                                                                {fourthBreakdown && fourthBreakdown.length > 0 && (
-                                                                  <AccordionDetails className={classesm.subUnitSection}>
-                                                                    <List className={classesm.listSection}>
-                                                                      {fourthBreakdown.map((subSubUnit, subSubUnitIndex) => (
-                                                                        <ListItem button className={classesm.workAreaList} onClick={() => handleProjectBreakdown(index, phaseIndex, unitIndex, subUnitIndex, subSubUnitIndex, '4L')}>
-                                                                          <ListItemText primary={subSubUnit.structureName} />
-                                                                        </ListItem>
-                                                                      ))}
-                                                                    </List>
+                                                                {openUnit
+                                                                  === `panel${index}${phaseIndex}${unitIndex}`
+                                                                  && thirdBreakdown
+                                                                  && thirdBreakdown.length
+                                                                    > 0 && (
+                                                                    <AccordionDetails
+                                                                    className={
+                                                                      classesm.subUnitSection
+                                                                    }
+                                                                  >
+                                                                    {thirdBreakdown.map(
+                                                                      (
+                                                                        subUnit,
+                                                                        subUnitIndex
+                                                                      ) => (
+                                                                        <Accordion
+                                                                          expanded={
+                                                                            openSubUnit
+                                                                              === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`
+                                                                          }
+                                                                          onChange={handleSubUnitChange(
+                                                                            `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`,
+                                                                            index,
+                                                                            subUnit.id
+                                                                          )}
+                                                                        >
+                                                                          <AccordionSummary
+                                                                            aria-controls="panel1bh-content"
+                                                                            id="panel1bh-header"
+                                                                          >
+                                                                            <List
+                                                                              className={
+                                                                                classesm.listSection
+                                                                              }
+                                                                            >
+                                                                              <ListItem
+                                                                                button
+                                                                                className={
+                                                                                  classesm.unitMenuList
+                                                                                }
+                                                                                onClick={
+                                                                                  value.breakdown
+                                                                                    && !value
+                                                                                      .breakdown[3]
+                                                                                    ? () => handleProjectBreakdown(
+                                                                                      index,
+                                                                                      phaseIndex,
+                                                                                      unitIndex,
+                                                                                      subUnitIndex,
+                                                                                      null,
+                                                                                      '3L'
+                                                                                    )
+                                                                                    : null
+                                                                                }
+                                                                              >
+                                                                                <ListItemText
+                                                                                  primary={
+                                                                                    subUnit.structureName
+                                                                                  }
+                                                                                />
+                                                                                {value.breakdown
+                                                                                    && value
+                                                                                      .breakdown[3] && (
+                                                                                      <>
+                                                                                        {openSubUnit
+                                                                                        === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}` ? (
+                                                                                          <RemoveIcon />
+                                                                                          ) : (
+                                                                                            <AddIcon />
+                                                                                          )}
+                                                                                      </>
+                                                                                )}
+                                                                              </ListItem>
+                                                                            </List>
+                                                                          </AccordionSummary>
+                                                                          {fourthBreakdown
+                                                                              && fourthBreakdown.length
+                                                                                > 0 && (
+                                                                                <AccordionDetails
+                                                                              className={
+                                                                                classesm.subUnitSection
+                                                                              }
+                                                                            >
+                                                                              <List
+                                                                                    className={
+                                                                                  classesm.listSection
+                                                                                }
+                                                                                  >
+                                                                                    {fourthBreakdown.map(
+                                                                                  (
+                                                                                    subSubUnit,
+                                                                                    subSubUnitIndex
+                                                                                  ) => (
+                                                                                    <ListItem
+                                                                                      button
+                                                                                      className={
+                                                                                        classesm.workAreaList
+                                                                                      }
+                                                                                      onClick={() => handleProjectBreakdown(
+                                                                                        index,
+                                                                                        phaseIndex,
+                                                                                        unitIndex,
+                                                                                        subUnitIndex,
+                                                                                        subSubUnitIndex,
+                                                                                        '4L'
+                                                                                      )
+                                                                                      }
+                                                                                    >
+                                                                                      <ListItemText
+                                                                                        primary={
+                                                                                          subSubUnit.structureName
+                                                                                        }
+                                                                                      />
+                                                                                    </ListItem>
+                                                                                  )
+                                                                                )}
+                                                                                  </List>
+                                                                            </AccordionDetails>
+                                                                          )}
+                                                                        </Accordion>
+                                                                      )
+                                                                    )}
                                                                   </AccordionDetails>
                                                                 )}
                                                               </Accordion>
-                                                            ))}
-                                                          </AccordionDetails>
-                                                        )}
-                                                      </Accordion>
-                                                    ))}
-                                                  </>
-                                                )}
-
-                                              </AccordionDetails>
-                                              {/* <AccordionDetails className={classesm.subUnitSection}>
+                                                            )
+                                                          )}
+                                                        </>
+                                              )}
+                                            </AccordionDetails>
+                                            {/* <AccordionDetails className={classesm.subUnitSection}>
                                           <Accordion expanded={openUnit === `panel${index}12`} onChange={handleUnitChange(`panel${index}12`)}>
                                             <AccordionSummary
                                               aria-controls="panel1bh-content"
@@ -1635,10 +2197,10 @@ function PersonalDashboard(props) {
                                           </Accordion>
 
                                         </AccordionDetails> */}
-                                            </Accordion>
-                                          )
-                                        })}
-                                      </>
+                                          </Accordion>
+                                        )
+                                      )}
+                                    </>
                                     )}
                                   </div>
                                 </CardContent>
@@ -1704,16 +2266,14 @@ function PersonalDashboard(props) {
           </Grid>
         </CustomPapperBlock>
       </>
-
     </>
   );
 }
-
 
 PersonalDashboard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 const DashboardInit = connect((state) => ({
-  initialValues: state.getIn(["InitialDetailsReducer"]),
+  initialValues: state.getIn(['InitialDetailsReducer']),
 }))(PersonalDashboard);
 export default withStyles(styles)(DashboardInit);

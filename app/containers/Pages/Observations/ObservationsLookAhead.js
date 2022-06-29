@@ -13,7 +13,7 @@ import completed from 'dan-images/completed.png';
 import preplanning from 'dan-images/preplanning.png';
 import progress from 'dan-images/progress.png';
 import React, { useState } from 'react';
-import "../../../styles/custom/customheader.css";
+import '../../../styles/custom/customheader.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,13 +79,13 @@ const useStyles = makeStyles((theme) => ({
   paddZero: {
     padding: '0px',
   },
-  pLTen : {
+  pLTen: {
     marginLeft: '5px',
   },
-  mTtop20 : {
+  mTtop20: {
     marginTop: '20px',
   },
-  marginTopBottom : {
+  marginTopBottom: {
     marginTop: '16px',
     marginBottom: '16px',
     backgroundColor: '#f3f3f3',
@@ -108,57 +108,57 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid #e4e4e4',
     padding: '0px 5px 0px 5px',
     borderRadius: '3px',
-},
-buttonsNewChild: {
-  borderRadius: '5px',
-  backgroundColor: '#23343e',
-  color: '#ffffff',
-},
-active: {
-  backgroundColor: '#f47607',
-  borderRadius: '5px',
-  color: '#ffffff',
-},
-activeTwo: {
-  backgroundColor: '#f47607',
-  borderRadius: '5px',
-  color: '#ffffff',
-  margin: '0px 10px',
-  minWidth: '38px',
-  padding: '4px 5px 5px 4px',
-},
-floatR: {
-  float: 'right',
-},
-sepHeight: {
-  borderLeft: '1px solid #cccccc',
-  height: '65px',
-},
-sepHeightTen: {
-  borderLeft: '1px solid #cccccc',
-  height: '10px',
-  verticalAlign:'middle',
-},
-textCenter: {
-  textAlign: 'right',
-  verticalAlign: 'middle',
-  padding: '16px!important',
-},
-textLeftone: {
-  textAlign: 'left',
-  verticalAlign: 'middle',
-  padding: '16px!important',
-  minWidth: '19% !important',
-},
-pLtenPRten: {padding: '0px 10px 0px 10px',},
-buttonsNewDays: {
-  padding: '6px 5px 5px 6px',
-  margin: '0px 10px',
-  minWidth: '38px',
-  backgroundColor: '#ffffff',
-  color: '#23343e',
-  borderRadius: '0px',
-},
+  },
+  buttonsNewChild: {
+    borderRadius: '5px',
+    backgroundColor: '#23343e',
+    color: '#ffffff',
+  },
+  active: {
+    backgroundColor: '#f47607',
+    borderRadius: '5px',
+    color: '#ffffff',
+  },
+  activeTwo: {
+    backgroundColor: '#f47607',
+    borderRadius: '5px',
+    color: '#ffffff',
+    margin: '0px 10px',
+    minWidth: '38px',
+    padding: '4px 5px 5px 4px',
+  },
+  floatR: {
+    float: 'right',
+  },
+  sepHeight: {
+    borderLeft: '1px solid #cccccc',
+    height: '65px',
+  },
+  sepHeightTen: {
+    borderLeft: '1px solid #cccccc',
+    height: '10px',
+    verticalAlign: 'middle',
+  },
+  textCenter: {
+    textAlign: 'right',
+    verticalAlign: 'middle',
+    padding: '16px!important',
+  },
+  textLeftone: {
+    textAlign: 'left',
+    verticalAlign: 'middle',
+    padding: '16px!important',
+    minWidth: '19% !important',
+  },
+  pLtenPRten: { padding: '0px 10px 0px 10px' },
+  buttonsNewDays: {
+    padding: '6px 5px 5px 6px',
+    margin: '0px 10px',
+    minWidth: '38px',
+    backgroundColor: '#ffffff',
+    color: '#23343e',
+    borderRadius: '0px',
+  },
 }));
 
 function LookAhead() {
@@ -177,7 +177,7 @@ function LookAhead() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  
+
   const classes = useStyles();
 
   return (
@@ -185,7 +185,11 @@ function LookAhead() {
       <Box padding={0}>
         <div className={classes.paddZero}>
           <Paper elevation={0}>
-              <AppBar position="static" color="transparent" className={classes.AppBarHeader}>
+            <AppBar
+              position="static"
+              color="transparent"
+              className={classes.AppBarHeader}
+            >
               <Toolbar className={classes.paddZero}>
                 <Grid item sm={2} xs={12} className={classes.search}>
                   <Paper elevation={1}>
@@ -202,58 +206,95 @@ function LookAhead() {
                     />
                   </Paper>
                 </Grid>
-                <Grid item  sm={5} xs={12} className="toggleViewButtons">
-                  <Typography variant="caption" className={classes.toggleTitle} />
+                <Grid item sm={5} xs={12} className="toggleViewButtons">
+                  <Typography
+                    variant="caption"
+                    className={classes.toggleTitle}
+                  />
                   <Tooltip title="My Observations" aria-label="My Observations">
                     <Button
                       variant="contained"
-                      onClick={(e) => handelView(e)}                    
+                      onClick={(e) => handelView(e)}
                       color="secondary"
                       className={classes.active}
-                      >
-                      My Observations
+                    >
+                      My Observations777
                     </Button>
                   </Tooltip>
-                  <Tooltip title="Team's Observations" aria-label="Team's Observations" className={classes.pLTen}>
+                  <Tooltip
+                    title="Team's Observations"
+                    aria-label="Team's Observations"
+                    className={classes.pLTen}
+                  >
                     <Button
                       variant="outlined"
                       onClick={(e) => handelViewTabel(e)}
                       color="primary"
                       className={classes.buttonsNewChild}
-                      >
+                    >
                       Team's Observations
                     </Button>
                   </Tooltip>
-                  <Tooltip title="Big Picture" aria-label="Big Picture" className={classes.pLTen}>
+                  <Tooltip
+                    title="Big Picture"
+                    aria-label="Big Picture"
+                    className={classes.pLTen}
+                  >
                     <Button
                       variant="outlined"
                       href="/app/charts/barcharts"
                       color="primary"
                       className={classes.buttonsNewChild}
-                      >
+                    >
                       Big Picture
                     </Button>
                   </Tooltip>
                 </Grid>
-                    <Grid item sm={3} xs={12} className={classes.textCenter}><img src={preplanning} /><img src={progress} className={classes.pLtenPRten} /><img src={completed} /></Grid>
-                    <span item sm={1} xs={1} className={classes.sepHeight}></span>
-                    <Grid item sm={2} xs={6} className={classes.textLeftone}>
-                      Days: <Button size="medium" variant="contained" className={classes.activeTwo} color="primary">
-                            30
-                          </Button>
-                          <span item xs={1} className={classes.sepHeightTen}></span> 
-                          <Button size="medium" variant="contained" className={classes.buttonsNewDays} color="primary">
-                            60
-                          </Button>
-                          <span item xs={1} className={classes.sepHeightTen}></span>
-                          <Button size="medium" variant="contained" className={classes.buttonsNewDays} color="primary">
-                            90
-                          </Button>
-                          <span item xs={1} className={classes.sepHeightTen}></span>
-                          <Button size="medium" variant="contained" className={classes.buttonsNewDays} color="primary">
-                            All
-                          </Button>
-                  </Grid>
+                <Grid item sm={3} xs={12} className={classes.textCenter}>
+                  <img src={preplanning} />
+                  <img src={progress} className={classes.pLtenPRten} />
+                  <img src={completed} />
+                </Grid>
+                <span item sm={1} xs={1} className={classes.sepHeight} />
+                <Grid item sm={2} xs={6} className={classes.textLeftone}>
+                  Days:
+                  {' '}
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    className={classes.activeTwo}
+                    color="primary"
+                  >
+                    30
+                  </Button>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    className={classes.buttonsNewDays}
+                    color="primary"
+                  >
+                    60
+                  </Button>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    className={classes.buttonsNewDays}
+                    color="primary"
+                  >
+                    90
+                  </Button>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    className={classes.buttonsNewDays}
+                    color="primary"
+                  >
+                    All
+                  </Button>
+                </Grid>
               </Toolbar>
             </AppBar>
           </Paper>

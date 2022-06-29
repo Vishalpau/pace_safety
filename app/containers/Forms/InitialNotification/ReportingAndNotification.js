@@ -940,23 +940,21 @@ const ReportingAndNotification = (props) => {
                         item
                         md={typeof item.evidenceDocument === "string" ? 2 : 6}
                       >
-                        {/* <input
+                        <input
                           ref={ref}
                           id="file"
                           type="file"
                           accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
                           style={{
                             color:
-                              typeof item.evidenceDocument === 'string'
-                              && 'transparent',
+                              typeof item.evidenceDocument === "string" &&
+                              "transparent",
                           }}
-                          onChange={(e) => handleEvidanceForm(e, index, 'evidenceDocument')}
-                        /> */}
-                        <MultiAttachment
-                          attachmentHandler={(files) =>
-                            handleEvidanceForm(files, index, "evidenceDocument")
+                          onChange={(e) =>
+                            handleEvidanceForm(e, index, "evidenceDocument")
                           }
                         />
+                        {/* <MultiAttachment attachmentHandler={(files) => handleEvidanceForm(files, index, 'evidenceDocument')} /> */}
                       </Grid>
                       {typeof item.evidenceDocument === "string" ? (
                         <Grid item md={4}>

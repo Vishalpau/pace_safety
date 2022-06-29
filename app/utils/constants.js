@@ -1,29 +1,29 @@
-
-
 export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';
 export const DAEMON = '@@saga-injector/daemon';
 export const ONCE_TILL_UNMOUNT = '@@saga-injector/once-till-unmount';
 
 const getSSOUrl = () => {
   if (window.location.hostname === 'localhost') {
-    return "https://dev-accounts.pace-os.com";
+    return 'https://dev-accounts.pace-os.com';
   }
   if (window.location.hostname === 'dev-safety.pace-os.com') {
-    return "https://dev-accounts.pace-os.com";
+    return 'https://dev-accounts.pace-os.com';
   }
-  if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
-    return "https://stage-accounts.pace-os.com";
+  if (
+    window.location.hostname
+    === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'
+  ) {
+    return 'https://stage-accounts.pace-os.com';
   }
   if (window.location.hostname === 'safety.pace-os.com') {
-    return "https://accounts.pace-os.com";
+    return 'https://accounts.pace-os.com';
   }
   if (window.location.hostname === 'qa-safety.pace-os.com') {
-    return "https://qa-accounts.pace-os.com";
+    return 'https://qa-accounts.pace-os.com';
   }
+};
 
-}
-
-export const SSO_URL = getSSOUrl()
+export const SSO_URL = getSSOUrl();
 // Dev
 // "https://dev-accounts.pace-os.com";
 // Production
@@ -32,30 +32,39 @@ export const SSO_URL = getSSOUrl()
 // local
 export const LOCAL_SSO_CLIENT_SECRET = 'pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW';
 export const LOCAL_SSO_CLIENT_ID = 'ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1';
-export const LOCAL_LOGIN_URL =
-  "https://dev-accounts.pace-os.com/api/v1/user/auth/authorize/?client_id=" + LOCAL_SSO_CLIENT_ID + "&client_secret=" + LOCAL_SSO_CLIENT_SECRET + "&response_type=code";
+export const LOCAL_LOGIN_URL = 'https://dev-accounts.pace-os.com/api/v1/user/auth/authorize/?client_id='
+  + LOCAL_SSO_CLIENT_ID
+  + '&client_secret='
+  + LOCAL_SSO_CLIENT_SECRET
+  + '&response_type=code';
 
 const getSSOClientSecret = () => {
   if (window.location.hostname === 'localhost') {
-    return "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW";
+    return 'pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW';
   }
   if (window.location.hostname === 'dev-safety.pace-os.com') {
-    return "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz";
+    return 'pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz';
   }
-  if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
-    return "";
+  if (
+    window.location.hostname
+    === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'
+  ) {
+    return '';
   }
-  if (window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
-    return "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
+  if (
+    window.location.hostname
+    === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'
+  ) {
+    return 'wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE';
   }
   if (window.location.hostname === 'safety.pace-os.com') {
-    return "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
+    return 'wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE';
   }
   if (window.location.hostname === 'qa-safety.pace-os.com') {
-    return "nLj0xu4IGFrTEe1TXehC0VMD4CPVcn1WzKXWQzN1FlSFTVP2BFFvFyQsbw2P5wRQ4wRhusCmSwz0LcVqo74NQhpBX5qwcHlOJopEFBZjhbqR6t4y7hoC9KdIHQ787OaC";
+    return 'nLj0xu4IGFrTEe1TXehC0VMD4CPVcn1WzKXWQzN1FlSFTVP2BFFvFyQsbw2P5wRQ4wRhusCmSwz0LcVqo74NQhpBX5qwcHlOJopEFBZjhbqR6t4y7hoC9KdIHQ787OaC';
   }
-}
-export const SSO_CLIENT_SECRET = getSSOClientSecret()
+};
+export const SSO_CLIENT_SECRET = getSSOClientSecret();
 // Dev
 // "4OyOnL5wVipenQ6QpG8fOasjjRSJ2cJwuOUF1sH4yaeGI70flEiwttckHlep0QklG0tS7GyX568wjIpEvR5oYPnseJvjEV3zzlcneOdtGJLs5g24KrwZDzfYu8TohUhw";
 // Production
@@ -63,25 +72,31 @@ export const SSO_CLIENT_SECRET = getSSOClientSecret()
 
 const getSSOClientId = () => {
   if (window.location.hostname === 'localhost') {
-    return "ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1";
+    return 'ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1';
   }
   if (window.location.hostname === 'dev-safety.pace-os.com') {
-    return "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo";
+    return 'yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo';
   }
-  if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
-    return "";
+  if (
+    window.location.hostname
+    === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'
+  ) {
+    return '';
   }
-  if (window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
-    return "bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q";
+  if (
+    window.location.hostname
+    === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'
+  ) {
+    return 'bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q';
   }
   if (window.location.hostname === 'safety.pace-os.com') {
-    return "bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q";
+    return 'bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q';
   }
   if (window.location.hostname === 'qa-safety.pace-os.com') {
-    return "1SBHU8yXJJUQoYXa4aRMeR4g2ht6KM96iZEOJk5F";
+    return '1SBHU8yXJJUQoYXa4aRMeR4g2ht6KM96iZEOJk5F';
   }
-}
-export const SSO_CLIENT_ID = getSSOClientId()
+};
+export const SSO_CLIENT_ID = getSSOClientId();
 // Dev
 // "OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq";
 // Production
@@ -91,65 +106,62 @@ export const SSO_CLIENT_ID = getSSOClientId()
 export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=${SSO_CLIENT_ID}&client_secret=${SSO_CLIENT_SECRET}&response_type=code`;
 export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 
-
 const getUrl = () => {
-  if (localStorage.getItem('userDetails') != null && localStorage.getItem('projectName') != null) {
-    let user = JSON.parse(localStorage.getItem('userDetails'))
-    let comp = JSON.parse(localStorage.getItem('company')).fkCompanyId
-    let apiDomain = user
-      .companies
-      .filter(company => company.companyId == comp)[0]
-      .subscriptions
-      .filter(subscription => subscription.appCode == "safety")[0]
-      .hostings[0].apiDomain
-
+  if (
+    localStorage.getItem('userDetails') != null
+    && localStorage.getItem('projectName') != null
+  ) {
+    const user = JSON.parse(localStorage.getItem('userDetails'));
+    const comp = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    const { apiDomain } = user.companies
+      .filter((company) => company.companyId == comp)[0]
+      .subscriptions.filter(
+        (subscription) => subscription.appCode == 'safety'
+      )[0].hostings[0];
 
     // api.defaults.baseURL = apiDomain
-
   }
 
-  return ""
-}
+  return '';
+};
 
-export const API_URL = getUrl()
+export const API_URL = getUrl();
 
-
-export const ACCOUNT_API_URL = getSSOUrl() + '/'
+export const ACCOUNT_API_URL = getSSOUrl() + '/';
 // Dev
 // "https://dev-accounts.pace-os.com/"
 // Production
 // "https://accounts.pace-os.com/"
 
-
-export const access_token = localStorage.getItem("access_token");
-export const access_token_action = localStorage.getItem("access_token_action");
-export const API_VERSION = "api/v1/"
-export const SELF_API = ACCOUNT_API_URL + "api/v1/user/self/";
+export const access_token = localStorage.getItem('access_token');
+export const access_token_action = localStorage.getItem('access_token_action');
+export const API_VERSION = 'api/v1/';
+export const SELF_API = ACCOUNT_API_URL + 'api/v1/user/self/';
 
 // Header authenticatuon
 export const HEADER_AUTH = { Authorization: `Bearer ${access_token}` };
 
 // Header authenticatuon
-export const HEADER_AUTH_ACTION = { Authorization: `Bearer ${access_token_action}` };
+export const HEADER_AUTH_ACTION = {
+  Authorization: `Bearer ${access_token_action}`,
+};
 
 // Menu file constants
-export const APPCODE = "safety"
-export const adminUser_Dev = "Supervisor"
-export const adminUser_Prod = "Safety Admin"
+export const APPCODE = 'safety';
+export const adminUser_Dev = 'Supervisor';
+export const adminUser_Prod = 'Safety Admin';
 
 // comment constant
-export const COMMENT = "Comments"
+export const COMMENT = 'Comments';
 
 // user details
-export const projectId =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-    : null;
+export const projectId = JSON.parse(localStorage.getItem('projectName')) !== null
+  ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+  : null;
 
-export const companyId =
-  JSON.parse(localStorage.getItem("company")) !== null
-    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-    : null;
+export const companyId = JSON.parse(localStorage.getItem('company')) !== null
+  ? JSON.parse(localStorage.getItem('company')).fkCompanyId
+  : null;
 
 export const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
   ? JSON.parse(localStorage.getItem('userDetails')).id
@@ -160,21 +172,43 @@ export const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
   : null;
 
 export const INITIAL_NOTIFICATION_FORM = {
-  'Incident details': `/incident/${localStorage.getItem('fkincidentId')}/modify/`,
-  'People affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/peoples-afftected/`,
-  'Property/Material affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/property-affected/`,
-  'Equipment affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/equipment-affected/`,
-  'Environment impact': `/incident/${localStorage.getItem('fkincidentId')}/modify/environment-affected/`,
-  'Reporting and notification': `/incident/${localStorage.getItem('fkincidentId')}/modify/reporting-and-notification/`,
+  'Incident details': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/modify/`,
+  'People affected': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/modify/peoples-afftected/`,
+  'Property/Material affected': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/modify/property-affected/`,
+  'Equipment affected': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/modify/equipment-affected/`,
+  'Environment impact': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/modify/environment-affected/`,
+  'Reporting and notification': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/modify/reporting-and-notification/`,
 };
 
 export const INITIAL_NOTIFICATION_FORM_NEW = {
   'Incident details': '/incident/new/',
-  'People affected': `/incident/${localStorage.getItem('fkincidentId')}/peoples-afftected/new/`,
-  'Property affected': `/incident/${localStorage.getItem('fkincidentId')}/property-affected/new/`,
-  'Equipment affected': `/incident/${localStorage.getItem('fkincidentId')}/equipment-affected/new/`,
-  'Environment impact': `/incident/${localStorage.getItem('fkincidentId')}/environment-affected/new/`,
-  'Reporting and notification': `/incident/${localStorage.getItem('fkincidentId')}/reporting-and-notification/new/`,
+  'People affected': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/peoples-afftected/new/`,
+  'Property affected': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/property-affected/new/`,
+  'Equipment affected': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/equipment-affected/new/`,
+  'Environment impact': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/environment-affected/new/`,
+  'Reporting and notification': `/incident/${localStorage.getItem(
+    'fkincidentId'
+  )}/reporting-and-notification/new/`,
 };
 
 export const EVIDENCE_FORM = {
@@ -197,11 +231,11 @@ export const INVESTIGATION_FORM = {
     '/app/incident-management/registration/investigation/investigation-overview/',
   'Severity consequences':
     '/app/incident-management/registration/investigation/severity-consequences/',
-  'Worker details':
-    `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem('fkincidentId')}`,
+  'Worker details': `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem(
+    'fkincidentId'
+  )}`,
   'Event details':
     '/app/incident-management/registration/investigation/event-details/',
-
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
@@ -241,8 +275,7 @@ export const LESSION_LEARNED_FORM = {
     '/app/incident-management/registration/lession-learned/lession-learned/',
 };
 export const CLOSE_OUT_FORM = {
-  'Close out':
-    '/app/incident-management/registration/close-out/',
+  'Close out': '/app/incident-management/registration/close-out/',
 };
 
 export const FORM_HEADER = {
@@ -308,9 +341,7 @@ export const FIVEWHYHIDE = [
   'Cause analysis',
 ];
 
-export const PACEHIDE = [
-  'Cause analysis', 'Five Why analysis'
-];
+export const PACEHIDE = ['Cause analysis', 'Five Why analysis'];
 
 export const ROOTHIDE = [
   'Hazardous acts',
@@ -320,7 +351,7 @@ export const ROOTHIDE = [
   'Management control',
   'Preventive actions',
   'Additional information',
-  'Five Why analysis'
+  'Five Why analysis',
 ];
 
 // option in root cause and anlysis
@@ -523,5 +554,6 @@ export const AHA = {
   'Project Details': '/app/pages/aha/assessments/project-details',
   'Project Area Hazards': '/app/pages/aha/assessments/project-area-hazards',
   Assessment: '/app/pages/aha/assessments/assessment',
-  'Documents & Notifications': '/app/pages/aha/assessments/DocumentsNotifications'
+  'Documents & Notifications':
+    '/app/pages/aha/assessments/DocumentsNotifications',
 };

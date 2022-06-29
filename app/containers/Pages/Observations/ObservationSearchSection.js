@@ -1,4 +1,4 @@
-import React, { useState, lazy, useEffect } from "react";
+import React, { useState, lazy, useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -11,16 +11,19 @@ import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import PropTypes from 'prop-types';
 
-import "../../../styles/custom/customheader.css";
+import '../../../styles/custom/customheader.css';
 import preplanning from 'dan-images/preplanning.png';
 import progress from 'dan-images/progress.png';
 import completed from 'dan-images/completed.png';
 
-const ObservationBookmarkFilter = lazy(() => import('./ObservationBookmarkFilter'));
+const ObservationBookmarkFilter = lazy(() => import('./ObservationBookmarkFilter')
+);
 const ObservationsFilter = lazy(() => import('./ObservationsFilter'));
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const {
+    children, value, index, ...other
+  } = props;
 
   return (
     <div
@@ -243,7 +246,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '16px!important',
     minWidth: '19% !important',
   },
-  pLtenPRten: { margin: '0px 10px 0px 10px', },
+  pLtenPRten: { margin: '0px 10px 0px 10px' },
   buttonsNewDays: {
     padding: '6px 5px 5px 6px',
     margin: '0px 10px',
@@ -326,10 +329,10 @@ const useStyles = makeStyles((theme) => ({
   statusIconBox: {
     textAlign: 'center',
     padding: '24px 0px !important',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       padding: '0px 0px 25px 0px !important',
     },
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       padding: '12px 0px 25px 16px !important',
       textAlign: 'left',
     },
@@ -345,20 +348,20 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const [observation, setObservation] = useState("My Observations");
-  const [searchIncident, setSeacrhIncident] = useState("")
-  const [dummySearch, setDummySearch] = React.useState("");
+  const [observation, setObservation] = useState('My Observations');
+  const [searchIncident, setSeacrhIncident] = useState('');
+  const [dummySearch, setDummySearch] = React.useState('');
   const [blank, setBlank] = React.useState(true);
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState('');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if (newValue === 0) {
-      setObservation("My Observations")
-      setStatus('')
+      setObservation('My Observations');
+      setStatus('');
     } else if (newValue === 1) {
-      setObservation("Big Picture")
-      setStatus('')
+      setObservation('Big Picture');
+      setStatus('');
     }
   };
   // const handleSearch = (e) => {
@@ -367,9 +370,9 @@ export default function SimpleTabs(props) {
 
   useEffect(() => {
     // localStorage.setItem("SearchedText", JSON.stringify(search))
-    if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
+    if (JSON.parse(localStorage.getItem('SearchedText')) !== '') {
       const retreiveSearchText = JSON.parse(
-        localStorage.getItem("SearchedText")
+        localStorage.getItem('SearchedText')
       );
       setSeacrhIncident(retreiveSearchText);
       setDummySearch(retreiveSearchText);
@@ -378,23 +381,22 @@ export default function SimpleTabs(props) {
 
   const handleSearch = (e) => {
     setDummySearch(e.target.value.toLowerCase());
-  }
+  };
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       setSeacrhIncident(dummySearch);
-    }, 1000)
+    }, 1000);
 
-    return () => clearTimeout(delayDebounceFn)
-  }, [dummySearch])
-
+    return () => clearTimeout(delayDebounceFn);
+  }, [dummySearch]);
 
   useEffect(() => {
-    localStorage.setItem("SearchedText", JSON.stringify(searchIncident));
+    localStorage.setItem('SearchedText', JSON.stringify(searchIncident));
   }, [searchIncident]);
 
   useEffect(() => {
-    if (searchIncident === "") {
+    if (searchIncident === '') {
       setBlank(true);
     } else {
       setBlank(false);
@@ -405,14 +407,27 @@ export default function SimpleTabs(props) {
     <div className={classes.root}>
       <Grid item md={12} className={classes.AppBarHeader}>
         <Grid container spacing={3}>
-
           <Grid item md={7} sm={12} xs={12}>
             <AppBar position="static" className={classes.navTabBack}>
               <div className={classes.floatL}>
-                <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                  <Tab label="My Observations" {...a11yProps(0)} className={classes.hoverB} />
+                <Tabs
+                  className={classes.minwdTab}
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="Tabs"
+                  indicatorColor="none"
+                >
+                  <Tab
+                    label="My Observations"
+                    {...a11yProps(0)}
+                    className={classes.hoverB}
+                  />
                   {/* <Tab label="Team's Observations" {...a11yProps(1)} /> */}
-                  <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
+                  <Tab
+                    label="Big Picture"
+                    {...a11yProps(2)}
+                    className={classes.hoverB}
+                  />
                   {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} /> */}
                 </Tabs>
               </div>
@@ -432,20 +447,25 @@ export default function SimpleTabs(props) {
                 value={dummySearch}
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={(e) => handleSearch(e)}
-
               />
             </Paper>
           </Grid>
 
           <Grid item md={2} sm={12} xs={12} className={classes.statusIconBox}>
             <span className={classes.mR10}>
-              <img src={preplanning} onClick={(e) => setStatus("Open")} selected={true} />
-              <img src={progress} className={classes.pLtenPRten} onClick={(e) => setStatus("Planned")} />
-              <img src={completed} onClick={(e) => setStatus("Completed")} />
+              <img
+                src={preplanning}
+                onClick={(e) => setStatus('Open')}
+                selected
+              />
+              <img
+                src={progress}
+                className={classes.pLtenPRten}
+                onClick={(e) => setStatus('Planned')}
+              />
+              <img src={completed} onClick={(e) => setStatus('Completed')} />
             </span>
           </Grid>
-
-
         </Grid>
       </Grid>
       <Grid container spacing={3}>
@@ -454,7 +474,9 @@ export default function SimpleTabs(props) {
             <ObservationsFilter
               observation={observation}
               search={
-                searchIncident || JSON.parse(localStorage.getItem("SearchedText")) || ''
+                searchIncident
+                || JSON.parse(localStorage.getItem('SearchedText'))
+                || ''
               }
               status={status}
               value={props.value}
@@ -466,7 +488,9 @@ export default function SimpleTabs(props) {
               search={
                 searchIncident !== ''
                   ? searchIncident
-                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+                  : JSON.parse(localStorage.getItem('SearchedText'))
+                    ? JSON.parse(localStorage.getItem('SearchedText'))
+                    : ''
               }
               status={status}
               value={props.value}
@@ -478,7 +502,9 @@ export default function SimpleTabs(props) {
               search={
                 searchIncident !== ''
                   ? searchIncident
-                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+                  : JSON.parse(localStorage.getItem('SearchedText'))
+                    ? JSON.parse(localStorage.getItem('SearchedText'))
+                    : ''
               }
               status={status}
               value={props.value}
