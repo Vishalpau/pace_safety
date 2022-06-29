@@ -105,7 +105,8 @@ const CardFooter = (props) => {
               Comments:{" "}
             </Typography>
             <Link
-              onClick={() => props.handleVisibilityComments()}
+              style={{ cursor: "unset", textDecoration: "none" }}
+              // onClick={() => props.handleVisibilityComments()}
               color="secondary"
               aria-haspopup="true"
               className={classes.commentLink}

@@ -463,7 +463,13 @@ const LessonsLearned = () => {
                   variant="contained"
                   color="secondary"
                   className="buttonStyle custmCancelBtn"
-                  onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
+                  onClick={(e) =>
+                    history.push(
+                      `${SUMMARY_FORM["Summary"]}/${JSON.parse(
+                        localStorage.getItem("fkJHAId")
+                      )}`
+                    )
+                  }
                 >
                   Cancel
                 </Button>
