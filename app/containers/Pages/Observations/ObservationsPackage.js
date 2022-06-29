@@ -852,7 +852,7 @@ function Actions(props) {
       const data = item[1];
       data.status = "Delete";
       delete data.attachment;
-       setIsLoading(false);
+      setIsLoading(false);
       await api
         .put(`/api/v1/observations/${data.id}/`, data)
         .then((response) => fetchInitialiObservation())
@@ -926,7 +926,11 @@ function Actions(props) {
     };
 
     const deleteItem = {
-      ...item,
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      fkProjectStructureIds: item.fkProjectStructureIds,
+      createdBy: item.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
     };
 

@@ -676,13 +676,8 @@ function JhaPackage(props) {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
       fkProjectStructureIds: item.fkProjectStructureIds,
-      location: item.location,
-      jhaAssessmentDate: item.jhaAssessmentDate,
-      permitToPerform: item.permitToPerform,
-      jobTitle: item.jobTitle,
-      description: item.description,
-      classification: item.classification,
       createdBy: item.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
     };
 
@@ -1053,7 +1048,6 @@ function JhaPackage(props) {
                 <div className="gridView">
                   <AllCardData item={singleitem[1]} index={index} />
                 </div>
-                
               </Grid>
             ))
           ) : (
