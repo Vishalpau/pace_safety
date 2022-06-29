@@ -782,8 +782,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -815,7 +815,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function() {
+    function () {
       clearTimeout(timer);
 
       timer = setTimeout(() => setSeacrhFlha(v), d);
@@ -930,9 +930,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleChange = async (event, value) => {
@@ -944,8 +944,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1009,23 +1009,23 @@ function xflha(props) {
   const SetDataOrder = () => {
     let newdata;
     if (order === "ascDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         return moment(a.createdAt) - moment(b.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "descDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         return moment(b.createdAt) - moment(a.createdAt);
       });
       setFlhas(newdata);
     } else if (order === "ascAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
       setFlhas(newdata);
     } else if (order === "descAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
+      newdata = flhas.slice().sort(function (a, b) {
         if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
         return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
       });
@@ -1278,7 +1278,11 @@ function xflha(props) {
                         <Grid item md={12} sm={12} xs={12}>
                           {item.files.map((a) => (
                             <div className="attachFileThumb">
-                              <Attachment src={a.fileName} value={a.fileName} />
+                              <Attachment
+                                key={a.id}
+                                value={a.fileName}
+                                type={a.fileType}
+                              />
                             </div>
                           ))}
                         </Grid>
@@ -1906,9 +1910,8 @@ function xflha(props) {
                   <TableContainer component={Paper}>
                     <Grid component={Paper}>
                       <MUIDataTable
-                        className={`${
-                          classes.dataTableSectionDesign
-                        } dataTableSectionDesign`}
+                        className={`${classes.dataTableSectionDesign
+                          } dataTableSectionDesign`}
                         title="FLHA's"
                         data={Object.entries(flhas).map((item) => [
                           item[1].flhaNumber,

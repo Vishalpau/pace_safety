@@ -529,8 +529,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -657,8 +657,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -841,9 +841,9 @@ function Actions(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const classes = useStyles();
 
@@ -979,7 +979,7 @@ function Actions(props) {
         <CardView
           ifdifferent={
             item.source === "Paper" &&
-            moment() - moment(item.createdAt) < oneHour
+              moment() - moment(item.createdAt) < oneHour
               ? "latest"
               : ""
           }
@@ -1047,7 +1047,13 @@ function Actions(props) {
                       <Grid item md={12} sm={12} xs={12}>
                         {item.files.map((a) => (
                           <div className="attachFileThumb">
-                            <Attachment src={a.fileName} value={a.fileName} />
+                            <Attachment
+                              // src={a.fileName}
+                              // value={a.fileName}
+                              key={a.id}
+                              value={a.fileName}
+                              type={a.fileType}
+                            />
                           </div>
                         ))}
                       </Grid>
