@@ -825,7 +825,7 @@ function JhaPackage(props) {
               onMouseEnter={handleAttachOpen}
               onMouseLeave={handleAttachClose}
               open={showGrid}
-              className="paddTBRemove attactmentShowSection"
+              className="paddTBRemove"
             >
               <Paper elevation={1} className="cardSectionBottom">
                 <Grid container spacing={3}>
@@ -834,9 +834,13 @@ function JhaPackage(props) {
                       <ListItem>
                         <Grid item md={12} sm={12} xs={12}>
                           {item.files.map((a) => (
-                            <div className="attachFileThumb">
-                              <Attachment src={a.fileName} value={a.fileName} />
-                            </div>
+                            <Attachment
+                              key={a.id}
+                              value={a.fileName}
+                              type={a.fileType}
+                              // src={a.fileName}
+                              // value={a.fileName}
+                            />
                           ))}
                         </Grid>
                       </ListItem>

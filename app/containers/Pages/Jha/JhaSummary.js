@@ -162,7 +162,6 @@ function JhaSummary(props) {
   const history = useHistory();
   const commentPayload = history.location.state;
   const { id } = useParams();
-  console.log(id, 'iddddddddddddd');
   const [assessment, setAssessment] = useState({});
   const [expanded, setExpanded] = useState(false);
   const [projectStructure, setProjectStructure] = useState({});
@@ -1956,8 +1955,8 @@ function JhaSummary(props) {
                     variant="subtitle"
                     name="Comments"
                     to={{
-                      pathname:`/app/comments/jha/${id}`,
-                      state: commentPayload
+                      pathname: `/app/comments/jha/${id}`,
+                      state: commentPayload,
                     }}
                   >
                     Comments
