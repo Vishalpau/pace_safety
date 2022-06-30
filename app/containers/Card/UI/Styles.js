@@ -121,6 +121,26 @@ const Styles = (theme) => ({
     marginLeft: "2px",
     cursor: "pointer",
   },
+  cardContentSection: {
+    position: "relative",
+    "&:hover": {
+      backgroundColor: "#f0f0f0",
+      webkitBoxShadow: "0 1px 5px 2px #f0f0f0",
+      boxShadow: "0 1px 5px 2px #f0f0f0",
+    },
+    "&:hover .MuiGrid-align-items-xs-flex-start": {
+      backgroundColor: "#f0f0f0",
+    },
+  },
+  card: {
+    boxShadow: "0px 0px 2px #ccc",
+    borderRadius: "10px",
+    marginBottom: "30px",
+
+    "&.latest": {
+      borderColor: "#818181",
+    },
+  },
 });
 
 export default Styles;

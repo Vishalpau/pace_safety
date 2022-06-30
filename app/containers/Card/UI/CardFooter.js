@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme) => Styles());
 const CardFooter = (props) => {
   const classes = useStyles();
 
+  // Delete component props
+
   const {
     deleteUrl,
     axiosObj,
@@ -44,7 +46,7 @@ const CardFooter = (props) => {
                 aria-haspopup="true"
                 className={classes.commentLink}
               >
-                {props.files !== null ? <>{props.files}</> : 0}
+                {props.files !== null ? props.files : 0}
               </Link>
             </Typography>
             <span item xs={1} className={classes.sepHeightTen} />

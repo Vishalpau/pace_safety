@@ -9,45 +9,13 @@ import CardBody from "./UI/CardBody";
 import CardFooter from "./UI/CardFooter";
 import UserProfile from "../UserProfile/Index";
 import PropTypes from "prop-types";
+import Styles from "./UI/Styles";
 
-const useStyles = makeStyles((theme) => ({
-  cardContentSection: {
-    position: "relative",
-    "&:hover": {
-      backgroundColor: "#f0f0f0",
-      webkitBoxShadow: "0 1px 5px 2px #f0f0f0",
-      boxShadow: "0 1px 5px 2px #f0f0f0",
-    },
-    "&:hover .MuiGrid-align-items-xs-flex-start": {
-      backgroundColor: "#f0f0f0",
-    },
-  },
-  card: {
-    boxShadow: "0px 0px 2px #ccc",
-    borderRadius: "10px",
-    marginBottom: "30px",
-
-    "&.latest": {
-      borderColor: "#818181",
-    },
-  },
-}));
+const useStyles = makeStyles((theme) => Styles());
 
 const CardView = (props) => {
   const classes = useStyles();
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-
-  const handleSummaryPush = () => {
-    props.handleSummaryPush(props.itemId);
-  };
-
-  const handleMyUserPClickOpen = (val) => {
-    setMyUserPOpen(val);
-  };
-
-  const handleMyUserPClose = (val) => {
-    setMyUserPOpen(val);
-  };
 
   return (
     <>
@@ -66,18 +34,18 @@ const CardView = (props) => {
               headerFields={props.headerFields} // Card Header labels and values
               handleMyUserPClickOpen={(val) => {
                 // Open user profile pop up
-                handleMyUserPClickOpen(val);
+                setMyUserPOpen(val);
               }}
               handleSummaryPush={() => {
                 // Go to detail page
-                handleSummaryPush();
+                props.handleSummaryPush(props.itemId);
               }}
               ifPaperUpload={props.ifPaperUpload ? props.ifPaperUpload : ""} // If observation is uploaded by paper
             />
             <CardBody
               handleSummaryPush={() => {
                 // Go to detail page
-                handleSummaryPush();
+                props.handleSummaryPush(props.itemId);
               }}
               bodyFields={props.bodyFields} // Card Body labels and values
             />
@@ -103,7 +71,7 @@ const CardView = (props) => {
           open={myUserPOpen} // State true or false to open popup
           handleMyUserPClose={(val) => {
             // Close popup function
-            handleMyUserPClose(val);
+            setMyUserPOpen(val);
           }}
         />
       </Card>

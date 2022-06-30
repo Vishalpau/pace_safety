@@ -7,5 +7,5 @@ export const handleSummaryPush = (props) => {
 // Open userprofile popup.
 
 export const handleMyUserPClickOpen = (props) => {
-  //   props.handleMyUserPClickOpen(true);
+  props.handleMyUserPClickOpen(true);
 };

@@ -8,13 +8,15 @@ import progress from "dan-images/progress.png";
 import preplanning from "dan-images/preplanning.png";
 import completed from "dan-images/completed.png";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
-import Styles from "./Styles";
 import { handleSummaryPush, handleMyUserPClickOpen } from "../CardFunctions"; // Imported functions from CardFunctions.js
+import Styles from "./Styles";
 
 const useStyles = makeStyles((theme) => Styles());
 
 const CardHeader = (props) => {
   const classes = useStyles();
+
+  // Mapping the labels and its values of Card Header
 
   const mappedHeader = props.headerFields.map((one) => {
     return (

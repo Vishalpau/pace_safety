@@ -11,6 +11,8 @@ const useStyles = makeStyles((theme) => Styles());
 const CardBody = (props) => {
   const classes = useStyles();
 
+  // Mapping the labels and its values of Card Body
+
   const mappedBody = props.bodyFields.map((one) => {
     return (
       <>
