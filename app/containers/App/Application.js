@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { ThemeContext } from './ThemeWrapper';
 import Dashboard from '../Templates/Dashboard';
+import BookmarkList from '../Bookmark/BookmarkList';
 import {
   PersonalDashboard,
   CrmDashboard,
@@ -198,9 +199,8 @@ import {
   PerformanceMatrixAdd,
   PerformanceMatrixEdit,
   PerformanceMatrixView,
-} from "../pageListAsync";
+} from '../pageListAsync';
 // import PrintFlha from '../Pages/Assesments/PrintFlha';
-
 
 function Application(props) {
   const { history } = props;
@@ -208,7 +208,7 @@ function Application(props) {
   return (
     <Dashboard history={history} changeMode={changeMode}>
       <Switch>
-      //settings
+        //settings
         <Route path="/app/settings/setting" component={Setting} />
         {/* Home */}
         {/* <Route exact path="/:?code" component={PersonalDashboard} /> */}
@@ -256,7 +256,7 @@ function Application(props) {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         {/* https://dev-safety.pace-os.com/?code=UrQhtBJlcqmykCPa7Rl4yI2lCkwIyg&state=%7B%27companyId%27%3A+%271%27%2C+%27projectId%27%3A+%2716%27%2C+%27targetPage%27%3A+%27+++++incidents+%27%2C+%27targetId%27%3A+%27%27%2C+%27redirect_back%27%3A+%27%27%7D */}
-        {/*Incident List  */}
+        {/* Incident List  */}
         <Route exact path="/incidents/" component={Incident} />
         <Route exact path="/app/incidents" component={Incident} />
         {/* <Route exact path="/?code=/state" component={Incident} /> */}
@@ -271,16 +271,8 @@ function Application(props) {
           path="/incident/:id/modify/equipment-affected/"
           component={EqiptmentAffected}
         />
-        <Route
-          exact
-          path="/incident/new/"
-          component={IncidentDetails}
-        />
-        <Route
-          exact
-          path="/incident/:id/modify/"
-          component={IncidentDetails}
-        />
+        <Route exact path="/incident/new/" component={IncidentDetails} />
+        <Route exact path="/incident/:id/modify/" component={IncidentDetails} />
         <Route
           exact
           path="/incident/:id/modify/peoples-afftected/"
@@ -296,7 +288,6 @@ function Application(props) {
           path="/incident/:id/modify/reporting-and-notification/"
           component={ReportingAndNotification}
         />
-
         {/* form Evidence */}
         <Route
           exact
@@ -338,7 +329,6 @@ function Application(props) {
           path="/app/incident-management/registration/evidence/personal-and-ppedetails/:id"
           component={PersonalAndPpeDetails}
         />
-
         {/* form investigation */}
         <Route
           path="/app/incident-management/registration/investigation/action-taken/"
@@ -365,7 +355,6 @@ function Application(props) {
           path="/app/incident-management/registration/investigation/worker-details/:id"
           component={WorkerDetails}
         />
-
         {/* form root cause analysis */}
         <Route
           path="/app/incident-management/registration/root-cause-analysis/basic-cause/"
@@ -444,42 +433,21 @@ function Application(props) {
           path="/app/incident-management/registration/root-cause-analysis/why-analysis/:id"
           component={WhyAnalysis}
         />
-
         {/* summary */}
-        <Route
-          path="/incident/details/:id/"
-          component={Summary}
-        />
+        <Route path="/incident/details/:id/" component={Summary} />
         {/* {route for git} */}
-        <Route
-          path="/app/incident/details/:id/"
-          component={Summary}
-        />
+        <Route path="/app/incident/details/:id/" component={Summary} />
         {/* from leassionlearned */}
         <Route
           exact
           path="/incident/:id/lesson-learnt/:mode/"
           component={LessionLearned}
         />
-
-
         {/* checklist */}
-        <Route
-          path="/app/pages/checklist/"
-          component={CheckList}
-        />
-
-        <Route
-          path="/app/pages/groups/"
-          component={Groups}
-        />
-
-        <Route
-          path="/app/pages/options/"
-          component={Options}
-        />
+        <Route path="/app/pages/checklist/" component={CheckList} />
+        <Route path="/app/pages/groups/" component={Groups} />
+        <Route path="/app/pages/options/" component={Options} />
         {/* <Route exact path="/app/:entity/comments/:id/" component={Comments} /> */}
-
         {/* close out */}
         <Route
           exact
@@ -538,55 +506,127 @@ function Application(props) {
           path="/app/charts/radar-polar-chart"
           component={RadarPolarCharts}
         />
-
         {/* Comments */}
         <Route path="/app/comments/:module/:moduleId" component={Comments} />
-
         {/* Observation Routes  */}
         <Route exact path="/app/icare" component={Observations} />
         <Route exact path="/app/observations" component={Observations} />
         <Route exact path="/icare" component={Observations} />
         <Route path="/app/icare#table" component={Observations} />
-        <Route exact path="/app/icare-corrective-action" component={ObservationCorrectiveAction} />
-        <Route exact path="/app/icare-corrective-action/:id" component={ObservationCorrectiveAction} />
+        <Route
+          exact
+          path="/app/icare-corrective-action"
+          component={ObservationCorrectiveAction}
+        />
+        <Route
+          exact
+          path="/app/icare-corrective-action/:id"
+          component={ObservationCorrectiveAction}
+        />
         <Route path="/app/icare/details/:id" component={ObservationSummary} />
-        <Route path="/app/icare/details/:id#action-taking" component={ObservationSummary} />
-        <Route path="/app/icare/details/:id#comments" component={ObservationSummary} />
-        <Route path="/app/icare/details/:id#activity" component={ObservationSummary} />
-        <Route path="/app/icare/details/:id#modify" component={ObservationSummary} />
-        <Route exact path="/app/icare-initial-notification" component={ObservationInitialNotification} />
-        <Route exact path="/app/icare-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
-        <Route path="/app/icare-view" component={ObservationInitialNotificationView} />
+        <Route
+          path="/app/icare/details/:id#action-taking"
+          component={ObservationSummary}
+        />
+        <Route
+          path="/app/icare/details/:id#comments"
+          component={ObservationSummary}
+        />
+        <Route
+          path="/app/icare/details/:id#activity"
+          component={ObservationSummary}
+        />
+        <Route
+          path="/app/icare/details/:id#modify"
+          component={ObservationSummary}
+        />
+        <Route
+          exact
+          path="/app/icare-initial-notification"
+          component={ObservationInitialNotification}
+        />
+        <Route
+          exact
+          path="/app/icare-initial-notification/:id"
+          component={ObservationInitialNotificationUpdate}
+        />
+        <Route
+          path="/app/icare-view"
+          component={ObservationInitialNotificationView}
+        />
         <Route path="/app/prints/:id" component={Prints} />
-        <Route path="/app/pages/general-icare-prints/:id" component={GeneralObservationPrints} />
+        <Route
+          path="/app/pages/general-icare-prints/:id"
+          component={GeneralObservationPrints}
+        />
         <Route path="/app/icare-bulkupload" component={ObservationBulkupload} />
-        <Route path="/app/icare-bulkuploadfile" component={ObservationUploadScreen} />
-
+        <Route
+          path="/app/icare-bulkuploadfile"
+          component={ObservationUploadScreen}
+        />
         {/* Aha Routes */}
-
         <Route path="/app/pages/aha" exact component={AhaMain} />
-        <Route path="/app/pages/aha/aha-summary/:id" exact component={AhaSummary} />
+        <Route
+          path="/app/pages/aha/aha-summary/:id"
+          exact
+          component={AhaSummary}
+        />
         {/* <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} /> */}
-        <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetailsAndHazard} />
-        <Route path="/app/pages/aha/assessments/project-details/:id" exact component={ProjectDetailsAndHazard} />
-        <Route path="/app/pages/aha/assessments/assessment" exact component={AssessmentAndNotification} />
-        <Route path="/app/pages/aha/assessments/assessment/:id" exact component={AssessmentAndNotification} />
-        <Route path="/app/pages/aha/approvals/approvals" exact component={Approvals} />
-        <Route path="/app/pages/aha/lessons-learned/lessons-learned" exact component={LessonsLearned} />
+        <Route
+          path="/app/pages/aha/assessments/project-details"
+          exact
+          component={ProjectDetailsAndHazard}
+        />
+        <Route
+          path="/app/pages/aha/assessments/project-details/:id"
+          exact
+          component={ProjectDetailsAndHazard}
+        />
+        <Route
+          path="/app/pages/aha/assessments/assessment"
+          exact
+          component={AssessmentAndNotification}
+        />
+        <Route
+          path="/app/pages/aha/assessments/assessment/:id"
+          exact
+          component={AssessmentAndNotification}
+        />
+        <Route
+          path="/app/pages/aha/approvals/approvals"
+          exact
+          component={Approvals}
+        />
+        <Route
+          path="/app/pages/aha/lessons-learned/lessons-learned"
+          exact
+          component={LessonsLearned}
+        />
         <Route path="/app/pages/aha/close-out" component={AhaCloseOut} />
-
-
+        <Route
+          path="/app/containers/Bookmark/BookmarkList"
+          component={BookmarkList}
+        />
         {/* Jha  */}
-
         <Route path="/app/pages/jha/all_jha" component={JhaMain} />
         <Route path="/app/pages/jha/jha-summary/:id" component={JhaSummary} />
-        <Route path="/app/pages/jha/assessments/Job-hazards" component={JhaJobDetailHazard} />
-        <Route path="/app/pages/jha/assessments/assessment" component={JhaAssessmentAndDocument} />
-        <Route path="/app/pages/jha/approvals/approvals" component={JhaApprovals} />
-        <Route path="/app/pages/jha/lessons-learned/lessons-learned" component={JhaLessonsLearned} />
+        <Route
+          path="/app/pages/jha/assessments/Job-hazards"
+          component={JhaJobDetailHazard}
+        />
+        <Route
+          path="/app/pages/jha/assessments/assessment"
+          component={JhaAssessmentAndDocument}
+        />
+        <Route
+          path="/app/pages/jha/approvals/approvals"
+          component={JhaApprovals}
+        />
+        <Route
+          path="/app/pages/jha/lessons-learned/lessons-learned"
+          component={JhaLessonsLearned}
+        />
         <Route path="/app/pages/jha/close-out" component={JhaCloseOut} />
-
-
         {/* Sample Apps */}
         <Route path="/app/pages/contact" component={Contact} />
         <Route path="/app/pages/chat" component={Chat} />
@@ -602,7 +642,6 @@ function Application(props) {
         <Route exact path="/app/pages" component={Parent} />
         <Route path="/app/pages/user-profile" component={Profile} />
         <Route path="/app/pages/blank-page" component={BlankPage} />
-
         <Route path="/app/pages/photo-gallery" component={Photos} />
         <Route path="/app/pages/pricing" component={Pricing} />
         <Route path="/app/pages/not-found" component={NotFound} />
@@ -618,66 +657,173 @@ function Application(props) {
         <Route path="/app/maps/street-view" component={StreetViewMap} />
         {/* Picklist */}
         <Route exact path="/app/pages/picklist" component={Picklist} />
-        <Route exact path="/app/pages/picklist/value/:id" component={PicklistValue} />
+        <Route
+          exact
+          path="/app/pages/picklist/value/:id"
+          component={PicklistValue}
+        />
         {/* Xflha Routes  */}
         <Route path="/app/pages/summary" component={Summary} />
         {/* <Route path="/app/pages/sample" component={SamplePage} /> */}
         <Route path="/app/assesments/" component={Xflha} />
         <Route path="/app/pages/assesments/xflha" component={Xflha} />
-        <Route path="/app/pages/assesments/flhaSummary/:id" component={FlhaSummary} />
-        <Route path="/app/pages/assesments/PreventiveControls" component={PreventiveControls} />
-        <Route path="/app/pages/assesments/IsolationControl" component={IsolationControl} />
-        <Route path="/app/pages/assesments/EnergyControl" component={EnergyControl} />
-        <Route path="/app/pages/assesments/flha/:id/close-out" component={AssessmentCloseOut} />
+        <Route
+          path="/app/pages/assesments/flhaSummary/:id"
+          component={FlhaSummary}
+        />
+        <Route
+          path="/app/pages/assesments/PreventiveControls"
+          component={PreventiveControls}
+        />
+        <Route
+          path="/app/pages/assesments/IsolationControl"
+          component={IsolationControl}
+        />
+        <Route
+          path="/app/pages/assesments/EnergyControl"
+          component={EnergyControl}
+        />
+        <Route
+          path="/app/pages/assesments/flha/:id/close-out"
+          component={AssessmentCloseOut}
+        />
         <Route path="/app/pages/assesments/AuditCheck" component={AuditCheck} />
-        <Route path="/app/pages/assesments/flha/:id/revise" component={FlhaEdit} />
+        <Route
+          path="/app/pages/assesments/flha/:id/revise"
+          component={FlhaEdit}
+        />
         <Route path="/app/pages/assesments/flhaadd" component={FlhaAdd} />
-        <Route path="/app/pages/assesments/flha/:id/print" component={PrintFlha} />
-        <Route path="/app/pages/assesments/flha/:id/activities" component={FlhaActivities} />
-        <Route path="/app/pages/assesments/flha/:id/comments" component={FlhaComments} />
+        <Route
+          path="/app/pages/assesments/flha/:id/print"
+          component={PrintFlha}
+        />
+        <Route
+          path="/app/pages/assesments/flha/:id/activities"
+          component={FlhaActivities}
+        />
+        <Route
+          path="/app/pages/assesments/flha/:id/comments"
+          component={FlhaComments}
+        />
         {/* Xflha Config  */}
         {/* <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
         <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />
         <Route path="/app/pages/assesments/FlhaConfigCriticalTask" component={FlhaConfigCriticalTask} />
         <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} /> */}
         {/* Control Tower */}
-        <Route path="/app/pages/control-tower/controltower-icare" component={ControlTowerIcare} />
-
+        <Route
+          path="/app/pages/control-tower/controltower-icare"
+          component={ControlTowerIcare}
+        />
         {/* Compliance Routes */}
         <Route path="/app/pages/compliance" exact component={Compliance} />
-        <Route path="/app/pages/compliance/compliance-summary/:id" exact component={ComplianceSummary} />
-        <Route path="/app/pages/compliance/compliance-details" exact component={ComplianceDetails} />
-        <Route path="/app/pages/compliance/compliance-details/:id" exact component={ComplianceDetails} />
-        <Route path="/app/pages/compliance/compliance" exact component={ComplianceForm} />
+        <Route
+          path="/app/pages/compliance/compliance-summary/:id"
+          exact
+          component={ComplianceSummary}
+        />
+        <Route
+          path="/app/pages/compliance/compliance-details"
+          exact
+          component={ComplianceDetails}
+        />
+        <Route
+          path="/app/pages/compliance/compliance-details/:id"
+          exact
+          component={ComplianceDetails}
+        />
+        <Route
+          path="/app/pages/compliance/compliance"
+          exact
+          component={ComplianceForm}
+        />
         <Route path="/app/pages/compliance/checks" exact component={Checks} />
-        <Route path="/app/pages/compliance/categories" exact component={Categories} />
-        <Route path="/app/pages/compliance/performance-summary" exact component={PerformanceSummary} />
-        <Route path="/app/pages/compliance-comment" component={ComplianceComment} />
-        <Route path="/app/pages/compliance-activity" component={ComplianceActivity} />
-
+        <Route
+          path="/app/pages/compliance/categories"
+          exact
+          component={Categories}
+        />
+        <Route
+          path="/app/pages/compliance/performance-summary"
+          exact
+          component={PerformanceSummary}
+        />
+        <Route
+          path="/app/pages/compliance-comment"
+          component={ComplianceComment}
+        />
+        <Route
+          path="/app/pages/compliance-activity"
+          component={ComplianceActivity}
+        />
         {/* Administrations */}
-        <Route path="/app/compliance-config/" exact component={ComplianceConfig} />
-        <Route path="/app/compliance-config/question-group" exact component={QuestionsGroup} />
-        <Route path="/app/compliance-config/question" exact component={Questions} />
-        <Route path="/app/compliance-config/new-question" exact component={ComplianceConfigNewQ} />
-        <Route path="/app/compliance-config/bulk-upload" exact component={ComplianceConfigBulkUploadQ} />
-        <Route path="/app/compliance-config/edit/:id" exact component={ComplianceConfigEditQ} />
-        <Route path="/app/compliance-config/view/:id" exact component={ComplianceConfigViewQ} />
-
-        <Route path="/app/compliance-config/performance-factor/add" exact component={PerformanceFactorAdd} />
-        <Route path="/app/compliance-config/performance-factor/edit" exact component={PerformanceFactorEdit} />
-        <Route path="/app/compliance-config/performance-factor/view" exact component={PerformanceFactorView} />
-
-        <Route path="/app/compliance-config/performance-matrix/add" exact component={PerformanceMatrixAdd} />
-        <Route path="/app/compliance-config/performance-matrix/edit" exact component={PerformanceMatrixEdit} />
-        <Route path="/app/compliance-config/performance-matrix/view" exact component={PerformanceMatrixView} />
-
+        <Route
+          path="/app/compliance-config/"
+          exact
+          component={ComplianceConfig}
+        />
+        <Route
+          path="/app/compliance-config/question-group"
+          exact
+          component={QuestionsGroup}
+        />
+        <Route
+          path="/app/compliance-config/question"
+          exact
+          component={Questions}
+        />
+        <Route
+          path="/app/compliance-config/new-question"
+          exact
+          component={ComplianceConfigNewQ}
+        />
+        <Route
+          path="/app/compliance-config/bulk-upload"
+          exact
+          component={ComplianceConfigBulkUploadQ}
+        />
+        <Route
+          path="/app/compliance-config/edit/:id"
+          exact
+          component={ComplianceConfigEditQ}
+        />
+        <Route
+          path="/app/compliance-config/view/:id"
+          exact
+          component={ComplianceConfigViewQ}
+        />
+        <Route
+          path="/app/compliance-config/performance-factor/add"
+          exact
+          component={PerformanceFactorAdd}
+        />
+        <Route
+          path="/app/compliance-config/performance-factor/edit"
+          exact
+          component={PerformanceFactorEdit}
+        />
+        <Route
+          path="/app/compliance-config/performance-factor/view"
+          exact
+          component={PerformanceFactorView}
+        />
+        <Route
+          path="/app/compliance-config/performance-matrix/add"
+          exact
+          component={PerformanceMatrixAdd}
+        />
+        <Route
+          path="/app/compliance-config/performance-matrix/edit"
+          exact
+          component={PerformanceMatrixEdit}
+        />
+        <Route
+          path="/app/compliance-config/performance-matrix/view"
+          exact
+          component={PerformanceMatrixView}
+        />
         {/* Default */}
         <Route component={NotFound} />
-
-
-
-
       </Switch>
     </Dashboard>
   );

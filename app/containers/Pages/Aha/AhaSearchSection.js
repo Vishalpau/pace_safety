@@ -10,17 +10,15 @@ import Grid from '@material-ui/core/Grid';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import AddIcon from '@material-ui/icons/Add';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
-import classNames from "classnames";
+import classNames from 'classnames';
 import Button from '@material-ui/core/Button';
 import ReorderIcon from '@material-ui/icons/Reorder';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import ViewWeekIcon from '@material-ui/icons/ViewWeek';
-//import ObservationsLookAhead from './ObservationsLookAhead';
-import AhaFilter from './AhaFilter';
-import AhaBookmarkFilter from './AhaBookmarkFilter';
-//import ObservationsKanban from './ObservationsKanban';
+// import ObservationsLookAhead from './ObservationsLookAhead';
+// import ObservationsKanban from './ObservationsKanban';
 import SearchIcon from '@material-ui/icons/Search';
 
 import Paper from '@material-ui/core/Paper';
@@ -33,9 +31,13 @@ import completed from 'dan-images/completed.png';
 import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
 import GamesOutlinedIcon from '@material-ui/icons/GamesOutlined';
 import StarsIcon from '@material-ui/icons/Stars';
+import AhaBookmarkFilter from './AhaBookmarkFilter';
+import AhaFilter from './AhaFilter';
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const {
+    children, value, index, ...other
+  } = props;
 
   return (
     <div
@@ -243,7 +245,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '16px!important',
     minWidth: '19% !important',
   },
-  pLtenPRten: { margin: '0px 10px 0px 10px', },
+  pLtenPRten: { margin: '0px 10px 0px 10px' },
   buttonsNewDays: {
     padding: '6px 5px 5px 6px',
     minWidth: '38px',
@@ -262,11 +264,11 @@ const useStyles = makeStyles((theme) => ({
   },
   searchSetionBox: {
     paddingRight: '0px',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       padding: '0px 12px !important',
     },
     '& .MuiPaper-root': {
-      ['@media (max-width:800px)']: {
+      '@media (max-width:800px)': {
         margin: '0px 0px 0px 8px',
       },
     },
@@ -274,10 +276,10 @@ const useStyles = makeStyles((theme) => ({
   statusIconBox: {
     textAlign: 'center',
     padding: '24px 0px !important',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       padding: '0px 0px 25px 0px !important',
     },
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       padding: '12px 0px 25px 16px !important',
       textAlign: 'left',
     },
@@ -312,7 +314,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'transparent',
     marginTop: '13px',
     '& button': {
-      ['@media (max-width:480px)']: {
+      '@media (max-width:480px)': {
         fontSize: '9px',
       },
     },
@@ -329,7 +331,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTab-textColorInherit.Mui-selected': {
       backgroundColor: '#f47607',
       color: '#ffffff',
-      //borderRadius: '5px 5px 5px 5px',
+      // borderRadius: '5px 5px 5px 5px',
       // minWidth: '100px',
       // marginRight: '6px',
       // maxHeight: '40px',
@@ -346,7 +348,7 @@ const useStyles = makeStyles((theme) => ({
       minHeight: '40px',
       marginLeft: '5px',
       padding: '10px',
-      ['@media (max-width:480px)']: {
+      '@media (max-width:480px)': {
         minWidth: 'auto',
         marginLeft: '2px',
         marginRight: '2px',
@@ -372,11 +374,11 @@ export default function SimpleTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [searchIncident, setSeacrhIncident] = React.useState('');
-  const [dummySearch, setDummySearch] = React.useState("");
+  const [dummySearch, setDummySearch] = React.useState('');
   const [blank, setBlank] = React.useState(true);
-  const [assessments, setAssessments] = useState("My Assessments");
+  const [assessments, setAssessments] = useState('My Assessments');
   // const [searchIncident, setSeacrhIncident] = useState("")
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState('');
 
   // let timer
   // let debounce = ( v, d) => {
@@ -388,23 +390,22 @@ export default function SimpleTabs(props) {
 
   // const handleSearch = e => debounce( e.target.value.toLowerCase(), 1000)()
 
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if (newValue === 0) {
-      setAssessments("My Assessments")
-      setStatus('')
+      setAssessments('My Assessments');
+      setStatus('');
     } else if (newValue === 1) {
-      setAssessments("Big Picture")
-      setStatus('')
+      setAssessments('Big Picture');
+      setStatus('');
     }
   };
 
   useEffect(() => {
     // localStorage.setItem("SearchedText", JSON.stringify(search))
-    if (JSON.parse(localStorage.getItem("SearchedText")) !== "") {
+    if (JSON.parse(localStorage.getItem('SearchedText')) !== '') {
       const retreiveSearchText = JSON.parse(
-        localStorage.getItem("SearchedText")
+        localStorage.getItem('SearchedText')
       );
       setSeacrhIncident(retreiveSearchText);
       setDummySearch(retreiveSearchText);
@@ -413,23 +414,22 @@ export default function SimpleTabs(props) {
 
   const handleSearch = (e) => {
     setDummySearch(e.target.value.toLowerCase());
-  }
+  };
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       setSeacrhIncident(dummySearch);
-    }, 1000)
+    }, 1000);
 
-    return () => clearTimeout(delayDebounceFn)
-  }, [dummySearch])
-
+    return () => clearTimeout(delayDebounceFn);
+  }, [dummySearch]);
 
   useEffect(() => {
-    localStorage.setItem("SearchedText", JSON.stringify(searchIncident));
+    localStorage.setItem('SearchedText', JSON.stringify(searchIncident));
   }, [searchIncident]);
 
   useEffect(() => {
-    if (searchIncident === "") {
+    if (searchIncident === '') {
       setBlank(true);
     } else {
       setBlank(false);
@@ -443,10 +443,30 @@ export default function SimpleTabs(props) {
           <Grid item md={7} sm={12} xs={12}>
             <AppBar position="static" className={classes.navTabBack}>
               <div className={classes.floatL}>
-                <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                  <Tab label="My Assessments" {...a11yProps(0)} className={classes.hoverB} />
+                <Tabs
+                  className={classes.minwdTab}
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="Tabs"
+                  indicatorColor="none"
+                >
+                  <Tab
+                    label="My Assessments"
+                    {...a11yProps(0)}
+                    className={classes.hoverB}
+                  />
                   {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
-                  <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
+                  <Tab
+                    label="Big Picture"
+                    {...a11yProps(2)}
+                    className={classes.hoverB}
+                  />
+
+                  <Tab
+                    icon={<StarsIcon className={classes.buckmarkIcon} />}
+                    {...a11yProps(3)}
+                    className={classNames(classes.hoverB, classes.minWd55)}
+                  />
                   {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
                 </Tabs>
               </div>
@@ -471,8 +491,8 @@ export default function SimpleTabs(props) {
           </Grid>
           <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
             <span className={classes.mR10}>
-              <img src={preplanning} onClick={() => setStatus("Open")} />
-              <img src={completed} onClick={() => setStatus("Closed")} />
+              <img src={preplanning} onClick={() => setStatus('Open')} />
+              <img src={completed} onClick={() => setStatus('Closed')} />
             </span>
           </Grid>
         </Grid>
@@ -482,7 +502,9 @@ export default function SimpleTabs(props) {
           <TabPanel value={value} index={0} className={classes.paddLRzero}>
             <AhaFilter
               search={
-                searchIncident || JSON.parse(localStorage.getItem("SearchedText")) || ''
+                searchIncident
+                || JSON.parse(localStorage.getItem('SearchedText'))
+                || ''
               }
               assessments={assessments}
               value={props.value}
@@ -494,7 +516,9 @@ export default function SimpleTabs(props) {
               search={
                 searchIncident !== ''
                   ? searchIncident
-                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+                  : JSON.parse(localStorage.getItem('SearchedText'))
+                    ? JSON.parse(localStorage.getItem('SearchedText'))
+                    : ''
               }
               assessments={assessments}
               value={props.value}
@@ -506,7 +530,9 @@ export default function SimpleTabs(props) {
               search={
                 searchIncident !== ''
                   ? searchIncident
-                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+                  : JSON.parse(localStorage.getItem('SearchedText'))
+                    ? JSON.parse(localStorage.getItem('SearchedText'))
+                    : ''
               }
               assessments={assessments}
               value={props.value}

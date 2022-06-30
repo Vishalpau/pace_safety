@@ -20,7 +20,8 @@ import Acl from '../../../components/Error/acl';
 import { checkACL } from '../../../utils/helper';
 import allPickListDataValue from '../../../utils/Picklist/allPickList';
 
-const ObservationSearchSection = lazy(() => import('./ObservationSearchSection'));
+const ObservationSearchSection = lazy(() => import('./ObservationSearchSection')
+);
 const ObservationsBarCharts = lazy(() => import('./ObservationsBarCharts'));
 
 function TabPanel(props) {
@@ -83,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight: '5px',
     },
   },
-  pLtenPRten: { padding: '0px 10px 0px 10px', },
+  pLtenPRten: { padding: '0px 10px 0px 10px' },
   // pLTen: {
   //   marginRight: '5px',
   // },
@@ -218,15 +219,12 @@ export default function Observations() {
   const [acls, setAcls] = useState('');
   const [showHTML, setShowHTML] = useState(false);
 
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const handleBulkUploadfilePush = async () => {
-    history.push(
-      '/app/icare-bulkupload'
-    );
+    history.push('/app/icare-bulkupload');
   };
 
   const handleInitialNotificationPush = async () => {
@@ -246,13 +244,13 @@ export default function Observations() {
     }, 100);
   }, [acls]);
 
-  useEffect(() => {
-    return () => {
-      localStorage.setItem("SearchedText", JSON.stringify(''))
-    }
-  }, [])
+  useEffect(() => () => {
+    localStorage.setItem('SearchedText', JSON.stringify(''));
+  }, []);
 
-  return (!showHTML ? '' : (
+  return !showHTML ? (
+    ''
+  ) : (
     <Acl
       module="safety-observations"
       action="view_observations"
@@ -261,12 +259,14 @@ export default function Observations() {
           <Grid item sm={12} xs={12} className={classes.borderTop}>
             <Grid container spacing={3}>
               <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
-                <img src={obsIcon} className={classes.attachImg} alt="decoration" />
+                <img
+                  src={obsIcon}
+                  className={classes.attachImg}
+                  alt="decoration"
+                />
                 <Typography variant="h5"> iCare </Typography>
               </Grid>
               <Grid item sm={5} xs={12}>
-
-
                 {/* {false &&  */}
                 <Button
                   variant="contained"
@@ -278,8 +278,15 @@ export default function Observations() {
                   onClick={() => handleBulkUploadfilePush()}
                   style={{
                     marginLeft: '10px',
-                    background: checkACL('safety-observations', 'add_observations') ? '#06425c' : '#c0c0c0',
-                    cursor: checkACL('safety-observations', 'add_observations') ? 'pointer' : 'not-allowed'
+                    background: checkACL(
+                      'safety-observations',
+                      'add_observations'
+                    )
+                      ? '#06425c'
+                      : '#c0c0c0',
+                    cursor: checkACL('safety-observations', 'add_observations')
+                      ? 'pointer'
+                      : 'not-allowed',
                   }}
                 >
                   Upload
@@ -293,27 +300,49 @@ export default function Observations() {
                   color="primary"
                   onClick={() => handleInitialNotificationPush()}
                   style={{
-                    background: checkACL('safety-observations', 'add_observations') ? '#06425c' : '#c0c0c0',
-                    cursor: checkACL('safety-observations', 'add_observations') ? 'pointer' : 'not-allowed'
+                    background: checkACL(
+                      'safety-observations',
+                      'add_observations'
+                    )
+                      ? '#06425c'
+                      : '#c0c0c0',
+                    cursor: checkACL('safety-observations', 'add_observations')
+                      ? 'pointer'
+                      : 'not-allowed',
                   }}
                 >
                   <AddIcon className={classes.floatR} />
                   {' '}
-                  Add new
+Add new
                 </Button>
                 {/* )} */}
-
               </Grid>
-
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item sm={8} xs={12} className={classes.listViewTab}>
               <AppBar position="static" className={classes.navTabBack}>
                 <div className={classes.floatL}>
-                  <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                    <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
-                    <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
+                  <Tabs
+                    className={classes.minwdTab}
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="Tabs"
+                    indicatorColor="none"
+                  >
+                    <Tab
+                      label="Card"
+                      {...a11yProps(0)}
+                      icon={
+                        <DashboardIcon className={classNames(classes.pL0)} />
+                      }
+                    />
+                    <Tab
+                      label="List"
+                      {...a11yProps(1)}
+                      icon={<ReorderIcon />}
+                      classNames={classes.pLTen}
+                    />
                   </Tabs>
                 </div>
               </AppBar>
@@ -336,6 +365,5 @@ export default function Observations() {
         </div>
       )}
     />
-  )
   );
 }

@@ -64,7 +64,6 @@ import { connect, useDispatch } from 'react-redux';
 import Axios from 'axios';
 import Headerbox from './headerbox';
 
-
 // redux
 import {
   projectName,
@@ -79,6 +78,9 @@ import SearchUi from '../Search/SearchUi';
 import UserMenu from './UserMenu';
 import styles from './header-jss';
 import api from '../../utils/axios';
+{
+  /* import { hot } from 'react-hot-loader/root'; */
+}
 
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
@@ -662,7 +664,9 @@ function Header(props) {
     setCompanyOpen(false);
   };
 
-  const ProjectChip = (props) => <Chip className={classes.projectChip} size="small" {...props} />;
+  const ProjectChip = (props) => (
+    <Chip className={classes.projectChip} size="small" {...props} />
+  );
 
   const DialogTitle = withStyles(styles)((props) => {
     const {
@@ -1447,7 +1451,7 @@ function Header(props) {
                                       <Accordion
                                         expanded={
                                           openPhase
-                                                === `panel${index}${phaseIndex}`
+                                              === `panel${index}${phaseIndex}`
                                         }
                                         onChange={handlePhaseChange(
                                           `panel${index}${phaseIndex}`,
@@ -1465,9 +1469,7 @@ function Header(props) {
                                           id="panel1bh-header"
                                         >
                                           <List
-                                            className={
-                                              classesm.listSection
-                                            }
+                                            className={classesm.listSection}
                                           >
                                             <ListItem
                                               button
@@ -1476,7 +1478,7 @@ function Header(props) {
                                               }
                                               onClick={
                                                 value.breakdown
-                                                      && !value.breakdown[1]
+                                                    && !value.breakdown[1]
                                                   ? () => handleProjectBreakdown(
                                                     index,
                                                     phaseIndex,
@@ -1494,15 +1496,15 @@ function Header(props) {
                                                 }
                                               />
                                               {value.breakdown
-                                                      && value.breakdown[1] && (
-                                                        <>
-                                                          {openPhase
-                                                          === `panel${index}${phaseIndex}` ? (
+                                                    && value.breakdown[1] && (
+                                                      <>
+                                                        {openPhase
+                                                        === `panel${index}${phaseIndex}` ? (
                                                             <RemoveIcon />
-                                                            ) : (
-                                                              <AddIcon />
-                                                            )}
-                                                        </>
+                                                          ) : (
+                                                            <AddIcon />
+                                                          )}
+                                                      </>
                                               )}
                                             </ListItem>
                                           </List>
@@ -1514,201 +1516,200 @@ function Header(props) {
                                           }
                                         >
                                           {openPhase
-                                                  === `panel${index}${phaseIndex}`
-                                                  && secondBreakdown
-                                                  && secondBreakdown.length
-                                                    > 0 && (
-                                                    <>
-                                                      {secondBreakdown.map(
-                                                        (unit, unitIndex) => (
-                                                          <Accordion
-                                                            expanded={
-                                                              openUnit
-                                                              === `panel${index}${phaseIndex}${unitIndex}`
-                                                            }
-                                                            onChange={handleUnitChange(
-                                                              `panel${index}${phaseIndex}${unitIndex}`,
-                                                              index,
-                                                              unit.id
-                                                            )}
+                                                === `panel${index}${phaseIndex}`
+                                                && secondBreakdown
+                                                && secondBreakdown.length > 0 && (
+                                                  <>
+                                                    {secondBreakdown.map(
+                                                      (unit, unitIndex) => (
+                                                        <Accordion
+                                                          expanded={
+                                                            openUnit
+                                                            === `panel${index}${phaseIndex}${unitIndex}`
+                                                          }
+                                                          onChange={handleUnitChange(
+                                                            `panel${index}${phaseIndex}${unitIndex}`,
+                                                            index,
+                                                            unit.id
+                                                          )}
+                                                        >
+                                                          <AccordionSummary
+                                                            aria-controls="panel1bh-content"
+                                                            id="panel1bh-header"
                                                           >
-                                                            <AccordionSummary
-                                                              aria-controls="panel1bh-content"
-                                                              id="panel1bh-header"
+                                                            <List
+                                                              className={
+                                                                classesm.listSection
+                                                              }
                                                             >
-                                                              <List
+                                                              <ListItem
+                                                                button
                                                                 className={
-                                                                  classesm.listSection
+                                                                  classesm.unitMenuList
+                                                                }
+                                                                onClick={
+                                                                  value.breakdown
+                                                                  && !value
+                                                                    .breakdown[2]
+                                                                    ? () => handleProjectBreakdown(
+                                                                      index,
+                                                                      phaseIndex,
+                                                                      unitIndex,
+                                                                      null,
+                                                                      null,
+                                                                      '2L'
+                                                                    )
+                                                                    : null
                                                                 }
                                                               >
-                                                                <ListItem
-                                                                  button
-                                                                  className={
-                                                                    classesm.unitMenuList
+                                                                <ListItemText
+                                                                  primary={
+                                                                    unit.structureName
                                                                   }
-                                                                  onClick={
-                                                                    value.breakdown
-                                                                    && !value
-                                                                      .breakdown[2]
-                                                                      ? () => handleProjectBreakdown(
-                                                                        index,
-                                                                        phaseIndex,
-                                                                        unitIndex,
-                                                                        null,
-                                                                        null,
-                                                                        '2L'
-                                                                      )
-                                                                      : null
-                                                                  }
-                                                                >
-                                                                  <ListItemText
-                                                                    primary={
-                                                                      unit.structureName
-                                                                    }
-                                                                  />
-                                                                  {value.breakdown
-                                                                    && value
-                                                                      .breakdown[2] && (
-                                                                      <>
-                                                                        {openUnit
-                                                                        === `panel${index}${phaseIndex}${unitIndex}` ? (
+                                                                />
+                                                                {value.breakdown
+                                                                  && value
+                                                                    .breakdown[2] && (
+                                                                    <>
+                                                                      {openUnit
+                                                                      === `panel${index}${phaseIndex}${unitIndex}` ? (
                                                                           <RemoveIcon />
-                                                                          ) : (
-                                                                            <AddIcon />
-                                                                          )}
-                                                                      </>
-                                                                  )}
-                                                                </ListItem>
-                                                              </List>
-                                                            </AccordionSummary>
-                                                            {openUnit
-                                                              === `panel${index}${phaseIndex}${unitIndex}`
-                                                              && thirdBreakdown
-                                                              && thirdBreakdown.length
-                                                                > 0 && (
-                                                                <AccordionDetails
+                                                                        ) : (
+                                                                          <AddIcon />
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                              </ListItem>
+                                                            </List>
+                                                          </AccordionSummary>
+                                                          {openUnit
+                                                            === `panel${index}${phaseIndex}${unitIndex}`
+                                                            && thirdBreakdown
+                                                            && thirdBreakdown.length
+                                                              > 0 && (
+                                                            <AccordionDetails
                                                                 className={
-                                                                  classesm.subUnitSection
-                                                                }
+                                                                classesm.subUnitSection
+                                                              }
                                                               >
                                                                 {thirdBreakdown.map(
-                                                                  (
-                                                                    subUnit,
-                                                                    subUnitIndex
-                                                                  ) => (
-                                                                    <Accordion
-                                                                      expanded={
-                                                                        openSubUnit
-                                                                          === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`
-                                                                      }
-                                                                      onChange={handleSubUnitChange(
-                                                                        `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`,
-                                                                        index,
-                                                                        subUnit.id
-                                                                      )}
+                                                                (
+                                                                  subUnit,
+                                                                  subUnitIndex
+                                                                ) => (
+                                                                  <Accordion
+                                                                    expanded={
+                                                                      openSubUnit
+                                                                        === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`
+                                                                    }
+                                                                    onChange={handleSubUnitChange(
+                                                                      `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`,
+                                                                      index,
+                                                                      subUnit.id
+                                                                    )}
+                                                                  >
+                                                                    <AccordionSummary
+                                                                      aria-controls="panel1bh-content"
+                                                                      id="panel1bh-header"
                                                                     >
-                                                                      <AccordionSummary
-                                                                        aria-controls="panel1bh-content"
-                                                                        id="panel1bh-header"
+                                                                      <List
+                                                                        className={
+                                                                          classesm.listSection
+                                                                        }
                                                                       >
-                                                                        <List
+                                                                        <ListItem
+                                                                          button
+                                                                          className={
+                                                                            classesm.unitMenuList
+                                                                          }
+                                                                          onClick={
+                                                                            value.breakdown
+                                                                              && !value
+                                                                                .breakdown[3]
+                                                                              ? () => handleProjectBreakdown(
+                                                                                index,
+                                                                                phaseIndex,
+                                                                                unitIndex,
+                                                                                subUnitIndex,
+                                                                                null,
+                                                                                '3L'
+                                                                              )
+                                                                              : null
+                                                                          }
+                                                                        >
+                                                                          <ListItemText
+                                                                            primary={
+                                                                              subUnit.structureName
+                                                                            }
+                                                                          />
+                                                                          {value.breakdown
+                                                                              && value
+                                                                                .breakdown[3] && (
+                                                                                <>
+                                                                                  {openSubUnit
+                                                                                  === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}` ? (
+                                                                                      <RemoveIcon />
+                                                                                    ) : (
+                                                                                      <AddIcon />
+                                                                                    )}
+                                                                                </>
+                                                                          )}
+                                                                        </ListItem>
+                                                                      </List>
+                                                                    </AccordionSummary>
+                                                                    {fourthBreakdown
+                                                                        && fourthBreakdown.length
+                                                                          > 0 && (
+                                                                      <AccordionDetails
+                                                                            className={
+                                                                          classesm.subUnitSection
+                                                                        }
+                                                                          >
+                                                                            <List
                                                                           className={
                                                                             classesm.listSection
                                                                           }
                                                                         >
-                                                                          <ListItem
-                                                                            button
-                                                                            className={
-                                                                              classesm.unitMenuList
-                                                                            }
-                                                                            onClick={
-                                                                              value.breakdown
-                                                                                && !value
-                                                                                  .breakdown[3]
-                                                                                ? () => handleProjectBreakdown(
+                                                                          {fourthBreakdown.map(
+                                                                            (
+                                                                              subSubUnit,
+                                                                              subSubUnitIndex
+                                                                            ) => (
+                                                                              <ListItem
+                                                                                button
+                                                                                className={
+                                                                                  classesm.workAreaList
+                                                                                }
+                                                                                onClick={() => handleProjectBreakdown(
                                                                                   index,
                                                                                   phaseIndex,
                                                                                   unitIndex,
                                                                                   subUnitIndex,
-                                                                                  null,
-                                                                                  '3L'
+                                                                                  subSubUnitIndex,
+                                                                                  '4L'
                                                                                 )
-                                                                                : null
-                                                                            }
-                                                                          >
-                                                                            <ListItemText
-                                                                              primary={
-                                                                                subUnit.structureName
-                                                                              }
-                                                                            />
-                                                                            {value.breakdown
-                                                                                && value
-                                                                                  .breakdown[3] && (
-                                                                                  <>
-                                                                                    {openSubUnit
-                                                                                    === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}` ? (
-                                                                                      <RemoveIcon />
-                                                                                      ) : (
-                                                                                        <AddIcon />
-                                                                                      )}
-                                                                                  </>
-                                                                            )}
-                                                                          </ListItem>
-                                                                        </List>
-                                                                      </AccordionSummary>
-                                                                      {fourthBreakdown
-                                                                          && fourthBreakdown.length
-                                                                            > 0 && (
-                                                                            <AccordionDetails
-                                                                          className={
-                                                                            classesm.subUnitSection
-                                                                          }
-                                                                        >
-                                                                          <List
-                                                                                className={
-                                                                              classesm.listSection
-                                                                            }
+                                                                                }
                                                                               >
-                                                                                {fourthBreakdown.map(
-                                                                              (
-                                                                                subSubUnit,
-                                                                                subSubUnitIndex
-                                                                              ) => (
-                                                                                <ListItem
-                                                                                  button
-                                                                                  className={
-                                                                                    classesm.workAreaList
+                                                                                <ListItemText
+                                                                                  primary={
+                                                                                    subSubUnit.structureName
                                                                                   }
-                                                                                  onClick={() => handleProjectBreakdown(
-                                                                                    index,
-                                                                                    phaseIndex,
-                                                                                    unitIndex,
-                                                                                    subUnitIndex,
-                                                                                    subSubUnitIndex,
-                                                                                    '4L'
-                                                                                  )
-                                                                                  }
-                                                                                >
-                                                                                  <ListItemText
-                                                                                    primary={
-                                                                                      subSubUnit.structureName
-                                                                                    }
-                                                                                  />
-                                                                                </ListItem>
-                                                                              )
-                                                                            )}
-                                                                              </List>
-                                                                        </AccordionDetails>
-                                                                      )}
-                                                                    </Accordion>
-                                                                  )
-                                                                )}
+                                                                                />
+                                                                              </ListItem>
+                                                                            )
+                                                                          )}
+                                                                        </List>
+                                                                          </AccordionDetails>
+                                                                    )}
+                                                                  </Accordion>
+                                                                )
+                                                              )}
                                                               </AccordionDetails>
-                                                            )}
-                                                          </Accordion>
-                                                        )
-                                                      )}
-                                                    </>
+                                                          )}
+                                                        </Accordion>
+                                                      )
+                                                    )}
+                                                  </>
                                           )}
                                         </AccordionDetails>
                                         {/* <AccordionDetails className={classesm.subUnitSection}>
@@ -1837,13 +1838,18 @@ function Header(props) {
                 id="open"
               >
                 {/* Filterlist Icon */}
-                {console.log(history.location.pathname, 'history')}
+
                 {!history.location.pathname.includes('control-tower') ? (
                   <FilterListIcon fontSize="small" />
                 ) : (
-                  ''
+                  ' '
                 )}
+                {/* onClick={clearCacheData()} */}
+
+                {/* window.location.reload() */}
+
                 {/* {history.location.pathname !== */}
+                {console.log(history.location.pathname, 'history')}
 
                 {/* } */}
               </IconButton>
@@ -1936,6 +1942,7 @@ function Header(props) {
             </div>
 
             {/* <NextIcon> */}
+
             {!history.location.pathname.includes('control-tower') ? (
               <Breadcrumbs
                 className={classes.projectBreadcrumbs}
@@ -1986,4 +1993,17 @@ const HeaderInit = connect((state) => ({
   initialValues: state.getIn(['InitialDetailsReducer']),
 }))(Header);
 
+const clearCacheData = () => {
+  caches.keys().then((names) => {
+    names.forEach((name) => {
+      caches.delete(name);
+    });
+  });
+  alert('Complete Cache Cleared');
+  console.log('cleared');
+};
+
 export default withStyles(styles)(HeaderInit);
+{
+  /* (hot) */
+}
