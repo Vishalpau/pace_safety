@@ -18,20 +18,24 @@ import { useHistory } from "react-router";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 import api from "../../../utils/axios";
-import { handelActionData, handelConvert, handelIncidentId } from "../../../utils/CheckerValue";
+import {
+  handelActionData,
+  handelConvert,
+  handelIncidentId,
+} from "../../../utils/CheckerValue";
 import {
   HAZARDIOUS_ACTS_SUB_TYPES,
-  HAZARDIOUS_CONDITION_SUB_TYPES, ROOT_CAUSE_ANALYSIS_FORM
+  HAZARDIOUS_CONDITION_SUB_TYPES,
+  ROOT_CAUSE_ANALYSIS_FORM,
 } from "../../../utils/constants";
 import ActionShow from "../ActionShow";
-//import CircularProgress from '@material-ui/core/CircularProgress';
+import { SSO_URL } from "../../../utils/constants";
+import Link from "@material-ui/core/Link";
 
 import ActionTracker from "../ActionTracker";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -74,7 +78,7 @@ const BasicCauseAndAction = () => {
   const putId = useRef("");
   let id = useRef();
   const [actionData, setActionData] = useState({});
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [updatePage, setUpdatePage] = useState(false);
 
   const handelShowData = async () => {
@@ -86,7 +90,7 @@ const BasicCauseAndAction = () => {
     putId.current = handelIncidentId();
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
-    )
+    );
 
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
@@ -97,17 +101,15 @@ const BasicCauseAndAction = () => {
 
     tempApiData.map((value) => {
       if (value["action"] == undefined) {
-        value["action"] = [{}]
+        value["action"] = [{}];
       }
-    })
+    });
     await handelActionTracker(tempApiData);
   };
 
-
   const handelActionTracker = async (apiData) => {
-    let allAction = await handelActionData(putId.current, apiData)
+    let allAction = await handelActionData(putId.current, apiData);
     await setData(allAction);
-
   };
 
   const handelActionLink = () => {
@@ -134,7 +136,6 @@ const BasicCauseAndAction = () => {
 
   const handelNavigate = (navigateType) => {
     if (navigateType == "next") {
-
       history.push(
         `${ROOT_CAUSE_ANALYSIS_FORM["Basic cause"]}${putId.current}`
       );
@@ -159,23 +160,26 @@ const BasicCauseAndAction = () => {
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
 
-  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
 
-  const projectStuctId = JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]
+  const projectStuctId = JSON.parse(localStorage.getItem("commonObject"))[
+    "incident"
+  ]["projectStruct"];
 
   const handelCallback = async () => {
-    await setIsLoading(true)
+    await setIsLoading(true);
     await handelShowData();
     await fetchIncidentDetails();
     await handelActionLink();
-    await setIsLoading(false)
+    await setIsLoading(false);
   };
 
   useEffect(() => {
@@ -185,9 +189,8 @@ const BasicCauseAndAction = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
-
     <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
-      {isLoading == false ?
+      {isLoading == false ? (
         <Grid container spacing={3}>
           <Grid container item md={9} spacing={3}>
             <Grid item xs={12} md={6}>
@@ -226,9 +229,8 @@ const BasicCauseAndAction = () => {
               <TableContainer component={Paper}>
                 <Table className={classes.table}>
                   <TableBody>
-
                     {data.map((value, index) => (
-                      < TableRow >
+                      <TableRow>
                         <TableCell align="left">
                           {handelConvert(value.rcaSubType)}
                         </TableCell>
@@ -258,9 +260,18 @@ const BasicCauseAndAction = () => {
                             />
                           ))}
                         </TableCell>
+                        <TableCell align="right" style={{ minWidth: 200 }}>
+                          <Link
+                            className={classes.actionLinkAudit}
+                            display="block"
+                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&response_type=code&companyId=1&projectId=13&targetPage=assesments`}
+                            target="_blank"
+                          >
+                            link to redirect assesment
+                          </Link>
+                        </TableCell>
                       </TableRow>
                     ))}
-
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -301,11 +312,10 @@ const BasicCauseAndAction = () => {
             </Grid>
           )}
         </Grid>
-
-        :
+      ) : (
         <Loader />
-      }
-    </PapperBlock >
+      )}
+    </PapperBlock>
   );
 };
 

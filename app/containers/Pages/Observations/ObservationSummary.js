@@ -495,8 +495,10 @@ const ObservationSummary = () => {
                         className="quickActionSectionLink"
                         variant="subtitle"
                         name="Comments"
+                        disabled="true"
                         to={{
-                          pathname: `/app/comments/observations/${id}`,
+                          // pathname: `/app/comments/observations/${id}`,
+                          pathname: history.location.pathname,
                           state: commentPayload
                         }}
                       >

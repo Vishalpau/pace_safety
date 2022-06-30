@@ -172,7 +172,7 @@ class SimpleTabs extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props)
+    console.log(this.props);
     this.getFlhaDetails();
     this.getJobVisualConfirmation();
     this.handelVersion();
@@ -183,9 +183,9 @@ class SimpleTabs extends React.Component {
   getFlhaDetails = async () => {
     const flhaNumber = this.props.match.params.id;
     const res = await api.get("api/v1/flhas/" + flhaNumber + "/");
+    console.log(res, "reeeeeeeeeeeeeeeeeeeee");
     await this.handelWorkArea1(res.data.data.results);
     this.setState({ flha: res.data.data.results });
-    console.log(res);
   };
 
   handelVersion = async () => {
@@ -269,8 +269,8 @@ class SimpleTabs extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const commentPayload = this.props.location.state
-    console.log()
+    const commentPayload = this.props.location.state;
+    console.log();
     const {
       value,
       flha,
@@ -278,7 +278,7 @@ class SimpleTabs extends React.Component {
       visualConfirmations,
       versions,
       projectStructName,
-      id
+      id,
     } = this.state;
 
     return (
@@ -507,14 +507,18 @@ class SimpleTabs extends React.Component {
                         <HistoryIcon />
                       </ListItemIcon>
                       <Link
-                        onClick={() =>
-                          this.redirectToHome(
-                            "/app/pages/assesments/AuditCheck/" +
-                              this.props.match.params.id +
-                              "/" +
-                              this.state.flha.fkProjectStructureIds
-                          )
+                        disabled={
+                          !this.state.flha.fkProjectStructureIds && "true"
                         }
+                        onClick={() => {
+                          this.state.flha.fkProjectStructureIds &&
+                            this.redirectToHome(
+                              "/app/pages/assesments/AuditCheck/" +
+                                this.props.match.params.id +
+                                "/" +
+                                this.state.flha.fkProjectStructureIds
+                            );
+                        }}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
@@ -529,9 +533,11 @@ class SimpleTabs extends React.Component {
                         className="quickActionSectionLink"
                         variant="subtitle"
                         name="Comments"
+                        disabled="true"
                         to={{
-                          pathname: `/app/comments/flha/${id}`,
-                          state: commentPayload
+                          // pathname: `/app/comments/flha/${id}`,
+                          pathname: this.props.history.location.pathname,
+                          state: commentPayload,
                         }}
                       >
                         Comments

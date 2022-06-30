@@ -1,4 +1,10 @@
-import { Button, FormHelperText, FormLabel, Grid, Select } from "@material-ui/core";
+import {
+  Button,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  Select,
+} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
@@ -11,7 +17,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
@@ -101,9 +107,9 @@ const EventDetails = () => {
   const [errorCost, setErrorCost] = useState({});
   const [loading, setLoading] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
-  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"));
 
-  // check upadte 
+  // check upadte
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -123,7 +129,8 @@ const EventDetails = () => {
       investigationId.current = allApiData.id;
       setForm({ ...form, fkInvestigationId: allApiData.id });
       const event = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
         }/events/`
       );
       const eventData = event.data.data.results[0];
@@ -136,7 +143,8 @@ const EventDetails = () => {
       // Weather data
       if (eventId.current != "") {
         const weather = await api.get(
-          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/events/${eventId.current}/weatherconditions/`
         );
         const weatherData = weather.data.data.results;
@@ -146,24 +154,30 @@ const EventDetails = () => {
             weatherId.current.push(value.id);
           });
         }
-        const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
-        const costData = cost.data.data.results
+        const cost = await api.get(
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
+          }/events/${eventId.current}/cost/`
+        );
+        const costData = cost.data.data.results;
 
         if (costData.length !== 0) {
-          setOverAllCost(costData)
+          setOverAllCost(costData);
           costData.map((value) => {
-            overAllCostId.current.push(value.id)
-          })
+            overAllCostId.current.push(value.id);
+          });
         } else if (costData.length == 0) {
-          let tempCostData = [{
-            costType: "",
-            costAmount: "",
-            casualFactor: "",
-            currency: "INR",
-            status: "Active",
-            createdBy: 0,
-          }]
-          setOverAllCost(tempCostData)
+          let tempCostData = [
+            {
+              costType: "",
+              costAmount: "",
+              casualFactor: "",
+              currency: "INR",
+              status: "Active",
+              createdBy: 0,
+            },
+          ];
+          setOverAllCost(tempCostData);
         }
       }
       // event data
@@ -174,12 +188,12 @@ const EventDetails = () => {
   const handelWeather = async (e, key, value) => {
     const temp = [...weather];
     temp[key]["weatherCondition"] = value;
-    await setWeather(temp);
+    setWeather(temp);
   };
 
   const handelAdd = async (e) => {
     if (weather.length < 3) {
-      await setWeather([
+      setWeather([
         ...weather,
         {
           weatherCondition: "",
@@ -193,21 +207,21 @@ const EventDetails = () => {
   const handelRemove = async (e, index) => {
     if (weather.length > 1) {
       if (weather[index].id !== undefined) {
-
         const res = await api.delete(
-          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/events/${eventId.current}/weatherconditions/${weather[index].id}/`
         );
       }
 
       let newData = weather.filter((item, key) => key !== index);
-      await setWeather(newData);
+      setWeather(newData);
     }
   };
 
   const handelOveallCostAdd = async (e) => {
     if (overAllCost.length < 4) {
-      await setOverAllCost([
+      setOverAllCost([
         ...overAllCost,
         {
           costType: "",
@@ -225,35 +239,37 @@ const EventDetails = () => {
     if (overAllCost.length > 1) {
       if (overAllCost[index].id !== undefined) {
         const res = await api.delete(
-          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/events/${eventId.current}/cost/${overAllCost[index].id}/`
         );
       }
       let newData = overAllCost.filter((item, key) => key !== index);
-      await setOverAllCost(newData);
+      setOverAllCost(newData);
     }
   };
 
   const handelNext = async (e) => {
     const { error, isValid } = EventDetailsValidate(form);
     const { errorWeather } = EventDetailsWeatherValidate(weather);
-    const { errorCost } = EventDetailsCostValidate(overAllCost)
-    await setError(error);
-    await setErrorWeather(errorWeather);
-    await setErrorCost(errorCost)
-    const temp = incidentsListData
+    const { errorCost } = EventDetailsCostValidate(overAllCost);
+    setError(error);
+    setErrorWeather(errorWeather);
+    setErrorCost(errorCost);
+    const temp = incidentsListData;
     temp.updatedAt = new Date().toISOString();
-    setButtonLoading(true)
+    setButtonLoading(true);
     if (incidentsListData.incidentStage === "Investigation") {
-      temp.incidentStatus = "Done"
-      try {
-        const res = await api.put(
-          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
-        );
-      } catch (error) {
-        history.push("/app/pages/error")
-      }
+      temp.incidentStatus = "Done";
+      // try {
+      api
+        .put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`, temp)
+        .catch((err) => {
+          history.push("/app/pages/error");
+        });
+      // }
+      // catch (error) {
+      // }
     }
     // event api call
     if (
@@ -263,7 +279,8 @@ const EventDetails = () => {
     ) {
       if (eventId.current === "") {
         const res = await api.post(
-          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/events/`,
           form
         );
@@ -275,7 +292,8 @@ const EventDetails = () => {
           for (let key in weatherObject) {
             weatherObject[key]["fkEventDetailsId"] = eventID;
             const resWeather = await api.post(
-              `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+              `api/v1/incidents/${putId.current}/investigations/${
+                investigationId.current
               }/events/${eventID}/weatherconditions/`,
               weatherObject[key]
             );
@@ -289,7 +307,8 @@ const EventDetails = () => {
             for (let keys in costObject) {
               costObject[keys]["fkEventDetailsId"] = eventID;
               const resWeather = await api.post(
-                `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+                `api/v1/incidents/${putId.current}/investigations/${
+                  investigationId.current
                 }/events/${eventID}/cost/`,
                 costObject[keys]
               );
@@ -299,16 +318,21 @@ const EventDetails = () => {
             }
           }
           let viewMode = {
-            initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
-          }
-          localStorage.setItem("viewMode", JSON.stringify(viewMode))
+            initialNotification: false,
+            investigation: true,
+            evidence: false,
+            rootcauseanalysis: false,
+            lessionlearn: false,
+          };
+          localStorage.setItem("viewMode", JSON.stringify(viewMode));
           dispatch(tabViewMode(viewMode));
-          history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
+          history.push(`${SUMMERY_FORM["Summary"]}${putId.current}/`);
         }
         // put
       } else if (eventId.current !== "") {
         const res = await api.put(
-          `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/events/${eventId.current}/`,
           form
         );
@@ -319,8 +343,10 @@ const EventDetails = () => {
           for (let key in weatherObject) {
             if (weatherObject[key].id !== undefined) {
               const resWeather = await api.put(
-                `api/v1/incidents/${putId.current}/investigations/${investigationId.current
-                }/events/${eventId.current}/weatherconditions/${weatherObject[key].id
+                `api/v1/incidents/${putId.current}/investigations/${
+                  investigationId.current
+                }/events/${eventId.current}/weatherconditions/${
+                  weatherObject[key].id
                 }/`,
                 weatherObject[key]
               );
@@ -330,7 +356,8 @@ const EventDetails = () => {
             } else {
               weatherObject[key]["fkEventDetailsId"] = eventId.current;
               const resWeather = await api.post(
-                `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+                `api/v1/incidents/${putId.current}/investigations/${
+                  investigationId.current
                 }/events/${eventId.current}/weatherconditions/`,
                 weatherObject[key]
               );
@@ -346,11 +373,17 @@ const EventDetails = () => {
           if (overAllCost.length > 0) {
             let costObject = overAllCost;
             for (let keys in costObject) {
-              if (costObject[keys].costType !== "" && costObject[keys].costAmount !== "" && costObject[keys].casualFactor !== "") {
+              if (
+                costObject[keys].costType !== "" &&
+                costObject[keys].costAmount !== "" &&
+                costObject[keys].casualFactor !== ""
+              ) {
                 if (costObject[keys].id !== undefined) {
                   const resWeather = await api.put(
-                    `api/v1/incidents/${putId.current}/investigations/${investigationId.current
-                    }/events/${eventId.current}/cost/${overAllCostId.current[keys]
+                    `api/v1/incidents/${putId.current}/investigations/${
+                      investigationId.current
+                    }/events/${eventId.current}/cost/${
+                      overAllCostId.current[keys]
                     }/`,
                     costObject[keys]
                   );
@@ -360,7 +393,8 @@ const EventDetails = () => {
                 } else {
                   costObject[keys]["fkEventDetailsId"] = eventId.current;
                   const resWeather = await api.post(
-                    `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+                    `api/v1/incidents/${putId.current}/investigations/${
+                      investigationId.current
                     }/events/${eventId.current}/cost/`,
                     costObject[keys]
                   );
@@ -373,14 +407,18 @@ const EventDetails = () => {
           }
         }
         let viewMode = {
-          initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
-        }
-        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+          initialNotification: false,
+          investigation: true,
+          evidence: false,
+          rootcauseanalysis: false,
+          lessionlearn: false,
+        };
+        localStorage.setItem("viewMode", JSON.stringify(viewMode));
         dispatch(tabViewMode(viewMode));
-        history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
+        history.push(`${SUMMERY_FORM["Summary"]}${putId.current}/`);
       }
     }
-    setButtonLoading(false)
+    setButtonLoading(false);
   };
 
   const PickListCall = async () => {
@@ -392,18 +430,17 @@ const EventDetails = () => {
     costTypeValues.current = await pickListValues["68"];
     casualFactorTypeValues.current = await pickListValues["69"];
     await handelUpdateCheck();
-    await setLoading(true)
+    setLoading(true);
   };
   // fetch incident data
-  const fetchIncidentsData = async () => {
-    const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    ).then((res) => {
-      const result = res.data.data.results;
-      setIncidentsListdata(result);
-    })
-      .catch((err) => history.push("/app/pages/error"))
-
+  const fetchIncidentsData = () => {
+    api
+      .get(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`)
+      .then((res) => {
+        const result = res.data.data.results;
+        setIncidentsListdata(result);
+      })
+      .catch((err) => history.push("/app/pages/error"));
   };
 
   useEffect(() => {
@@ -415,16 +452,14 @@ const EventDetails = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
-      {loading ?
+      {loading ? (
         <>
           <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
               {/* job task */}
               <Grid item xs={12} md={6}>
                 <FormControl
-                  error={
-                    error && error.jobTask
-                  }
+                  error={error && error.jobTask}
                   variant="outlined"
                   required
                   className={classes.formControl}
@@ -461,9 +496,7 @@ const EventDetails = () => {
               {/* activity */}
               <Grid item xs={12} md={6}>
                 <FormControl
-                  error={
-                    error && error.activity
-                  }
+                  error={error && error.activity}
                   variant="outlined"
                   required
                   className={classes.formControl}
@@ -520,7 +553,8 @@ const EventDetails = () => {
                   <Grid item xs={10}>
                     <FormControl
                       error={
-                        errorWeather && errorWeather[`weatherCondition${[index]}`]
+                        errorWeather &&
+                        errorWeather[`weatherCondition${[index]}`]
                       }
                       variant="outlined"
                       required
@@ -536,18 +570,21 @@ const EventDetails = () => {
                         {weatherValues.current.map((selectValues) => (
                           <MenuItem
                             value={selectValues.value}
-                            onClick={(e) => handelWeather(e, index, selectValues.value)}
+                            onClick={(e) =>
+                              handelWeather(e, index, selectValues.value)
+                            }
                           >
                             {selectValues.label}
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
-                    {errorWeather && errorWeather[`weatherCondition${[index]}`] && (
-                      <FormHelperText style={{ color: "red" }}>
-                        {errorWeather[`weatherCondition${[index]}`]}
-                      </FormHelperText>
-                    )}
+                    {errorWeather &&
+                      errorWeather[`weatherCondition${[index]}`] && (
+                        <FormHelperText style={{ color: "red" }}>
+                          {errorWeather[`weatherCondition${[index]}`]}
+                        </FormHelperText>
+                      )}
                   </Grid>
 
                   {weather.length > 1 ? (
@@ -660,10 +697,7 @@ const EventDetails = () => {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <FormControl
-                  variant="outlined"
-                  className={classes.formControl}
-                >
+                <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="project-name-label">Fluid type</InputLabel>
                   <Select
                     id="project-name"
@@ -813,8 +847,11 @@ const EventDetails = () => {
                           <FormControl
                             variant="outlined"
                             error={errorCost && errorCost[`costType${[index]}`]}
-                            className={classes.formControl}>
-                            <InputLabel id="project-name-label">Cost type</InputLabel>
+                            className={classes.formControl}
+                          >
+                            <InputLabel id="project-name-label">
+                              Cost type
+                            </InputLabel>
                             <Select
                               id="project-name"
                               labelId="project-name-label"
@@ -826,7 +863,8 @@ const EventDetails = () => {
                                   value={selectValues.value}
                                   onClick={async (e) => {
                                     const temp = [...overAllCost];
-                                    temp[index]["costType"] = selectValues.value;
+                                    temp[index]["costType"] =
+                                      selectValues.value;
                                     await setOverAllCost(temp);
                                   }}
                                 >
@@ -846,7 +884,9 @@ const EventDetails = () => {
                         <Grid item xs={6} md={2}>
                           <TextField
                             id="title"
-                            error={errorCost && errorCost[`costAmount${[index]}`]}
+                            error={
+                              errorCost && errorCost[`costAmount${[index]}`]
+                            }
                             variant="outlined"
                             label="Cost amount"
                             value={overAllCost[index].costAmount}
@@ -867,7 +907,9 @@ const EventDetails = () => {
                         {/* cost factor */}
                         <Grid item xs={10} md={4}>
                           <FormControl
-                            error={errorCost && errorCost[`casualFactor${[index]}`]}
+                            error={
+                              errorCost && errorCost[`casualFactor${[index]}`]
+                            }
                             variant="outlined"
                             className={classes.formControl}
                           >
@@ -886,7 +928,8 @@ const EventDetails = () => {
                                     value={selectValues.value}
                                     onClick={async (e) => {
                                       const temp = [...overAllCost];
-                                      temp[index]["casualFactor"] = selectValues.value;
+                                      temp[index]["casualFactor"] =
+                                        selectValues.value;
                                       await setOverAllCost(temp);
                                     }}
                                   >
@@ -956,9 +999,9 @@ const EventDetails = () => {
             )}
           </Grid>
         </>
-        :
+      ) : (
         <Loader />
-      }
+      )}
     </PapperBlock>
   );
 };

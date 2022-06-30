@@ -186,15 +186,19 @@ const ReportingAndNotification = (props) => {
     }
 
     // put call for update incident Details
-    try {
-      const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-    } catch (error) {
-      setIsnext(true);
-      history.push("/app/pages/error");
-    }
+    // try {
+    api
+      .put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`, temp)
+      .catch((err) => {
+        setIsnext(true);
+        history.push("/app/pages/error");
+      });
+
+    // }
+    // .catch (error) {
+    //   setIsnext(true);
+    //   history.push('/app/pages/error');
+    // }
   };
 
   const handleRemoveExitingReport = async () => {
@@ -202,16 +206,19 @@ const ReportingAndNotification = (props) => {
     if (reportedToObj.length > 0) {
       for (const key in reportedToObj) {
         const reportId = reportedToObj[key].id;
-
-        try {
-          setIsnext(false);
-          const res = await api.delete(
-            `/api/v1/incidents/${id}/reports/${reportId}/`
-          );
-        } catch (err) {
-          setIsnext(true);
-          history.push("/app/pages/error");
-        }
+        setIsnext(false);
+        // try {
+        api
+          .delete(`/api/v1/incidents/${id}/reports/${reportId}/`)
+          .catch((err) => {
+            setIsnext(true);
+            history.push("/app/pages/error");
+          });
+        // }
+        // catch (err) {
+        //   setIsnext(true);
+        //   history.push('/app/pages/error');
+        // }
       }
     }
   };
@@ -220,18 +227,27 @@ const ReportingAndNotification = (props) => {
   const setOtherDataReportTo = async (notifyto) => {
     if (reportOtherData !== "") {
       if (form.reportedto.includes("Others")) {
-        try {
-          await setIsnext(false);
-          const res = await api.post(`/api/v1/incidents/${id}/reports/`, {
+        // try {
+        setIsnext(false);
+        api
+          .post(`/api/v1/incidents/${id}/reports/`, {
             reportTo: reportOtherData,
             createdBy: parseInt(userId),
             notifyTo: notifyto,
             fkIncidentId: localStorage.getItem("fkincidentId") || id,
+          })
+          .then(res => {
+            return res;
+          })
+          .catch((err) => {
+            setIsnext(true);
+            history.push("/app/pages/error");
           });
-        } catch (err) {
-          await setIsnext(true);
-          history.push("/app/pages/error");
-        }
+        // }
+        // .catch (err) {
+        //   setIsnext(true);
+        //   history.push("/app/pages/error");
+        // }
       }
     }
   };
@@ -252,15 +268,18 @@ const ReportingAndNotification = (props) => {
             if (typeof evidanceForm[key].evidenceDocument === "string") {
               if (evidanceId.length > 0) {
                 for (let i = 0; i < evidanceId.length; i++) {
-                  await api.delete(
-                    `api/v1/incidents/${localStorage.getItem(
-                      "fkincidentId"
-                    )}/evidences/${evidanceId[i]}/`
-                  );
+                  const res = await api
+                    .delete(
+                      `api/v1/incidents/${localStorage.getItem(
+                        "fkincidentId"
+                      )}/evidences/${evidanceId[i]}/`
+                    )
+                    .then();
                 }
               }
-              try {
-                await api.put(
+              // try {
+              api
+                .put(
                   `api/v1/incidents/${localStorage.getItem(
                     "fkincidentId"
                   )}/evidences/${evidanceForm[key].id}/`,
@@ -274,11 +293,13 @@ const ReportingAndNotification = (props) => {
                     fkIncidentId: localStorage.getItem("fkincidentId"),
                     id: evidanceForm[key].id,
                   }
-                );
-              } catch (error) {
-                setIsnext(true);
-                history.push("/app/pages/error");
-              }
+                )
+                .catch((err) => {
+                  setIsnext(true);
+                  history.push("/app/pages/error");
+                });
+              // } catch (error) {
+              // }
             } else {
               if (evidanceId.length > 0) {
                 for (let i = 0; i < evidanceId.length; i++) {
@@ -289,38 +310,45 @@ const ReportingAndNotification = (props) => {
                   );
                 }
               }
-              try {
-                const formData = new FormData();
-                formData.append(
-                  "evidenceDocument",
-                  evidanceForm[key].evidenceDocument
-                );
-                formData.append(
-                  "evidenceRemark",
-                  evidanceForm[key].evidenceRemark
-                );
-                formData.append("evidenceCheck", "Yes");
-                formData.append("evidenceCategory", "Initial Evidence");
-                formData.append("createdBy", parseInt(userId));
-                formData.append("status", "Active");
-                formData.append(
-                  "fkIncidentId",
-                  localStorage.getItem("fkincidentId")
-                );
-                const evidanceResponse = await api.post(
+              // try {
+              const formData = new FormData();
+              formData.append(
+                "evidenceDocument",
+                evidanceForm[key].evidenceDocument
+              );
+              formData.append(
+                "evidenceRemark",
+                evidanceForm[key].evidenceRemark
+              );
+              formData.append("evidenceCheck", "Yes");
+              formData.append("evidenceCategory", "Initial Evidence");
+              formData.append("createdBy", parseInt(userId));
+              formData.append("status", "Active");
+              formData.append(
+                "fkIncidentId",
+                localStorage.getItem("fkincidentId")
+              );
+              api
+                .post(
                   `api/v1/incidents/${localStorage.getItem(
                     "fkincidentId"
                   )}/evidences/`,
                   formData
-                );
-              } catch (error) {
-                setIsnext(true);
-                history.push("/app/pages/error");
-              }
+                )
+                .catch((err) => {
+                  setIsnext(true);
+                  history.push("/app/pages/error");
+                });
+              // }
+              // catch (error) {
+              // setIsnext(true);
+              // history.push('/app/pages/error');
+              // }
             }
           }
         }
       } else {
+        console.log("trueeee");
         setIsnext(true);
       }
       // check initial evidance
@@ -361,8 +389,9 @@ const ReportingAndNotification = (props) => {
           for (const key in unique) {
             const name = unique[key];
 
-            try {
-              const res = await api.post(
+            // try {
+            api
+              .post(
                 `/api/v1/incidents/${localStorage.getItem(
                   "fkincidentId"
                 )}/reports/`,
@@ -372,29 +401,46 @@ const ReportingAndNotification = (props) => {
                   notifyTo: stringNotifyList,
                   fkIncidentId: localStorage.getItem("fkincidentId") || id,
                 }
-              );
-              status = res.status;
-            } catch (err) {
-              setIsnext(true);
-              history.push("/app/pages/error");
-            }
+              )
+              .then((res) => {
+                const viewMode = {
+                  initialNotification: true,
+                  investigation: false,
+                  evidence: false,
+                  rootcauseanalysis: false,
+                  lessionlearn: false,
+                };
+                dispatch(tabViewMode(viewMode));
+                const resFromData = setOtherDataReportTo(stringNotifyList);
+                if (resFromData) {
+                  history.push(`${SUMMERY_FORM.Summary}${id}/`);
+                }
+              })
+              // }
+              .catch((err) => {
+                setIsnext(true);
+                history.push("/app/pages/error");
+              });
+            // .catch (err) {
+            // }
           }
 
           // set in reportTo otherData
-          await setOtherDataReportTo(stringNotifyList);
+          await 
 
-          if (status === 201) {
-            const viewMode = {
-              initialNotification: true,
-              investigation: false,
-              evidence: false,
-              rootcauseanalysis: false,
-              lessionlearn: false,
-            };
-            dispatch(tabViewMode(viewMode));
+          console.log(status, "status");
 
-            history.push(`${SUMMERY_FORM.Summary}${id}/`);
-          }
+          // if (status === 201) {
+          //   const viewMode = {
+          //     initialNotification: true,
+          //     investigation: false,
+          //     evidence: false,
+          //     rootcauseanalysis: false,
+          //     lessionlearn: false,
+          //   };
+          //   dispatch(tabViewMode(viewMode));
+          //   history.push(`${SUMMERY_FORM.Summary}${id}/`);
+          // }
         } else {
           setIsnext(true);
         }
@@ -426,14 +472,14 @@ const ReportingAndNotification = (props) => {
       if (e.target.checked == false) {
         const newData = form.reportedto.filter((item) => item !== value);
 
-        await setForm({
+        setForm({
           ...form,
           reportedto: newData,
         });
 
         // let newReportedTo = [];
       } else {
-        await setForm({
+        setForm({
           ...form,
           reportedto: [...form.reportedto, value],
         });
@@ -494,30 +540,28 @@ const ReportingAndNotification = (props) => {
             setEvidanceId([...evidanceId, evdId]);
           }
 
-          await setMessage("File uploaded successfully!");
-          await setMessageType("success");
-          await setOpen(true);
+          setMessage("File uploaded successfully!");
+          setMessageType("success");
+          setOpen(true);
         } else {
           ref.current.value = "";
-          await setMessage(
-            "File uploading failed! Select file less than 25MB!"
-          );
-          await setMessageType("error");
-          await setOpen(true);
+          setMessage("File uploading failed! Select file less than 25MB!");
+          setMessageType("error");
+          setOpen(true);
         }
       } else {
         ref.current.value = "";
-        await setMessage(
+        setMessage(
           "Only pdf, jpg, jpeg, xlx, xlsx, doc, word,ppt, png allowed!"
         );
-        await setMessageType("error");
-        await setOpen(true);
+        setMessageType("error");
+        setOpen(true);
       }
     } else {
       temp[key][fieldname] = value;
     }
 
-    await setEvidanceForm(temp);
+    setEvidanceForm(temp);
   };
 
   // handle remove evidance
@@ -531,12 +575,12 @@ const ReportingAndNotification = (props) => {
       if (res.status === 200) {
         const temp = [...evidanceForm];
         const newData = temp.filter((item, index) => index !== key);
-        await setEvidanceForm(newData);
+        setEvidanceForm(newData);
       }
     } else {
       const temp = [...evidanceForm];
       const newData = temp.filter((item, index) => index !== key);
-      await setEvidanceForm(newData);
+      setEvidanceForm(newData);
     }
   };
 

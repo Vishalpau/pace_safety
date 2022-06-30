@@ -899,7 +899,6 @@ const FlhaDetails = (props) => {
                         <FormLabel className="viewLabel" component="legend">
                           Attachment
                         </FormLabel>
-                        {console.log(flha.files, "flhaaaaa")}
                         {flha.files ? (
                           <Typography
                             style={{
