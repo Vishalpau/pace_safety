@@ -4,10 +4,10 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
-import CardHeader from "./CardHeader";
-import CardBody from "./CardBody";
-import CardFooter from "./CardFooter";
-import UserProfile from "./UserProfile";
+import CardHeader from "./UI/CardHeader";
+import CardBody from "./UI/CardBody";
+import CardFooter from "./UI/CardFooter";
+import UserProfile from "../UserProfile/Index";
 import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CardView = (props) => {
-  // console.log(props, 'rfhdshfhkldslkjfdhs');
   const classes = useStyles();
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 

@@ -8,95 +8,13 @@ import progress from "dan-images/progress.png";
 import preplanning from "dan-images/preplanning.png";
 import completed from "dan-images/completed.png";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
+import Styles from "./Styles";
+import { handleSummaryPush, handleMyUserPClickOpen } from "../CardFunctions";
 
-const useStyles = makeStyles((theme) => ({
-  title: {
-    fontSize: "1.25rem",
-    fontFamily: "Montserrat-Regular",
-    color: "rgba(0, 0, 0, 0.87)",
-    fontWeight: "500",
-    lineHeight: "1.6",
-  },
-  titlespan: {
-    fontSize: "11px",
-    marginLeft: "10px",
-    color: "#fff",
-    padding: "4px 5px",
-    background: "#ff6e0c",
-    borderRadius: "3px",
-    textTransform: "uppercase",
-  },
-  listHeadColor: { backgroundColor: "#fafafa" },
-  marginTopBottom: {
-    "& .MuiTypography-h6 .MuiTypography-h5": {
-      fontFamily: "Montserrat-Regular",
-    },
-  },
-  listingLabelName: {
-    color: "#7692a4",
-    fontSize: "0.88rem",
-    fontFamily: "Montserrat-Regular",
-  },
-  listingLabelValue: {
-    color: "#333333",
-    fontSize: "0.88rem",
-    fontFamily: "Montserrat-Regular",
-    "& a": {
-      paddingLeft: "5px",
-      cursor: "pointer",
-      color: "rgba(0, 0, 0, 0.87)",
-      fontWeight: "600",
-    },
-    "&.green": {
-      color: "#006400",
-    },
-  },
-  sepHeightOne: {
-    borderLeft: "3px solid #cccccc",
-    height: "8px",
-    verticalAlign: "middle",
-    margin: "15px",
-    fontSize: "10px",
-  },
-  floatR: {
-    float: "right",
-    textTransform: "capitalize",
-    ["@media (max-width:480px)"]: {
-      float: "left",
-    },
-    position: "absolute",
-    right: "5px",
-    top: "5px",
-    zIndex: 9,
-  },
-  userImage: {
-    borderRadius: "50px",
-    width: "50px",
-    height: "50px",
-    marginRight: "10px",
-  },
-  cardLinkAction: {
-    width: "100%",
-    float: "left",
-    padding: "14px",
-    cursor: "pointer",
-    textDecoration: "none !important",
-    ["@media (max-width:800px)"]: {
-      paddingTop: "85px",
-    },
-  },
-}));
+const useStyles = makeStyles((theme) => Styles());
 
 const CardHeader = (props) => {
   const classes = useStyles();
-
-  const handleMyUserPClickOpen = () => {
-    // props.handleMyUserPClickOpen(true);
-  };
-
-  const handleSummaryPush = () => {
-    props.handleSummaryPush();
-  };
 
   const mappedHeader = props.headerFields.map((one) => {
     return (
@@ -144,8 +62,8 @@ const CardHeader = (props) => {
   return (
     <>
       <Button
-        className={classes.floatR}
-        onClick={() => handleMyUserPClickOpen()}
+        className={classes.floatRWithAbsolute}
+        onClick={() => handleMyUserPClickOpen(props)}
       >
         <img
           src={props.avatar !== null ? props.avatar : paceLogoSymbol}
@@ -155,7 +73,7 @@ const CardHeader = (props) => {
       </Button>
 
       <Link
-        onClick={() => handleSummaryPush()}
+        onClick={() => handleSummaryPush(props)}
         className={classes.cardLinkAction}
       >
         <Grid item xs={12}>
