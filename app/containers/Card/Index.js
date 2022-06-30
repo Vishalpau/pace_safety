@@ -54,49 +54,55 @@ const CardView = (props) => {
       <Card
         variant="outlined"
         className={`${classes.card} ${
-          props.ifdifferent ? props.ifdifferent : ""
+          props.ifPaperUpload ? props.ifPaperUpload : ""
         }`}
       >
         <CardContent>
           <Grid container spacing={3} className={classes.cardContentSection}>
             <CardHeader
-              cardTitle={props.cardTitle}
-              username={props.username}
-              avatar={props.avatar}
-              headerFields={props.headerFields}
+              cardTitle={props.cardTitle} // Card Title
+              username={props.username} // Profile Username
+              avatar={props.avatar} // Card Avatar
+              headerFields={props.headerFields} // Card Header labels and values
               handleMyUserPClickOpen={(val) => {
+                // Open user profile pop up
                 handleMyUserPClickOpen(val);
               }}
               handleSummaryPush={() => {
+                // Go to detail page
                 handleSummaryPush();
               }}
-              ifdifferent={props.ifdifferent ? props.ifdifferent : ""}
+              ifPaperUpload={props.ifPaperUpload ? props.ifPaperUpload : ""} // If observation is uploaded by paper
             />
             <CardBody
               handleSummaryPush={() => {
+                // Go to detail page
                 handleSummaryPush();
               }}
-              bodyFields={props.bodyFields}
+              bodyFields={props.bodyFields} // Card Body labels and values
             />
           </Grid>
         </CardContent>
         <Divider />
         <CardFooter
-          files={props.files}
-          commentsCount={props.commentsCount}
-          checkDeletePermission={props.checkDeletePermission}
-          deleteFields={props.deleteFields}
+          files={props.files} // Attachment counts
+          commentsCount={props.commentsCount} // Comments counts
+          checkDeletePermission={props.checkDeletePermission} // Check delete permission
+          deleteFields={props.deleteFields} // Delete component fields
           handleVisibilityComments={() => {
+            // Add comment box
             props.handleVisibilityComments();
           }}
-          handleVisibility={() => props.handleVisibility()}
+          handleVisibility={() => props.handleVisibility()} // Show attachment box
         />
         <UserProfile
           ifJsa={
+            // If card is from JSA
             props.headerFields.filter((one) => one.value === "JSA").length > 0
           }
-          open={myUserPOpen}
+          open={myUserPOpen} // State true or false to open popup
           handleMyUserPClose={(val) => {
+            // Close popup function
             handleMyUserPClose(val);
           }}
         />

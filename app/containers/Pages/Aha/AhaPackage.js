@@ -740,17 +740,19 @@ function AhaPackage(props) {
     return (
       <>
         <CardView
-          cardTitle={item.description}
-          avatar={item.avatar}
-          username={item.username}
-          itemId={item.id}
+          cardTitle={item.description} // Card title
+          avatar={item.avatar} // Card avatar
+          username={item.username} // Profile username
+          itemId={item.id} // Item ID
           headerFields={[
+            // Card header labels and values for each item
             { label: "Number", value: item.ahaNumber },
             { label: "Category", value: "AHA" },
             { label: "Stage", value: item.ahaStage },
             { label: "Status", value: item.ahaStatus },
           ]}
           bodyFields={[
+            // Card body labels and values for each item
             { label: "Workarea", value: item.workArea },
             { label: "Location", value: item.location },
             {
@@ -760,6 +762,7 @@ function AhaPackage(props) {
             { label: "Created By", value: item.createdByName },
           ]}
           deleteFields={{
+            // Delete component props
             deleteUrl: `/api/v1/ahas/${item.id}/`,
             afterDelete: () => {
               fetchAllAHAData();
@@ -772,12 +775,12 @@ function AhaPackage(props) {
             yesBtn: "Yes",
             noBtn: "No",
           }}
-          handleVisibility={() => handleVisibility()}
-          handleVisibilityComments={() => handleVisibilityComments()}
-          files={item.files !== null ? item.files.length : 0}
-          commentsCount={item.commentsCount}
-          handleSummaryPush={() => handleSummaryPush(item, commentPayload)}
-          checkDeletePermission={checkDeletePermission}
+          handleVisibility={() => handleVisibility()} // Show attachment box
+          handleVisibilityComments={() => handleVisibilityComments()} // Show "add comment" box
+          files={item.files !== null ? item.files.length : 0} // Attachment counts
+          commentsCount={item.commentsCount} // Comments count
+          handleSummaryPush={() => handleSummaryPush(item, commentPayload)} // Go to detail page function
+          checkDeletePermission={checkDeletePermission} // Check delete permission
         />
 
         {item.files && item.files.length ? (

@@ -977,7 +977,7 @@ function Actions(props) {
     return (
       <>
         <CardView
-          ifdifferent={
+          ifPaperUpload={
             item.source === "Paper" &&
             moment() - moment(item.createdAt) < oneHour
               ? "latest"

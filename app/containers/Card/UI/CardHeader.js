@@ -83,9 +83,9 @@ const CardHeader = (props) => {
                 <Grid item md={10} sm={12} xs={12}>
                   <Typography className={classes.title} variant="h6">
                     {props.cardTitle}
-                    {props.ifdifferent ? (
+                    {props.ifPaperUpload ? (
                       <span className={classes.titlespan}>
-                        {props.ifdifferent}
+                        {props.ifPaperUpload}
                       </span>
                     ) : (
                       ""
