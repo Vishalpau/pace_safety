@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Styles from "./Styles";
-import { handleSummaryPush } from "../CardFunctions";
+import { handleSummaryPush } from "../CardFunctions"; // Imported functions from CardFunctions.js
 
 const useStyles = makeStyles((theme) => Styles());
 

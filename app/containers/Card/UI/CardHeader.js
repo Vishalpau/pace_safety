@@ -9,7 +9,7 @@ import preplanning from "dan-images/preplanning.png";
 import completed from "dan-images/completed.png";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import Styles from "./Styles";
-import { handleSummaryPush, handleMyUserPClickOpen } from "../CardFunctions";
+import { handleSummaryPush, handleMyUserPClickOpen } from "../CardFunctions"; // Imported functions from CardFunctions.js
 
 const useStyles = makeStyles((theme) => Styles());
 
