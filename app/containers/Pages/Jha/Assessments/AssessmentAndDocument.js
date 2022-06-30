@@ -1047,7 +1047,7 @@ const AssessmentAndDocument = (props) => {
                   variant="contained"
                   color="secondary"
                   className="buttonStyle custmCancelBtn"
-                  onClick={(e) => history.push("/app/pages/jha/assessments/Job-hazards")}
+                  onClick={(e) => history.push(`/app/pages/jha/jha-summary/${fkJHAId}`)}
                 >
                   Cancel
                 </Button>
