@@ -85,7 +85,7 @@ import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 import Delete from "../../Delete/Delete";
 import Attachment from "../../Attachment/Attachment";
-import CardView from "../../Card/Index";
+import CardView from "../../../components/Card/Index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
