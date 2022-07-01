@@ -178,12 +178,15 @@ const ObservationCorrectiveActionView = () => {
   const classes = useStyles();
   const fetchComments = async () => {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
-    const result = res.data.data.results.results[0]
-    const result1 = res.data.data.results
+    if (res.data.data.metadata.count > 0) {
+
+      const result = res.data.data.results[0]
+      const result1 = res.data.data.results
 
 
-    // await setComments(result[3])
-    await setComment(result)
+      // await setComments(result[3])
+      await setComment(result)
+    }
     // await setIsLoading(true)
   }
 
@@ -340,6 +343,7 @@ const ObservationCorrectiveActionView = () => {
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
                     Comments
                   </Typography>
+                  {console.log(comment.comment, 'comment.comment')}
                   <Typography className={classes.labelValue}>
                     {comment ? comment.comment : "-"}
                   </Typography>

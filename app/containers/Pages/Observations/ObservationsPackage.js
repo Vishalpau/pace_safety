@@ -37,7 +37,7 @@ import api from "../../../utils/axios";
 import { HEADER_AUTH, SELF_API } from "../../../utils/constants";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import { checkACL } from "../../../utils/helper";
-import CardView from "../../Card/CardView";
+import CardView from "../../Card/Index";
 
 const UserDetailsView = lazy(() => import("../../UserDetails/UserDetail"));
 const Loader = lazy(() => import("../Loader"));
@@ -529,8 +529,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -657,8 +657,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -841,9 +841,9 @@ function Actions(props) {
               });
             }
           })
-          .catch((error) => { });
+          .catch((error) => {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   const classes = useStyles();
 
@@ -977,9 +977,9 @@ function Actions(props) {
     return (
       <>
         <CardView
-          ifdifferent={
+          ifPaperUpload={
             item.source === "Paper" &&
-              moment() - moment(item.createdAt) < oneHour
+            moment() - moment(item.createdAt) < oneHour
               ? "latest"
               : ""
           }

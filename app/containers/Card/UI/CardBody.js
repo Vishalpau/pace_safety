@@ -3,41 +3,15 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
+import Styles from "./Styles";
+import { handleSummaryPush } from "../CardFunctions"; // Imported functions from CardFunctions.js
 
-const useStyles = makeStyles((theme) => ({
-  cardLinkAction: {
-    width: "100%",
-    float: "left",
-    padding: "14px",
-    cursor: "pointer",
-    textDecoration: "none !important",
-    ["@media (max-width:800px)"]: {
-      paddingTop: "85px",
-    },
-  },
-  listingLabelValue: {
-    color: "#333333",
-    fontSize: "0.88rem",
-    fontFamily: "Montserrat-Regular",
-    "& a": {
-      paddingLeft: "5px",
-      cursor: "pointer",
-      color: "rgba(0, 0, 0, 0.87)",
-      fontWeight: "600",
-    },
-    "&.green": {
-      color: "#006400",
-    },
-  },
-  listingLabelName: {
-    color: "#7692a4",
-    fontSize: "0.88rem",
-    fontFamily: "Montserrat-Regular",
-  },
-}));
+const useStyles = makeStyles((theme) => Styles());
 
 const CardBody = (props) => {
   const classes = useStyles();
+
+  // Mapping the labels and its values of Card Body
 
   const mappedBody = props.bodyFields.map((one) => {
     return (
@@ -59,14 +33,10 @@ const CardBody = (props) => {
     );
   });
 
-  const handleSummaryPush = () => {
-    props.handleSummaryPush();
-  };
-
   return (
     <>
       <Link
-        onClick={() => handleSummaryPush()}
+        onClick={() => handleSummaryPush(props)}
         className={classes.cardLinkAction}
       >
         <Grid item sm={12} xs={12}>
