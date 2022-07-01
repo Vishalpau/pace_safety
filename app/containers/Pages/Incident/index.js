@@ -50,6 +50,8 @@ import {
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
 import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
+// import { Delete } from "@material-ui/icons";
+import Delete from "../../Delete/Delete";
 
 const Loader = lazy(() => import("../../Forms/Loader"));
 
@@ -240,7 +242,7 @@ function BlankPage(props) {
           let pageCount = Math.ceil(res.data.data.results.count / 25);
           setPageCount(pageCount);
         })
-        // .catch((err) => history.push("/app/pages/error"));
+      // .catch((err) => history.push("/app/pages/error"));
       // handleTimeOutError(res)
     }
     const viewMode = {
@@ -410,23 +412,24 @@ function BlankPage(props) {
   };
 
   const handleDelete = async (item) => {
-    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const userDetails = JSON.parse(localStorage.getItem("userDetails")).id;
-    const fkProjectId =
-      props.projectName.projectId ||
-      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
-    const selectBreakdown =
-      props.projectName.breakDown.length > 0
-        ? props.projectName.breakDown
-        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
-    let struct = "";
+    // debugger
+    // const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    // const userDetails = JSON.parse(localStorage.getItem("userDetails")).id;
+    // const fkProjectId =
+    //   props.projectName.projectId ||
+    //   JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    // const selectBreakdown =
+    //   props.projectName.breakDown.length > 0
+    //     ? props.projectName.breakDown
+    //     : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    //       ? JSON.parse(localStorage.getItem("selectBreakDown"))
+    //       : null;
+    // let struct = "";
 
-    for (const i in selectBreakdown) {
-      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-    }
-    const fkProjectStructureIds = struct.slice(0, -1);
+    // for (const i in selectBreakdown) {
+    //   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    // }
+    // const fkProjectStructureIds = struct.slice(0, -1);
     // console.log(item);
     if (checkACL("safety-incident", "delete_incidents")) {
       const data = {
@@ -435,8 +438,8 @@ function BlankPage(props) {
         fkProjectStructureIds: fkProjectStructureIds,
         // incidentStatus: 'Done',
         // incidentStage: '',
-        // updatedBy: userDetails,
-        // createdBy: userDetails,
+        updatedBy: userDetails,
+        createdBy: userDetails,
         status: "Delete",
       };
       // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
@@ -449,10 +452,39 @@ function BlankPage(props) {
         .put(`/api/v1/incidents/${item[1].id}/`, data)
         .then((response) => {
           console.log(response);
-          // fetchData();
+          fetchData();
         })
         .catch((err) => console.log(err));
     }
+  };
+
+  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+  const createdId = JSON.parse(localStorage.getItem("userDetails")).id;
+  const fkProjectId =
+    props.projectName.projectId ||
+    JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+  const selectBreakdown1 =
+    props.projectName.breakDown.length > 0
+      ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+  let struct1 = "";
+
+  for (const i in selectBreakdown1) {
+    struct1 += `${selectBreakdown1[i].depth}${selectBreakdown1[i].id}:`;
+  }
+  const fkProjectStructureIds1 = struct1.slice(0, -1);
+
+  const deleteItem = {
+    fkCompanyId: fkCompanyId,
+    fkProjectId: fkProjectId,
+    fkProjectStructureIds: fkProjectStructureIds1,
+    // incidentStatus: 'Done',
+    // incidentStage: '',
+    updatedBy: createdId,
+    createdBy: createdId,
+    status: "Delete",
   };
 
   const handleSearchIncident = (serchValue) => {
@@ -852,15 +884,29 @@ function BlankPage(props) {
                                         }}
                                       />
                                     ) : (
-                                      <Link
-                                        href="#"
-                                        className={classes.mLeftR5}
-                                      >
-                                        <DeleteForeverOutlinedIcon
-                                          className={classes.iconteal}
-                                          onClick={(e) => handleDelete(item)}
-                                        />
-                                      </Link>
+                                      // <Link
+                                      //   // href="#"
+                                      //   className={classes.mLeftR5}
+                                      // >
+                                      //   <DeleteForeverOutlinedIcon
+                                      //     className={classes.iconteal}
+                                      //     onClick={(e) => handleDelete(item)}
+                                      //   />
+                                      // </Link>
+                                      <Delete
+                                        deleteUrl={`/api/v1/incidents/${item[1].id}/`}
+                                        afterDelete={() => {
+                                          fetchData()
+                                        }}
+                                        axiosObj={api}
+                                        item={deleteItem}
+                                        loader={setIsLoading}
+                                        loadingFlag={false}
+                                        deleteMsg="Are you sure you want to delete this FLHA?"
+                                        yesBtn="Yes"
+                                        noBtn="No"
+
+                                      />
                                     )}
                                   </Typography>
                                 </div>

@@ -37,7 +37,8 @@ const CardHeader = (props) => {
             {one.label === "Stage" && one.value === "Open" ? (
               <img src={preplanning} alt="preplaning" />
             ) : (one.label === "Stage" && one.value === "Closed") ||
-              (one.label === "Stage" && one.value === "Close") ? (
+              (one.label === "Stage" && one.value === "Close") ||
+              (one.label === "Stage" && one.value === "Completed") ? (
               <img src={completed} alt="completed" />
             ) : (
               ""
