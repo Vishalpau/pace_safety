@@ -37,7 +37,7 @@ import api from "../../../utils/axios";
 import { HEADER_AUTH, SELF_API } from "../../../utils/constants";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import { checkACL } from "../../../utils/helper";
-import CardView from "../../Card/Index";
+import CardView from "../../../components/Card/Index";
 
 const UserDetailsView = lazy(() => import("../../UserDetails/UserDetail"));
 const Loader = lazy(() => import("../Loader"));

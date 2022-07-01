@@ -7,8 +7,8 @@ import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-import Delete from "../../Delete/Delete";
-import Bookmark from "../../Bookmark/Bookmark";
+import Delete from "../../../containers/Delete/Delete";
+import Bookmark from "../../../containers/Bookmark/Bookmark";
 import Styles from "./Styles";
 
 const useStyles = makeStyles((theme) => Styles());
