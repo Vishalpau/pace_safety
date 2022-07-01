@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import CardHeader from "./UI/CardHeader";
 import CardBody from "./UI/CardBody";
 import CardFooter from "./UI/CardFooter";
-import UserProfile from "../UserProfile/Index";
+import UserProfile from "../../containers/UserProfile/Index";
 import PropTypes from "prop-types";
 import Styles from "./UI/Styles";
 

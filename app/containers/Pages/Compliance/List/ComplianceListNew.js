@@ -57,7 +57,7 @@ import moment from "moment";
 import { checkACL } from "../../../../utils/helper";
 import Attachment from "../../../../containers/Attachment/Attachment";
 import Delete from "../../../Delete/Delete";
-import CardView from "../../../Card/Index";
+import CardView from "../../../../components/Card/Index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
