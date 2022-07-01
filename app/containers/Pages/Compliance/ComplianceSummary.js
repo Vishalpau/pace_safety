@@ -475,6 +475,7 @@ function ComplianceSummary(props) {
       `/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${projectId}&projectStructure=`
     );
     const result = res.data.data.results;
+    console.log(result, 'resultssssssssss');
     setColorData(result);
   };
 
@@ -1319,26 +1320,10 @@ function ComplianceSummary(props) {
                                                                                 style={{
                                                                                   backgroundColor:
                                                                                     value.performance &&
-                                                                                    colordata.filter(
-                                                                                      (
-                                                                                        i
-                                                                                      ) =>
-                                                                                        i.matrixConstant ==
-                                                                                        (value.performance *
-                                                                                          5) /
-                                                                                          100
-                                                                                    )
-                                                                                      .length
-                                                                                      ? colordata.filter(
-                                                                                          (
-                                                                                            i
-                                                                                          ) =>
-                                                                                            i.matrixConstant ==
-                                                                                            (value.performance *
-                                                                                              5) /
-                                                                                              100
-                                                                                        )[0]
-                                                                                          .matrixConstantColor
+                                                                                    colordata.filter((i) => i.matrixConstant == (value.performance * 5) / 100).length
+                                                                                      ? colordata.filter((i) =>i.matrixConstant ==(value.performance *5) /100 )[0]['status'] === 'Active' ? 
+                                                                                      colordata.filter((i) =>i.matrixConstant ==(value.performance *5) /100 )[0].matrixConstantColor
+                                                                                      : '#fff'
                                                                                       : "#fff",
                                                                                   border:
                                                                                     "1px",
