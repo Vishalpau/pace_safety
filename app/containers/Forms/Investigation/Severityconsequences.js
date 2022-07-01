@@ -211,7 +211,7 @@ const InvestigationOverview = (props) => {
 
 
   const handelClassification = async (value) => {
-
+    console.log(value)
     let paceCauseClassification = [
       "Fatality",
       "Lost time incident",
@@ -596,13 +596,13 @@ const InvestigationOverview = (props) => {
                     {classificationValues.current.map((selectValues) => (
                       <MenuItem
                         value={selectValues.value}
-                        // onClick={(e) => handelClassification(selectValues.value)}
-                        onClick={(e) => {
-                          setForm({
-                            ...form,
-                            classification: selectValues.value,
-                          });
-                        }}
+                        onClick={(e) => handelClassification(selectValues.value)}
+                      // onClick={(e) => {
+                      //   setForm({
+                      //     ...form,
+                      //     classification: selectValues.value,
+                      //   });
+                      // }}
                       >
                         {selectValues.label}
                       </MenuItem>
