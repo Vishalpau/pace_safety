@@ -7,61 +7,16 @@ import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-import Delete from "../Delete/Delete";
-import Bookmark from "../Bookmark/Bookmark";
+import Delete from "../../Delete/Delete";
+import Bookmark from "../../Bookmark/Bookmark";
+import Styles from "./Styles";
 
-const useStyles = makeStyles((theme) => ({
-  mLeftR5: {
-    marginLeft: "5px",
-    marginRight: "15px",
-    ["@media (max-width:480px)"]: {
-      marginLeft: "3px",
-      marginRight: "3px",
-    },
-  },
-  textRight: {
-    textAlign: "right",
-    ["@media (max-width:480px)"]: {
-      textAlign: "left",
-      padding: "0px 8px 15px 8px !important",
-    },
-  },
-  sepHeightTen: {
-    borderLeft: "3px solid #cccccc",
-    height: "8px",
-    verticalAlign: "middle",
-    margin: "15px 15px 15px 8px",
-    fontSize: "10px",
-    ["@media (max-width:480px)"]: {
-      margin: "10px 5px 10px 5px",
-    },
-  },
-  floatR: {
-    float: "right",
-    textTransform: "capitalize",
-    ["@media (max-width:480px)"]: {
-      float: "left",
-    },
-  },
-  iconteal: {
-    color: "#06425c",
-  },
-  mright5: {
-    marginRight: "5px",
-    color: "#a7a7a7",
-  },
-  width100: {
-    width: "100%",
-    padding: "14px 15px",
-  },
-  commentLink: {
-    marginLeft: "2px",
-    cursor: "pointer",
-  },
-}));
+const useStyles = makeStyles((theme) => Styles());
 
 const CardFooter = (props) => {
   const classes = useStyles();
+
+  // Delete component props
 
   const {
     deleteUrl,
@@ -91,7 +46,7 @@ const CardFooter = (props) => {
                 aria-haspopup="true"
                 className={classes.commentLink}
               >
-                {props.files !== null ? <>{props.files}</> : 0}
+                {props.files !== null ? props.files : 0}
               </Link>
             </Typography>
             <span item xs={1} className={classes.sepHeightTen} />
