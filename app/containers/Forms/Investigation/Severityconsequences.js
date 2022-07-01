@@ -200,11 +200,11 @@ const InvestigationOverview = (props) => {
   const handelCall = async () => {
     await handelUpdateCheck();
     classificationValues.current = pickListValues["40"];
-    healthAndSafetyValues.current = [...pickListValues["42"],ONA[0],ONA[1]];
-    environmentValues.current = [...pickListValues["43"],ONA[0],ONA[1]];
-    regulationValues.current = [...pickListValues["44"],ONA[0],ONA[1]];
-    reputaionValues.current = [...pickListValues["45"],ONA[0],ONA[1]];
-    financialValues.current = [...pickListValues["46"],ONA[0],ONA[1]];
+    healthAndSafetyValues.current = [...pickListValues["42"], ONA[0], ONA[1]];
+    environmentValues.current = [...pickListValues["43"], ONA[0], ONA[1]];
+    regulationValues.current = [...pickListValues["44"], ONA[0], ONA[1]];
+    reputaionValues.current = [...pickListValues["45"], ONA[0], ONA[1]];
+    financialValues.current = [...pickListValues["46"], ONA[0], ONA[1]];
     highestImpactReceptor.current = pickListValues["72"];
     await setIsLoading(true);
   };
@@ -596,7 +596,13 @@ const InvestigationOverview = (props) => {
                     {classificationValues.current.map((selectValues) => (
                       <MenuItem
                         value={selectValues.value}
-                        onClick={(e) => handelClassification(selectValues.value)}
+                        // onClick={(e) => handelClassification(selectValues.value)}
+                        onClick={(e) => {
+                          setForm({
+                            ...form,
+                            classification: selectValues.value,
+                          });
+                        }}
                       >
                         {selectValues.label}
                       </MenuItem>
