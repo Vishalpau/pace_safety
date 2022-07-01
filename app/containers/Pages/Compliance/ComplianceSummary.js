@@ -546,14 +546,14 @@ function ComplianceSummary(props) {
                         <ul className="SummaryTabList">
                           <li>
                             <Button
-                              color={"secondary"}
-                              variant={"contained"}
+                              color={complianceData.performanceSummary ? "secondary" : "primary"}
+                              // variant={"contained"}
+                              variant={complianceData.performanceSummary ? "contained" : "outlined"}
                               size="small"
                               //endIcon={<CheckCircle />}
                               className={classes.statusButton}
                               onClick={(e) => {
                                 handleComplianceStatusChange();
-
                                 //setApprovals(false);
                                 //setLessonsLearned(false);
                                 //setSummary(false);
