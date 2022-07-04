@@ -2297,7 +2297,8 @@ const Checks = (props) => {
                                                                               .projectId
                                                                           }&targetPage=/action/details/&targetId=${
                                                                             valueAction.id
-                                                                          }`}
+                                                                          }&projectStructure=${localStorage.getItem('selectBreakDown')}
+                                                                          `}
                                                                           target="_blank"
                                                                         >
                                                                           {
