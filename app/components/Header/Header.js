@@ -625,9 +625,9 @@ function Header(props) {
 
     localStorage.setItem('projectName', JSON.stringify(data));
     localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
-    await dispatch(projectName(data));
+     dispatch(projectName(data));
 
-    await dispatch(breakDownDetails(selectBreakDown));
+     dispatch(breakDownDetails(selectBreakDown));
     document.getElementById('open').click();
     // documentElementById("open").click()
     // setAnchorEl(event.currentTarget);
