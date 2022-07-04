@@ -86,6 +86,7 @@ import Acl from "../../../components/Error/acl";
 import Delete from "../../Delete/Delete";
 import Attachment from "../../Attachment/Attachment";
 import CardView from "../../../components/Card/Index";
+import { flhaLabels } from "../../../components/Card/CardConstants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1218,17 +1219,17 @@ function xflha(props) {
             username={item.username}
             itemId={item.id}
             headerFields={[
-              { label: "Number", value: item.flhaNumber },
-              { label: "Category", value: "FLHA" },
-              { label: "Stage", value: item.flhaStage },
-              { label: "Status", value: item.flhaStatus },
+              { label: flhaLabels.header[0], value: item.flhaNumber },
+              { label: flhaLabels.header[1], value: "FLHA" },
+              { label: flhaLabels.header[2], value: item.flhaStage },
+              { label: flhaLabels.header[3], value: item.flhaStatus },
             ]}
             bodyFields={[
               {
-                label: "Created On",
+                label: flhaLabels.body[0],
                 value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
               },
-              { label: "Created By", value: item.createdByName },
+              { label: flhaLabels.body[1], value: item.createdByName },
             ]}
             deleteFields={{
               deleteUrl: `/api/v1/flhas/${item.id}/`,

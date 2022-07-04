@@ -64,6 +64,7 @@ import { checkACL } from "../../../utils/helper";
 import Attachment from "../../Attachment/Attachment";
 import Delete from "../../Delete/Delete";
 import CardView from "../../../components/Card/Index";
+import { jhaLabels } from "../../../components/Card/CardConstants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -775,19 +776,19 @@ function JhaPackage(props) {
             username={item.username}
             itemId={item.id}
             headerFields={[
-              { label: "Number", value: item.jhaNumber },
-              { label: "Category", value: "JSA" },
-              { label: "Stage", value: item.jhaStage },
-              { label: "Status", value: item.jhaStatus },
+              { label: jhaLabels.header[0], value: item.jhaNumber },
+              { label: jhaLabels.header[1], value: "JSA" },
+              { label: jhaLabels.header[2], value: item.jhaStage },
+              { label: jhaLabels.header[3], value: item.jhaStatus },
             ]}
             bodyFields={[
-              { label: "Location", value: item.location },
+              { label: jhaLabels.body[0], value: item.location },
               {
-                label: "Created On",
+                label: jhaLabels.body[1],
                 value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
               },
               {
-                label: "Created By",
+                label: jhaLabels.body[2],
                 value: item.createdByName,
               },
             ]}

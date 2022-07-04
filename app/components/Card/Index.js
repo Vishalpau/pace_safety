@@ -4,12 +4,12 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
-import CardHeader from "./UI/CardHeader";
-import CardBody from "./UI/CardBody";
-import CardFooter from "./UI/CardFooter";
+import CardHeader from "./UI_2.1/CardHeader";
+import CardBody from "./UI_2.1/CardBody";
+import CardFooter from "./UI_2.1/CardFooter";
 import UserProfile from "../../containers/UserProfile/Index";
 import PropTypes from "prop-types";
-import Styles from "./UI/Styles";
+import Styles from "./UI_2.1/Styles";
 
 const useStyles = makeStyles((theme) => Styles());
 

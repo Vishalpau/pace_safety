@@ -57,6 +57,7 @@ import { checkACL } from "../../../utils/helper";
 import Attachment from "../../Attachment/Attachment";
 import Delete from "../../Delete/Delete";
 import CardView from "../../../components/Card/Index";
+import { ahaLabels } from "../../../components/Card/CardConstants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -746,20 +747,20 @@ function AhaPackage(props) {
           itemId={item.id} // Item ID
           headerFields={[
             // Card header labels and values for each item
-            { label: "Number", value: item.ahaNumber },
-            { label: "Category", value: "AHA" },
-            { label: "Stage", value: item.ahaStage },
-            { label: "Status", value: item.ahaStatus },
+            { label: ahaLabels.header[0], value: item.ahaNumber },
+            { label: ahaLabels.header[1], value: "AHA" },
+            { label: ahaLabels.header[2], value: item.ahaStage },
+            { label: ahaLabels.header[3], value: item.ahaStatus },
           ]}
           bodyFields={[
             // Card body labels and values for each item
-            { label: "Workarea", value: item.workArea },
-            { label: "Location", value: item.location },
+            { label: ahaLabels.body[0], value: item.workArea },
+            { label: ahaLabels.body[1], value: item.location },
             {
-              label: "Created On",
+              label: ahaLabels.body[2],
               value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
             },
-            { label: "Created By", value: item.createdByName },
+            { label: ahaLabels.body[3], value: item.createdByName },
           ]}
           deleteFields={{
             // Delete component props
