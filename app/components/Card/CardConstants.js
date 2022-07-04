@@ -1,6 +1,6 @@
 export const icareLabels = {
   header: ["Number", "Assignee", "Stage", "Status"],
-  body: ["Location", "Created On", "Created By"],
+  body: ["Type", "Location", "Created On", "Created By"],
 };
 
 export const ahaLabels = {
