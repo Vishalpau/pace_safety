@@ -698,11 +698,11 @@ function AhaSummary(props) {
                           <li>
                             <Button
                               color={
-                                ahaData.additionalRemarks ? "secondary" : "primary"
+                                ahaData.ahaStatus === "Assessment" ? "secondary" : "primary"
                               }
                               // variant="contained"
                               variant={
-                                ahaData.additionalRemarks
+                                ahaData.ahaStatus === "Assessment"
                                   ? "contained"
                                   : "outlined"
                               }
@@ -718,8 +718,8 @@ function AhaSummary(props) {
                               display="block"
                               align="center"
                             >
-                              {ahaData.additionalRemarks ? "Done" : "Pending"}
-                              {ahaData.additionalRemarks ? (
+                              {ahaData.ahaStatus === "Assessment" ? "Done" : "Pending"}
+                              {ahaData.ahaStatus === "Assessment" ? (
                                 <CheckCircle />
                               ) : (
                                 <AccessTime />
