@@ -367,8 +367,7 @@ function ComplianceSummary(props) {
         headers: HEADER_AUTH,
       });
       const workArea = await api_work_area.get(
-        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${
-          workAreaId[0]
+        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
         }/${workAreaId[1]}/`
       );
       structName.push(workArea.data.data.results[0]["structureName"]);
@@ -416,8 +415,8 @@ function ComplianceSummary(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -443,7 +442,7 @@ function ComplianceSummary(props) {
         }
         setNotificationSentValue(data);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // get audit question on summary page
@@ -505,9 +504,8 @@ function ComplianceSummary(props) {
   }
   return (
     <CustomPapperBlock
-      title={`Compliance number: ${
-        complianceData.auditNumber ? complianceData.auditNumber : ""
-      }`}
+      title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
+        }`}
       icon="customDropdownPageIcon compliancePageIcon"
       whiteBg
     >
@@ -805,7 +803,7 @@ function ComplianceSummary(props) {
                                     </Typography>
                                     <Typography className="viewLabelValue">
                                       {complianceData["hseRepresentative"] !==
-                                      ""
+                                        ""
                                         ? complianceData["hseRepresentative"]
                                         : "-"}
                                     </Typography>
@@ -861,7 +859,7 @@ function ComplianceSummary(props) {
                                     </Typography>
                                     <Typography className="viewLabelValue">
                                       {complianceData["contractorRepNumber"] !==
-                                      ""
+                                        ""
                                         ? complianceData["contractorRepNumber"]
                                         : "-"}
                                     </Typography>
@@ -893,8 +891,8 @@ function ComplianceSummary(props) {
                                         "contractorSupervisorName"
                                       ] !== ""
                                         ? complianceData[
-                                            "contractorSupervisorName"
-                                          ]
+                                        "contractorSupervisorName"
+                                        ]
                                         : "-"}
                                     </Typography>
                                   </Grid>
@@ -909,13 +907,13 @@ function ComplianceSummary(props) {
                                     </Typography>
                                     {team.length > 0
                                       ? team.map((item) => (
-                                          <Typography
-                                            display="block"
-                                            className="viewLabelValue"
-                                          >
-                                            {item}
-                                          </Typography>
-                                        ))
+                                        <Typography
+                                          display="block"
+                                          className="viewLabelValue"
+                                        >
+                                          {item}
+                                        </Typography>
+                                      ))
                                       : "-"}
                                   </Grid>
                                 </Grid>
@@ -1183,13 +1181,11 @@ function ComplianceSummary(props) {
                                                             <Accordion
                                                               expanded={
                                                                 expandedTableDetail ===
-                                                                `panel6 ${
-                                                                  value.id
+                                                                `panel6 ${value.id
                                                                 }`
                                                               }
                                                               onChange={handleTDChange(
-                                                                `panel6 ${
-                                                                  value.id
+                                                                `panel6 ${value.id
                                                                 }`,
                                                                 value.id
                                                               )}
@@ -1237,9 +1233,9 @@ function ComplianceSummary(props) {
                                                                       >
                                                                         {value.criticality !==
                                                                           "N/A" &&
-                                                                        value.criticality !==
+                                                                          value.criticality !==
                                                                           "No" &&
-                                                                        value.criticality !==
+                                                                          value.criticality !==
                                                                           "Yes" ? (
                                                                           <FormLabel
                                                                             component="legend"
@@ -1268,9 +1264,9 @@ function ComplianceSummary(props) {
                                                                       {value.criticality !==
                                                                         "N/A" &&
                                                                         value.criticality !==
-                                                                          "No" &&
+                                                                        "No" &&
                                                                         value.criticality !==
-                                                                          "Yes" && (
+                                                                        "Yes" && (
                                                                           <>
                                                                             <Grid
                                                                               item
@@ -1320,10 +1316,10 @@ function ComplianceSummary(props) {
                                                                                 style={{
                                                                                   backgroundColor:
                                                                                     value.performance &&
-                                                                                    colordata.filter((i) => i.matrixConstant == (value.performance * 5) / 100).length
-                                                                                      ? colordata.filter((i) =>i.matrixConstant ==(value.performance *5) /100 )[0]['status'] === 'Active' ? 
-                                                                                      colordata.filter((i) =>i.matrixConstant ==(value.performance *5) /100 )[0].matrixConstantColor
-                                                                                      : '#fff'
+                                                                                      colordata.filter((i) => i.matrixConstant == (value.performance * 5) / 100).length
+                                                                                      ? colordata.filter((i) => i.matrixConstant == (value.performance * 5) / 100)[0]['status'] === 'Active' ?
+                                                                                        colordata.filter((i) => i.matrixConstant == (value.performance * 5) / 100)[0].matrixConstantColor
+                                                                                        : '#fff'
                                                                                       : "#fff",
                                                                                   border:
                                                                                     "1px",
@@ -1422,12 +1418,12 @@ function ComplianceSummary(props) {
                                                                       val.id ==
                                                                       value.questionId
                                                                   )[0] &&
-                                                                  actionData.filter(
-                                                                    (val) =>
-                                                                      val.id ==
-                                                                      value.questionId
-                                                                  )[0].action
-                                                                    .length ? (
+                                                                    actionData.filter(
+                                                                      (val) =>
+                                                                        val.id ==
+                                                                        value.questionId
+                                                                    )[0].action
+                                                                      .length ? (
                                                                     <Grid
                                                                       item
                                                                       md={12}
@@ -1447,115 +1443,111 @@ function ComplianceSummary(props) {
                                                                         ) => (
                                                                           <>
                                                                             {val.id ==
-                                                                            value.questionId ? (
+                                                                              value.questionId ? (
                                                                               <>
                                                                                 {val
                                                                                   .action
                                                                                   .length >
                                                                                   0 && (
-                                                                                  <Grid
-                                                                                    item
-                                                                                    md={
-                                                                                      12
-                                                                                    }
-                                                                                    xs={
-                                                                                      12
-                                                                                    }
-                                                                                  >
-                                                                                    <Table
-                                                                                      component={
-                                                                                        Paper
+                                                                                    <Grid
+                                                                                      item
+                                                                                      md={
+                                                                                        12
                                                                                       }
-                                                                                      className="simpleTableSection"
+                                                                                      xs={
+                                                                                        12
+                                                                                      }
                                                                                     >
-                                                                                      <TableHead>
-                                                                                        <TableRow>
-                                                                                          <TableCell className="tableHeadCellFirst">
-                                                                                            Action
-                                                                                            number
-                                                                                          </TableCell>
-                                                                                          <TableCell className="tableHeadCellSecond">
-                                                                                            Action
-                                                                                            title
-                                                                                          </TableCell>
-                                                                                        </TableRow>
-                                                                                      </TableHead>
-                                                                                      <TableBody>
-                                                                                        {actionData.map(
-                                                                                          (
-                                                                                            val
-                                                                                          ) => (
-                                                                                            <>
-                                                                                              {val.id ==
-                                                                                              value.questionId ? (
-                                                                                                <>
-                                                                                                  {val
-                                                                                                    .action
-                                                                                                    .length >
-                                                                                                    0 &&
-                                                                                                    val.action.map(
-                                                                                                      (
-                                                                                                        valueAction
-                                                                                                      ) => (
-                                                                                                        <TableRow>
-                                                                                                          <TableCell align="left">
-                                                                                                            <Link
-                                                                                                              className={
-                                                                                                                classes.actionLinkAudit
-                                                                                                              }
-                                                                                                              display="block"
-                                                                                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                                                                                                JSON.parse(
+                                                                                      <Table
+                                                                                        component={
+                                                                                          Paper
+                                                                                        }
+                                                                                        className="simpleTableSection"
+                                                                                      >
+                                                                                        <TableHead>
+                                                                                          <TableRow>
+                                                                                            <TableCell className="tableHeadCellFirst">
+                                                                                              Action
+                                                                                              number
+                                                                                            </TableCell>
+                                                                                            <TableCell className="tableHeadCellSecond">
+                                                                                              Action
+                                                                                              title
+                                                                                            </TableCell>
+                                                                                          </TableRow>
+                                                                                        </TableHead>
+                                                                                        <TableBody>
+                                                                                          {actionData.map(
+                                                                                            (
+                                                                                              val
+                                                                                            ) => (
+                                                                                              <>
+                                                                                                {val.id ==
+                                                                                                  value.questionId ? (
+                                                                                                  <>
+                                                                                                    {val
+                                                                                                      .action
+                                                                                                      .length >
+                                                                                                      0 &&
+                                                                                                      val.action.map(
+                                                                                                        (
+                                                                                                          valueAction
+                                                                                                        ) => (
+                                                                                                          <TableRow>
+                                                                                                            <TableCell align="left">
+                                                                                                              <Link
+                                                                                                                className={
+                                                                                                                  classes.actionLinkAudit
+                                                                                                                }
+                                                                                                                display="block"
+                                                                                                                href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
                                                                                                                   localStorage.getItem(
                                                                                                                     "BaseUrl"
                                                                                                                   )
                                                                                                                 )[
                                                                                                                   "actionClientID"
                                                                                                                 ]
-                                                                                                              }&response_type=code&companyId=${
-                                                                                                                JSON.parse(
-                                                                                                                  localStorage.getItem(
-                                                                                                                    "company"
+                                                                                                                  }&response_type=code&companyId=${JSON.parse(
+                                                                                                                    localStorage.getItem(
+                                                                                                                      "company"
+                                                                                                                    )
                                                                                                                   )
-                                                                                                                )
-                                                                                                                  .fkCompanyId
-                                                                                                              }&projectId=${
-                                                                                                                JSON.parse(
-                                                                                                                  localStorage.getItem(
-                                                                                                                    "projectName"
+                                                                                                                    .fkCompanyId
+                                                                                                                  }&projectId=${JSON.parse(
+                                                                                                                    localStorage.getItem(
+                                                                                                                      "projectName"
+                                                                                                                    )
                                                                                                                   )
-                                                                                                                )
-                                                                                                                  .projectName
-                                                                                                                  .projectId
-                                                                                                              }&targetPage=/action/details/&targetId=${
-                                                                                                                valueAction.id
-                                                                                                              }`}
-                                                                                                              target="_blank"
-                                                                                                            >
+                                                                                                                    .projectName
+                                                                                                                    .projectId
+                                                                                                                  }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                                                  }`}
+                                                                                                                target="_blank"
+                                                                                                              >
+                                                                                                                {
+                                                                                                                  valueAction.number
+                                                                                                                }
+                                                                                                              </Link>
+                                                                                                            </TableCell>
+                                                                                                            <TableCell>
                                                                                                               {
-                                                                                                                valueAction.number
+                                                                                                                valueAction.title
                                                                                                               }
-                                                                                                            </Link>
-                                                                                                          </TableCell>
-                                                                                                          <TableCell>
-                                                                                                            {
-                                                                                                              valueAction.title
-                                                                                                            }
-                                                                                                          </TableCell>
-                                                                                                        </TableRow>
-                                                                                                      )
-                                                                                                    )}
-                                                                                                </>
-                                                                                              ) : (
-                                                                                                ""
-                                                                                              )}
-                                                                                            </>
-                                                                                          )
-                                                                                        )}
-                                                                                      </TableBody>
-                                                                                    </Table>
-                                                                                  </Grid>
-                                                                                )}
+                                                                                                            </TableCell>
+                                                                                                          </TableRow>
+                                                                                                        )
+                                                                                                      )}
+                                                                                                  </>
+                                                                                                ) : (
+                                                                                                  ""
+                                                                                                )}
+                                                                                              </>
+                                                                                            )
+                                                                                          )}
+                                                                                        </TableBody>
+                                                                                      </Table>
+                                                                                    </Grid>
+                                                                                  )}
                                                                               </>
                                                                             ) : (
                                                                               ""
@@ -1810,7 +1802,7 @@ function ComplianceSummary(props) {
                                     </FormLabel>
                                     <Typography className="viewLabelValue">
                                       {complianceData["performanceSummary"] !==
-                                      null
+                                        null
                                         ? complianceData["performanceSummary"]
                                         : "-"}
                                     </Typography>
@@ -1824,13 +1816,13 @@ function ComplianceSummary(props) {
                                     </FormLabel>
                                     {notificationSentValue.length > 0
                                       ? notificationSentValue.map((value) => (
-                                          <Typography
-                                            display="block"
-                                            className="viewLabelValue"
-                                          >
-                                            {value.roleName}
-                                          </Typography>
-                                        ))
+                                        <Typography
+                                          display="block"
+                                          className="viewLabelValue"
+                                        >
+                                          {value.roleName}
+                                        </Typography>
+                                      ))
                                       : "-"}
                                   </Grid>
                                 </Grid>
