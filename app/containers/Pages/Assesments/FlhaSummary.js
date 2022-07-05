@@ -237,8 +237,7 @@ class SimpleTabs extends React.Component {
         headers: HEADER_AUTH,
       });
       const workArea = await api_work_area.get(
-        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${
-          workAreaId[0]
+        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
         }/${workAreaId[1]}/`
       );
       structName.push(workArea.data.data.results[0]["structureName"]);
@@ -493,8 +492,8 @@ class SimpleTabs extends React.Component {
                         onClick={() =>
                           this.redirectToHome(
                             "/app/pages/assesments/flha/" +
-                              this.props.match.params.id +
-                              "/revise"
+                            this.props.match.params.id +
+                            "/revise"
                           )
                         }
                         variant="subtitle"
@@ -514,9 +513,9 @@ class SimpleTabs extends React.Component {
                           this.state.flha.fkProjectStructureIds &&
                             this.redirectToHome(
                               "/app/pages/assesments/AuditCheck/" +
-                                this.props.match.params.id +
-                                "/" +
-                                this.state.flha.fkProjectStructureIds
+                              this.props.match.params.id +
+                              "/" +
+                              this.state.flha.fkProjectStructureIds
                             );
                         }}
                         variant="subtitle"
@@ -552,8 +551,8 @@ class SimpleTabs extends React.Component {
                         onClick={() =>
                           this.redirectToHome(
                             "/app/pages/assesments/flha/" +
-                              this.props.match.params.id +
-                              "/close-out"
+                            this.props.match.params.id +
+                            "/close-out"
                           )
                         }
                         variant="subtitle"

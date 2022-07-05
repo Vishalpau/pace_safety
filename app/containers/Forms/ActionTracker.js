@@ -258,17 +258,17 @@ export default function ActionTracker(props) {
   }, [])
 
   return (
-      <>
+    <>
       {props.isCorrectiveActionTaken === null ?
         <Button
           variant="contained"
           color="primary"
           onClick={handleClickOpen}
           disabled={props.isCorrectiveActionTaken === null ? true : false}
-          style={{
-            background: props.isCorrectiveActionTaken ? '#616161!important' : '#c0c0c0',
-            cursor: props.isCorrectiveActionTaken ? 'pointer' : 'not-allowed'
-          }}
+        // style={{
+        //   background: props.isCorrectiveActionTaken ? '#616161!important' : '#c0c0c0',
+        //   cursor: props.isCorrectiveActionTaken ? 'pointer' : 'not-allowed'
+        // }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 75 50">
             <g id="Group_336" data-name="Group 336" transform="translate(-338 -858)">
