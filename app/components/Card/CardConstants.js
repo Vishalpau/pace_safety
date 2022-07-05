@@ -1,6 +1,6 @@
 export const icareLabels = {
   header: ["Number", "Assignee", "Stage", "Status"],
-  body: ["Location", "Created On", "Created By"],
+  body: ["Type", "Location", "Created On", "Created By"],
 };
 
 export const ahaLabels = {
@@ -21,4 +21,9 @@ export const flhaLabels = {
 export const complianceLabels = {
   header: ["Number", "Group Name"],
   body: ["Location", "Created On", "Created By"],
+};
+
+export const staticLabels = {
+  attachment: "Attachments",
+  comment: "Comments",
 };

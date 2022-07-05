@@ -597,12 +597,6 @@ const InvestigationOverview = (props) => {
                       <MenuItem
                         value={selectValues.value}
                         onClick={(e) => handelClassification(selectValues.value)}
-                      // onClick={(e) => {
-                      //   setForm({
-                      //     ...form,
-                      //     classification: selectValues.value,
-                      //   });
-                      // }}
                       >
                         {selectValues.label}
                       </MenuItem>
