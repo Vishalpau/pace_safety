@@ -354,7 +354,7 @@ const FlhaDetails = (props) => {
       fkCompanyId: fkCompanyId,
       fkProjectId: fkProjectId,
       fkProjectStructureIds: projectStr,
-      flhaStage: "Close",
+      flhaStage: "Open",
       flhaStatus: "Close",
       createdBy: createdBy,
     });

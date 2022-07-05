@@ -304,7 +304,7 @@ function AhaSummary(props) {
 
   const handelApprovalViewChange = (side) => {
     // if (ahaData.notifyTo !== null) {
-    if (ahaData.additionalRemarks) {
+    if (ahaData.ahaStatus === "Assessment" || ahaData.ahaStatus === "Closed") {
       setAssessments(false);
       if (
         ahaData.wrpApprovalUser !== null &&
@@ -698,11 +698,11 @@ function AhaSummary(props) {
                           <li>
                             <Button
                               color={
-                                ahaData.additionalRemarks ? "secondary" : "primary"
+                                ahaData.ahaStatus === "Assessment" || ahaData.ahaStatus === "Closed" ? "secondary" : "primary"
                               }
                               // variant="contained"
                               variant={
-                                ahaData.additionalRemarks
+                                ahaData.ahaStatus === "Assessment" || ahaData.ahaStatus === "Closed"
                                   ? "contained"
                                   : "outlined"
                               }
@@ -718,8 +718,8 @@ function AhaSummary(props) {
                               display="block"
                               align="center"
                             >
-                              {ahaData.additionalRemarks ? "Done" : "Pending"}
-                              {ahaData.additionalRemarks ? (
+                              {ahaData.ahaStatus === "Assessment" || ahaData.ahaStatus === "Closed" ? "Done" : "Pending"}
+                              {ahaData.ahaStatus === "Assessment" || ahaData.ahaStatus === "Closed" ? (
                                 <CheckCircle />
                               ) : (
                                 <AccessTime />

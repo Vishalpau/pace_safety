@@ -569,7 +569,7 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`
+        `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStage=${status}&createdBy=${createdBy}`
       );
       const result = res.data.data.results.results;
       setAllAHAData(result);
@@ -579,7 +579,7 @@ function AhaPackage(props) {
       setPageCount(pageCount);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`
+        `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStage=${status}`
       );
       const result = res.data.data.results.results;
       setAllAHAData(result);
@@ -750,7 +750,10 @@ function AhaPackage(props) {
             { label: ahaLabels.header[0], value: item.ahaNumber },
             { label: ahaLabels.header[1], value: "AHA" },
             { label: ahaLabels.header[2], value: item.ahaStage },
-            { label: ahaLabels.header[3], value: item.ahaStatus },
+            {
+              label: ahaLabels.header[3],
+              value: item.ahaStatus === "Assessment" ? "Open" : item.ahaStatus,
+            },
           ]}
           bodyFields={[
             // Card body labels and values for each item

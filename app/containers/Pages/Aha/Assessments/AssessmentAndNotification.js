@@ -52,13 +52,11 @@ import Attachment from "../../../Attachment/Attachment";
 import { AHA } from "../constants";
 import { keySeq } from "draft-js/lib/DefaultDraftBlockRenderMap";
 import Loader from "../../Loader";
-import {
-  HEADER_AUTH, SSO_URL
-} from "../../../../utils/constants";
+import { HEADER_AUTH, SSO_URL } from "../../../../utils/constants";
 import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from '@material-ui/lab/Alert';
+import MuiAlert from "@material-ui/lab/Alert";
 import { checkACL } from "../../../../utils/helper";
-import MultiAttachment from '../../../MultiAttachment/MultiAttachment';
+import MultiAttachment from "../../../MultiAttachment/MultiAttachment";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -247,14 +245,13 @@ const AssessmentAndNotification = (props) => {
     projectStructId: "",
   });
   const [open, setOpen] = useState(false);
-  const [messageType, setMessageType] = useState('');
-  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState("");
+  const [message, setMessage] = useState("");
   const monitor = useRef([]);
   const [additinalJobDetails, setAdditionalJobDetails] = useState({
     workStopCondition: [],
   });
   const ref = useRef();
-
 
   const approver = ["Yes", "No"];
   const [notificationSentValue, setNotificationSentValue] = useState([]);
@@ -267,7 +264,7 @@ const AssessmentAndNotification = (props) => {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       // setOpenError(false)
       return;
     }
@@ -440,16 +437,17 @@ const AssessmentAndNotification = (props) => {
   const [checkGroups, setCheckListGroups] = useState([]);
 
   const handleSubmit = async (e) => {
-    let userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails')).id
-      : null;
+    let userId =
+      JSON.parse(localStorage.getItem("userDetails")) !== null
+        ? JSON.parse(localStorage.getItem("userDetails")).id
+        : null;
 
     ahaform[
       "workStopCondition"
     ] = additinalJobDetails.workStopCondition.toString();
     ahaform["ahaStage"] = "Open";
-    ahaform["ahaStatus"] = "Open";
-    ahaform["updatedBy"] = userId
+    ahaform["ahaStatus"] = "Assessment";
+    ahaform["updatedBy"] = userId;
     let data = new FormData();
     data.append("fkCompanyId", ahaform.fkCompanyId),
       data.append("fkProjectId", ahaform.fkProjectId),
@@ -460,9 +458,13 @@ const AssessmentAndNotification = (props) => {
       data.append("permitToPerahaform", ahaform.permitToPerahaform),
       data.append("permitNumber", ahaform.permitNumber),
       data.append("ahaNumber", ahaform.ahaNumber);
-    if (ahaform.files !== null && ahaform.files !== undefined && typeof ahaform.files !== 'string') {
+    if (
+      ahaform.files !== null &&
+      ahaform.files !== undefined &&
+      typeof ahaform.files !== "string"
+    ) {
       ahaform.files.map((file) => {
-        data.append('files', file);
+        data.append("files", file);
       });
     }
     if (
@@ -492,7 +494,7 @@ const AssessmentAndNotification = (props) => {
       data.append("vendor", ahaform.vendor);
     data.append("vendorReferenceId", ahaform.vendorReferenceId);
 
-    await setSubmitLoader(true);
+    setSubmitLoader(true);
     const res = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`,
       form
@@ -513,8 +515,7 @@ const AssessmentAndNotification = (props) => {
     history.push(
       `/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`
     );
-
-  }
+  };
 
   const [notifyToList, setNotifyToList] = useState([]);
 
@@ -555,8 +556,8 @@ const AssessmentAndNotification = (props) => {
   };
 
   const checkList = async () => {
-    const project = JSON.parse(localStorage.getItem("projectName"))
-    const projectId = project.projectName.projectId
+    const project = JSON.parse(localStorage.getItem("projectName"));
+    const projectId = project.projectName.projectId;
     const temp = {};
     const res = await api.get(
       `/api/v1/core/checklists/aha-document-conditions/${projectId}/`
@@ -566,36 +567,37 @@ const AssessmentAndNotification = (props) => {
     setCheckListGroups(checklistGroups);
   };
 
-  const fileTypeError = 'Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!';
-  const fielSizeError = 'Size less than 25Mb allowed';
+  const fileTypeError =
+    "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!";
+  const fielSizeError = "Size less than 25Mb allowed";
   const handleFile = async (e) => {
     const acceptFileTypes = [
-      'pdf',
-      'png',
-      'jpeg',
-      'jpg',
-      'xls',
-      'xlsx',
-      'doc',
-      'word',
-      'ppt',
+      "pdf",
+      "png",
+      "jpeg",
+      "jpg",
+      "xls",
+      "xlsx",
+      "doc",
+      "word",
+      "ppt",
     ];
-    const file = e.target.files[0].name.split('.');
+    const file = e.target.files[0].name.split(".");
 
     if (
-      acceptFileTypes.includes(file[file.length - 1])
-      && e.target.files[0].size < 25670647
+      acceptFileTypes.includes(file[file.length - 1]) &&
+      e.target.files[0].size < 25670647
     ) {
       const temp = { ...ahaform };
       const filesAll = e.target.files[0];
       temp.ahaAssessmentAttachment = filesAll;
       await setAHAForm(temp);
     } else {
-      ref.current.value = '';
+      ref.current.value = "";
       !acceptFileTypes.includes(file[file.length - 1])
         ? await setMessage(fileTypeError)
         : await setMessage(`${fielSizeError}`);
-      await setMessageType('error');
+      await setMessageType("error");
       await setOpen(true);
     }
   };
@@ -620,13 +622,13 @@ const AssessmentAndNotification = (props) => {
           : [],
     });
   };
-  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"));
 
   const pickListValue = async () => {
-    risk.current = await pickListValues["78"]
-    riskResidual.current = await pickListValues["76"]
-    monitor.current = await pickListValues["77"]
-  }
+    risk.current = await pickListValues["78"];
+    riskResidual.current = await pickListValues["76"];
+    monitor.current = await pickListValues["77"];
+  };
 
   const handleRiskChange = (e, key, fieldname) => {
     const temp = [...form];
@@ -634,14 +636,14 @@ const AssessmentAndNotification = (props) => {
     temp[key][fieldname] = e.target.value;
     const riskSeverity =
       temp[key].riskSeverityValue == undefined ||
-        temp[key].riskSeverityValue == "" ||
-        isNaN(temp[key].riskSeverityValue)
+      temp[key].riskSeverityValue == "" ||
+      isNaN(temp[key].riskSeverityValue)
         ? 1
         : temp[key].riskSeverityValue;
     const riskProbability =
       temp[key].riskProbabilityValue == undefined ||
-        temp[key].riskProbabilityValue == "" ||
-        isNaN(temp[key].riskProbabilityValue)
+      temp[key].riskProbabilityValue == "" ||
+      isNaN(temp[key].riskProbabilityValue)
         ? 1
         : temp[key].riskProbabilityValue;
 
@@ -675,8 +677,10 @@ const AssessmentAndNotification = (props) => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
-    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
     let struct = "";
@@ -696,9 +700,9 @@ const AssessmentAndNotification = (props) => {
         console.log(result, "LLLLLL");
         setNotificationSentValue(result);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
-  console.log(form, 'form')
+  console.log(form, "form");
 
   const handelCallBack = async () => {
     await fetchHzardsData();
@@ -718,7 +722,11 @@ const AssessmentAndNotification = (props) => {
   return (
     <>
       {" "}
-      <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon ahaPageIcon' whiteBg>
+      <CustomPapperBlock
+        title="Assessments"
+        icon="customDropdownPageIcon ahaPageIcon"
+        whiteBg
+      >
         {isLoading ? (
           <>
             <Grid
@@ -1116,16 +1124,23 @@ const AssessmentAndNotification = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                   </Grid>
-                                  {checkACL('action_tracker-actions', 'view_actions') &&
+                                  {checkACL(
+                                    "action_tracker-actions",
+                                    "view_actions"
+                                  ) && (
                                     <Grid
                                       item
                                       xs={6}
                                       className={classes.createHazardbox}
-                                      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                                      style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                      }}
                                     >
                                       {handelActionShow(value.id)}
                                     </Grid>
-                                  }
+                                  )}
                                 </Grid>
                               </AccordionDetails>
                             </Accordion>
@@ -1184,9 +1199,17 @@ const AssessmentAndNotification = (props) => {
                   </Paper>
                 </Grid>
 
-                <MultiAttachment attachmentHandler={(files) => setAHAForm({ ...ahaform, files: files })} />
+                <MultiAttachment
+                  attachmentHandler={(files) =>
+                    setAHAForm({ ...ahaform, files: files })
+                  }
+                />
 
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Snackbar
+                  open={open}
+                  autoHideDuration={6000}
+                  onClose={handleClose}
+                >
                   <Alert onClose={handleClose} severity="error">
                     {message}
                   </Alert>
@@ -1256,32 +1279,39 @@ const AssessmentAndNotification = (props) => {
                               Notifications to be sent to
                             </FormLabel>
                             <FormGroup row>
-                              {console.log(notificationSentValue, 'notificationSentValue')}
-                              {notificationSentValue.length != 0 ? notificationSentValue.map((value) => (
-                                <FormControlLabel
-                                  className={classes.labelValue}
-                                  control={
-                                    <Checkbox
-                                      icon={
-                                        <CheckBoxOutlineBlankIcon fontSize="small" />
+                              {console.log(
+                                notificationSentValue,
+                                "notificationSentValue"
+                              )}
+                              {notificationSentValue.length != 0
+                                ? notificationSentValue.map((value) => (
+                                    <FormControlLabel
+                                      className={classes.labelValue}
+                                      control={
+                                        <Checkbox
+                                          icon={
+                                            <CheckBoxOutlineBlankIcon fontSize="small" />
+                                          }
+                                          checkedIcon={
+                                            <CheckBoxIcon fontSize="small" />
+                                          }
+                                          name="checkedI"
+                                          checked={
+                                            ahaform.notifyTo !== null
+                                              ? ahaform.notifyTo.includes(
+                                                  value.id
+                                                )
+                                              : ""
+                                          }
+                                          onChange={(e) =>
+                                            handleNotification(e, value.id)
+                                          }
+                                        />
                                       }
-                                      checkedIcon={
-                                        <CheckBoxIcon fontSize="small" />
-                                      }
-                                      name="checkedI"
-                                      checked={
-                                        ahaform.notifyTo !== null
-                                          ? ahaform.notifyTo.includes(value.id)
-                                          : ""
-                                      }
-                                      onChange={(e) =>
-                                        handleNotification(e, value.id)
-                                      }
+                                      label={value.roleName}
                                     />
-                                  }
-                                  label={value.roleName}
-                                />
-                              )) : null}
+                                  ))
+                                : null}
                             </FormGroup>
                           </Grid>
                         </Grid>
@@ -1291,10 +1321,12 @@ const AssessmentAndNotification = (props) => {
                 ) : null}
 
                 <Grid item md={12} xs={12}>
-
                   <div className={classes.loadingWrapper}>
                     <Button
-                      size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
+                      size="medium"
+                      variant="contained"
+                      color="primary"
+                      className="spacerRight buttonStyle"
                       onClick={(e) => handleSubmit()}
                       disabled={submitLoader}
                     >
@@ -1307,8 +1339,13 @@ const AssessmentAndNotification = (props) => {
                       />
                     )}
                   </div>
-                  <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
-                    onClick={() => handleCancle()}>
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="secondary"
+                    className="buttonStyle custmCancelBtn"
+                    onClick={() => handleCancle()}
+                  >
                     Cancel
                   </Button>
                 </Grid>
@@ -1339,7 +1376,6 @@ const mapStateToProps = (state) => {
     todoIncomplete: state,
   };
 };
-
 
 export default connect(
   mapStateToProps,
