@@ -43,8 +43,7 @@ const CardHeader = (props) => {
             ) : (
               ""
             )}
-            {(one.label === "Status" && one.value === "Open") ||
-            (one.label === "Status" && one.value === "Assessment") ? (
+            {one.label === "Status" && one.value === "Open" ? (
               <img src={preplanning} alt="preplaning" />
             ) : (one.label === "Status" && one.value === "Closed") ||
               (one.label === "Status" && one.value === "Close") ? (

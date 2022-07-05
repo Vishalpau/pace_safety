@@ -750,7 +750,10 @@ function AhaPackage(props) {
             { label: ahaLabels.header[0], value: item.ahaNumber },
             { label: ahaLabels.header[1], value: "AHA" },
             { label: ahaLabels.header[2], value: item.ahaStage },
-            { label: ahaLabels.header[3], value: item.ahaStatus },
+            {
+              label: ahaLabels.header[3],
+              value: item.ahaStatus === "Assessment" ? "Open" : item.ahaStatus,
+            },
           ]}
           bodyFields={[
             // Card body labels and values for each item
