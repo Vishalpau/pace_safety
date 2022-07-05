@@ -22,3 +22,8 @@ export const complianceLabels = {
   header: ["Number", "Group Name"],
   body: ["Location", "Created On", "Created By"],
 };
+
+export const staticLabels = {
+  attachment: "Attachments",
+  comment: "Comments",
+};

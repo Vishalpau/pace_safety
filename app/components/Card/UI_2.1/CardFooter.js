@@ -10,6 +10,7 @@ import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined"
 import Delete from "../../../containers/Delete/Delete";
 import Bookmark from "../../../containers/Bookmark/Bookmark";
 import Styles from "./Styles";
+import { staticLabels } from "../CardConstants";
 
 const useStyles = makeStyles((theme) => Styles());
 
@@ -37,7 +38,7 @@ const CardFooter = (props) => {
           <Grid item xs={12} md={5} sm={12}>
             <Typography variant="body1" display="inline" color="textPrimary">
               <AttachmentIcon className={classes.mright5} />
-              Attachments:{" "}
+              {staticLabels.attachment}:{" "}
             </Typography>
             <Typography variant="body2" display="inline">
               <Link
@@ -57,7 +58,7 @@ const CardFooter = (props) => {
               className={classes.mLeft}
             >
               <InsertCommentOutlinedIcon className={classes.mright5} />
-              Comments:{" "}
+              {staticLabels.comment}:{" "}
             </Typography>
             <Link
               style={{ cursor: "unset", textDecoration: "none" }}
