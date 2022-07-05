@@ -19,6 +19,8 @@ import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import ViewWeekIcon from '@material-ui/icons/ViewWeek';
 import SearchIcon from '@material-ui/icons/Search';
 import StarsIcon from '@material-ui/icons/Stars';
+import {Link} from "react-router-dom";
+
 
 import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -32,11 +34,18 @@ import ComplianceFilterCard from './ComplianceFilterCard';
 import ComplianceBookmarkFilter from './ComplianceBookmarkFilter';
 
 import StatusFilter from './StatusFilter';
+import Bookmarklist from '../../Jha/BookmarkList';
 
 function TabPanel(props) {
   const {
     children, value, index, ...other
   } = props;
+
+  {/*const navigate =useNavigate();
+  const navigateToBookmarkList = () =>{
+    navigate('/Bookmarklist')
+  }*/}
+ 
 
   return (
     <div
@@ -456,6 +465,8 @@ export default function ComplianceSearchSectionCard() {
           <Grid item md={7} sm={12} xs={12}>
             <AppBar position="static" className={classes.navTabBack}>
               <div className={classes.floatL}>
+                
+                
                 <Tabs
                   className={classes.minwdTab}
                   value={value}
@@ -484,7 +495,11 @@ export default function ComplianceSearchSectionCard() {
                     icon={<StarsIcon className={classes.buckmarkIcon} />}
                     {...a11yProps(3)}
                     className={classNames(classes.hoverB, classes.minWd55)}
-                  />
+                                      
+                />
+                {/*<Link to="/BookmarkList"/>*/}
+                  
+                  
                   {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
                 </Tabs>
               </div>

@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { ThemeContext } from './ThemeWrapper';
 import Dashboard from '../Templates/Dashboard';
-import BookmarkList from '../Bookmark/BookmarkList';
+{/*import BookmarkList from '../Bookmark/BookmarkList';*/}
 import {
   PersonalDashboard,
   CrmDashboard,
@@ -603,10 +603,9 @@ function Application(props) {
           component={LessonsLearned}
         />
         <Route path="/app/pages/aha/close-out" component={AhaCloseOut} />
-        <Route
-          path="/app/containers/Bookmark/BookmarkList"
-          component={BookmarkList}
-        />
+        {/*<Route
+           path="/BookmarkList" component={Bookmarklist}
+        />*/}
         {/* Jha  */}
         <Route path="/app/pages/jha/all_jha" component={JhaMain} />
         <Route path="/app/pages/jha/jha-summary/:id" component={JhaSummary} />

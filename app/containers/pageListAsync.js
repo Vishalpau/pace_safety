@@ -906,3 +906,7 @@ export const PerformanceMatrixEdit = loadable(() => import("./ComplianceConfig/P
 export const PerformanceMatrixView = loadable(() => import("./ComplianceConfig/PerformanceMatrix/PerformanceMatrixView"), {
   fallback: <Loading />,
 });
+
+{/*export const Bookmarklist = loadable(() => import("./Bookmark/BookmarkList"), {
+  fallback: <Loading />,
+});*/}

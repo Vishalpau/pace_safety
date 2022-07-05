@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import StarsIcon from '@material-ui/icons/Stars';
 import { makeStyles } from '@material-ui/core/styles';
+import Loading from 'dan-components/Loading';
+{/*import loadable from '../utils/loadable';*/}
 
 function handleBookmarkList() {
   console.log('BookmarkList');
@@ -36,12 +38,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BookmarkList() {
   return (
-    <>
-      <Tab
-        icon={<StarsIcon className={classes.buckmarkIcon} />}
-        {...a11yProps(3)}
-        className={classNames(classes.hoverB, classes.minWd55)}
-      />
-    </>
-  );
+  
+    hi
+    
+   
+  )
 }

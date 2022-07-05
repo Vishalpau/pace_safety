@@ -33,6 +33,7 @@ import moment from 'moment';
 import MUIDataTable from 'mui-datatables';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 
+
 import { connect, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import {
@@ -531,12 +532,13 @@ function BlankPage(props) {
                       </Tooltip>
                     </div>
                   </Grid>
-                  <h6>IB555</h6>
+                 
                   {/* <Tab
                     label="My BookmarkList"
                     {...a11yProps(2)}
                     className={classes.hoverB}
                         /> */}
+                        
 
                   <Grid item xs={7} md={5}>
                     <Box display="flex" justifyContent="flex-end">
@@ -833,7 +835,7 @@ Comments:
                                         href="#"
                                         className={classes.mLeftR5}
                                       >
-                                        <h6>IB</h6>
+                                        
                                         <DeleteForeverOutlinedIcon
                                           className={classes.iconteal}
                                           onClick={(e) => handleDelete(item)}
