@@ -1312,6 +1312,7 @@ function ComplianceSummary(props) {
                                                                                 Performance
                                                                                 rating
                                                                               </FormLabel>
+                                                                              {console.log(colordata, 'colordata')}
                                                                               <Typography
                                                                                 style={{
                                                                                   backgroundColor:
