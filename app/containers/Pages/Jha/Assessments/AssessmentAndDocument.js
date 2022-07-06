@@ -418,12 +418,12 @@ const AssessmentAndDocument = (props) => {
 
   const handelNext = async () => {
     setSubmitLoader(true);
-    await api
-      .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form)
+    // await api
+    //   .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form)
 
-      .catch(() => handelApiError());
-    setSubmitLoader(false);
+    //   .catch(() => handelApiError());
     await handelNextDocument();
+    setSubmitLoader(false);
   };
 
   const handelActionLink = () => {
@@ -507,14 +507,14 @@ const AssessmentAndDocument = (props) => {
       const temp = { ...formDocument };
       const filesAll = e.target.files[0];
       temp.jhaAssessmentAttachment = filesAll;
-      await setFormDocument(temp);
+       setFormDocument(temp);
     } else {
       ref.current.value = "";
       !acceptFileTypes.includes(file[file.length - 1])
-        ? await setMessage(fileTypeError)
-        : await setMessage(`${fielSizeError}`);
-      await setMessageType("error");
-      await setOpen(true);
+        ?  setMessage(fileTypeError)
+        :  setMessage(`${fielSizeError}`);
+       setMessageType("error");
+       setOpen(true);
     }
   };
 
@@ -526,16 +526,17 @@ const AssessmentAndDocument = (props) => {
     setOpen(false);
   };
 
-  function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
-  const handelNavigateDocument = (navigateType) => {
-    if (navigateType === "next") {
-      history.push("/app/pages/jha/jha-summary");
-    } else if (navigateType === "previous") {
-      history.push("/app/pages/Jha/assessments/assessment");
-    }
-  };
+  // function Alert(props) {
+  //   return <MuiAlert elevation={6} variant="filled" {...props} />;
+  // }
+
+  // const handelNavigateDocument = (navigateType) => {
+  //   if (navigateType === "next") {
+  //     history.push("/app/pages/jha/jha-summary");
+  //   } else if (navigateType === "previous") {
+  //     history.push("/app/pages/Jha/assessments/assessment");
+  //   }
+  // };
 
   const handelNotifyTo = async (e, value) => {
     if (e.target.checked === false) {
@@ -559,12 +560,13 @@ const AssessmentAndDocument = (props) => {
 
   const handelNextDocument = async () => {
     setsubmitLoaderDocumentDocument(true);
-    console.log("hiiiiiiiiiiiiiiiiiiiiiii");
-    if (
-      typeof additinalJobDetails.files === "object" &&
-      additinalJobDetails.files !== null
-    ) {
+
+
+    if ( typeof additinalJobDetails.files === "object" && additinalJobDetails.files !== null ) {
+      console.log('yahan aaya');
       const data = new FormData();
+      data.append('jhaStage', 'Open');
+      data.append('jhaStatus', 'Assessment');
       data.append("fkCompanyId", formDocument.fkCompanyId);
       data.append("fkProjectId", formDocument.fkProjectId);
       data.append("fkProjectStructureIds", formDocument.fkProjectStructureIds);
@@ -599,17 +601,15 @@ const AssessmentAndDocument = (props) => {
         });
       }
 
-      data.append(
-        "jhaAssessmentAttachment",
-        formDocument.jhaAssessmentAttachment
-      );
-      await api
-        .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, data)
+      data.append("jhaAssessmentAttachment", formDocument.jhaAssessmentAttachment );
+      await api .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, data)
         .catch(() => handelApiErrorDocument());
-    } else {
+    } 
+
+    else {
       delete formDocument.jhaAssessmentAttachment;
       formDocument["qrCodeUrl"] = null;
-      formDocument["jhaStatus"] = "Open";
+      formDocument["jhaStatus"] = "Assessment";
       formDocument["jhaStage"] = "Open";
       formDocument["link"] = "";
       formDocument["notifyTo"] = formDocument.notifyTo.toString();
@@ -620,12 +620,10 @@ const AssessmentAndDocument = (props) => {
       formDocument[
         "workStopCondition"
       ] = additinalJobDetails.workStopCondition.toString();
-      await api
-        .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, formDocument)
+      console.log(formDocument, 'formDocument');
+      await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, formDocument)
         .catch(() => handelApiErrorDocument());
     }
-    console.log("hhhhhhhhh, shfdsfkds");
-    console.log(fkJHAId, "fkJhasdfds");
     history.push(`/app/pages/jha/jha-summary/${fkJHAId}`);
     localStorage.setItem("Jha Status", JSON.stringify({ assessment: "done" }));
     setsubmitLoaderDocumentDocument(false);
