@@ -464,7 +464,8 @@ function ComplianceSummary(props) {
       //   "qustionsIds"
       // ];
       let apiData = JSON.parse(localStorage.getItem("commonObject"));
-      let allAction = await handelActionData(jhaId, apiData.audit);
+      let allAction = await handelActionData(jhaId, apiData.audit.qustionsIds);
+      console.log(allAction, 'allAction');
       setActionData(allAction);
     }
   };
@@ -1417,17 +1418,8 @@ function ComplianceSummary(props) {
                                                                     </Grid>
                                                                   )}
 
-                                                                  {actionData.filter(
-                                                                    (val) =>
-                                                                      val.id ==
-                                                                      value.questionId
-                                                                  )[0] &&
-                                                                  actionData.filter(
-                                                                    (val) =>
-                                                                      val.id ==
-                                                                      value.questionId
-                                                                  )[0].action
-                                                                    .length ? (
+                                                                  {actionData.filter((val) => val.id == value.questionId)[0] &&
+                                                                  actionData.filter((val) => val.id == value.questionId)[0].action.length ? (
                                                                     <Grid
                                                                       item
                                                                       md={12}
@@ -1441,31 +1433,18 @@ function ComplianceSummary(props) {
                                                                         Corrective
                                                                         Actions
                                                                       </FormLabel>
-                                                                      {actionData.map(
-                                                                        (
-                                                                          val
-                                                                        ) => (
+                                                                      {actionData.map((val) => (
                                                                           <>
-                                                                            {val.id ==
-                                                                            value.questionId ? (
+                                                                            {val.id == value.questionId ? (
                                                                               <>
-                                                                                {val
-                                                                                  .action
-                                                                                  .length >
-                                                                                  0 && (
+                                                                                {val.action.length > 0 && (
                                                                                   <Grid
                                                                                     item
-                                                                                    md={
-                                                                                      12
-                                                                                    }
-                                                                                    xs={
-                                                                                      12
-                                                                                    }
+                                                                                    md={12}
+                                                                                    xs={12}
                                                                                   >
                                                                                     <Table
-                                                                                      component={
-                                                                                        Paper
-                                                                                      }
+                                                                                      component={Paper}
                                                                                       className="simpleTableSection"
                                                                                     >
                                                                                       <TableHead>
@@ -1481,22 +1460,12 @@ function ComplianceSummary(props) {
                                                                                         </TableRow>
                                                                                       </TableHead>
                                                                                       <TableBody>
-                                                                                        {actionData.map(
-                                                                                          (
-                                                                                            val
-                                                                                          ) => (
+                                                                                        {actionData.map((val) => (
                                                                                             <>
-                                                                                              {val.id ==
-                                                                                              value.questionId ? (
+                                                                                              {val.id == value.questionId ? (
                                                                                                 <>
-                                                                                                  {val
-                                                                                                    .action
-                                                                                                    .length >
-                                                                                                    0 &&
-                                                                                                    val.action.map(
-                                                                                                      (
-                                                                                                        valueAction
-                                                                                                      ) => (
+                                                                                                  {val.action.length > 0 &&
+                                                                                                    val.action.map((valueAction) => (
                                                                                                         <TableRow>
                                                                                                           <TableCell align="left">
                                                                                                             <Link

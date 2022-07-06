@@ -352,6 +352,18 @@ const Checks = (props) => {
   const [valueStar, setValueStar] = React.useState([]);
   const [categories, setCategories] = useState([]);
 
+  const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+
   //fetch matrix color and color data
   const fetchMatrixData = async () => {
     const res = await api.get(
@@ -797,13 +809,13 @@ const Checks = (props) => {
         temp[i][field] = value;
       }
     }
-    console.log(temp, "tempppppppppppp");
+    // console.log(temp, "tempppppppppppp");
     setCheckData(temp);
   };
 
-  useEffect(() => {
-    console.log(checkData, "checkDataaaaaaaaaaa");
-  }, [checkData]);
+  // useEffect(() => {
+  //   console.log(checkData, "checkDataaaaaaaaaaa");
+  // }, [checkData]);
 
   // for get action tracker & showing
   const handelActionTracker = async () => {
@@ -816,6 +828,7 @@ const Checks = (props) => {
         "qustionsIds"
       ];
       let allAction = await handelActionData(jhaId, apiData);
+      console.log(allAction, 'allAction');
       setActionData(allAction);
     }
   };
@@ -2203,15 +2216,7 @@ const Checks = (props) => {
                                                           )
                                                         ).projectName.projectId
                                                       }
-                                                      fkProjectStructureIds={
-                                                        JSON.parse(
-                                                          localStorage.getItem(
-                                                            "commonObject"
-                                                          )
-                                                        )["audit"][
-                                                          "projectStruct"
-                                                        ]
-                                                      }
+                                                      fkProjectStructureIds={struct}
                                                       createdBy={
                                                         JSON.parse(
                                                           localStorage.getItem(

@@ -62,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ActionTracker(props) {
+
+  console.log(props, 'fkprojectstructureid');
+
   const userName = JSON.parse(localStorage.getItem('userDetails')).name
   const userId = JSON.parse(localStorage.getItem('userDetails')).id
   const [form, setForm] = useState({
@@ -160,7 +163,7 @@ export default function ActionTracker(props) {
   }
 
   const handleClickOpen = async () => {
-    await setOpen(true);
+     setOpen(true);
   };
 
   const handelCloseAndSubmit = () => {
@@ -177,7 +180,7 @@ export default function ActionTracker(props) {
   }
 
   const handleClose = async () => {
-    await setError({ actionTitle: "" });
+     setError({ actionTitle: "" });
     await handelCloseAndSubmit()
     await setOpen(false);
     await props.setUpdatePage(!props.updatePage)
