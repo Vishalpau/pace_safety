@@ -11,7 +11,7 @@ import UserProfile from "../../containers/UserProfile/Index";
 import PropTypes from "prop-types";
 import Styles from "./UI/Styles";
 
-/**
+/** COMPONENT INFORMATION
  * PaceCommonCard 
  * Common card component for all modules
  * @param cardTitle > string > description or title of the card
@@ -76,6 +76,14 @@ import Styles from "./UI/Styles";
         handleSummaryPush={() => handleSummaryPush(item, commentPayload)} // Go to detail page function
         checkDeletePermission={checkDeletePermission} // Check delete permission
       />
+**/
+
+/**
+ * @file - index.js
+ * @location /app/components/Card
+ * @description Landing file for all sub components
+ * @author Abhimanyu<abhimanyus@teknobuilt.com>
+ * @since v1.1.0
  **/
 
 const useStyles = makeStyles((theme) => Styles());

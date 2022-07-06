@@ -11,6 +11,14 @@ import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import { handleSummaryPush, handleMyUserPClickOpen } from "../CardFunctions"; // Imported functions from CardFunctions.js
 import Styles from "./Styles";
 
+/**
+ * @file - CardHeader.js
+ * @location /app/components/Card/UI
+ * @description Showing card header with labels and value + userprofile button
+ * @author Abhimanyu<abhimanyus@teknobuilt.com>
+ * @since v1.1.0
+ **/
+
 const useStyles = makeStyles((theme) => Styles());
 
 const CardHeader = (props) => {

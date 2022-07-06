@@ -6,6 +6,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Styles from "./Styles";
 import { handleSummaryPush } from "../CardFunctions"; // Imported functions from CardFunctions.js
 
+/**
+ * @file - CardBody.js
+ * @location /app/components/Card/UI
+ * @description Showing card body with labels and value
+ * @author Abhimanyu<abhimanyus@teknobuilt.com>
+ * @since v1.1.0
+ **/
+
 const useStyles = makeStyles((theme) => Styles());
 
 const CardBody = (props) => {

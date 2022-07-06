@@ -1,3 +1,11 @@
+/**
+ * @file - CardConstants.js
+ * @location /app/components/Card
+ * @description Includes all the static labels and texts of card component
+ * @author Abhimanyu<abhimanyus@teknobuilt.com>
+ * @since v1.1.0
+ **/
+
 export const icareLabels = {
   header: ["Number", "Assignee", "Stage", "Status"],
   body: ["Type", "Location", "Created On", "Created By"],

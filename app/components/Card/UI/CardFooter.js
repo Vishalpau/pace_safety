@@ -12,6 +12,14 @@ import Bookmark from "../../../containers/Bookmark/Bookmark";
 import Styles from "./Styles";
 import { staticLabels } from "../CardConstants";
 
+/**
+ * @file - CardFooter.js
+ * @location /app/components/Card/UI
+ * @description Showing card footer which includes card actions and counts of attachment and comments.
+ * @author Abhimanyu<abhimanyus@teknobuilt.com>
+ * @since v1.1.0
+ **/
+
 const useStyles = makeStyles((theme) => Styles());
 
 const CardFooter = (props) => {
