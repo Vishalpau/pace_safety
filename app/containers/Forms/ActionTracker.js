@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ActionTracker(props) {
 
-  console.log(props, 'fkprojectstructureid');
+  // console.log(props, 'fkprojectstructureid');
 
   const userName = JSON.parse(localStorage.getItem('userDetails')).name
   const userId = JSON.parse(localStorage.getItem('userDetails')).id
