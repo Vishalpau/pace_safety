@@ -522,8 +522,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -538,8 +538,7 @@ function ComplianceListNew(props) {
       setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -551,8 +550,7 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -567,10 +565,8 @@ function ComplianceListNew(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -582,10 +578,8 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -609,8 +603,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -625,16 +619,14 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
         setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -643,20 +635,16 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
         setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
