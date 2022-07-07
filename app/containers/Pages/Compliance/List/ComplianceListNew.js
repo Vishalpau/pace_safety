@@ -867,7 +867,7 @@ function ComplianceListNew(props) {
                         className="attachFileThumb"
                         style={{ width: "auto", margin: "0 10px" }}
                       >
-                        <Attachment src={a} value={a} />
+                        <Attachment type={a} value={a} />
                       </div>
                     ))}
                   </Grid>

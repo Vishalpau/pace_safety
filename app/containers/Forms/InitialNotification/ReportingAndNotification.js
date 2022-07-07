@@ -236,7 +236,7 @@ const ReportingAndNotification = (props) => {
             notifyTo: notifyto,
             fkIncidentId: localStorage.getItem("fkincidentId") || id,
           })
-          .then(res => {
+          .then((res) => {
             return res;
           })
           .catch((err) => {
@@ -312,10 +312,14 @@ const ReportingAndNotification = (props) => {
               }
               // try {
               const formData = new FormData();
-              formData.append(
-                "evidenceDocument",
-                evidanceForm[key].evidenceDocument
-              );
+
+              evidanceForm[key].evidenceDocument.map((file) => {
+                formData.append("files", file);
+              });
+              // formData.append(
+              //   "evidenceDocument",
+              //   evidanceForm[key].evidenceDocument
+              // );
               formData.append(
                 "evidenceRemark",
                 evidanceForm[key].evidenceRemark
@@ -328,6 +332,7 @@ const ReportingAndNotification = (props) => {
                 "fkIncidentId",
                 localStorage.getItem("fkincidentId")
               );
+
               api
                 .post(
                   `api/v1/incidents/${localStorage.getItem(
@@ -426,9 +431,7 @@ const ReportingAndNotification = (props) => {
           }
 
           // set in reportTo otherData
-          await 
-
-          console.log(status, "status");
+          await console.log(status, "status");
 
           // if (status === 201) {
           //   const viewMode = {
@@ -514,48 +517,21 @@ const ReportingAndNotification = (props) => {
     setOpen(false);
   };
   // handle form initial evidance
-  const handleEvidanceForm = async (e, key, fieldname) => {
+  const handleEvidanceForm = async (e, files, key, fieldname) => {
     const temp = [...evidanceForm];
-    const { value } = e.target;
+    let value;
+    if (e !== undefined) {
+      value = e.target.value;
+    }
 
     if (fieldname === "evidenceDocument") {
-      const file = e.target.files[0].name.split(".");
+      const file = files;
 
-      if (
-        file[1].toLowerCase() === "jpg" ||
-        file[1].toLowerCase() === "jpeg" ||
-        file[1].toLowerCase() === "png" ||
-        file[1].toLowerCase() === "xls" ||
-        file[1].toLowerCase() === "xlsx" ||
-        file[1].toLowerCase() === "pdf" ||
-        file[1].toLowerCase() === "doc" ||
-        file[1].toLowerCase() === "word" ||
-        file[1].toLowerCase() === "ppt"
-      ) {
-        if (e.target.files[0].size <= 1024 * 1024 * 25) {
-          temp[key][fieldname] = e.target.files[0];
-          const evdId = temp[key].id;
+      temp[key][fieldname] = file;
+      const evdId = temp[key].id;
 
-          if (evdId) {
-            setEvidanceId([...evidanceId, evdId]);
-          }
-
-          setMessage("File uploaded successfully!");
-          setMessageType("success");
-          setOpen(true);
-        } else {
-          ref.current.value = "";
-          setMessage("File uploading failed! Select file less than 25MB!");
-          setMessageType("error");
-          setOpen(true);
-        }
-      } else {
-        ref.current.value = "";
-        setMessage(
-          "Only pdf, jpg, jpeg, xlx, xlsx, doc, word,ppt, png allowed!"
-        );
-        setMessageType("error");
-        setOpen(true);
+      if (evdId) {
+        setEvidanceId([...evidanceId, evdId]);
       }
     } else {
       temp[key][fieldname] = value;
@@ -935,12 +911,17 @@ const ReportingAndNotification = (props) => {
                 </Box>
                 <Grid item xs={12}>
                   {evidanceForm.map((item, index) => (
-                    <Grid container spacing={3} alignItems="center">
+                    <Grid container spacing={3} alignItems="flex-end">
                       <Grid
                         item
-                        md={typeof item.evidenceDocument === "string" ? 2 : 6}
+                        md={
+                          typeof item.files === "array" ||
+                          typeof item.files === "object"
+                            ? 4
+                            : 6
+                        }
                       >
-                        <input
+                        {/* <input
                           ref={ref}
                           id="file"
                           type="file"
@@ -953,15 +934,32 @@ const ReportingAndNotification = (props) => {
                           onChange={(e) =>
                             handleEvidanceForm(e, index, "evidenceDocument")
                           }
+                        /> */}
+                        <MultiAttachment
+                          attachmentHandler={(files) => {
+                            handleEvidanceForm(
+                              undefined,
+                              files,
+                              index,
+                              "evidenceDocument"
+                            );
+                          }}
                         />
-                        {/* <MultiAttachment attachmentHandler={(files) => handleEvidanceForm(files, index, 'evidenceDocument')} /> */}
                       </Grid>
-                      {typeof item.evidenceDocument === "string" ? (
-                        <Grid item md={4}>
-                          <Tooltip title="fileName">
-                            <Attachment value={item.evidenceDocument} />
-                          </Tooltip>
-                        </Grid>
+                      {typeof item.files === "array" ||
+                      typeof item.files === "object" ? (
+                        <>
+                          <Grid item md={2}>
+                            {item.files.map((file) => {
+                              return (
+                                <Attachment
+                                  type={file.fileName}
+                                  value={file.fileName}
+                                />
+                              );
+                            })}
+                          </Grid>
+                        </>
                       ) : null}
                       <Grid item xs={8} md={4}>
                         <TextField
@@ -983,7 +981,12 @@ const ReportingAndNotification = (props) => {
                           className={classes.formControl}
                           value={item.evidenceRemark}
                           onChange={(e) =>
-                            handleEvidanceForm(e, index, "evidenceRemark")
+                            handleEvidanceForm(
+                              e,
+                              undefined,
+                              index,
+                              "evidenceRemark"
+                            )
                           }
                         />
                       </Grid>

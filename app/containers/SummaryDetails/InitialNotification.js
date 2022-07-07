@@ -22,8 +22,6 @@ import Attachment from "../Attachment/Attachment";
 import Loader from "../Forms/Loader";
 import { connect } from "react-redux";
 
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -76,12 +74,12 @@ const IncidentDetailsSummary = (props) => {
   const [enviornmentData, setEnviornmentData] = useState([]);
   const [equipmentData, setEquipmentData] = useState([]);
   const [reportsData, setReportsData] = useState([]);
-  const [notifyToList, setNotifyToList] = useState([])
+  const [notifyToList, setNotifyToList] = useState([]);
   const [expanded, setExpanded] = React.useState(false);
   const [evidence, setEvidence] = useState([]);
   const { id } = useParams();
   const history = useHistory();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   if (id) {
     localStorage.setItem("fkincidentId", id);
   }
@@ -89,35 +87,35 @@ const IncidentDetailsSummary = (props) => {
   const fkid = localStorage.getItem("fkincidentId");
 
   const fetchIncidentData = async () => {
-    const allIncidents = await api.get(`api/v1/incidents/${fkid}/`).
-      then((allIncidents) => {
+    const allIncidents = await api
+      .get(`api/v1/incidents/${fkid}/`)
+      .then((allIncidents) => {
         setIncidents(allIncidents.data.data.results);
-      })
-
+      });
   };
 
   const fetchPeopleAffectData = async () => {
-    const response = await api.get(`api/v1/incidents/${fkid}/people/`)
+    const response = await api
+      .get(`api/v1/incidents/${fkid}/people/`)
       .then((response) => {
         setPeopleData(response.data.data.results);
-      })
-
+      });
   };
 
   const fetchPropertyAffectData = async () => {
-    const response = await api.get(`api/v1/incidents/${fkid}/properties/`)
+    const response = await api
+      .get(`api/v1/incidents/${fkid}/properties/`)
       .then((response) => {
         setPropertyData(response.data.data.results);
-      })
-
+      });
   };
 
   const fetchEquipmentAffectData = async () => {
-    const response = await api.get(`api/v1/incidents/${fkid}/equipments/`)
+    const response = await api
+      .get(`api/v1/incidents/${fkid}/equipments/`)
       .then((response) => {
         setEquipmentData(response.data.data.results);
-      })
-
+      });
   };
 
   const fetchEnviornmentAffectData = async () => {
@@ -128,33 +126,32 @@ const IncidentDetailsSummary = (props) => {
   const fetchReportsData = async () => {
     const response = await api.get(`api/v1/incidents/${fkid}/reports/`);
     if (response.status === 200) {
-      let results = response.data.data.results
+      let results = response.data.data.results;
       await setReportsData(results);
       if (results.length > 0) {
-        fetchNotificationSent(results[0].notifyTo)
+        fetchNotificationSent(results[0].notifyTo);
       }
     }
-
   };
 
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${fkid}/evidences/`);
     if (allEvidence.status === 200) {
       await setEvidence(allEvidence.data.data.results);
-
     }
   };
 
   // fetch value noticefication sent
   const fetchNotificationSent = async (data) => {
-
-    let notifyList = data.split(',')
+    let notifyList = data.split(",");
     try {
       let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
       let projectId = JSON.parse(localStorage.getItem("projectName"))
         .projectName.projectId;
-        const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      const selectBreakdown =
+        props.projectName.breakDown.length > 0
+          ? props.projectName.breakDown
+          : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
           ? JSON.parse(localStorage.getItem("selectBreakDown"))
           : null;
       let struct = "";
@@ -162,31 +159,30 @@ const IncidentDetailsSummary = (props) => {
         struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
       }
       const fkProjectStructureIds = struct.slice(0, -1);
-      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom&projectStructure=${fkProjectStructureIds}`)
+      const res = await api
+        .get(
+          `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom&projectStructure=${fkProjectStructureIds}`
+        )
         .then((res) => {
           if (res.status === 200) {
             const result = res.data.data.results;
-            console.log(result)
-            data = []
-            const newData = result.map(item => {
-
+            console.log(result);
+            data = [];
+            const newData = result.map((item) => {
               if (notifyList.includes(item.id.toString())) {
-                return item.roleName
+                return item.roleName;
               }
+            });
 
-            })
-
-            setNotifyToList(newData)
+            setNotifyToList(newData);
             // setNotificationSentValue(result);
           }
-        })
-
-
-    } catch (error) { }
+        });
+    } catch (error) {}
   };
 
   const handelCallBack = async () => {
-    await setLoading(true)
+    await setLoading(true);
     await fetchIncidentData();
     await fetchPeopleAffectData();
     await fetchPropertyAffectData();
@@ -194,31 +190,29 @@ const IncidentDetailsSummary = (props) => {
     await fetchEnviornmentAffectData();
     await fetchReportsData();
     await fetchEvidanceData();
-    await setLoading(false)
-  }
+    await setLoading(false);
+  };
 
   useEffect(() => {
-    handelCallBack()
+    handelCallBack();
   }, []);
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
   const handelModifyInitialNotification = (e) => {
-    history.push(
-      `/incident/${id}/modify/`
-    );
+    history.push(`/incident/${id}/modify/`);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(incidents);
-  }, [incidents])
+  }, [incidents]);
 
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <>
-      {loading == false ?
+      {loading == false ? (
         <Grid container spacing={3}>
           {!isDesktop && (
             <Grid item xs={12}>
@@ -388,7 +382,9 @@ const IncidentDetailsSummary = (props) => {
                             Person name
                           </Typography>
                           <Typography className={Fonts.labelValue}>
-                            {peopledata.personName ? peopledata.personName : "-"}
+                            {peopledata.personName
+                              ? peopledata.personName
+                              : "-"}
                           </Typography>
                         </Grid>
 
@@ -401,7 +397,9 @@ const IncidentDetailsSummary = (props) => {
                             Person type
                           </Typography>
                           <Typography className={Fonts.labelValue}>
-                            {peopledata.personType ? peopledata.personType : "-"}
+                            {peopledata.personType
+                              ? peopledata.personType
+                              : "-"}
                           </Typography>
                         </Grid>
 
@@ -565,7 +563,8 @@ const IncidentDetailsSummary = (props) => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Do you have details to share about the properties affected?
+                        Do you have details to share about the properties
+                        affected?
                       </Typography>
                       <Typography className={Fonts.labelValue}>
                         {incidents.isPropertyDamagedAvailable
@@ -678,7 +677,8 @@ const IncidentDetailsSummary = (props) => {
                         gutterBottom
                         className={Fonts.labelName}
                       >
-                        Do you have details to share about the equipment affected?
+                        Do you have details to share about the equipment
+                        affected?
                       </Typography>
                       <Typography className={Fonts.labelValue}>
                         {incidents.isEquipmentDamagedAvailable
@@ -722,35 +722,35 @@ const IncidentDetailsSummary = (props) => {
                 <AccordionDetails>
                   {enviornmentData.length !== 0
                     ? enviornmentData.map((envData, key) => (
-                      <Grid container item xs={12} spacing={3} key={key}>
-                        <Grid item xs={12}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            {envData.envQuestion}
-                          </Typography>
+                        <Grid container item xs={12} spacing={3} key={key}>
+                          <Grid item xs={12}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              {envData.envQuestion}
+                            </Typography>
 
-                          <Typography className={Fonts.labelValue}>
-                            {envData.envQuestionOption}
-                          </Typography>
+                            <Typography className={Fonts.labelValue}>
+                              {envData.envQuestionOption}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              className={Fonts.labelName}
+                            >
+                              {"Details of"}
+                              {envData.envQuestion.slice(14, -1)}
+                            </Typography>
+                            <Typography className={Fonts.labelValue}>
+                              {envData.envAnswerDetails}
+                            </Typography>
+                          </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={Fonts.labelName}
-                          >
-                            {"Details of"}
-                            {envData.envQuestion.slice(14, -1)}
-                          </Typography>
-                          <Typography className={Fonts.labelValue}>
-                            {envData.envAnswerDetails}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    ))
+                      ))
                     : null}
 
                   <Grid item xs={12}>
@@ -796,10 +796,10 @@ const IncidentDetailsSummary = (props) => {
                       </Typography>
                       {reportsData.length !== 0
                         ? reportsData.map((report, key) => (
-                          <Typography className={Fonts.labelValue} key={key}>
-                            {report.reportTo}
-                          </Typography>
-                        ))
+                            <Typography className={Fonts.labelValue} key={key}>
+                              {report.reportTo}
+                            </Typography>
+                          ))
                         : null}
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -812,10 +812,10 @@ const IncidentDetailsSummary = (props) => {
                       </Typography>
                       {notifyToList.length !== 0
                         ? notifyToList.map((notify, key) => (
-                          <Typography className={Fonts.labelValue} key={key}>
-                            {notify}
-                          </Typography>
-                        ))
+                            <Typography className={Fonts.labelValue} key={key}>
+                              {notify}
+                            </Typography>
+                          ))
                         : "-"}
                     </Grid>
                     <Grid item xs={12} md={12}>
@@ -854,99 +854,110 @@ const IncidentDetailsSummary = (props) => {
                   <>
                     {evidence.length !== 0
                       ? evidence
-                        .filter(
-                          (item) => item.evidenceCategory === "Initial Evidence"
-                        )
-                        .map((value, index) => (
-                          <Grid
-                            key={index}
-                            container
-                            className="repeatedGrid"
-                            item
-                            xs={12}
-                            spacing={3}
-                          >
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Evidence No
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                {value.evidenceNumber}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Evidence Check
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                {value.evidenceCheck}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Evidence Category
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                {value.evidenceCategory}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Evidence Remark
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                {value.evidenceRemark}
-                              </Typography>
-                            </Grid>
-                            {value.evidenceDocument ? (
+                          .filter(
+                            (item) =>
+                              item.evidenceCategory === "Initial Evidence"
+                          )
+                          .map((value, index) => (
+                            <Grid
+                              key={index}
+                              container
+                              className="repeatedGrid"
+                              item
+                              xs={12}
+                              spacing={3}
+                            >
                               <Grid item xs={12} md={6}>
                                 <Typography
                                   variant="h6"
                                   gutterBottom
                                   className={Fonts.labelName}
                                 >
-                                  Evidence Document
+                                  Evidence No
                                 </Typography>
                                 <Typography
                                   variant="body"
                                   className={Fonts.labelValue}
                                 >
-
-                                  <Attachment value={value.evidenceDocument} />
-
+                                  {value.evidenceNumber}
                                 </Typography>
                               </Grid>
-                            ) : null}
-                          </Grid>
-                        ))
+                              <Grid item xs={12} md={6}>
+                                <Typography
+                                  variant="h6"
+                                  gutterBottom
+                                  className={Fonts.labelName}
+                                >
+                                  Evidence Check
+                                </Typography>
+                                <Typography
+                                  variant="body"
+                                  className={Fonts.labelValue}
+                                >
+                                  {value.evidenceCheck}
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={12} md={6}>
+                                <Typography
+                                  variant="h6"
+                                  gutterBottom
+                                  className={Fonts.labelName}
+                                >
+                                  Evidence Category
+                                </Typography>
+                                <Typography
+                                  variant="body"
+                                  className={Fonts.labelValue}
+                                >
+                                  {value.evidenceCategory}
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={12} md={6}>
+                                <Typography
+                                  variant="h6"
+                                  gutterBottom
+                                  className={Fonts.labelName}
+                                >
+                                  Evidence Remark
+                                </Typography>
+                                <Typography
+                                  variant="body"
+                                  className={Fonts.labelValue}
+                                >
+                                  {value.evidenceRemark}
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={12} md={12}>
+                                <Typography
+                                  variant="h6"
+                                  gutterBottom
+                                  className={Fonts.labelName}
+                                >
+                                  Evidence Documents
+                                </Typography>
+                                <Typography
+                                  variant="body"
+                                  className={Fonts.labelValue}
+                                  style={{ margin: "0 -12px" }}
+                                >
+                                  {value.files.length > 0 ? (
+                                    <>
+                                      {value.files.map((file) => {
+                                        return (
+                                          <Attachment
+                                            type={file.fileName}
+                                            value={file.fileName}
+                                          />
+                                        );
+                                      })}
+                                    </>
+                                  ) : (
+                                    "0"
+                                  )}
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          ))
                       : null}
                   </>
                 </AccordionDetails>
@@ -954,13 +965,12 @@ const IncidentDetailsSummary = (props) => {
             </Grid>
           )}
         </Grid>
-        :
+      ) : (
         <Loader />
-      }
+      )}
     </>
   );
 };
-
 
 const mapStateToProps = (state) => {
   return {
@@ -968,7 +978,6 @@ const mapStateToProps = (state) => {
     todoIncomplete: state,
   };
 };
-
 
 export default connect(
   mapStateToProps,
