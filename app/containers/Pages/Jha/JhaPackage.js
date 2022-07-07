@@ -779,7 +779,10 @@ function JhaPackage(props) {
               { label: jhaLabels.header[0], value: item.jhaNumber },
               { label: jhaLabels.header[1], value: "JSA" },
               { label: jhaLabels.header[2], value: item.jhaStage },
-              { label: jhaLabels.header[3], value: item.jhaStatus },
+              {
+                label: jhaLabels.header[3],
+                value: item.jhaStatus === "Assessment" ? "Open" : item.jhaStatus,
+              },
             ]}
             bodyFields={[
               { label: jhaLabels.body[0], value: item.location },
