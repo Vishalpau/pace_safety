@@ -163,7 +163,7 @@ export default function ActionTracker(props) {
   }
 
   const handleClickOpen = async () => {
-     setOpen(true);
+    setOpen(true);
   };
 
   const handelCloseAndSubmit = () => {
@@ -180,7 +180,7 @@ export default function ActionTracker(props) {
   }
 
   const handleClose = async () => {
-     setError({ actionTitle: "" });
+    setError({ actionTitle: "" });
     await handelCloseAndSubmit()
     await setOpen(false);
     await props.setUpdatePage(!props.updatePage)
@@ -247,7 +247,7 @@ export default function ActionTracker(props) {
     }
   }
 
-  let severity = ["Normal", "Critical", "Blocker"];
+  let severity = ["Low", "Medium", "High"];
   const classes = useStyles();
 
   const handelCallBack = async () => {

@@ -252,10 +252,12 @@ export default function Observations() {
   const [canUploadPaperFile, setCanUploadPaperFile] = useState();
 
   useEffect(() => {
-    setCanUploadPaperFile(
-      JSON.parse(localStorage.getItem("app_acl"))["safety-observations"]
-        .upload_paper_file
-    );
+    if (JSON.parse(localStorage.getItem("app_acl"))["safety-observations"].upload_paper_file) {
+      setCanUploadPaperFile(
+        JSON.parse(localStorage.getItem("app_acl"))["safety-observations"]
+          .upload_paper_file
+      );
+    }
   }, []);
 
   return !showHTML ? (
