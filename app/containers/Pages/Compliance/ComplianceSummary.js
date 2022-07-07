@@ -476,10 +476,6 @@ function ComplianceSummary(props) {
       `/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${projectId}&projectStructure=`
     );
     const result = res.data.data.results;
-<<<<<<< HEAD
-=======
-    console.log(result, "resultssssssssss");
->>>>>>> 9f26c462d93852a7a9d6b7313a738aee0729d13d
     setColorData(result);
   };
 
