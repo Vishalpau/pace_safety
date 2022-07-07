@@ -159,7 +159,9 @@ const MultiAttachment = (props) => {
   };
 
   useEffect(() => {
-    attachmentHandler();
+    if (files.length > 0) {
+      attachmentHandler();
+    }
   }, [files]);
 
   function Alert(props) {
@@ -261,7 +263,7 @@ const MultiAttachment = (props) => {
                   </svg>
                 </span>
                 <p className="chooseFileDesign">
-                  Drag and drop here or <span>Choose file</span>
+                  Drag and drop here or <span>Choose files</span>
                 </p>
                 <aside>
                   {files.length > 0 ? (

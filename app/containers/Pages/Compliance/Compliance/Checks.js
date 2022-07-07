@@ -96,6 +96,7 @@ import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBloc
 import { connect } from "react-redux";
 import Attachment from "../../../../containers/Attachment/Attachment";
 import { checkACL } from "../../../../utils/helper";
+import MultiAttachment from "../../../MultiAttachment/MultiAttachment";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -446,6 +447,7 @@ const Checks = (props) => {
 
   // method to call when we click on submit
   const updateAccordian = async () => {
+    debugger;
     setLoading(true);
     const temp = [...checkData];
     for (const key in temp) {
@@ -456,6 +458,11 @@ const Checks = (props) => {
         Object.keys(data).forEach((key) => {
           if (key === "fkAuditId") {
             formData.append(key, data[key]);
+          }
+          if (key === "files") {
+            data.files.map((file) => {
+              formData.append(key, file);
+            });
           }
           if (
             key !== "check" &&
@@ -722,40 +729,40 @@ const Checks = (props) => {
   };
 
   // method for uploading a file
-  const handleFileUpload = (event, questionId) => {
+  const handleFileUpload = (files, questionId, targetName) => {
     debugger;
     let temp = [...checkData];
-    const name = event.target.name;
-    const file = event.target.files[0];
+    const name = targetName;
+    const file = files;
     // checking type of attachments
-    if (file.size <= 1024 * 1024 * 25) {
-      temp.map((a, i) => {
-        if (a.questionId === questionId) {
-          if (name === "attachment") {
-            a.attachment = file;
-          }
-          if (name === "evidence") {
-            a.mediaAttachment = file;
-          }
+    // if (file.size <= 1024 * 1024 * 25) {
+    temp.map((a, i) => {
+      if (a.questionId === questionId) {
+        if (name === "attachment") {
+          a.files = file;
         }
-        return a;
-      });
-      setCheckData(temp);
-    } else {
-      setOpen(true);
-      const allAttchment = document.querySelectorAll("#attachment");
-      const allEvidence = document.querySelectorAll("#evidence");
-      allAttchment.forEach((element) => {
-        if (element.contains(event.currentTarget)) {
-          element.value = null;
+        if (name === "evidence") {
+          a.files = file;
         }
-      });
-      allEvidence.forEach((element) => {
-        if (element.contains(event.currentTarget)) {
-          element.value = null;
-        }
-      });
-    }
+      }
+      return a;
+    });
+    setCheckData(temp);
+    // } else {
+    //   setOpen(true);
+    //   const allAttchment = document.querySelectorAll("#attachment");
+    //   const allEvidence = document.querySelectorAll("#evidence");
+    //   allAttchment.forEach((element) => {
+    //     if (element.contains(event.currentTarget)) {
+    //       element.value = null;
+    //     }
+    //   });
+    //   allEvidence.forEach((element) => {
+    //     if (element.contains(event.currentTarget)) {
+    //       element.value = null;
+    //     }
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -1554,12 +1561,23 @@ const Checks = (props) => {
                                                     xs={12}
                                                     className={classes.formBox}
                                                   >
-                                                    <FormLabel
+                                                    {/* <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Document{" "}
-                                                    </FormLabel>
+                                                    </FormLabel> */}
+                                                    <MultiAttachment
+                                                      attachmentHandler={(
+                                                        files
+                                                      ) => {
+                                                        handleFileUpload(
+                                                          files,
+                                                          value.id,
+                                                          "attachment"
+                                                        );
+                                                      }}
+                                                    />
                                                     <Typography className="viewLabelValue">
                                                       <input
                                                         type="file"
@@ -1609,12 +1627,23 @@ const Checks = (props) => {
                                                     xs={12}
                                                     className={classes.formBox}
                                                   >
-                                                    <FormLabel
+                                                    {/* <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Evidence{" "}
-                                                    </FormLabel>
+                                                    </FormLabel> */}
+                                                    <MultiAttachment
+                                                      attachmentHandler={(
+                                                        files
+                                                      ) => {
+                                                        handleFileUpload(
+                                                          files,
+                                                          value.id,
+                                                          "evidence"
+                                                        );
+                                                      }}
+                                                    />
                                                     <Typography className="viewLabelValue">
                                                       <input
                                                         type="file"
@@ -2297,7 +2326,9 @@ const Checks = (props) => {
                                                                               .projectId
                                                                           }&targetPage=/action/details/&targetId=${
                                                                             valueAction.id
-                                                                          }&projectStructure=${localStorage.getItem('selectBreakDown')}
+                                                                          }&projectStructure=${localStorage.getItem(
+                                                                            "selectBreakDown"
+                                                                          )}
                                                                           `}
                                                                           target="_blank"
                                                                         >
@@ -2329,12 +2360,23 @@ const Checks = (props) => {
                                                     xs={12}
                                                     className={classes.formBox}
                                                   >
-                                                    <FormLabel
+                                                    {/* <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Document{" "}
-                                                    </FormLabel>
+                                                    </FormLabel> */}
+                                                    <MultiAttachment
+                                                      attachmentHandler={(
+                                                        files
+                                                      ) => {
+                                                        handleFileUpload(
+                                                          files,
+                                                          value.id,
+                                                          "attachment"
+                                                        );
+                                                      }}
+                                                    />
                                                     <Typography className="viewLabelValue">
                                                       {/* {(value.attachment === "Yes") && */}
                                                       <input
@@ -2387,12 +2429,23 @@ const Checks = (props) => {
                                                     xs={12}
                                                     className={classes.formBox}
                                                   >
-                                                    <FormLabel
+                                                    {/* <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Evidence{" "}
-                                                    </FormLabel>
+                                                    </FormLabel> */}
+                                                    <MultiAttachment
+                                                      attachmentHandler={(
+                                                        files
+                                                      ) => {
+                                                        handleFileUpload(
+                                                          files,
+                                                          value.id,
+                                                          "evidence"
+                                                        );
+                                                      }}
+                                                    />
                                                     <Typography className="viewLabelValue">
                                                       <input
                                                         name="evidence"
