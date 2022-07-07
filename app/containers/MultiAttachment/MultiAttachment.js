@@ -199,7 +199,7 @@ const MultiAttachment = (props) => {
               fill="#06425c"
             />
           </svg>{" "}
-          Attachment
+          {props.headerText ? props.headerText : "Attachment"}
         </Typography>
       </Grid>
       <Grid item md={12} sm={12} xs={12} className="paddTBRemove">

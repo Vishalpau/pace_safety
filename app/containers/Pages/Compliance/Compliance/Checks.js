@@ -754,12 +754,12 @@ const Checks = (props) => {
     // if (file.size <= 1024 * 1024 * 25) {
     temp.map((a, i) => {
       if (a.questionId === questionId) {
-        if (name === "attachment") {
-          a.files = file;
-        }
-        if (name === "evidence") {
-          a.files = file;
-        }
+        // if (name === "attachment") {
+        a.files = file;
+        // }
+        // if (name === "evidence") {
+        // a.files = file;
+        // }
       }
       return a;
     });
@@ -1501,33 +1501,44 @@ const Checks = (props) => {
                                                     </Table>
                                                   </Grid>
                                                 )}
-                                                {value.attachment === "Yes" && (
-                                                  <Grid
-                                                    item
-                                                    md={12}
-                                                    sm={12}
-                                                    xs={12}
-                                                    className={classes.formBox}
-                                                  >
-                                                    {/* <FormLabel
+                                                {value.attachment === "Yes" ||
+                                                  (value.evidenceType ===
+                                                    "Yes" && (
+                                                    <Grid
+                                                      item
+                                                      md={12}
+                                                      sm={12}
+                                                      xs={12}
+                                                      className={
+                                                        classes.formBox
+                                                      }
+                                                    >
+                                                      {/* <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Document{" "}
                                                     </FormLabel> */}
-                                                    <MultiAttachment
-                                                      attachmentHandler={(
-                                                        files
-                                                      ) => {
-                                                        handleFileUpload(
-                                                          files,
-                                                          value.id,
-                                                          "attachment"
-                                                        );
-                                                      }}
-                                                    />
-                                                    <Typography className="viewLabelValue">
-                                                      <input
+                                                      <Grid
+                                                        style={{
+                                                          marginTop: "-20px",
+                                                        }}
+                                                      >
+                                                        <MultiAttachment
+                                                          headerText="Documents & Evidences"
+                                                          attachmentHandler={(
+                                                            files
+                                                          ) => {
+                                                            handleFileUpload(
+                                                              files,
+                                                              value.id,
+                                                              "attachment"
+                                                            );
+                                                          }}
+                                                        />
+                                                      </Grid>
+                                                      <Typography className="viewLabelValue">
+                                                        {/* <input
                                                         type="file"
                                                         id="attachment"
                                                         name="attachment"
@@ -1539,34 +1550,34 @@ const Checks = (props) => {
                                                             value.id
                                                           );
                                                         }}
-                                                      />
-                                                      {showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      ).length &&
-                                                      showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      )[0].attachment !=
-                                                        null ? (
-                                                        <Attachment
-                                                          value={
-                                                            showCheckData.filter(
-                                                              (cd) =>
-                                                                cd.question ==
-                                                                value.question
-                                                            )[0].attachment
-                                                          }
-                                                        />
-                                                      ) : (
-                                                        ""
-                                                      )}
-                                                    </Typography>
-                                                  </Grid>
-                                                )}
-                                                {value.evidenceType ===
+                                                      /> */}
+                                                        {showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        ).length &&
+                                                        showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        )[0].attachment !=
+                                                          null ? (
+                                                          <Attachment
+                                                            value={
+                                                              showCheckData.filter(
+                                                                (cd) =>
+                                                                  cd.question ==
+                                                                  value.question
+                                                              )[0].attachment
+                                                            }
+                                                          />
+                                                        ) : (
+                                                          ""
+                                                        )}
+                                                      </Typography>
+                                                    </Grid>
+                                                  ))}
+                                                {/* {value.evidenceType ===
                                                   "Yes" && (
                                                   <Grid
                                                     item
@@ -1575,23 +1586,30 @@ const Checks = (props) => {
                                                     xs={12}
                                                     className={classes.formBox}
                                                   >
-                                                    {/* <FormLabel
+                                                    <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Evidence{" "}
-                                                    </FormLabel> */}
-                                                    <MultiAttachment
-                                                      attachmentHandler={(
-                                                        files
-                                                      ) => {
-                                                        handleFileUpload(
-                                                          files,
-                                                          value.id,
-                                                          "evidence"
-                                                        );
+                                                    </FormLabel>
+                                                    <Grid
+                                                      style={{
+                                                        marginTop: "-20px",
                                                       }}
-                                                    />
+                                                    >
+                                                      <MultiAttachment
+                                                        headerText="Documents & Evidences"
+                                                        attachmentHandler={(
+                                                          files
+                                                        ) => {
+                                                          handleFileUpload(
+                                                            files,
+                                                            value.id,
+                                                            "evidence"
+                                                          );
+                                                        }}
+                                                      />
+                                                    </Grid>
                                                     <Typography className="viewLabelValue">
                                                       <input
                                                         type="file"
@@ -1630,7 +1648,7 @@ const Checks = (props) => {
                                                       ""
                                                     )}
                                                   </Grid>
-                                                )}
+                                                )} */}
                                               </Grid>
                                             </AccordionDetails>
                                           </Accordion>
@@ -2292,34 +2310,45 @@ const Checks = (props) => {
                                                     </TableBody>
                                                   </Table>
                                                 </Grid>
-                                                {value.attachment === "Yes" && (
-                                                  <Grid
-                                                    item
-                                                    md={12}
-                                                    sm={12}
-                                                    xs={12}
-                                                    className={classes.formBox}
-                                                  >
-                                                    {/* <FormLabel
+                                                {value.attachment === "Yes" ||
+                                                  (value.evidenceType ===
+                                                    "Yes" && (
+                                                    <Grid
+                                                      item
+                                                      md={12}
+                                                      sm={12}
+                                                      xs={12}
+                                                      className={
+                                                        classes.formBox
+                                                      }
+                                                    >
+                                                      {/* <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Document{" "}
                                                     </FormLabel> */}
-                                                    <MultiAttachment
-                                                      attachmentHandler={(
-                                                        files
-                                                      ) => {
-                                                        handleFileUpload(
-                                                          files,
-                                                          value.id,
-                                                          "attachment"
-                                                        );
-                                                      }}
-                                                    />
-                                                    <Typography className="viewLabelValue">
-                                                      {/* {(value.attachment === "Yes") && */}
-                                                      <input
+                                                      <Grid
+                                                        style={{
+                                                          marginTop: "-20px",
+                                                        }}
+                                                      >
+                                                        <MultiAttachment
+                                                          headerText="Documents & Evidences"
+                                                          attachmentHandler={(
+                                                            files
+                                                          ) => {
+                                                            handleFileUpload(
+                                                              files,
+                                                              value.id,
+                                                              "attachment"
+                                                            );
+                                                          }}
+                                                        />
+                                                      </Grid>
+                                                      <Typography className="viewLabelValue">
+                                                        {/* {(value.attachment === "Yes") && */}
+                                                        {/* <input
                                                         type="file"
                                                         name="attachment"
                                                         id="evidence"
@@ -2331,37 +2360,36 @@ const Checks = (props) => {
                                                             value.id
                                                           );
                                                         }}
-                                                      />
-                                                      {showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      ).length &&
-                                                      showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      )[0].attachment !=
-                                                        null ? (
-                                                        <Attachment
-                                                          value={
-                                                            showCheckData.filter(
-                                                              (cd) =>
-                                                                cd.question ==
-                                                                value.question
-                                                            )[0].attachment
-                                                          }
-                                                        />
-                                                      ) : (
-                                                        ""
-                                                      )}
+                                                      /> */}
+                                                        {showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        ).length &&
+                                                        showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        )[0].attachment !=
+                                                          null ? (
+                                                          <Attachment
+                                                            value={
+                                                              showCheckData.filter(
+                                                                (cd) =>
+                                                                  cd.question ==
+                                                                  value.question
+                                                              )[0].attachment
+                                                            }
+                                                          />
+                                                        ) : (
+                                                          ""
+                                                        )}
 
-                                                      {/* } */}
-                                                    </Typography>
-                                                  </Grid>
-                                                )}
-                                                {value.evidenceType ===
-                                                  "Yes" && (
+                                                        {/* } */}
+                                                      </Typography>
+                                                    </Grid>
+                                                  ))}
+                                                {/* {value.evidenceType === "Yes" && (
                                                   <Grid
                                                     item
                                                     md={12}
@@ -2369,23 +2397,30 @@ const Checks = (props) => {
                                                     xs={12}
                                                     className={classes.formBox}
                                                   >
-                                                    {/* <FormLabel
+                                                    <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Evidence{" "}
-                                                    </FormLabel> */}
-                                                    <MultiAttachment
-                                                      attachmentHandler={(
-                                                        files
-                                                      ) => {
-                                                        handleFileUpload(
-                                                          files,
-                                                          value.id,
-                                                          "evidence"
-                                                        );
+                                                    </FormLabel>
+                                                    <Grid
+                                                      style={{
+                                                        marginTop: "-20px",
                                                       }}
-                                                    />
+                                                    >
+                                                      <MultiAttachment
+                                                        headerText="Documents & Evidences"
+                                                        attachmentHandler={(
+                                                          files
+                                                        ) => {
+                                                          handleFileUpload(
+                                                            files,
+                                                            value.id,
+                                                            "evidence"
+                                                          );
+                                                        }}
+                                                      />
+                                                    </Grid>
                                                     <Typography className="viewLabelValue">
                                                       <input
                                                         name="evidence"
@@ -2424,7 +2459,7 @@ const Checks = (props) => {
                                                       )}
                                                     </Typography>
                                                   </Grid>
-                                                )}
+                                                )} */}
                                                 {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                                                 <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
                                                 <Typography className="viewLabelValue">

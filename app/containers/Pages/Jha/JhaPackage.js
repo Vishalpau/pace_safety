@@ -833,22 +833,25 @@ function JhaPackage(props) {
             >
               <Paper elevation={1} className="cardSectionBottom">
                 <Grid container spacing={3}>
-                  <Grid item md={12} sm={12} xs={12}>
-                    <List>
-                      <ListItem>
-                        <Grid item md={12} sm={12} xs={12}>
-                          {item.files.map((a) => (
-                            <Attachment
-                              key={a.id}
-                              value={a.fileName}
-                              type={a.fileType}
-                              // src={a.fileName}
-                              // value={a.fileName}
-                            />
-                          ))}
-                        </Grid>
-                      </ListItem>
-                    </List>
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    style={{ margin: "0 -10px" }}
+                  >
+                    {item.files.map((a) => (
+                      <div
+                        className="attachFileThumb"
+                        style={{ width: "auto", margin: "0 10px" }}
+                      >
+                        <Attachment
+                          key={a.id}
+                          value={a.fileName}
+                          type={a.fileType}
+                        />
+                      </div>
+                    ))}
                   </Grid>
                 </Grid>
               </Paper>
