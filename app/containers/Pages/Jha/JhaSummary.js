@@ -462,7 +462,7 @@ function JhaSummary(props) {
 
   const handelApprovalViewChange = (side) => {
     // if (formStatus.assessmentStatus === true) {
-      if (jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed") {
+    if (jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed") {
       setAssessmentsView(false);
       if (handelApprovalTabStatus() && side === undefined) {
         setApprovalsView(true);
@@ -634,13 +634,17 @@ function JhaSummary(props) {
                         <li>
                           <Button
                             color={
-                              (jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed")
+                              (assessmentsView === true &&
+                                jhaData.jhaStatus === "Closed") ||
+                              (assessmentsView === true &&
+                                jhaData.jhaStatus === "Assessment")
                                 ? "secondary"
                                 : "primary"
                             }
                             size="large"
                             variant={
-                              (jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed")
+                              jhaData.jhaStatus === "Assessment" ||
+                              jhaData.jhaStatus === "Closed"
                                 ? "contained"
                                 : "outlined"
                             }
@@ -656,8 +660,12 @@ function JhaSummary(props) {
                             display="block"
                             align="center"
                           >
-                            {(jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed") ? "Done" : "Pending"}
-                            {(jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed") ? (
+                            {jhaData.jhaStatus === "Assessment" ||
+                            jhaData.jhaStatus === "Closed"
+                              ? "Done"
+                              : "Pending"}
+                            {jhaData.jhaStatus === "Assessment" ||
+                            jhaData.jhaStatus === "Closed" ? (
                               <CheckCircle />
                             ) : (
                               <AccessTime />
