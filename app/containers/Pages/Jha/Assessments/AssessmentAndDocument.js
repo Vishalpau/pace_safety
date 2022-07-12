@@ -507,14 +507,14 @@ const AssessmentAndDocument = (props) => {
       const temp = { ...formDocument };
       const filesAll = e.target.files[0];
       temp.jhaAssessmentAttachment = filesAll;
-       setFormDocument(temp);
+      setFormDocument(temp);
     } else {
       ref.current.value = "";
       !acceptFileTypes.includes(file[file.length - 1])
-        ?  setMessage(fileTypeError)
-        :  setMessage(`${fielSizeError}`);
-       setMessageType("error");
-       setOpen(true);
+        ? setMessage(fileTypeError)
+        : setMessage(`${fielSizeError}`);
+      setMessageType("error");
+      setOpen(true);
     }
   };
 
@@ -561,12 +561,14 @@ const AssessmentAndDocument = (props) => {
   const handelNextDocument = async () => {
     setsubmitLoaderDocumentDocument(true);
 
-
-    if ( typeof additinalJobDetails.files === "object" && additinalJobDetails.files !== null ) {
-      console.log('yahan aaya');
+    if (
+      typeof additinalJobDetails.files === "object" &&
+      additinalJobDetails.files !== null
+    ) {
+      console.log("yahan aaya");
       const data = new FormData();
-      data.append('jhaStage', 'Open');
-      data.append('jhaStatus', 'Assessment');
+      data.append("jhaStage", "Open");
+      data.append("jhaStatus", "Assessment");
       data.append("fkCompanyId", formDocument.fkCompanyId);
       data.append("fkProjectId", formDocument.fkProjectId);
       data.append("fkProjectStructureIds", formDocument.fkProjectStructureIds);
@@ -600,13 +602,21 @@ const AssessmentAndDocument = (props) => {
           data.append("files", file);
         });
       }
-
-      data.append("jhaAssessmentAttachment", formDocument.jhaAssessmentAttachment );
-      await api .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, data)
+      data.append(
+        "jhaAssessmentAttachment",
+        formDocument.jhaAssessmentAttachment
+      );
+      await api
+        .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, data)
         .catch(() => handelApiErrorDocument());
-    } 
 
-    else {
+      if (form.length > 0) {
+        const jhaId = handelJhaId();
+        await api
+          .put(`/api/v1/jhas/${jhaId}/bulkhazards/ `, form)
+          .catch(() => handelApiErrorDocument());
+      }
+    } else {
       delete formDocument.jhaAssessmentAttachment;
       formDocument["qrCodeUrl"] = null;
       formDocument["jhaStatus"] = "Assessment";
@@ -620,8 +630,9 @@ const AssessmentAndDocument = (props) => {
       formDocument[
         "workStopCondition"
       ] = additinalJobDetails.workStopCondition.toString();
-      console.log(formDocument, 'formDocument');
-      await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, formDocument)
+      console.log(formDocument, "formDocument");
+      await api
+        .put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, formDocument)
         .catch(() => handelApiErrorDocument());
     }
     history.push(`/app/pages/jha/jha-summary/${fkJHAId}`);
@@ -1045,7 +1056,9 @@ const AssessmentAndDocument = (props) => {
                   variant="contained"
                   color="secondary"
                   className="buttonStyle custmCancelBtn"
-                  onClick={(e) => history.push(`/app/pages/jha/jha-summary/${fkJHAId}`)}
+                  onClick={(e) =>
+                    history.push(`/app/pages/jha/jha-summary/${fkJHAId}`)
+                  }
                 >
                   Cancel
                 </Button>
