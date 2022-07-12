@@ -9,8 +9,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import StarsIcon from '@material-ui/icons/Stars';
-import Delete from '../Delete/Delete';
-import Bookmark from '../Bookmark/Bookmark';
+import Delete from "../../../containers/Delete/Delete"
+import Bookmark from '../../../containers/Bookmark/Bookmark';
+import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
+import BookmarkList from "../../../containers/Bookmark/BookmarkList";
+import Print from '@material-ui/icons/Print';
+import Share from '@material-ui/icons/Share';
 
 const useStyles = makeStyles((theme) => ({
   mLeftR5: {
@@ -117,21 +121,48 @@ const CardFooter = (props) => {
               {props.commentsCount}
             </Link>
           </Grid>
+          
 
           <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
             <div
               className={classes.floatR}
               style={{ display: 'flex', alignItems: 'center' }}
             >
+              
+                {/*<Typography variant="body1" display="inline">
+                  <Link href="#" className={classes.mLeftR5}>
+                    <IconButton>
+                      <Share className={classes.iconteal} />
+                    </IconButton>
+                    
+                  </Link>
+  </Typography>
+                <span item xs={1} className={classes.sepHeightTen} />*/}
+              
+              <Typography variant="body1" display="inline">
+                  <Link href="#" className={classes.mLeftR5}>
+                    <IconButton>
+                      <Print className={classes.iconteal} />
+                    </IconButton>
+                    
+                  </Link>
+                </Typography>
+             
+
               <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
+              
+
                 <Typography variant="body1" display="inline">
                   <Link href="#" className={classes.mLeftR5}>
                     <IconButton>
                       <StarsIcon className={classes.iconteal} />
                     </IconButton>
+                    
                   </Link>
                 </Typography>
+                
+                
               </Typography>
               <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">

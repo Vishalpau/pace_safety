@@ -495,7 +495,7 @@ export default function ComplianceSearchSectionCard() {
                     icon={<StarsIcon className={classes.buckmarkIcon} />}
                     {...a11yProps(3)}
                     className={classNames(classes.hoverB, classes.minWd55)}
-                                      
+                    
                 />
                 {/*<Link to="/BookmarkList"/>*/}
                   

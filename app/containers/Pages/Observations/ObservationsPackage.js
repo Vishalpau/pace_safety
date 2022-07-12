@@ -37,8 +37,8 @@ import api from "../../../utils/axios";
 import { HEADER_AUTH, SELF_API } from "../../../utils/constants";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import { checkACL } from "../../../utils/helper";
-import CardView from "../../Card/CardView";
-
+import CardView from "../../../components/Card/Index";
+import { icareLabels } from "../../../components/Card/CardConstants";
 const UserDetailsView = lazy(() => import("../../UserDetails/UserDetail"));
 const Loader = lazy(() => import("../Loader"));
 import Delete from "../../Delete/Delete";
@@ -852,7 +852,7 @@ function Actions(props) {
       const data = item[1];
       data.status = "Delete";
       delete data.attachment;
-       setIsLoading(false);
+      setIsLoading(false);
       await api
         .put(`/api/v1/observations/${data.id}/`, data)
         .then((response) => fetchInitialiObservation())
@@ -926,7 +926,11 @@ function Actions(props) {
     };
 
     const deleteItem = {
-      ...item,
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      fkProjectStructureIds: item.fkProjectStructureIds,
+      createdBy: item.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
     };
 
@@ -973,7 +977,7 @@ function Actions(props) {
     return (
       <>
         <CardView
-          ifdifferent={
+          ifPaperUpload={
             item.source === "Paper" &&
             moment() - moment(item.createdAt) < oneHour
               ? "latest"
@@ -984,19 +988,19 @@ function Actions(props) {
           username={item.username}
           itemId={item.id}
           headerFields={[
-            { label: "Number", value: item.observationNumber },
-            { label: "Assignee", value: "" },
-            { label: "Stage", value: item.observationStage },
-            { label: "Status", value: item.observationStatus },
+            { label: icareLabels.header[0], value: item.observationNumber },
+            { label: icareLabels.header[1], value: "" },
+            { label: icareLabels.header[2], value: item.observationStage },
+            { label: icareLabels.header[3], value: item.observationStatus },
           ]}
           bodyFields={[
-            { label: "Type", value: item.observationType },
-            { label: "Location", value: item.location },
+            { label: icareLabels.body[0], value: item.observationType },
+            { label: icareLabels.body[1], value: item.location },
             {
-              label: "Created On",
+              label: icareLabels.body[2],
               value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
             },
-            { label: "Created By", value: item.createdByName },
+            { label: icareLabels.body[3], value: item.createdByName },
           ]}
           deleteFields={{
             deleteUrl: `/api/v1/observations/${item.id}/`,
@@ -1043,7 +1047,13 @@ function Actions(props) {
                       <Grid item md={12} sm={12} xs={12}>
                         {item.files.map((a) => (
                           <div className="attachFileThumb">
-                            <Attachment src={a.fileName} value={a.fileName} />
+                            <Attachment
+                              // src={a.fileName}
+                              // value={a.fileName}
+                              key={a.id}
+                              value={a.fileName}
+                              type={a.fileType}
+                            />
                           </div>
                         ))}
                       </Grid>

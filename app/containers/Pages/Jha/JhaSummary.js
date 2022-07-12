@@ -147,6 +147,13 @@ const useStyles = makeStyles((theme) => ({
     width: "calc(100% - 100px)",
     textAlign: "right",
   },
+  statusLabel: {
+    fontSize: "14px",
+    fontFamily: "Montserrat-Regular",
+    "& svg": {
+      color: "#06425C",
+    },
+  },
 }));
 
 function Alert(props) {
@@ -162,7 +169,6 @@ function JhaSummary(props) {
   const history = useHistory();
   const commentPayload = history.location.state;
   const { id } = useParams();
-  console.log(id, 'iddddddddddddd');
   const [assessment, setAssessment] = useState({});
   const [expanded, setExpanded] = useState(false);
   const [projectStructure, setProjectStructure] = useState({});
@@ -190,6 +196,7 @@ function JhaSummary(props) {
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel5"
   );
+  const [jhaData, setJhaData] = useState({});
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
@@ -203,20 +210,21 @@ function JhaSummary(props) {
     const jhaId = handelJhaId();
     const res = await api.get(`/api/v1/jhas/${jhaId}/`);
     const result = res.data.data.results;
-    await setAssessment(result);
+    setAssessment(result);
+    setJhaData(result);
     await handelWorkArea(result);
     if (localStorage.getItem("JSAlessonsLearned") === "Done") {
-      await setLessonsLearnedView(true);
+      setLessonsLearnedView(true);
     } else if (localStorage.getItem("JSAApproval") === "Done") {
-      await setApprovalsView(true);
+      setApprovalsView(true);
     } else {
-      await setAssessmentsView(true);
+      setAssessmentsView(true);
     }
     console.log(result, "resultssss");
     await fetchNotificationSent(result.notifyTo);
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`);
     const resultTeam = resTeam.data.data.results;
-    await setTeam(resultTeam);
+    setTeam(resultTeam);
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`);
     const resultHazard = resHazards.data.data.results;
     let resAction = await handelActionDataAssessment(
@@ -225,7 +233,7 @@ function JhaSummary(props) {
       "all",
       "jha:hazard"
     );
-    await setHazard(resAction);
+    setHazard(resAction);
     await handelActionTracker(resultHazard);
     let assessmentDecider =
       result.jhaStage === "Open" || result.jhaStage === "Closed";
@@ -233,14 +241,14 @@ function JhaSummary(props) {
       result.wrpApprovalUser !== null && result.sapApprovalUser !== null;
     let lessionDecider = result.anyLessonsLearnt !== null;
     let closeOutDecider = result.closedById !== null;
-    await setFormStatus({
+    setFormStatus({
       ...formStatus,
       assessmentStatus: assessmentDecider,
       approvalStatus: approvalDecider,
       closeOutStatus: closeOutDecider,
       lessionLeranedStatus: lessionDecider,
     });
-    await setLoader(false);
+    setLoader(false);
   };
 
   const handleClickSnackBar = () => {
@@ -417,7 +425,7 @@ function JhaSummary(props) {
             }
           }
         }
-        await setNotificationSentValue(data);
+        setNotificationSentValue(data);
       }
     } catch (error) {}
   };
@@ -453,7 +461,8 @@ function JhaSummary(props) {
   };
 
   const handelApprovalViewChange = (side) => {
-    if (formStatus.assessmentStatus === true) {
+    // if (formStatus.assessmentStatus === true) {
+    if (jhaData.additionalRemarks) {
       setAssessmentsView(false);
       if (handelApprovalTabStatus() && side === undefined) {
         setApprovalsView(true);
@@ -573,7 +582,7 @@ function JhaSummary(props) {
   );
 
   const handelCallBack = async () => {
-    await setLoader(true);
+    setLoader(true);
     await handelAsessment();
     await handelProjectStructre();
     await handelActionLink();
@@ -625,28 +634,41 @@ function JhaSummary(props) {
                         <li>
                           <Button
                             color={
-                              assessmentsView === true ? "secondary" : "primary"
+                              jhaData.additionalRemarks
+                                ? "secondary"
+                                : "primary"
                             }
                             size="large"
                             variant={
-                              formStatus.assessmentStatus
+                              jhaData.additionalRemarks
                                 ? "contained"
                                 : "outlined"
                             }
-                            endIcon={
-                              formStatus.assessmentStatus ? (
-                                <CheckCircle />
-                              ) : (
-                                <AccessTime />
-                              )
-                            }
+                            // endIcon={
+                            //   jhaData.additionalRemarks ? (
+                            //     <CheckCircle />
+                            //   ) : (
+                            //     <AccessTime />
+                            //   )
+                            // }
                             className={classes.statusButton}
                             onClick={(e) => viewSwitch("assessment")}
                           >
                             Assessments
                           </Button>
-                          <Typography variant="caption" display="block">
-                            {formStatus.assessmentStatus ? "Done" : "Pending"}
+                          {/* <Typography variant="caption" display="block"> */}
+                          <Typography
+                            className={classes.statusLabel}
+                            variant="caption"
+                            display="block"
+                            align="center"
+                          >
+                            {jhaData.additionalRemarks ? "Done" : "Pending"}
+                            {jhaData.additionalRemarks ? (
+                              <CheckCircle />
+                            ) : (
+                              <AccessTime />
+                            )}
                           </Typography>
                         </li>
                         <li>
@@ -670,8 +692,19 @@ function JhaSummary(props) {
                           >
                             Approvals
                           </Button>
-                          <Typography variant="caption" display="block">
+                          {/* <Typography variant="caption" display="block"> */}
+                          <Typography
+                            className={classes.statusLabel}
+                            variant="caption"
+                            display="block"
+                            align="center"
+                          >
                             {handelApprovalTabStatus() ? "Done" : "Pending"}
+                            {handelApprovalTabStatus() ? (
+                              <CheckCircle />
+                            ) : (
+                              <AccessTime />
+                            )}
                           </Typography>
                         </li>
                         {/* <li>
@@ -714,10 +747,21 @@ function JhaSummary(props) {
                           >
                             Lessons Learned
                           </Button>
-                          <Typography variant="caption" display="block">
+                          {/* <Typography variant="caption" display="block"> */}
+                          <Typography
+                            className={classes.statusLabel}
+                            variant="caption"
+                            display="block"
+                            align="center"
+                          >
                             {formStatus.lessionLeranedStatus
                               ? "Done"
                               : "Pending"}
+                            {formStatus.lessionLeranedStatus ? (
+                              <CheckCircle />
+                            ) : (
+                              <AccessTime />
+                            )}
                           </Typography>
                         </li>
                       </ul>
@@ -1955,9 +1999,11 @@ function JhaSummary(props) {
                     className="quickActionSectionLink"
                     variant="subtitle"
                     name="Comments"
+                    disabled="true"
                     to={{
-                      pathname:`/app/comments/jha/${id}`,
-                      state: commentPayload
+                      // pathname: `/app/comments/jha/${id}`,
+                      pathname: history.location.pathname,
+                      state: commentPayload,
                     }}
                   >
                     Comments

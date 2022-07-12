@@ -356,12 +356,12 @@ function ObservationCorrectiveAction() {
 
   const fetchComments = async () => {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
-    const result = res.data.data.results.results[0]
-    const result2 = res.data.data.results.results
-    if (result2.length > 0) {
-      await setComment(result)
-    }
+    if (res.data.data.metadata.count > 0) {
+      const result = res.data.data.results[0]
 
+      await setComment(result)
+
+    }
     await setIsLoading(true);
   }
 
@@ -831,9 +831,9 @@ function ObservationCorrectiveAction() {
             </Button>
             {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
             <Button
-              variant="outlined"
               onClick={(e) => handleCancle()}
-              size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
+              size="medium"
+              variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
               style={{ marginLeft: "2px" }}
             >
               Cancel

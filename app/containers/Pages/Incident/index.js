@@ -47,10 +47,12 @@ import {
   INITIAL_NOTIFICATION_FORM_NEW,
   SELF_API,
   SSO_URL,
-} from '../../../utils/constants';
-import allPickListDataValue from '../../../utils/Picklist/allPickList';
-import { checkACL } from '../../../utils/helper';
-import Acl from '../../../components/Error/acl';
+} from "../../../utils/constants";
+import allPickListDataValue from "../../../utils/Picklist/allPickList";
+import { checkACL } from "../../../utils/helper";
+import Acl from "../../../components/Error/acl";
+// import { Delete } from "@material-ui/icons";
+import Delete from "../../Delete/Delete";
 
 const Loader = lazy(() => import('../../Forms/Loader'));
 
@@ -192,15 +194,17 @@ function BlankPage(props) {
   const fetchData = async () => {
     setPage(1);
     setIsLoading(true);
-    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
-    const fkProjectId = props.projectName.projectId
-      || JSON.parse(localStorage.getItem('projectName')).projectName.projectId;
-    const selectBreakdown = props.projectName.breakDown.length > 0
-      ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem('selectBreakDown')) !== null
-        ? JSON.parse(localStorage.getItem('selectBreakDown'))
-        : null;
-    let struct = '';
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
+    let struct = "";
 
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -238,7 +242,7 @@ function BlankPage(props) {
           const pageCount = Math.ceil(res.data.data.results.count / 25);
           setPageCount(pageCount);
         })
-        .catch((err) => history.push('/app/pages/error'));
+      // .catch((err) => history.push("/app/pages/error"));
       // handleTimeOutError(res)
     }
     const viewMode = {
@@ -263,7 +267,7 @@ function BlankPage(props) {
         };
 
         await api(config)
-          .then((response) => {
+          .then(function (response) {
             console.log(response);
             if (response.status === 200) {
               const hosting = response.data.data.results.data.companies
@@ -316,9 +320,9 @@ function BlankPage(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch(function (error) { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handlePush = async () => {
@@ -380,15 +384,17 @@ function BlankPage(props) {
   };
 
   const handleChange = async (event, value) => {
-    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
-    const fkProjectId = props.projectName.projectId
-      || JSON.parse(localStorage.getItem('projectName')).projectName.projectId;
-    const selectBreakdown = props.projectName.breakDown.length > 0
-      ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem('selectBreakDown')) !== null
-        ? JSON.parse(localStorage.getItem('selectBreakDown'))
-        : null;
-    let struct = '';
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
+    let struct = "";
 
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -402,14 +408,39 @@ function BlankPage(props) {
         setIncidents(res.data.data.results.results);
         setPage(value);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const handleDelete = async (item) => {
+    // debugger
+    // const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    // const userDetails = JSON.parse(localStorage.getItem("userDetails")).id;
+    // const fkProjectId =
+    //   props.projectName.projectId ||
+    //   JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    // const selectBreakdown =
+    //   props.projectName.breakDown.length > 0
+    //     ? props.projectName.breakDown
+    //     : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    //       ? JSON.parse(localStorage.getItem("selectBreakDown"))
+    //       : null;
+    // let struct = "";
+
+    // for (const i in selectBreakdown) {
+    //   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    // }
+    // const fkProjectStructureIds = struct.slice(0, -1);
     // console.log(item);
     if (checkACL('safety-incident', 'delete_incidents')) {
       const data = {
-        status: 'Delete',
+        fkCompanyId: fkCompanyId,
+        fkProjectId: fkProjectId,
+        fkProjectStructureIds: fkProjectStructureIds,
+        // incidentStatus: 'Done',
+        // incidentStage: '',
+        updatedBy: userDetails,
+        createdBy: userDetails,
+        status: "Delete",
       };
       // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
       // let data = item[1];
@@ -421,22 +452,53 @@ function BlankPage(props) {
         .put(`/api/v1/incidents/${item[1].id}/`, data)
         .then((response) => {
           console.log(response);
-          // fetchData();
+          fetchData();
         })
         .catch((err) => console.log(err));
     }
   };
 
-  const handleSearchIncident = (serchValue) => {
-    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
-    const fkProjectId = props.projectName.projectId
-      || JSON.parse(localStorage.getItem('projectName')).projectName.projectId;
-    const selectBreakdown = props.projectName.breakDown.length > 0
+  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+  const createdId = JSON.parse(localStorage.getItem("userDetails")).id;
+  const fkProjectId =
+    props.projectName.projectId ||
+    JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+  const selectBreakdown1 =
+    props.projectName.breakDown.length > 0
       ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem('selectBreakDown')) !== null
-        ? JSON.parse(localStorage.getItem('selectBreakDown'))
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
-    let struct = '';
+  let struct1 = "";
+
+  for (const i in selectBreakdown1) {
+    struct1 += `${selectBreakdown1[i].depth}${selectBreakdown1[i].id}:`;
+  }
+  const fkProjectStructureIds1 = struct1.slice(0, -1);
+
+  const deleteItem = {
+    fkCompanyId: fkCompanyId,
+    fkProjectId: fkProjectId,
+    fkProjectStructureIds: fkProjectStructureIds1,
+    // incidentStatus: 'Done',
+    // incidentStage: '',
+    updatedBy: createdId,
+    createdBy: createdId,
+    status: "Delete",
+  };
+
+  const handleSearchIncident = (serchValue) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
+    let struct = "";
 
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -664,12 +726,12 @@ function BlankPage(props) {
                                     >
                                       Number:
                                       <ILink
-                                        onClick={(e) => history.push({
-                                          pathname: `/incident/details/${
-                                            item[1].id
-                                          }/`,
-                                          state: 'change_incident',
-                                        })
+                                        onClick={(e) =>
+                                          history.push({
+                                            pathname: `/incident/details/${item[1].id
+                                              }/`,
+                                            state: "change_incident",
+                                          })
                                         }
                                         variant="subtitle2"
                                         className={Fonts.listingLabelValue}
@@ -784,7 +846,7 @@ function BlankPage(props) {
                                   variant="body2"
                                   display="inline"
                                   className={Fonts.listingLabelName}
-                                  // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
+                                // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                                 >
                                   <MessageIcon fontSize="small" />
                                   {' '}
@@ -831,16 +893,29 @@ Comments:
                                         }}
                                       />
                                     ) : (
-                                      <Link
-                                        href="#"
-                                        className={classes.mLeftR5}
-                                      >
-                                        
-                                        <DeleteForeverOutlinedIcon
-                                          className={classes.iconteal}
-                                          onClick={(e) => handleDelete(item)}
-                                        />
-                                      </Link>
+                                      // <Link
+                                      //   // href="#"
+                                      //   className={classes.mLeftR5}
+                                      // >
+                                      //   <DeleteForeverOutlinedIcon
+                                      //     className={classes.iconteal}
+                                      //     onClick={(e) => handleDelete(item)}
+                                      //   />
+                                      // </Link>
+                                      <Delete
+                                        deleteUrl={`/api/v1/incidents/${item[1].id}/`}
+                                        afterDelete={() => {
+                                          fetchData()
+                                        }}
+                                        axiosObj={api}
+                                        item={deleteItem}
+                                        loader={setIsLoading}
+                                        loadingFlag={false}
+                                        deleteMsg="Are you sure you want to delete this FLHA?"
+                                        yesBtn="Yes"
+                                        noBtn="No"
+
+                                      />
                                     )}
                                   </Typography>
                                 </div>

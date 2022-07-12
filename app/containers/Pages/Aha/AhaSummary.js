@@ -234,6 +234,11 @@ function AhaSummary(props) {
   const [lessionAction, setLessionAction] = useState([]);
   const [messageSnackBar, setMessageSnackbar] = useState("");
   const [openSnackBar, setOpenSnackBar] = useState(false);
+
+  useEffect(() => {
+    console.log(ahaData, 'ahaData');
+  },[ahaData])
+
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
@@ -281,6 +286,7 @@ function AhaSummary(props) {
   let errorLession = "lession learned";
 
   const handleAssessmentViewChanges = () => {
+    // if (ahaData.notifyTo !== null) {
     if (ahaData.notifyTo !== null) {
       setAssessments(true);
       localStorage.removeItem("Approval");
@@ -297,7 +303,8 @@ function AhaSummary(props) {
   };
 
   const handelApprovalViewChange = (side) => {
-    if (ahaData.notifyTo !== null) {
+    // if (ahaData.notifyTo !== null) {
+    if (ahaData.additionalRemarks) {
       setAssessments(false);
       if (
         ahaData.wrpApprovalUser !== null &&
@@ -381,18 +388,18 @@ function AhaSummary(props) {
   const fetchAHASummary = async () => {
     const res = await api.get(`/api/v1/ahas/${id}/`);
     const result = res.data.data.results;
-    await setAHAData(result);
+     setAHAData(result);
     await handelWorkArea(result);
     await fetchBreakDownData(result.fkProjectStructureIds);
     await fetchNotificationSent(result.notifyTo);
     if (localStorage.getItem("lessonsLearned") === "Done") {
-      await setLessonsLearned(true);
+       setLessonsLearned(true);
     } else if (localStorage.getItem("Approval") === "Done") {
-      await setApprovals(true);
+       setApprovals(true);
     } else {
-      await setAssessments(true);
+       setAssessments(true);
     }
-    await setIsLoading(true);
+     setIsLoading(true);
   };
 
   useEffect(() => {
@@ -435,7 +442,7 @@ function AhaSummary(props) {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`
     );
     const result = res.data.data.results;
-    await setTeamForm(result);
+     setTeamForm(result);
   };
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
@@ -570,7 +577,7 @@ function AhaSummary(props) {
       "all",
       "aha:hazard"
     );
-    await setForm(resAction);
+     setForm(resAction);
     await handelActionTracker(result);
   };
 
@@ -691,11 +698,11 @@ function AhaSummary(props) {
                           <li>
                             <Button
                               color={
-                                assessments === true ? "secondary" : "primary"
+                                ahaData.additionalRemarks ? "secondary" : "primary"
                               }
                               // variant="contained"
                               variant={
-                                ahaData.notifyTo === "null"
+                                ahaData.additionalRemarks
                                   ? "contained"
                                   : "outlined"
                               }
@@ -711,8 +718,8 @@ function AhaSummary(props) {
                               display="block"
                               align="center"
                             >
-                              {ahaData.notifyTo === "null" ? "Done" : "Pending"}
-                              {ahaData.notifyTo === "null" ? (
+                              {ahaData.additionalRemarks ? "Done" : "Pending"}
+                              {ahaData.additionalRemarks ? (
                                 <CheckCircle />
                               ) : (
                                 <AccessTime />
@@ -1932,8 +1939,10 @@ function AhaSummary(props) {
                       className="quickActionSectionLink"
                       variant="subtitle"
                       name="Comments"
+                      disabled="true"
                       to={{
-                        pathname: `/app/comments/aha/${id}`,
+                        // pathname: `/app/comments/aha/${id}`,
+                        pathname: history.location.pathname,
                         state: commentPayload,
                       }}
                     >

@@ -325,7 +325,7 @@ const Approvals = () => {
     // history.push(
     //   `/app/pages/jha/jha-summary/${localStorage.getItem("fkJHAId")}`
     // );
-    history.push(`${SUMMARY_FORM.Summary}/${localStorage.getItem("fkJHAId")}`)
+    history.push(`${SUMMARY_FORM.Summary}/${localStorage.getItem("fkJHAId")}`);
     setSubmitLoader(false);
   };
 
@@ -733,7 +733,13 @@ const Approvals = () => {
                     variant="contained"
                     color="secondary"
                     className="buttonStyle custmCancelBtn"
-                    onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
+                    onClick={(e) =>
+                      history.push(
+                        `${SUMMARY_FORM["Summary"]}/${JSON.parse(
+                          localStorage.getItem("fkJHAId")
+                        )}`
+                      )
+                    }
                   >
                     Cancel
                   </Button>

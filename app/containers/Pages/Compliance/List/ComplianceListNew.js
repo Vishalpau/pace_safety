@@ -57,7 +57,8 @@ import moment from "moment";
 import { checkACL } from "../../../../utils/helper";
 import Attachment from "../../../../containers/Attachment/Attachment";
 import Delete from "../../../Delete/Delete";
-import CardView from "../../../Card/CardView";
+import CardView from "../../../../components/Card/Index";
+import { complianceLabels } from "../../../../components/Card/CardConstants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -690,12 +691,9 @@ function ComplianceListNew(props) {
       fkCompanyId: value.fkCompanyId,
       fkProjectId: value.fkProjectId,
       fkProjectStructureIds: value.fkProjectStructureIds,
-      location: value.location,
-      assessmentDate: value.assessmentDate,
-      permitToPerform: value.permitToPerform,
-      description: value.description,
-      classification: value.classification,
       createdBy: value.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
+      status: "Delete",
     };
     // const [openAttachment, setopenAttachment] = React.useState(false);
 
@@ -801,19 +799,19 @@ function ComplianceListNew(props) {
           username={value.username}
           itemId={value.id}
           headerFields={[
-            { label: "Number", value: value.auditNumber },
+            { label: complianceLabels.header[0], value: value.auditNumber },
             {
-              label: "Group Name",
+              label: complianceLabels.header[1],
               value: value.groups.length > 0 ? groupNames : "-",
             },
           ]}
           bodyFields={[
-            { label: "Location", value: value.area },
+            { label: complianceLabels.body[0], value: value.area },
             {
-              label: "Created On",
+              label: complianceLabels.body[1],
               value: moment(value.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
             },
-            { label: "Created By", value: value.createdByName },
+            { label: complianceLabels.body[2], value: value.createdByName },
           ]}
           deleteFields={{
             deleteUrl: `api/v1/audits/${value.id}/`,
@@ -962,22 +960,23 @@ function ComplianceListNew(props) {
                   >
                     Sorry, no matching records found
                   </Typography>
-                  <div className={classes.pagination}>
-                    {totalData != 0
-                      ? Number.isInteger(pageData) !== true
-                        ? totalData < 25 * page
-                          ? `${page * 25 - 24} - ${totalData} of ${totalData}`
-                          : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                        : `${page * 25 - 24} - ${25 * page} of ${totalData}`
-                      : null}
-                    <Pagination
-                      count={pageCount}
-                      page={page}
-                      onChange={handleChange}
-                    />
-                  </div>
                 </>
               )}
+
+              <div className={classes.pagination}>
+                {totalData != 0
+                  ? Number.isInteger(pageData) !== true
+                    ? totalData < 25 * page
+                      ? `${page * 25 - 24} - ${totalData} of ${totalData}`
+                      : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                    : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                  : null}
+                <Pagination
+                  count={pageCount}
+                  page={page}
+                  onChange={handleChange}
+                />
+              </div>
 
               <div>
                 <Dialog

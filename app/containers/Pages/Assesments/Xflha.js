@@ -72,20 +72,21 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import Pagination from '@material-ui/lab/Pagination';
 // react-redux
-import { connect } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import axios from 'axios';
-import { projectName, company } from '../../../redux/actions/initialDetails';
-import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
-import Loader from '../Loader';
-import api from '../../../utils/axios';
-import StatusFilter from './StatusFilter';
-import allPickListDataValue from '../../../utils/Picklist/allPickList';
-import { checkACL } from '../../../utils/helper';
-import Acl from '../../../components/Error/acl';
-import Delete from '../../Delete/Delete';
-import Attachment from '../../Attachment/Attachment';
-import CardView from '../../Card/CardView';
+import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { projectName, company } from "../../../redux/actions/initialDetails";
+import { SELF_API, HEADER_AUTH } from "../../../utils/constants";
+import Loader from "../Loader";
+import api from "../../../utils/axios";
+import StatusFilter from "./StatusFilter";
+import allPickListDataValue from "../../../utils/Picklist/allPickList";
+import { checkACL } from "../../../utils/helper";
+import Acl from "../../../components/Error/acl";
+import Delete from "../../Delete/Delete";
+import Attachment from "../../Attachment/Attachment";
+import CardView from "../../../components/Card/Index";
+import { flhaLabels } from "../../../components/Card/CardConstants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1098,7 +1099,6 @@ function xflha(props) {
   };
 
   useEffect(() => {
-    console.log(order, 'order');
     SetDataOrder();
   }, [order]);
 
@@ -1117,9 +1117,10 @@ function xflha(props) {
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
-      jobTitle: item.jobTitle,
-      jobDetails: item.jobDetails,
-      status: 'Delete',
+      fkProjectStructureIds: item.fkProjectStructureIds,
+      createdBy: item.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
+      status: "Delete",
     };
 
     const addComments = (event) => {
@@ -1208,17 +1209,17 @@ function xflha(props) {
             username={item.username}
             itemId={item.id}
             headerFields={[
-              { label: 'Number', value: item.flhaNumber },
-              { label: 'Category', value: 'FLHA' },
-              { label: 'Stage', value: item.flhaStage },
-              { label: 'Status', value: item.flhaStatus },
+              { label: flhaLabels.header[0], value: item.flhaNumber },
+              { label: flhaLabels.header[1], value: "FLHA" },
+              { label: flhaLabels.header[2], value: item.flhaStage },
+              { label: flhaLabels.header[3], value: item.flhaStatus },
             ]}
             bodyFields={[
               {
-                label: 'Created On',
-                value: moment(item.createdAt).format('Do MMMM YYYY, h:mm:ss a'),
+                label: flhaLabels.body[0],
+                value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
               },
-              { label: 'Created By', value: item.createdByName },
+              { label: flhaLabels.body[1], value: item.createdByName },
             ]}
             deleteFields={{
               deleteUrl: `/api/v1/flhas/${item.id}/`,
@@ -1266,7 +1267,11 @@ function xflha(props) {
                         <Grid item md={12} sm={12} xs={12}>
                           {item.files.map((a) => (
                             <div className="attachFileThumb">
-                              <Attachment src={a.fileName} value={a.fileName} />
+                              <Attachment
+                                key={a.id}
+                                value={a.fileName}
+                                type={a.fileType}
+                              />
                             </div>
                           ))}
                         </Grid>
@@ -1658,8 +1663,8 @@ Add new
                         </Grid>
                       </Box>
                     ))}
-                    {Object.keys(flhas).length === 0
-                      && 'Sorry, no matching records found'}
+                    {Object.keys(flhas).length === 0 &&
+                      "Sorry, no matching records found"}
                   </div>
 
                   <div className="gridView">
@@ -1705,12 +1710,12 @@ Add new
                                   className={classes.listingLabelName}
                                 >
                                   Number
-                                  {''}
+                                  {""}
                                   <Link
                                     href="/app/ActionSummary"
                                     variant="subtitle"
                                     className={Incidents.incidentNumber}
-                                    style={{ textDecoration: 'underline' }}
+                                    style={{ textDecoration: "underline" }}
                                   >
                                     {item[1].flhaNumber}
                                   </Link>
@@ -1818,9 +1823,7 @@ Add new
                                 display="inline"
                                 className={Incidents.actionsLabel}
                               >
-                                <AttachmentIcon />
-                                {' '}
-Comments:
+                                <AttachmentIcon /> Comments:
                               </Typography>
                               <Typography
                                 variant="body2"
@@ -1837,9 +1840,7 @@ Comments:
                                 display="inline"
                                 className={Incidents.actionsLabel}
                               >
-                                <AttachmentIcon />
-                                {' '}
-Actions:
+                                <AttachmentIcon /> Actions:
                               </Typography>
                               <Typography variant="body2" display="inline">
                                 <Link href="#" className={classes.mLeft}>
@@ -1853,9 +1854,7 @@ Actions:
                                 display="inline"
                                 className={Incidents.actionsLabel}
                               >
-                                <AttachmentIcon />
-                                {' '}
-Evidences:
+                                <AttachmentIcon /> Evidences:
                               </Typography>
                               <Typography variant="body2" display="inline">
                                 <Link href="#" className={classes.mLeft}>
@@ -1923,11 +1922,11 @@ Evidences:
                           item[1].flhaStatus,
                           item[1].createdByName,
                           // item[1].dateTimeFlha,
-                          moment(item[1].createdAt).format('Do MMMM YYYY'),
+                          moment(item[1].createdAt).format("Do MMMM YYYY"),
                           item[1].closedDate !== null
-                            ? moment(item[1].closedDate).format('Do MMMM YYYY')
-                            : '-',
-                          item[1].closedByName ? item[1].closedByName : '-',
+                            ? moment(item[1].closedDate).format("Do MMMM YYYY")
+                            : "-",
+                          item[1].closedByName ? item[1].closedByName : "-",
                         ])}
                         columns={columns}
                         options={options}

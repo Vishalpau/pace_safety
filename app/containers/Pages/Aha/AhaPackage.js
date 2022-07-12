@@ -56,7 +56,8 @@ import Loader from "../Loader";
 import { checkACL } from "../../../utils/helper";
 import Attachment from "../../Attachment/Attachment";
 import Delete from "../../Delete/Delete";
-import CardView from "../../Card/CardView";
+import CardView from "../../../components/Card/Index";
+import { ahaLabels } from "../../../components/Card/CardConstants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -546,7 +547,7 @@ function AhaPackage(props) {
   // }
 
   const fetchAllAHAData = async () => {
-     setPage(1);
+    setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -571,24 +572,24 @@ function AhaPackage(props) {
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`
       );
       const result = res.data.data.results.results;
-       setAllAHAData(result);
-       setTotalData(res.data.data.results.count);
-       setPageData(res.data.data.results.count / 25);
+      setAllAHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-       setPageCount(pageCount);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`
       );
       const result = res.data.data.results.results;
-       setAllAHAData(result);
-       setTotalData(res.data.data.results.count);
-       setPageData(res.data.data.results.count / 25);
+      setAllAHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
-       setPageCount(pageCount);
+      setPageCount(pageCount);
     }
 
-     setIsLoading(true);
+    setIsLoading(true);
   };
 
   const handleChange = async (event, value) => {
@@ -618,16 +619,16 @@ function AhaPackage(props) {
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
-       setAllAHAData(res.data.data.results.results);
-       setPage(value);
+      setAllAHAData(res.data.data.results.results);
+      setPage(value);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
-       setAllAHAData(res.data.data.results.results);
-       setPage(value);
+      setAllAHAData(res.data.data.results.results);
+      setPage(value);
     }
   };
 
@@ -658,12 +659,8 @@ function AhaPackage(props) {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
       fkProjectStructureIds: item.fkProjectStructureIds,
-      location: item.location,
-      assessmentDate: item.assessmentDate,
-      permitToPerform: item.permitToPerform,
-      description: item.description,
-      classification: item.classification,
       createdBy: item.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
     };
 
@@ -744,26 +741,29 @@ function AhaPackage(props) {
     return (
       <>
         <CardView
-          cardTitle={item.description}
-          avatar={item.avatar}
-          username={item.username}
-          itemId={item.id}
+          cardTitle={item.description} // Card title
+          avatar={item.avatar} // Card avatar
+          username={item.username} // Profile username
+          itemId={item.id} // Item ID
           headerFields={[
-            { label: "Number", value: item.ahaNumber },
-            { label: "Category", value: "AHA" },
-            { label: "Stage", value: item.ahaStage },
-            { label: "Status", value: item.ahaStatus },
+            // Card header labels and values for each item
+            { label: ahaLabels.header[0], value: item.ahaNumber },
+            { label: ahaLabels.header[1], value: "AHA" },
+            { label: ahaLabels.header[2], value: item.ahaStage },
+            { label: ahaLabels.header[3], value: item.ahaStatus },
           ]}
           bodyFields={[
-            { label: "Workarea", value: item.workArea },
-            { label: "Location", value: item.location },
+            // Card body labels and values for each item
+            { label: ahaLabels.body[0], value: item.workArea },
+            { label: ahaLabels.body[1], value: item.location },
             {
-              label: "Created On",
+              label: ahaLabels.body[2],
               value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
             },
-            { label: "Created By", value: item.createdByName },
+            { label: ahaLabels.body[3], value: item.createdByName },
           ]}
           deleteFields={{
+            // Delete component props
             deleteUrl: `/api/v1/ahas/${item.id}/`,
             afterDelete: () => {
               fetchAllAHAData();
@@ -776,12 +776,12 @@ function AhaPackage(props) {
             yesBtn: "Yes",
             noBtn: "No",
           }}
-          handleVisibility={() => handleVisibility()}
-          handleVisibilityComments={() => handleVisibilityComments()}
-          files={item.files !== null ? item.files.length : 0}
-          commentsCount={item.commentsCount}
-          handleSummaryPush={() => handleSummaryPush(item, commentPayload)}
-          checkDeletePermission={checkDeletePermission}
+          handleVisibility={() => handleVisibility()} // Show attachment box
+          handleVisibilityComments={() => handleVisibilityComments()} // Show "add comment" box
+          files={item.files !== null ? item.files.length : 0} // Attachment counts
+          commentsCount={item.commentsCount} // Comments count
+          handleSummaryPush={() => handleSummaryPush(item, commentPayload)} // Go to detail page function
+          checkDeletePermission={checkDeletePermission} // Check delete permission
         />
 
         {item.files && item.files.length ? (
@@ -808,7 +808,11 @@ function AhaPackage(props) {
                       <Grid item md={12} sm={12} xs={12}>
                         {item.files.map((a) => (
                           <div className="attachFileThumb">
-                            <Attachment src={a.fileName} value={a.fileName} />
+                            <Attachment
+                              key={a.id}
+                              value={a.fileName}
+                              type={a.fileType}
+                            />
                           </div>
                         ))}
                       </Grid>

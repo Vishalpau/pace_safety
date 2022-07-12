@@ -793,7 +793,7 @@ const Checks = (props) => {
           }
         }
         temp[i]["check"] = false;
-        console.log(value, 'value');
+        console.log(value, "value");
         temp[i][field] = value;
       }
     }
@@ -911,8 +911,8 @@ const Checks = (props) => {
   };
 
   useEffect(() => {
-    console.log(showCheckData, 'showCheckData');
-  },[showCheckData])
+    console.log(showCheckData, "showCheckData");
+  }, [showCheckData]);
 
   useEffect(() => {
     fetchFectorData();
@@ -1050,6 +1050,7 @@ const Checks = (props) => {
 
                           {Categor.length > 0 ? (
                             Categor.map((value, index) => {
+                              console.log(value, "value");
                               return (
                                 <>
                                   <Grid container item xs={12}>
@@ -1103,6 +1104,14 @@ const Checks = (props) => {
                                               <Grid container spacing={2}>
                                                 <Grid item md={12} xs={12}>
                                                   <FormControl component="fieldset">
+                                                    <FormLabel
+                                                      component="legend"
+                                                      className="checkRadioLabel"
+                                                    >
+                                                      Is this control applicable
+                                                      ?
+                                                    </FormLabel>
+
                                                     <RadioGroup
                                                       row
                                                       aria-label="select-typeof-compliance"
@@ -1833,14 +1842,19 @@ const Checks = (props) => {
                                                 </Grid>
                                                 <Grid item md={4} xs={12}>
                                                   {/* {console.log(ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ''),'pppppppppppp')} */}
-                                                  {console.log(ratingData, 'ratingData')}
+                                                  {console.log(
+                                                    ratingData,
+                                                    "ratingData"
+                                                  )}
                                                   <TextField
                                                     label="Performance rating %"
                                                     //margin="dense"
                                                     name="performancerating"
                                                     id="performancerating"
                                                     value={
-                                                      ratingData[catI + "-" + index] >= 0
+                                                      ratingData[
+                                                        catI + "-" + index
+                                                      ] >= 0
                                                         ? ratingData[
                                                             catI + "-" + index
                                                           ]
@@ -2283,7 +2297,8 @@ const Checks = (props) => {
                                                                               .projectId
                                                                           }&targetPage=/action/details/&targetId=${
                                                                             valueAction.id
-                                                                          }`}
+                                                                          }&projectStructure=${localStorage.getItem('selectBreakDown')}
+                                                                          `}
                                                                           target="_blank"
                                                                         >
                                                                           {

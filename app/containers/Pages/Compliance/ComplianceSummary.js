@@ -475,6 +475,7 @@ function ComplianceSummary(props) {
       `/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${projectId}&projectStructure=`
     );
     const result = res.data.data.results;
+    console.log(result, 'resultssssssssss');
     setColorData(result);
   };
 
@@ -546,14 +547,14 @@ function ComplianceSummary(props) {
                         <ul className="SummaryTabList">
                           <li>
                             <Button
-                              color={"secondary"}
-                              variant={"contained"}
+                              color={complianceData.performanceSummary ? "secondary" : "primary"}
+                              // variant={"contained"}
+                              variant={complianceData.performanceSummary ? "contained" : "outlined"}
                               size="small"
                               //endIcon={<CheckCircle />}
                               className={classes.statusButton}
                               onClick={(e) => {
                                 handleComplianceStatusChange();
-
                                 //setApprovals(false);
                                 //setLessonsLearned(false);
                                 //setSummary(false);
@@ -1172,7 +1173,10 @@ function ComplianceSummary(props) {
                                                     // console.log(subGrpData, 'subjiii');
                                                     return quesData.map(
                                                       (value, index) => {
-                                                        // console.log(value, 'value.subGroupId');
+                                                        console.log(
+                                                          value,
+                                                          "value.subGroupId"
+                                                        );
                                                         return subGrpData.id ===
                                                           value.subGroupId ? (
                                                           <>
@@ -1231,12 +1235,29 @@ function ComplianceSummary(props) {
                                                                         sm={4}
                                                                         xs={12}
                                                                       >
-                                                                        <FormLabel
-                                                                          component="legend"
-                                                                          className="viewLabel"
-                                                                        >
-                                                                          Criticality
-                                                                        </FormLabel>
+                                                                        {value.criticality !==
+                                                                          "N/A" &&
+                                                                        value.criticality !==
+                                                                          "No" &&
+                                                                        value.criticality !==
+                                                                          "Yes" ? (
+                                                                          <FormLabel
+                                                                            component="legend"
+                                                                            className="viewLabel"
+                                                                          >
+                                                                            Criticality
+                                                                          </FormLabel>
+                                                                        ) : (
+                                                                          <FormLabel
+                                                                            component="legend"
+                                                                            className="viewLabel"
+                                                                          >
+                                                                            Is
+                                                                            this
+                                                                            control
+                                                                            applicable?
+                                                                          </FormLabel>
+                                                                        )}
                                                                         <Typography className="viewLabelValue">
                                                                           {value.criticality
                                                                             ? value.criticality
@@ -1244,79 +1265,84 @@ function ComplianceSummary(props) {
                                                                         </Typography>
                                                                       </Grid>
 
-                                                                      <Grid
-                                                                        item
-                                                                        md={4}
-                                                                        sm={4}
-                                                                        xs={12}
-                                                                      >
-                                                                        <FormLabel
-                                                                          component="legend"
-                                                                          className="viewLabel"
-                                                                        >
-                                                                          Status
-                                                                        </FormLabel>
-                                                                        <Typography className="viewLabelValue">
-                                                                          {value.auditStatus
-                                                                            ? value.auditStatus
-                                                                            : "-"}
-                                                                        </Typography>
-                                                                      </Grid>
+                                                                      {value.criticality !==
+                                                                        "N/A" &&
+                                                                        value.criticality !==
+                                                                          "No" &&
+                                                                        value.criticality !==
+                                                                          "Yes" && (
+                                                                          <>
+                                                                            <Grid
+                                                                              item
+                                                                              md={
+                                                                                4
+                                                                              }
+                                                                              sm={
+                                                                                4
+                                                                              }
+                                                                              xs={
+                                                                                12
+                                                                              }
+                                                                            >
+                                                                              <FormLabel
+                                                                                component="legend"
+                                                                                className="viewLabel"
+                                                                              >
+                                                                                Status
+                                                                              </FormLabel>
+                                                                              <Typography className="viewLabelValue">
+                                                                                {value.auditStatus
+                                                                                  ? value.auditStatus
+                                                                                  : "-"}
+                                                                              </Typography>
+                                                                            </Grid>
 
-                                                                      <Grid
-                                                                        item
-                                                                        md={4}
-                                                                        sm={4}
-                                                                        xs={12}
-                                                                      >
-                                                                        <FormLabel
-                                                                          component="legend"
-                                                                          className="viewLabel"
-                                                                        >
-                                                                          Performance
-                                                                          rating
-                                                                        </FormLabel>
-                                                                        <Typography
-                                                                          style={{
-                                                                            backgroundColor:
-                                                                              value.performance &&
-                                                                              colordata.filter(
-                                                                                (
-                                                                                  i
-                                                                                ) =>
-                                                                                  i.matrixConstant ==
-                                                                                  (value.performance *
-                                                                                    5) /
-                                                                                    100
-                                                                              )
-                                                                                .length
-                                                                                ? colordata.filter(
-                                                                                    (
-                                                                                      i
-                                                                                    ) =>
-                                                                                      i.matrixConstant ==
-                                                                                      (value.performance *
-                                                                                        5) /
-                                                                                        100
-                                                                                  )[0]
-                                                                                    .matrixConstantColor
-                                                                                : "#fff",
-                                                                            border:
-                                                                              "1px",
-                                                                            width:
-                                                                              "50%",
-                                                                            height:
-                                                                              "80%",
-                                                                            textAlign:
-                                                                              "center",
-                                                                          }}
-                                                                          className="viewLabelValue"
-                                                                        >
-                                                                          {value.performance
-                                                                            ? value.performance
-                                                                            : "-"}
-                                                                        </Typography>
-                                                                      </Grid>
+                                                                            <Grid
+                                                                              item
+                                                                              md={
+                                                                                4
+                                                                              }
+                                                                              sm={
+                                                                                4
+                                                                              }
+                                                                              xs={
+                                                                                12
+                                                                              }
+                                                                            >
+                                                                              <FormLabel
+                                                                                component="legend"
+                                                                                className="viewLabel"
+                                                                              >
+                                                                                Performance
+                                                                                rating
+                                                                              </FormLabel>
+                                                                              <Typography
+                                                                                style={{
+                                                                                  backgroundColor:
+                                                                                    value.performance &&
+                                                                                    colordata.filter((i) => i.matrixConstant == (value.performance * 5) / 100).length
+                                                                                      ? colordata.filter((i) =>i.matrixConstant ==(value.performance *5) /100 )[0]['status'] === 'Active' ? 
+                                                                                      colordata.filter((i) =>i.matrixConstant ==(value.performance *5) /100 )[0].matrixConstantColor
+                                                                                      : '#fff'
+                                                                                      : "#fff",
+                                                                                  border:
+                                                                                    "1px",
+                                                                                  width:
+                                                                                    "50%",
+                                                                                  height:
+                                                                                    "80%",
+                                                                                  textAlign:
+                                                                                    "center",
+                                                                                }}
+                                                                                className="viewLabelValue"
+                                                                              >
+                                                                                {value.performance
+                                                                                  ? value.performance
+                                                                                  : "-"}
+                                                                              </Typography>
+                                                                            </Grid>
+                                                                          </>
+                                                                        )}
                                                                     </>
                                                                   ) : (
                                                                     <Grid
@@ -1876,8 +1902,10 @@ function ComplianceSummary(props) {
                       className="quickActionSectionLink"
                       variant="subtitle"
                       name="Comments"
+                      disabled={"true"}
                       to={{
-                        pathname: `/app/comments/compliance/${id}`,
+                        // pathname: `/app/comments/compliance/${id}`,
+                        pathname: history.location.pathname,
                         state: commentPayload,
                       }}
                     >

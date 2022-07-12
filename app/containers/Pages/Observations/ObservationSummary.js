@@ -229,9 +229,8 @@ const ObservationSummary = () => {
         <>
           {/* {isLoading ? ( */}
           <CustomPapperBlock
-            title={`iCare Number: ${
-              initialData.observationNumber ? initialData.observationNumber : ""
-            }`}
+            title={`iCare Number: ${initialData.observationNumber ? initialData.observationNumber : ""
+              }`}
             // icon="ion-md-list-box"
             variant="h5"
             icon="customDropdownPageIcon iCarePageIcon"
@@ -496,8 +495,10 @@ const ObservationSummary = () => {
                         className="quickActionSectionLink"
                         variant="subtitle"
                         name="Comments"
+                        disabled="true"
                         to={{
-                          pathname: `/app/comments/observations/${id}`,
+                          // pathname: `/app/comments/observations/${id}`,
+                          pathname: history.location.pathname,
                           state: commentPayload
                         }}
                       >

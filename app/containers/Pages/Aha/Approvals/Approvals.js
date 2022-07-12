@@ -253,11 +253,11 @@ const Approvals = () => {
   }
   const handelSubmit = async () => {
     const { error, isValid } = ApprovalValidator(form, actionData)
-    await setError(error)
+     setError(error)
     if (!isValid) {
       return "data not valid"
     }
-    await setSubmitLoader(true)
+     setSubmitLoader(true)
     if (form.notifyTo === null) {
       form['notifyTo'] = "null"
     }

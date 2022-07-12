@@ -63,7 +63,8 @@ import moment from "moment";
 import { checkACL } from "../../../utils/helper";
 import Attachment from "../../Attachment/Attachment";
 import Delete from "../../Delete/Delete";
-import CardView from "../../Card/CardView";
+import CardView from "../../../components/Card/Index";
+import { jhaLabels } from "../../../components/Card/CardConstants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -676,13 +677,8 @@ function JhaPackage(props) {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
       fkProjectStructureIds: item.fkProjectStructureIds,
-      location: item.location,
-      jhaAssessmentDate: item.jhaAssessmentDate,
-      permitToPerform: item.permitToPerform,
-      jobTitle: item.jobTitle,
-      description: item.description,
-      classification: item.classification,
       createdBy: item.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
     };
 
@@ -780,19 +776,19 @@ function JhaPackage(props) {
             username={item.username}
             itemId={item.id}
             headerFields={[
-              { label: "Number", value: item.jhaNumber },
-              { label: "Category", value: "JSA" },
-              { label: "Stage", value: item.jhaStage },
-              { label: "Status", value: item.jhaStatus },
+              { label: jhaLabels.header[0], value: item.jhaNumber },
+              { label: jhaLabels.header[1], value: "JSA" },
+              { label: jhaLabels.header[2], value: item.jhaStage },
+              { label: jhaLabels.header[3], value: item.jhaStatus },
             ]}
             bodyFields={[
-              { label: "Location", value: item.location },
+              { label: jhaLabels.body[0], value: item.location },
               {
-                label: "Created On",
+                label: jhaLabels.body[1],
                 value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
               },
               {
-                label: "Created By",
+                label: jhaLabels.body[2],
                 value: item.createdByName,
               },
             ]}
@@ -830,7 +826,7 @@ function JhaPackage(props) {
               onMouseEnter={handleAttachOpen}
               onMouseLeave={handleAttachClose}
               open={showGrid}
-              className="paddTBRemove attactmentShowSection"
+              className="paddTBRemove"
             >
               <Paper elevation={1} className="cardSectionBottom">
                 <Grid container spacing={3}>
@@ -839,9 +835,13 @@ function JhaPackage(props) {
                       <ListItem>
                         <Grid item md={12} sm={12} xs={12}>
                           {item.files.map((a) => (
-                            <div className="attachFileThumb">
-                              <Attachment src={a.fileName} value={a.fileName} />
-                            </div>
+                            <Attachment
+                              key={a.id}
+                              value={a.fileName}
+                              type={a.fileType}
+                              // src={a.fileName}
+                              // value={a.fileName}
+                            />
                           ))}
                         </Grid>
                       </ListItem>
@@ -1053,7 +1053,6 @@ function JhaPackage(props) {
                 <div className="gridView">
                   <AllCardData item={singleitem[1]} index={index} />
                 </div>
-                
               </Grid>
             ))
           ) : (
