@@ -859,7 +859,7 @@ function BlankPage(props) {
                                 </Typography>
                                 <Typography variant="body2" display="inline">
                                   {/* <ILink href="#"> */}
-                                  {item[1]["attachmentCount"]}
+                                  {item[1]["attachmentCount"].attachmentCount}
                                   {/* </ILink> */}
                                 </Typography>
                               </Grid>
