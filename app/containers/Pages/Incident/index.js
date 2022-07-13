@@ -905,7 +905,7 @@ function BlankPage(props) {
                                         item={deleteItem}
                                         loader={setIsLoading}
                                         loadingFlag={false}
-                                        deleteMsg="Are you sure you want to delete this FLHA?"
+                                        deleteMsg="Are you sure you want to delete this Incident?"
                                         yesBtn="Yes"
                                         noBtn="No"
                                       />

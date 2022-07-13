@@ -1,6 +1,6 @@
 import { FormHelperText } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Grid from "@material-ui/core/Grid";
@@ -30,7 +30,6 @@ import Attachment from "../../Attachment/Attachment";
 import EvidenceValidate from "../../Validator/EvidenceValidation";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -220,7 +219,8 @@ const Evidence = () => {
 
   const fetchEvidenceList = async () => {
     const lastItem = id || localStorage.getItem("fkincidentId");
-    const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`)
+    const res = await api
+      .get(`/api/v1/incidents/${lastItem}/evidences/`)
       .then((res) => {
         const result = res.data.data.results;
         const newData = result.filter(
@@ -263,20 +263,17 @@ const Evidence = () => {
         }
         setIsLoading(true);
       })
-      .catch(() => { })
-
-
+      .catch(() => {});
   };
 
   const fetchIncidentDetails = async () => {
-    const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId") || id}/`
-    ).then((res) => {
-      const result = res.data.data.results;
-      setIncidentDetail(result);
-    })
-      .catch(() => history.push("/app/pages/error"))
-
+    const res = await api
+      .get(`/api/v1/incidents/${localStorage.getItem("fkincidentId") || id}/`)
+      .then((res) => {
+        const result = res.data.data.results;
+        setIncidentDetail(result);
+      })
+      .catch(() => history.push("/app/pages/error"));
   };
 
   // On the next button click function call.
@@ -284,7 +281,6 @@ const Evidence = () => {
   const handleNext = async () => {
     const { error, isValid } = EvidenceValidate(form);
     if (evideceData.length > 0) {
-
     }
     await setError(error);
 
@@ -353,9 +349,6 @@ const Evidence = () => {
           );
         }
       } else {
-
-
-
         data.append("createdAt", form[i].createdAt);
         data.append("createdBy", form[i].createdBy);
         data.append("updatedAt", form[i].updatedAt);
@@ -384,14 +377,14 @@ const Evidence = () => {
     if (incidentDetail.incidentStage == "Investigation") {
       try {
         temp.updatedAt = new Date().toISOString();
-        temp.incidentStage = "Evidence"
-        temp.incidentStatus = "pending"
+        temp.incidentStage = "Evidence";
+        temp.incidentStatus = "pending";
         const res = await api.put(
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
       } catch (error) {
-        alert("something went wrong")
+        alert("something went wrong");
       }
     }
     const { error, isValid } = EvidenceValidate(form);
@@ -400,7 +393,6 @@ const Evidence = () => {
       setIsNext(false);
       let status = 0;
       if (evideceData.length > 0) {
-
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
@@ -441,7 +433,6 @@ const Evidence = () => {
           }
         }
       } else {
-
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
@@ -473,14 +464,16 @@ const Evidence = () => {
         }
       }
 
-      if (status === 201) {
+      if (status === 201 || status === 200) {
         history.push(
           `/app/incident-management/registration/evidence/activity-detail/${localStorage.getItem(
             "fkincidentId"
           )}`
         );
       }
-    } else { setIsNext(true) }
+    } else {
+      setIsNext(true);
+    }
   };
 
   const handleClose = (event, reason) => {
@@ -690,8 +683,8 @@ const Evidence = () => {
                               />
 
                               {value.evidenceDocument ===
-                                null ? null : typeof value.evidenceDocument ===
-                                  "string" ? (
+                              null ? null : typeof value.evidenceDocument ===
+                                "string" ? (
                                 <Attachment value={value.evidenceDocument} />
                               ) : null}
                             </TableCell>
