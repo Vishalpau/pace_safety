@@ -238,6 +238,18 @@ function ComplianceSummary(props) {
     "panel3"
   );
 
+  useEffect(() => {
+    console.log(colordata, 'colordata');
+  },[colordata])
+
+  useEffect(() => {
+    console.log(groupData, 'groupdata');
+  },[groupData])
+
+  useEffect(() => {
+    console.log(complianceData, 'complainceData');
+  },[complianceData])
+
   // for handle the accordian expand
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
@@ -1184,10 +1196,7 @@ function ComplianceSummary(props) {
                                                     // console.log(subGrpData, 'subjiii');
                                                     return quesData.map(
                                                       (value, index) => {
-                                                        // console.log(
-                                                        //   value,
-                                                        //   "value.subGroupId"
-                                                        // );
+                                                        console.log(value,"value.subGroupId");
                                                         return subGrpData.id ===
                                                           value.subGroupId ? (
                                                           <>
@@ -1285,15 +1294,9 @@ function ComplianceSummary(props) {
                                                                           <>
                                                                             <Grid
                                                                               item
-                                                                              md={
-                                                                                4
-                                                                              }
-                                                                              sm={
-                                                                                4
-                                                                              }
-                                                                              xs={
-                                                                                12
-                                                                              }
+                                                                              md={4}
+                                                                              sm={4}
+                                                                              xs={12}
                                                                             >
                                                                               <FormLabel
                                                                                 component="legend"
@@ -1310,15 +1313,9 @@ function ComplianceSummary(props) {
 
                                                                             <Grid
                                                                               item
-                                                                              md={
-                                                                                4
-                                                                              }
-                                                                              sm={
-                                                                                4
-                                                                              }
-                                                                              xs={
-                                                                                12
-                                                                              }
+                                                                              md={ 4 }
+                                                                              sm={ 4 }
+                                                                              xs={ 12 }
                                                                             >
                                                                               <FormLabel
                                                                                 component="legend"
@@ -1327,43 +1324,15 @@ function ComplianceSummary(props) {
                                                                                 Performance
                                                                                 rating
                                                                               </FormLabel>
+                                                                              {console.log(value)}
                                                                               <Typography
                                                                                 style={{
                                                                                   backgroundColor:
                                                                                     value.performance &&
-                                                                                    colordata.filter(
-                                                                                      (
-                                                                                        i
-                                                                                      ) =>
-                                                                                        i.matrixConstant ==
-                                                                                        (value.performance *
-                                                                                          5) /
-                                                                                          100
-                                                                                    )
-                                                                                      .length
-                                                                                      ? colordata.filter(
-                                                                                          (
-                                                                                            i
-                                                                                          ) =>
-                                                                                            i.matrixConstant ==
-                                                                                            (value.performance *
-                                                                                              5) /
-                                                                                              100
-                                                                                        )[0][
-                                                                                          "status"
-                                                                                        ] ===
-                                                                                        "Active"
-                                                                                        ? colordata.filter(
-                                                                                            (
-                                                                                              i
-                                                                                            ) =>
-                                                                                              i.matrixConstant ==
-                                                                                              (value.performance *
-                                                                                                5) /
-                                                                                                100
-                                                                                          )[0]
-                                                                                            .matrixConstantColor
-                                                                                        : "#fff"
+                                                                                    colordata.filter((i) => i.matrixConstant === (value.performance * 5) / 100).length
+                                                                                      // ? colordata.filter((i) => i.matrixConstant === (value.performance * 5) / 100 )
+                                                                                        ? colordata.filter((i) => i.matrixConstant === (value.performance * 5) / 100 )[0].matrixConstantColor
+                                                                                        // : "#fff"
                                                                                       : "#fff",
                                                                                   border:
                                                                                     "1px",

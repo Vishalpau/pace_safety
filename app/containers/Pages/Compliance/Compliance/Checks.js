@@ -1872,33 +1872,9 @@ const Checks = (props) => {
                                                         ? ratingColor[
                                                             catI + "-" + index
                                                           ]
-                                                        : showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          ).length > 0 &&
-                                                          colordata.filter(
-                                                            (c) =>
-                                                              c.matrixConstant ==
-                                                              (showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0].performance *
-                                                                5) /
-                                                                100
-                                                          ).length > 0
-                                                        ? colordata.filter(
-                                                            (c) =>
-                                                              c.matrixConstant ==
-                                                              (showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0].performance *
-                                                                5) /
-                                                                100
-                                                          )[0]
+                                                        : showCheckData.filter((cd) => cd.question == value.question ).length > 0 &&
+                                                          colordata.filter((c) => c.matrixConstant == (showCheckData.filter((cd) => cd.question == value.question)[0].performance * 5)/100 ).length > 0
+                                                        ? colordata.filter((c) => c.matrixConstant == (showCheckData.filter((cd) => cd.question == value.question)[0].performance * 5) / 100 )[0]
                                                             .matrixConstantColor
                                                         : "",
                                                     }}

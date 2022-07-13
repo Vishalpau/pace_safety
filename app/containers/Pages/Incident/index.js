@@ -174,9 +174,13 @@ function BlankPage(props) {
     setListToggle(false);
   };
 
+  // useEffect(() => {
+  //   console.log(isLoading, "isLoading");
+  // }, [isLoading]);
+
   useEffect(() => {
-    console.log(isLoading, "isLoading");
-  }, [isLoading]);
+    console.log(incidents, 'incidents');
+  },[incidents])
 
   const handelViewTabel = (e) => {
     setListToggle(true);
@@ -228,10 +232,7 @@ function BlankPage(props) {
       //   history.push("/app/pages/error")
       // }
     } else {
-      const res = await api
-        .get(
-          `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
-        )
+      const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
         // alert('hey')
         .then(async (res) => {
           // debugger;
@@ -400,10 +401,7 @@ function BlankPage(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api
-      .get(
-        `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
-      )
+    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`)
       .then((res) => {
         setIncidents(res.data.data.results.results);
         setPage(value);
@@ -411,52 +409,52 @@ function BlankPage(props) {
       .catch((error) => {});
   };
 
-  const handleDelete = async (item) => {
-    // debugger
-    // const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    // const userDetails = JSON.parse(localStorage.getItem("userDetails")).id;
-    // const fkProjectId =
-    //   props.projectName.projectId ||
-    //   JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
-    // const selectBreakdown =
-    //   props.projectName.breakDown.length > 0
-    //     ? props.projectName.breakDown
-    //     : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    //       ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    //       : null;
-    // let struct = "";
+  // const handleDelete = async (item) => {
+  //   // debugger
+  //   // const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+  //   // const userDetails = JSON.parse(localStorage.getItem("userDetails")).id;
+  //   // const fkProjectId =
+  //   //   props.projectName.projectId ||
+  //   //   JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+  //   // const selectBreakdown =
+  //   //   props.projectName.breakDown.length > 0
+  //   //     ? props.projectName.breakDown
+  //   //     : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+  //   //       ? JSON.parse(localStorage.getItem("selectBreakDown"))
+  //   //       : null;
+  //   // let struct = "";
 
-    // for (const i in selectBreakdown) {
-    //   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-    // }
-    // const fkProjectStructureIds = struct.slice(0, -1);
-    // console.log(item);
-    if (checkACL("safety-incident", "delete_incidents")) {
-      const data = {
-        fkCompanyId: fkCompanyId,
-        fkProjectId: fkProjectId,
-        fkProjectStructureIds: fkProjectStructureIds,
-        // incidentStatus: 'Done',
-        // incidentStage: '',
-        updatedBy: userDetails,
-        createdBy: userDetails,
-        status: "Delete",
-      };
-      // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
-      // let data = item[1];
-      // console.log(data);
-      // data.status = "Delete";
-      // delete data.attachment
-      setIsLoading(false);
-      const res1 = await api
-        .put(`/api/v1/incidents/${item[1].id}/`, data)
-        .then((response) => {
-          console.log(response);
-          fetchData();
-        })
-        .catch((err) => console.log(err));
-    }
-  };
+  //   // for (const i in selectBreakdown) {
+  //   //   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  //   // }
+  //   // const fkProjectStructureIds = struct.slice(0, -1);
+  //   // console.log(item);
+  //   if (checkACL("safety-incident", "delete_incidents")) {
+  //     const data = {
+  //       fkCompanyId: fkCompanyId,
+  //       fkProjectId: fkProjectId,
+  //       fkProjectStructureIds: fkProjectStructureIds,
+  //       // incidentStatus: 'Done',
+  //       // incidentStage: '',
+  //       updatedBy: userDetails,
+  //       createdBy: userDetails,
+  //       status: "Delete",
+  //     };
+  //     // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
+  //     // let data = item[1];
+  //     // console.log(data);
+  //     // data.status = "Delete";
+  //     // delete data.attachment
+  //     setIsLoading(false);
+  //     const res1 = await api
+  //       .put(`/api/v1/incidents/${item[1].id}/`, data)
+  //       .then((response) => {
+  //         console.log(response);
+  //         fetchData();
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
+  // };
 
   const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
   const createdId = JSON.parse(localStorage.getItem("userDetails")).id;
@@ -504,11 +502,7 @@ function BlankPage(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    api
-      .get(
-        `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`
-      )
-
+    api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`)
       .then((res) => {
         setIncidents(res.data.data.results.results);
         setTotalData(res.data.data.results.count);
@@ -859,7 +853,7 @@ function BlankPage(props) {
                                 </Typography>
                                 <Typography variant="body2" display="inline">
                                   {/* <ILink href="#"> */}
-                                  {item[1]["attachmentCount"]}
+                                  {item[1].attachmentCount.attachmentCount}
                                   {/* </ILink> */}
                                 </Typography>
                               </Grid>
