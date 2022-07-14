@@ -380,6 +380,7 @@ const AssessmentAndNotification = (props) => {
                             .projectName.projectId
                         }
                         updatePage={updatePage}
+                        projectStructure={localStorage.getItem("selectBreakDown")}
                       />
                     </>
                   ))}

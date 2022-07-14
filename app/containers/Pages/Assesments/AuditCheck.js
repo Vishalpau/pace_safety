@@ -838,6 +838,7 @@ const FlhaDetails = (props) => {
                                             ).projectName.projectId
                                           }
                                           updatePage={updatePage}
+                                          projectStructure={localStorage.getItem("selectBreakDown")}
                                         />
                                       </Typography>
                                     ))}
@@ -926,6 +927,7 @@ const FlhaDetails = (props) => {
                                           ).projectName.projectId
                                         }
                                         updatePage={updatePage}
+                                        projectStructure={localStorage.getItem("selectBreakDown")}
                                       />
                                     </Typography>
                                   ))}
@@ -1014,6 +1016,7 @@ const FlhaDetails = (props) => {
                                           ).projectName.projectId
                                         }
                                         updatePage={updatePage}
+                                        projectStructure={localStorage.getItem("selectBreakDown")}
                                       />
                                     </Typography>
                                   ))}
@@ -1102,6 +1105,7 @@ const FlhaDetails = (props) => {
                                           ).projectName.projectId
                                         }
                                         updatePage={updatePage}
+                                        projectStructure={localStorage.getItem("selectBreakDown")}
                                       />
                                     </Typography>
                                   ))}
@@ -1190,6 +1194,7 @@ const FlhaDetails = (props) => {
                                           ).projectName.projectId
                                         }
                                         updatePage={updatePage}
+                                        projectStructure={localStorage.getItem("selectBreakDown")}
                                       />
                                     </Typography>
                                   ))}
@@ -1279,6 +1284,7 @@ const FlhaDetails = (props) => {
                                           ).projectName.projectId
                                         }
                                         updatePage={updatePage}
+                                        projectStructure={localStorage.getItem("selectBreakDown")}
                                       />
                                     </Typography>
                                   ))}
@@ -1367,6 +1373,7 @@ const FlhaDetails = (props) => {
                                           ).projectName.projectId
                                         }
                                         updatePage={updatePage}
+                                        projectStructure={localStorage.getItem("selectBreakDown")}
                                       />
                                     </Typography>
                                   ))}
@@ -1456,6 +1463,7 @@ const FlhaDetails = (props) => {
                                           ).projectName.projectId
                                         }
                                         updatePage={updatePage}
+                                        projectStructure={localStorage.getItem("selectBreakDown")}
                                       />
                                     </Typography>
                                   ))}
@@ -1544,6 +1552,7 @@ const FlhaDetails = (props) => {
                                           ).projectName.projectId
                                         }
                                         updatePage={updatePage}
+                                        projectStructure={localStorage.getItem("selectBreakDown")}
                                       />
                                     </Typography>
                                   ))}

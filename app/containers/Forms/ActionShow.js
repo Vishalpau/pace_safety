@@ -61,8 +61,7 @@ const ActionShow = (props) => {
                 display="block"
                 href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${props.companyId
                     }&projectId=${props.projectId
-                    }&targetPage=/action/details/&targetId=${props.action.id
-                    }`}
+                    }&targetPage=/action/details/&targetId=${props.action.id}&projectStructure=${props.projectStructure}`}
                 target="_blank"
             >
                 {props.action.number}
