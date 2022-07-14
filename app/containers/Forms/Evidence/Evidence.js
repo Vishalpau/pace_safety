@@ -392,12 +392,13 @@ const Evidence = () => {
     if (isValid === true) {
       setIsNext(false);
       let status = 0;
+      debugger;
       if (evideceData.length > 0) {
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
             data.append("evidenceCheck", form[i].evidenceCheck);
-            data.append("evidenceNumber", form[i].evidenceNumber);
+            // data.append("evidenceNumber", form[i].evidenceNumber);
             data.append("evidenceCategory", form[i].evidenceCategory);
             data.append("evidenceRemark", form[i].evidenceRemark);
             if (typeof form[i].evidenceDocument !== "string") {
@@ -409,6 +410,7 @@ const Evidence = () => {
             data.append("updatedAt", new Date().toISOString());
             data.append("updatedBy", form[i].updatedBy);
             data.append("fkIncidentId", form[i].fkIncidentId);
+            data.append("createdBy", form[i].createdBy);
             if (form[i].pk) {
               const res = await api.put(
                 `/api/v1/incidents/${localStorage.getItem(
@@ -437,7 +439,7 @@ const Evidence = () => {
           try {
             const data = new FormData();
             data.append("evidenceCheck", form[i].evidenceCheck);
-            data.append("evidenceNumber", form[i].evidenceNumber);
+            // data.append("evidenceNumber", form[i].evidenceNumber);
             data.append("evidenceCategory", form[i].evidenceCategory);
             data.append("evidenceRemark", form[i].evidenceRemark);
             if (typeof form[i].evidenceDocument !== "string") {
