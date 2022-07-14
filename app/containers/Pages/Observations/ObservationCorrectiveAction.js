@@ -228,6 +228,7 @@ function ObservationCorrectiveAction() {
                   companyId={fkCompanyId}
                   projectId={projectId}
                   updatePage={updatePage}
+                  projectStructure={localStorage.getItem("selectBreakDown")}
                 />
               </>
             ))

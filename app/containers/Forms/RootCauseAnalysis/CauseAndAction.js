@@ -257,10 +257,11 @@ const BasicCauseAndAction = () => {
                               companyId={projectData.companyId}
                               projectId={projectData.projectId}
                               updatePage={updatePage}
+                              projectStructure={localStorage.getItem("selectBreakDown")}
                             />
                           ))}
                         </TableCell>
-                        <TableCell align="right" style={{ minWidth: 200 }}>
+                        {/* <TableCell align="right" style={{ minWidth: 200 }}>
                           <Link
                             className={classes.actionLinkAudit}
                             display="block"
@@ -269,7 +270,7 @@ const BasicCauseAndAction = () => {
                           >
                             link to redirect assesment
                           </Link>
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     ))}
                   </TableBody>

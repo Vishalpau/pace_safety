@@ -254,6 +254,7 @@ const BasicCauseAndAction = () => {
                                 companyId={projectData.companyId}
                                 projectId={projectData.projectId}
                                 updatePage={updatePage}
+                                projectStructure={localStorage.getItem("selectBreakDown")}
                               />
                             ))}
                           </Typography>

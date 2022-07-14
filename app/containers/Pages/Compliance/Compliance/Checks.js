@@ -1471,20 +1471,44 @@ const Checks = (props) => {
                                                                     val.action.map((valueAction) => (
                                                                         <TableRow>
                                                                           <TableCell align="left">
-                                                                            <Link
-                                                                              className={
-                                                                                classes.actionLinkAudit
-                                                                              }
-                                                                              display="block"
-                                                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                                                                          JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]
-                                                                                          }&response_type=code&companyId=${JSON.parse(localStorage.getItem("company")).fkCompanyId
-                                                                                          }&projectId=${ JSON.parse(localStorage.getItem("projectName")).projectName .projectId
-                                                                                          }&targetPage=/action/details/&targetId=${ valueAction.id }`}
-                                                                              target="_blank"
-                                                                            >
-                                                                              {valueAction.number}
-                                                                            </Link>
+                                                                          <Link
+                                                                          className={ classes.actionLinkAudit }
+                                                                          display="block"
+                                                                          href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
+                                                                            JSON.parse(
+                                                                              localStorage.getItem(
+                                                                                "BaseUrl"
+                                                                              )
+                                                                            )[
+                                                                              "actionClientID"
+                                                                            ]
+                                                                          }&response_type=code&companyId=${
+                                                                            JSON.parse(
+                                                                              localStorage.getItem(
+                                                                                "company"
+                                                                              )
+                                                                            )
+                                                                              .fkCompanyId
+                                                                          }&projectId=${
+                                                                            JSON.parse(
+                                                                              localStorage.getItem(
+                                                                                "projectName"
+                                                                              )
+                                                                            )
+                                                                              .projectName
+                                                                              .projectId
+                                                                          }&targetPage=/action/details/&targetId=${
+                                                                            valueAction.id
+                                                                          }&projectStructure=${localStorage.getItem(
+                                                                            "selectBreakDown"
+                                                                          )}
+                                                                          `}
+                                                                          target="_blank"
+                                                                        >
+                                                                          {
+                                                                            valueAction.number
+                                                                          }
+                                                                        </Link>
                                                                           </TableCell>
                                                                           <TableCell>
                                                                             {valueAction.title}
@@ -1872,33 +1896,9 @@ const Checks = (props) => {
                                                         ? ratingColor[
                                                             catI + "-" + index
                                                           ]
-                                                        : showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          ).length > 0 &&
-                                                          colordata.filter(
-                                                            (c) =>
-                                                              c.matrixConstant ==
-                                                              (showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0].performance *
-                                                                5) /
-                                                                100
-                                                          ).length > 0
-                                                        ? colordata.filter(
-                                                            (c) =>
-                                                              c.matrixConstant ==
-                                                              (showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0].performance *
-                                                                5) /
-                                                                100
-                                                          )[0]
+                                                        : showCheckData.filter((cd) => cd.question == value.question ).length > 0 &&
+                                                          colordata.filter((c) => c.matrixConstant == (showCheckData.filter((cd) => cd.question == value.question)[0].performance * 5)/100 ).length > 0
+                                                        ? colordata.filter((c) => c.matrixConstant == (showCheckData.filter((cd) => cd.question == value.question)[0].performance * 5) / 100 )[0]
                                                             .matrixConstantColor
                                                         : "",
                                                     }}
@@ -2246,18 +2246,11 @@ const Checks = (props) => {
                                                           {val.id ==
                                                           value.id ? (
                                                             <>
-                                                              {val.action
-                                                                .length > 0 &&
-                                                                val.action.map(
-                                                                  (
-                                                                    valueAction
-                                                                  ) => (
+                                                              {val.action.length > 0 && val.action.map( ( valueAction ) => (
                                                                     <TableRow>
                                                                       <TableCell align="left">
                                                                         <Link
-                                                                          className={
-                                                                            classes.actionLinkAudit
-                                                                          }
+                                                                          className={ classes.actionLinkAudit }
                                                                           display="block"
                                                                           href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
                                                                             JSON.parse(
