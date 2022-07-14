@@ -159,7 +159,9 @@ const MultiAttachment = (props) => {
   };
 
   useEffect(() => {
-    attachmentHandler();
+    if (files.length > 0) {
+      attachmentHandler();
+    }
   }, [files]);
 
   function Alert(props) {
@@ -197,7 +199,7 @@ const MultiAttachment = (props) => {
               fill="#06425c"
             />
           </svg>{" "}
-          Attachment
+          {props.headerText ? props.headerText : "Attachment"}
         </Typography>
       </Grid>
       <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -261,7 +263,7 @@ const MultiAttachment = (props) => {
                   </svg>
                 </span>
                 <p className="chooseFileDesign">
-                  Drag and drop here or <span>Choose file</span>
+                  Drag and drop here or <span>Choose files</span>
                 </p>
                 <aside>
                   {files.length > 0 ? (

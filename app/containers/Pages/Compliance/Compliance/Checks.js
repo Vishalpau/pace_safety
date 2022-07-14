@@ -96,6 +96,7 @@ import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBloc
 import { connect } from "react-redux";
 import Attachment from "../../../../containers/Attachment/Attachment";
 import { checkACL } from "../../../../utils/helper";
+import MultiAttachment from "../../../MultiAttachment/MultiAttachment";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -352,6 +353,22 @@ const Checks = (props) => {
   const [valueStar, setValueStar] = React.useState([]);
   const [categories, setCategories] = useState([]);
 
+  useEffect(() => {
+    console.log(actionData, 'actionData');
+  },[actionData])
+
+  const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+
   //fetch matrix color and color data
   const fetchMatrixData = async () => {
     const res = await api.get(
@@ -364,9 +381,9 @@ const Checks = (props) => {
     setColorData(a);
   };
 
-  useEffect(() => {
-    console.log(showCheckData, "showCheckData");
-  }, [showCheckData]);
+  // useEffect(() => {
+  //   console.log(showCheckData, "showCheckData");
+  // }, [showCheckData]);
 
   const radioDecide = ["Yes", "No", "N/A"];
 
@@ -446,6 +463,7 @@ const Checks = (props) => {
 
   // method to call when we click on submit
   const updateAccordian = async () => {
+    debugger;
     setLoading(true);
     const temp = [...checkData];
     for (const key in temp) {
@@ -456,6 +474,11 @@ const Checks = (props) => {
         Object.keys(data).forEach((key) => {
           if (key === "fkAuditId") {
             formData.append(key, data[key]);
+          }
+          if (key === "files") {
+            data.files.map((file) => {
+              formData.append(key, file);
+            });
           }
           if (
             key !== "check" &&
@@ -603,13 +626,13 @@ const Checks = (props) => {
     let tempCheckData = [];
     let categoriesData = {};
 
-    console.log(data);
+    // console.log(data);
 
     for (let i = 0; i < data.length; i++) {
       let groupName = data[i].groupName;
       let subGroupName = data[i].subGroupName;
       categoriesData[groupName] = [];
-      console.log(categoriesData);
+      // console.log(categoriesData);
 
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${strId}`
@@ -623,7 +646,7 @@ const Checks = (props) => {
     //here we are getting the data
     let fd = await fetchData();
 
-    console.log(fd, "ffffffdddddddddd");
+    // console.log(fd, "ffffffdddddddddd");
 
     //here we are making a separate array according to the key
     temp.map((tempvalue, i) => {
@@ -722,45 +745,45 @@ const Checks = (props) => {
   };
 
   // method for uploading a file
-  const handleFileUpload = (event, questionId) => {
+  const handleFileUpload = (files, questionId, targetName) => {
     debugger;
     let temp = [...checkData];
-    const name = event.target.name;
-    const file = event.target.files[0];
+    const name = targetName;
+    const file = files;
     // checking type of attachments
-    if (file.size <= 1024 * 1024 * 25) {
-      temp.map((a, i) => {
-        if (a.questionId === questionId) {
-          if (name === "attachment") {
-            a.attachment = file;
-          }
-          if (name === "evidence") {
-            a.mediaAttachment = file;
-          }
-        }
-        return a;
-      });
-      setCheckData(temp);
-    } else {
-      setOpen(true);
-      const allAttchment = document.querySelectorAll("#attachment");
-      const allEvidence = document.querySelectorAll("#evidence");
-      allAttchment.forEach((element) => {
-        if (element.contains(event.currentTarget)) {
-          element.value = null;
-        }
-      });
-      allEvidence.forEach((element) => {
-        if (element.contains(event.currentTarget)) {
-          element.value = null;
-        }
-      });
-    }
+    // if (file.size <= 1024 * 1024 * 25) {
+    temp.map((a, i) => {
+      if (a.questionId === questionId) {
+        // if (name === "attachment") {
+        a.files = file;
+        // }
+        // if (name === "evidence") {
+        // a.files = file;
+        // }
+      }
+      return a;
+    });
+    setCheckData(temp);
+    // } else {
+    //   setOpen(true);
+    //   const allAttchment = document.querySelectorAll("#attachment");
+    //   const allEvidence = document.querySelectorAll("#evidence");
+    //   allAttchment.forEach((element) => {
+    //     if (element.contains(event.currentTarget)) {
+    //       element.value = null;
+    //     }
+    //   });
+    //   allEvidence.forEach((element) => {
+    //     if (element.contains(event.currentTarget)) {
+    //       element.value = null;
+    //     }
+    //   });
+    // }
   };
 
-  useEffect(() => {
-    console.log(checkData);
-  }, [checkData]);
+  // useEffect(() => {
+  //   console.log(checkData);
+  // }, [checkData]);
 
   const handelSubmit = async () => {
     updateAccordian();
@@ -797,13 +820,13 @@ const Checks = (props) => {
         temp[i][field] = value;
       }
     }
-    console.log(temp, "tempppppppppppp");
+    // console.log(temp, "tempppppppppppp");
     setCheckData(temp);
   };
 
-  useEffect(() => {
-    console.log(checkData, "checkDataaaaaaaaaaa");
-  }, [checkData]);
+  // useEffect(() => {
+  //   console.log(checkData, "checkDataaaaaaaaaaa");
+  // }, [checkData]);
 
   // for get action tracker & showing
   const handelActionTracker = async () => {
@@ -816,6 +839,7 @@ const Checks = (props) => {
         "qustionsIds"
       ];
       let allAction = await handelActionData(jhaId, apiData);
+      // console.log(allAction, 'allAction');
       setActionData(allAction);
     }
   };
@@ -910,9 +934,9 @@ const Checks = (props) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    console.log(showCheckData, "showCheckData");
-  }, [showCheckData]);
+  // useEffect(() => {
+  //   console.log(showCheckData, "showCheckData");
+  // }, [showCheckData]);
 
   useEffect(() => {
     fetchFectorData();
@@ -1050,7 +1074,7 @@ const Checks = (props) => {
 
                           {Categor.length > 0 ? (
                             Categor.map((value, index) => {
-                              console.log(value, "value");
+                              // console.log(value, "value");
                               return (
                                 <>
                                   <Grid container item xs={12}>
@@ -1399,47 +1423,16 @@ const Checks = (props) => {
                                                     >
                                                       <ActionTracker
                                                         actionContext="audit:question"
-                                                        enitityReferenceId={`${localStorage.getItem(
-                                                          "fkComplianceId"
-                                                        )}:${value.id}`}
-                                                        setUpdatePage={
-                                                          setUpdatePage
-                                                        }
-                                                        fkCompanyId={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "company"
-                                                            )
-                                                          ).fkCompanyId
-                                                        }
+                                                        enitityReferenceId={`${localStorage.getItem( "fkComplianceId" )}:${value.id}`}
+                                                        setUpdatePage={ setUpdatePage }
+                                                        fkCompanyId={ JSON.parse( localStorage.getItem( "company" ) ).fkCompanyId }
                                                         fkProjectId={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "projectName"
-                                                            )
-                                                          ).projectName
-                                                            .projectId
+                                                          JSON.parse( localStorage.getItem( "projectName" ) ).projectName .projectId
                                                         }
-                                                        fkProjectStructureIds={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "commonObject"
-                                                            )
-                                                          )["audit"][
-                                                            "projectStruct"
-                                                          ]
-                                                        }
-                                                        createdBy={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "userDetails"
-                                                            )
-                                                          ).id
-                                                        }
+                                                        fkProjectStructureIds={ JSON.parse( localStorage.getItem( "commonObject" ) )["audit"][ "projectStruct" ] }
+                                                        createdBy={ JSON.parse( localStorage.getItem( "userDetails" ) ).id }
                                                         updatePage={updatePage}
-                                                        handelShowData={
-                                                          handelActionTracker
-                                                        }
+                                                        handelShowData={ handelActionTracker }
                                                       />
                                                     </Grid>
                                                   </Grid>
@@ -1454,14 +1447,8 @@ const Checks = (props) => {
                                                       className="simpleTableSection"
                                                     >
                                                       {/* {actionData.filter(val => val.id==value.id).length} */}
-                                                      {actionData.filter(
-                                                        (val) =>
-                                                          val.id == value.id
-                                                      )[0] &&
-                                                      actionData.filter(
-                                                        (val) =>
-                                                          val.id == value.id
-                                                      )[0].action.length ? (
+                                                      {actionData.filter( (val) => val.id == value.id )[0] &&
+                                                      actionData.filter( (val) => val.id == value.id )[0].action.length ? (
                                                         <TableHead>
                                                           <TableRow>
                                                             <TableCell className="tableHeadCellFirst">
@@ -1476,19 +1463,12 @@ const Checks = (props) => {
                                                         ""
                                                       )}
                                                       <TableBody>
-                                                        {actionData.map(
-                                                          (val) => (
+                                                        {actionData.map((val) => (
                                                             <>
-                                                              {val.id ==
-                                                              value.id ? (
+                                                              {val.id == value.id ? (
                                                                 <>
-                                                                  {val.action
-                                                                    .length >
-                                                                    0 &&
-                                                                    val.action.map(
-                                                                      (
-                                                                        valueAction
-                                                                      ) => (
+                                                                  {val.action .length > 0 &&
+                                                                    val.action.map((valueAction) => (
                                                                         <TableRow>
                                                                           <TableCell align="left">
                                                                             <Link
@@ -1497,42 +1477,17 @@ const Checks = (props) => {
                                                                               }
                                                                               display="block"
                                                                               href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                                                                JSON.parse(
-                                                                                  localStorage.getItem(
-                                                                                    "BaseUrl"
-                                                                                  )
-                                                                                )[
-                                                                                  "actionClientID"
-                                                                                ]
-                                                                              }&response_type=code&companyId=${
-                                                                                JSON.parse(
-                                                                                  localStorage.getItem(
-                                                                                    "company"
-                                                                                  )
-                                                                                )
-                                                                                  .fkCompanyId
-                                                                              }&projectId=${
-                                                                                JSON.parse(
-                                                                                  localStorage.getItem(
-                                                                                    "projectName"
-                                                                                  )
-                                                                                )
-                                                                                  .projectName
-                                                                                  .projectId
-                                                                              }&targetPage=/action/details/&targetId=${
-                                                                                valueAction.id
-                                                                              }`}
+                                                                                          JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]
+                                                                                          }&response_type=code&companyId=${JSON.parse(localStorage.getItem("company")).fkCompanyId
+                                                                                          }&projectId=${ JSON.parse(localStorage.getItem("projectName")).projectName .projectId
+                                                                                          }&targetPage=/action/details/&targetId=${ valueAction.id }`}
                                                                               target="_blank"
                                                                             >
-                                                                              {
-                                                                                valueAction.number
-                                                                              }
+                                                                              {valueAction.number}
                                                                             </Link>
                                                                           </TableCell>
                                                                           <TableCell>
-                                                                            {
-                                                                              valueAction.title
-                                                                            }
+                                                                            {valueAction.title}
                                                                           </TableCell>
                                                                         </TableRow>
                                                                       )
@@ -1546,22 +1501,44 @@ const Checks = (props) => {
                                                     </Table>
                                                   </Grid>
                                                 )}
-                                                {value.attachment === "Yes" && (
-                                                  <Grid
-                                                    item
-                                                    md={12}
-                                                    sm={12}
-                                                    xs={12}
-                                                    className={classes.formBox}
-                                                  >
-                                                    <FormLabel
+                                                {value.attachment === "Yes" ||
+                                                  (value.evidenceType ===
+                                                    "Yes" && (
+                                                    <Grid
+                                                      item
+                                                      md={12}
+                                                      sm={12}
+                                                      xs={12}
+                                                      className={
+                                                        classes.formBox
+                                                      }
+                                                    >
+                                                      {/* <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Document{" "}
-                                                    </FormLabel>
-                                                    <Typography className="viewLabelValue">
-                                                      <input
+                                                    </FormLabel> */}
+                                                      <Grid
+                                                        style={{
+                                                          marginTop: "-20px",
+                                                        }}
+                                                      >
+                                                        <MultiAttachment
+                                                          headerText="Documents & Evidences"
+                                                          attachmentHandler={(
+                                                            files
+                                                          ) => {
+                                                            handleFileUpload(
+                                                              files,
+                                                              value.id,
+                                                              "attachment"
+                                                            );
+                                                          }}
+                                                        />
+                                                      </Grid>
+                                                      <Typography className="viewLabelValue">
+                                                        {/* <input
                                                         type="file"
                                                         id="attachment"
                                                         name="attachment"
@@ -1573,34 +1550,34 @@ const Checks = (props) => {
                                                             value.id
                                                           );
                                                         }}
-                                                      />
-                                                      {showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      ).length &&
-                                                      showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      )[0].attachment !=
-                                                        null ? (
-                                                        <Attachment
-                                                          value={
-                                                            showCheckData.filter(
-                                                              (cd) =>
-                                                                cd.question ==
-                                                                value.question
-                                                            )[0].attachment
-                                                          }
-                                                        />
-                                                      ) : (
-                                                        ""
-                                                      )}
-                                                    </Typography>
-                                                  </Grid>
-                                                )}
-                                                {value.evidenceType ===
+                                                      /> */}
+                                                        {showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        ).length &&
+                                                        showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        )[0].attachment !=
+                                                          null ? (
+                                                          <Attachment
+                                                            value={
+                                                              showCheckData.filter(
+                                                                (cd) =>
+                                                                  cd.question ==
+                                                                  value.question
+                                                              )[0].attachment
+                                                            }
+                                                          />
+                                                        ) : (
+                                                          ""
+                                                        )}
+                                                      </Typography>
+                                                    </Grid>
+                                                  ))}
+                                                {/* {value.evidenceType ===
                                                   "Yes" && (
                                                   <Grid
                                                     item
@@ -1615,6 +1592,24 @@ const Checks = (props) => {
                                                     >
                                                       Evidence{" "}
                                                     </FormLabel>
+                                                    <Grid
+                                                      style={{
+                                                        marginTop: "-20px",
+                                                      }}
+                                                    >
+                                                      <MultiAttachment
+                                                        headerText="Documents & Evidences"
+                                                        attachmentHandler={(
+                                                          files
+                                                        ) => {
+                                                          handleFileUpload(
+                                                            files,
+                                                            value.id,
+                                                            "evidence"
+                                                          );
+                                                        }}
+                                                      />
+                                                    </Grid>
                                                     <Typography className="viewLabelValue">
                                                       <input
                                                         type="file"
@@ -1653,7 +1648,7 @@ const Checks = (props) => {
                                                       ""
                                                     )}
                                                   </Grid>
-                                                )}
+                                                )} */}
                                               </Grid>
                                             </AccordionDetails>
                                           </Accordion>
@@ -1842,10 +1837,10 @@ const Checks = (props) => {
                                                 </Grid>
                                                 <Grid item md={4} xs={12}>
                                                   {/* {console.log(ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ''),'pppppppppppp')} */}
-                                                  {console.log(
+                                                  {/* {console.log(
                                                     ratingData,
                                                     "ratingData"
-                                                  )}
+                                                  )} */}
                                                   <TextField
                                                     label="Performance rating %"
                                                     //margin="dense"
@@ -2203,15 +2198,7 @@ const Checks = (props) => {
                                                           )
                                                         ).projectName.projectId
                                                       }
-                                                      fkProjectStructureIds={
-                                                        JSON.parse(
-                                                          localStorage.getItem(
-                                                            "commonObject"
-                                                          )
-                                                        )["audit"][
-                                                          "projectStruct"
-                                                        ]
-                                                      }
+                                                      fkProjectStructureIds={struct}
                                                       createdBy={
                                                         JSON.parse(
                                                           localStorage.getItem(
@@ -2297,7 +2284,9 @@ const Checks = (props) => {
                                                                               .projectId
                                                                           }&targetPage=/action/details/&targetId=${
                                                                             valueAction.id
-                                                                          }&projectStructure=${localStorage.getItem('selectBreakDown')}
+                                                                          }&projectStructure=${localStorage.getItem(
+                                                                            "selectBreakDown"
+                                                                          )}
                                                                           `}
                                                                           target="_blank"
                                                                         >
@@ -2321,23 +2310,45 @@ const Checks = (props) => {
                                                     </TableBody>
                                                   </Table>
                                                 </Grid>
-                                                {value.attachment === "Yes" && (
-                                                  <Grid
-                                                    item
-                                                    md={12}
-                                                    sm={12}
-                                                    xs={12}
-                                                    className={classes.formBox}
-                                                  >
-                                                    <FormLabel
+                                                {value.attachment === "Yes" ||
+                                                  (value.evidenceType ===
+                                                    "Yes" && (
+                                                    <Grid
+                                                      item
+                                                      md={12}
+                                                      sm={12}
+                                                      xs={12}
+                                                      className={
+                                                        classes.formBox
+                                                      }
+                                                    >
+                                                      {/* <FormLabel
                                                       className="checkRadioLabel"
                                                       component="legend"
                                                     >
                                                       Document{" "}
-                                                    </FormLabel>
-                                                    <Typography className="viewLabelValue">
-                                                      {/* {(value.attachment === "Yes") && */}
-                                                      <input
+                                                    </FormLabel> */}
+                                                      <Grid
+                                                        style={{
+                                                          marginTop: "-20px",
+                                                        }}
+                                                      >
+                                                        <MultiAttachment
+                                                          headerText="Documents & Evidences"
+                                                          attachmentHandler={(
+                                                            files
+                                                          ) => {
+                                                            handleFileUpload(
+                                                              files,
+                                                              value.id,
+                                                              "attachment"
+                                                            );
+                                                          }}
+                                                        />
+                                                      </Grid>
+                                                      <Typography className="viewLabelValue">
+                                                        {/* {(value.attachment === "Yes") && */}
+                                                        {/* <input
                                                         type="file"
                                                         name="attachment"
                                                         id="evidence"
@@ -2349,37 +2360,36 @@ const Checks = (props) => {
                                                             value.id
                                                           );
                                                         }}
-                                                      />
-                                                      {showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      ).length &&
-                                                      showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      )[0].attachment !=
-                                                        null ? (
-                                                        <Attachment
-                                                          value={
-                                                            showCheckData.filter(
-                                                              (cd) =>
-                                                                cd.question ==
-                                                                value.question
-                                                            )[0].attachment
-                                                          }
-                                                        />
-                                                      ) : (
-                                                        ""
-                                                      )}
+                                                      /> */}
+                                                        {showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        ).length &&
+                                                        showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        )[0].attachment !=
+                                                          null ? (
+                                                          <Attachment
+                                                            value={
+                                                              showCheckData.filter(
+                                                                (cd) =>
+                                                                  cd.question ==
+                                                                  value.question
+                                                              )[0].attachment
+                                                            }
+                                                          />
+                                                        ) : (
+                                                          ""
+                                                        )}
 
-                                                      {/* } */}
-                                                    </Typography>
-                                                  </Grid>
-                                                )}
-                                                {value.evidenceType ===
-                                                  "Yes" && (
+                                                        {/* } */}
+                                                      </Typography>
+                                                    </Grid>
+                                                  ))}
+                                                {/* {value.evidenceType === "Yes" && (
                                                   <Grid
                                                     item
                                                     md={12}
@@ -2393,6 +2403,24 @@ const Checks = (props) => {
                                                     >
                                                       Evidence{" "}
                                                     </FormLabel>
+                                                    <Grid
+                                                      style={{
+                                                        marginTop: "-20px",
+                                                      }}
+                                                    >
+                                                      <MultiAttachment
+                                                        headerText="Documents & Evidences"
+                                                        attachmentHandler={(
+                                                          files
+                                                        ) => {
+                                                          handleFileUpload(
+                                                            files,
+                                                            value.id,
+                                                            "evidence"
+                                                          );
+                                                        }}
+                                                      />
+                                                    </Grid>
                                                     <Typography className="viewLabelValue">
                                                       <input
                                                         name="evidence"
@@ -2431,7 +2459,7 @@ const Checks = (props) => {
                                                       )}
                                                     </Typography>
                                                   </Grid>
-                                                )}
+                                                )} */}
                                                 {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                                                 <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
                                                 <Typography className="viewLabelValue">

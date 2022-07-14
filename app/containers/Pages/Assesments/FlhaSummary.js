@@ -172,7 +172,6 @@ class SimpleTabs extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
     this.getFlhaDetails();
     this.getJobVisualConfirmation();
     this.handelVersion();
@@ -270,7 +269,6 @@ class SimpleTabs extends React.Component {
   render() {
     const { classes } = this.props;
     const commentPayload = this.props.location.state;
-    console.log();
     const {
       value,
       flha,
@@ -280,6 +278,8 @@ class SimpleTabs extends React.Component {
       projectStructName,
       id,
     } = this.state;
+
+    console.log(flha, 'flhaaaaaa');
 
     return (
       <CustomPapperBlock
@@ -483,7 +483,8 @@ class SimpleTabs extends React.Component {
                     <ListItem
                       button
                       disabled={
-                        this.state.flha.flhaStage === "Close" ? true : false
+                        ((this.state.flha.flhaStage === "Open" && this.state.flha.flhaStatus === "Close") || 
+                        (this.state.flha.flhaStage === "Close" && this.state.flha.flhaStatus === "Close")) ? true : false
                       }
                     >
                       <ListItemIcon>

@@ -103,6 +103,18 @@ const CloseOut = (props) => {
   const history = useHistory();
   const classes = useStyles();
 
+  const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  var struct = "";
+  for (var i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+
+  console.log(fkProjectStructureIds, "iddddddddddddddddddddddd");
+
   const [jobForm, setJobForm] = React.useState({
     preUseInspection: "",
     warningRibbon: "",
@@ -119,12 +131,21 @@ const CloseOut = (props) => {
     fkCompanyId: "",
     fkProjectId: "",
     flhaStage: "",
+    createdBy:
+      JSON.parse(localStorage.getItem("userDetails")) !== null
+        ? JSON.parse(localStorage.getItem("userDetails")).id
+        : null,
+        fkProjectStructureIds: fkProjectStructureIds,
   });
 
   const [loading, setLoading] = useState(false);
   const { id } = props.match.params;
   const [error, setError] = useState({});
   const [disableForm, setDisableForm] = useState(false);
+
+  useEffect(() => {
+    console.log(disableForm, "disableform");
+  }, [disableForm]);
 
   const setFlhaDetails = async () => {
     const { id } = props.match.params;
@@ -137,6 +158,7 @@ const CloseOut = (props) => {
     const res = await api.get("/api/v1/flhas/" + id + "/");
     const flha = res.data.data.results;
     setJobForm({
+      ...jobForm,
       preUseInspection: flha.preUseInspection,
       warningRibbon: flha.warningRibbon,
       workerWorking: flha.workerWorking,
@@ -153,8 +175,9 @@ const CloseOut = (props) => {
       fkProjectId: flha.fkProjectId,
       flhaStage: flha.flhaStage,
     });
-    if (flha.flhaStage == "Close") {
-      await setDisableForm(true);
+    console.log(flha, "flhaaaaaaaaaaaaa");
+    if (flha.flhaStage === "Close") {
+      setDisableForm(true);
     }
   };
 
@@ -162,7 +185,7 @@ const CloseOut = (props) => {
     const temp = { ...jobForm };
     const { value } = e.target;
     temp[fieldname] = value;
-    await setJobForm(temp);
+    setJobForm(temp);
   };
 
   const handleFormSubmit = async () => {
@@ -171,8 +194,9 @@ const CloseOut = (props) => {
     if (Object.keys(error).length === 0) {
       jobForm.flhaStage = "Close";
       jobForm.flhaStatus = "Close";
+      console.log(jobForm, "jobForm");
       const res = await api.put("/api/v1/flhas/" + id + "/", jobForm);
-      await setDisableForm(true);
+      setDisableForm(true);
       // await setLoading(true)
       if (jobForm.creatingIncident === "Yes") {
         history.push(INITIAL_NOTIFICATION_FORM_NEW["Incident details"]);
@@ -183,9 +207,9 @@ const CloseOut = (props) => {
   };
 
   const handelCallBack = async () => {
-    await setLoading(true);
+    setLoading(true);
     await setFlhaDetails();
-    await setLoading(false);
+    setLoading(false);
   };
 
   useEffect(() => {

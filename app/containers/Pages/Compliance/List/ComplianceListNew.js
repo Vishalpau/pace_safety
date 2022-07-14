@@ -855,17 +855,22 @@ function ComplianceListNew(props) {
             <Paper elevation={1} className="cardSectionBottom">
               <Grid container spacing={3}>
                 <Grid item md={12} sm={12} xs={12}>
-                  <List>
-                    <ListItem>
-                      <Grid item md={12} sm={12} xs={12}>
-                        {value.attachmentLinks.links.map((a) => (
-                          <div className="attachFileThumb">
-                            <Attachment src={a} value={a} />
-                          </div>
-                        ))}
-                      </Grid>
-                    </ListItem>
-                  </List>
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    style={{ margin: "0 -10px" }}
+                  >
+                    {value.attachmentLinks.links.map((a) => (
+                      <div
+                        className="attachFileThumb"
+                        style={{ width: "auto", margin: "0 10px" }}
+                      >
+                        <Attachment type={a} value={a} />
+                      </div>
+                    ))}
+                  </Grid>
                 </Grid>
               </Grid>
             </Paper>

@@ -1,70 +1,30 @@
-import React from 'react';
-import CardActions from '@material-ui/core/CardActions';
-import Grid from '@material-ui/core/Grid';
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import Typography from '@material-ui/core/Typography';
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
-import IconButton from '@material-ui/core/IconButton';
-import StarsIcon from '@material-ui/icons/Stars';
-import Delete from "../../../containers/Delete/Delete"
-import Bookmark from '../../../containers/Bookmark/Bookmark';
-import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
+import React from "react";
+import CardActions from "@material-ui/core/CardActions";
+import Grid from "@material-ui/core/Grid";
+import AttachmentIcon from "@material-ui/icons/Attachment";
+import Typography from "@material-ui/core/Typography";
+import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
+import Link from "@material-ui/core/Link";
+import { makeStyles } from "@material-ui/core/styles";
+import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
+import IconButton from "@material-ui/core/IconButton";
+import StarsIcon from "@material-ui/icons/Stars";
+import Delete from "../../../containers/Delete/Delete";
+import Bookmark from "../../../containers/Bookmark/Bookmark";
+import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import BookmarkList from "../../../containers/Bookmark/BookmarkList";
-import Print from '@material-ui/icons/Print';
-import Share from '@material-ui/icons/Share';
+import Print from "@material-ui/icons/Print";
+import Share from "@material-ui/icons/Share";
 
-const useStyles = makeStyles((theme) => ({
-  mLeftR5: {
-    marginLeft: '5px',
-    marginRight: '15px',
-    '@media (max-width:480px)': {
-      marginLeft: '3px',
-      marginRight: '3px',
-    },
-  },
-  textRight: {
-    textAlign: 'right',
-    '@media (max-width:480px)': {
-      textAlign: 'left',
-      padding: '0px 8px 15px 8px !important',
-    },
-  },
-  sepHeightTen: {
-    borderLeft: '3px solid #cccccc',
-    height: '8px',
-    verticalAlign: 'middle',
-    margin: '15px 15px 15px 8px',
-    fontSize: '10px',
-    '@media (max-width:480px)': {
-      margin: '10px 5px 10px 5px',
-    },
-  },
-  floatR: {
-    float: 'right',
-    textTransform: 'capitalize',
-    '@media (max-width:480px)': {
-      float: 'left',
-    },
-  },
-  iconteal: {
-    color: '#06425c',
-  },
-  mright5: {
-    marginRight: '5px',
-    color: '#a7a7a7',
-  },
-  width100: {
-    width: '100%',
-    padding: '14px 15px',
-  },
-  commentLink: {
-    marginLeft: '2px',
-    cursor: 'pointer',
-  },
-}));
+/**
+ * @file - CardFooter.js
+ * @location /app/components/Card/UI
+ * @description Showing card footer which includes card actions and counts of attachment and comments.
+ * @author Abhimanyu<abhimanyus@teknobuilt.com>
+ * @since v1.1.0
+ **/
+
+const useStyles = makeStyles((theme) => Styles());
 
 const CardFooter = (props) => {
   const classes = useStyles();
@@ -88,8 +48,7 @@ const CardFooter = (props) => {
           <Grid item xs={12} md={5} sm={12}>
             <Typography variant="body1" display="inline" color="textPrimary">
               <AttachmentIcon className={classes.mright5} />
-              Attachments:
-              {' '}
+              Attachments:{" "}
             </Typography>
             <Typography variant="body2" display="inline">
               <Link
@@ -109,8 +68,7 @@ const CardFooter = (props) => {
               className={classes.mLeft}
             >
               <InsertCommentOutlinedIcon className={classes.mright5} />
-              Comments:
-              {' '}
+              Comments:{" "}
             </Typography>
             <Link
               onClick={() => props.handleVisibilityComments()}
@@ -121,15 +79,13 @@ const CardFooter = (props) => {
               {props.commentsCount}
             </Link>
           </Grid>
-          
 
           <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
             <div
               className={classes.floatR}
-              style={{ display: 'flex', alignItems: 'center' }}
+              style={{ display: "flex", alignItems: "center" }}
             >
-              
-                {/*<Typography variant="body1" display="inline">
+              {/*<Typography variant="body1" display="inline">
                   <Link href="#" className={classes.mLeftR5}>
                     <IconButton>
                       <Share className={classes.iconteal} />
@@ -138,31 +94,24 @@ const CardFooter = (props) => {
                   </Link>
   </Typography>
                 <span item xs={1} className={classes.sepHeightTen} />*/}
-              
+
               <Typography variant="body1" display="inline">
-                  <Link href="#" className={classes.mLeftR5}>
-                    <IconButton>
-                      <Print className={classes.iconteal} />
-                    </IconButton>
-                    
-                  </Link>
-                </Typography>
-             
+                <Link href="#" className={classes.mLeftR5}>
+                  <IconButton>
+                    <Print className={classes.iconteal} />
+                  </IconButton>
+                </Link>
+              </Typography>
 
               <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
-              
-
                 <Typography variant="body1" display="inline">
                   <Link href="#" className={classes.mLeftR5}>
                     <IconButton>
                       <StarsIcon className={classes.iconteal} />
                     </IconButton>
-                    
                   </Link>
                 </Typography>
-                
-                
               </Typography>
               <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
