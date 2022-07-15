@@ -7732,11 +7732,6 @@
   "resolved" "https://registry.npmjs.org/jpeg-js/-/jpeg-js-0.4.2.tgz"
   "version" "0.4.2"
 
-"jquery@>=1.8.0":
-  "integrity" "sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw=="
-  "resolved" "https://registry.npmjs.org/jquery/-/jquery-3.6.0.tgz"
-  "version" "3.6.0"
-
 "js-file-download@^0.4.12":
   "integrity" "sha512-rML+NkoD08p5Dllpjo0ffy4jRHeY6Zsapvr/W86N7E0yuzAO6qa5X9+xog6zQNlH102J7IXljNY2FtS6Lj3ucg=="
   "resolved" "https://registry.npmjs.org/js-file-download/-/js-file-download-0.4.12.tgz"
