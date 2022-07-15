@@ -1,5 +1,11 @@
 import DateFnsUtils from "@date-io/date-fns";
-import { Button, FormHelperText, FormLabel, Grid, Select } from "@material-ui/core";
+import {
+  Button,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  Select,
+} from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -24,7 +30,8 @@ import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import MuiAlert from "@material-ui/lab/Alert";
 import {
   KeyboardDatePicker,
-  KeyboardTimePicker, MuiPickersUtilsProvider
+  KeyboardTimePicker,
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import { PapperBlock } from "dan-components";
 import moment from "moment";
@@ -38,10 +45,10 @@ import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
-import { OtherNA } from "../../../utils/CheckerValue"
-
+import { OtherNA } from "../../../utils/CheckerValue";
+import MultiAttachment from "../../MultiAttachment/MultiAttachment";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -111,15 +118,15 @@ const WorkerDetails = () => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const fileRef = useRef("");
-  const [isDateShow, setIsDateShow] = useState(false)
-  const [isTimeShow, setIsTimeShow] = useState(false)
+  const [isDateShow, setIsDateShow] = useState(false);
+  const [isTimeShow, setIsTimeShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [buttonLoading, setButtonLoading] = useState(false)
+  const [buttonLoading, setButtonLoading] = useState(false);
   const TextFieldComponent = (props) => {
-    return <TextField {...props} inputProps={{ readOnly: true }} />
-  }
-  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
-  let ONA = OtherNA("on")
+    return <TextField {...props} inputProps={{ readOnly: true }} />;
+  };
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"));
+  let ONA = OtherNA("on");
   let [workerData, setworkerData] = useState({
     name: "",
     workerType: "",
@@ -183,10 +190,7 @@ const WorkerDetails = () => {
     if (typeof particularEffected !== "undefined") {
       setForm(particularEffected);
     }
-    if (
-      !particularEffected ||
-      particularEffected.id != ""
-    ) {
+    if (!particularEffected || particularEffected.id != "") {
       setWorkerId(particularEffected.id);
     }
     // getting person affected data end
@@ -217,37 +221,8 @@ const WorkerDetails = () => {
     "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!";
 
   let fielSizeError = "Size less than 25Mb allowed";
-  const handleFile = async (e) => {
-
-    let acceptFileTypes = [
-      "pdf",
-      "png",
-      "jpeg",
-      "jpg",
-      "xls",
-      "xlsx",
-      "doc",
-      "word",
-      "ppt",
-    ];
-    let file = e.target.files[0].name.split(".");
-
-    if (
-      acceptFileTypes.includes(file[file.length - 1]) &&
-      e.target.files[0].size < 25670647
-    ) {
-
-      const temp = { ...form };
-      temp.attachments = e.target.files[0];
-      await setForm(temp);
-    } else {
-      ref.current.value = "";
-      !acceptFileTypes.includes(file[file.length - 1])
-        ? await setMessage(fileTypeError)
-        : await setMessage(`${fielSizeError}`);
-      await setMessageType("error");
-      await setOpen(true);
-    }
+  const handleFile = async (files) => {
+    setForm({ ...form, files: files });
   };
 
   function Alert(props) {
@@ -265,7 +240,7 @@ const WorkerDetails = () => {
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
-    setButtonLoading(true)
+    setButtonLoading(true);
     if (Object.keys(error).length === 0) {
       let data = new FormData();
       data.append("name", form.name);
@@ -285,14 +260,13 @@ const WorkerDetails = () => {
       data.append("timeOnProject", form.timeOnProject);
       data.append("timeInIndustry", form.timeInIndustry);
       if (
-        form.attachments !== null &&
-        typeof form.attachments !== "undefined"
+        form.files !== null &&
+        typeof form.files !== "undefined" &&
+        typeof form.files !== "string"
       ) {
-        if (typeof form.attachments !== "string") {
-          data.append("attachments", form.attachments);
-        }
-      } else if (form.attachments == null) {
-        delete form["attachments"];
+        form.files.map((file) => {
+          data.append("files", file);
+        });
       }
       data.append("eventLeadingToInjury", form.eventLeadingToInjury);
       data.append("injuryObject", form.injuryObject);
@@ -335,7 +309,8 @@ const WorkerDetails = () => {
       if (!isNaN(form.id)) {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.put(
-          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/workers/${workerid}/`,
           data
         );
@@ -343,7 +318,8 @@ const WorkerDetails = () => {
       } else {
         form["fkInvestigationId"] = investigationId.current;
         const ress = await api.post(
-          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/workers/`,
           data
         );
@@ -353,12 +329,12 @@ const WorkerDetails = () => {
       if (res[0].status == 201 || res[0].status == 200) {
         let worker = JSON.parse(localStorage.getItem("personEffected"));
         form["id"] = res[0].data.data.results.id;
-        if (
-          res[0].data.data.results.attachments !== null &&
-          res[0].data.data.results.attachments !== {}
-        ) {
-          form["attachments"] = res[0].data.data.results.attachments;
-        }
+        // if (
+        //   res[0].data.data.results.files !== null &&
+        //   res[0].data.data.results.files !== {}
+        // ) {
+        //   form["files"] = res[0].data.data.results.files;
+        // }
 
         worker[workerNumber] = form;
         await localStorage.setItem("personEffected", JSON.stringify(worker));
@@ -379,7 +355,7 @@ const WorkerDetails = () => {
       await handelUpdateCheck();
     }
     document.getElementById("workerForm").reset();
-    setButtonLoading(false)
+    setButtonLoading(false);
   };
 
   const handelAddNew = async () => {
@@ -415,7 +391,8 @@ const WorkerDetails = () => {
     if (!isNaN(worker_removed[workerNumber].id)) {
       let deleteWorkerNumber = worker_removed[workerNumber];
       const deleteWorker = await api.delete(
-        `api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId
+        `api/v1/incidents/859/investigations/${
+          deleteWorkerNumber.fkInvestigationId
         }/workers/${deleteWorkerNumber.id}/`
       );
     }
@@ -465,7 +442,7 @@ const WorkerDetails = () => {
     await setIsLoading(true);
     await handelUpdateCheck();
     workerType.current = await pickListValues["71"];
-    setDepartmentName(await [...pickListValues["10"],ONA[0],ONA[1]]);
+    setDepartmentName(await [...pickListValues["10"], ONA[0], ONA[1]]);
     setworkHours(await pickListValues["70"]);
     setShiftType(await pickListValues["47"]);
     setOccupation(await pickListValues["48"]);
@@ -489,6 +466,10 @@ const WorkerDetails = () => {
   useEffect(() => {
     handelCallBack();
   }, []);
+
+  useEffect(() => {
+    console.log(form, "form Data");
+  }, [form]);
 
   const classes = useStyles();
 
@@ -545,10 +526,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {workerType.current.map((value) => (
-                        <MenuItem
-                          value={value.value}>
-                          {value.label}
-                        </MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                     {error && error.workerType && (
@@ -627,7 +605,6 @@ const WorkerDetails = () => {
                       helperText={""}
                       value={form.shiftTimeStart}
                       label="Start of shift time"
-                      value={form.shiftTimeStart}
                       onChange={(e) => {
                         setForm({
                           ...form,
@@ -752,7 +729,9 @@ const WorkerDetails = () => {
                     </Select>
                   </FormControl>
                   {error && error.noOfDaysIntoShift && (
-                    <FormHelperText style={{ color: "red" }}>{error.noOfDaysIntoShift}</FormHelperText>
+                    <FormHelperText style={{ color: "red" }}>
+                      {error.noOfDaysIntoShift}
+                    </FormHelperText>
                   )}
                 </Grid>
 
@@ -1484,8 +1463,13 @@ const WorkerDetails = () => {
                   </Typography>
                 </Grid>
 
-                <Grid item xs={12} md={4}>
-                  <input
+                <Grid item xs={12} md={12}>
+                  <MultiAttachment
+                    attachmentHandler={(files) => {
+                      handleFile(files);
+                    }}
+                  />
+                  {/* <input
                     id="selectFile"
                     type="file"
                     className={classes.fullWidth}
@@ -1499,16 +1483,23 @@ const WorkerDetails = () => {
                     onChange={(e) => {
                       handleFile(e);
                     }}
-                  />
+                  /> */}
                 </Grid>
 
                 <Grid item md={12}>
-                  {form.attachments != "" &&
-                    typeof form.attachments == "string" ? (
-                    <Attachment value={form.attachments} />
-                  ) : (
-                    <p />
-                  )}
+                  {typeof form.files === "object" && form.files.length > 0 ? (
+                    <>
+                      {/* Mapping the files */}
+
+                      {form.files.map((file) => (
+                        <Attachment
+                          key={file.id}
+                          value={file.fileName || file.path}
+                          // type={file.filename}
+                        />
+                      ))}
+                    </>
+                  ) : null}
                 </Grid>
 
                 {localWorkerData.length > 1 ? (
