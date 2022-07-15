@@ -21,10 +21,8 @@ import {
   SSO_URL
 } from "../../../utils/constants";
 import Loader from "../Loader"
-import { checkACL } from '../../../utils/helper'
-
-
-
+import { checkACL } from '../../../utils/helper';
+import Link from "@material-ui/core/Link";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
-  observationNewSection: {
-
+  actionLinkAudit: {
+    inlineSize: "max-content",
   },
   coponentTitleBox: {
     '& h5': {
@@ -264,10 +262,31 @@ const ObservationCorrectiveActionView = () => {
                               <TableRow>
                                 <TableCell style={{ width: 50 }}>
 
-                                  <a
+                                  {/* <a
                                     href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/action/details/&targetId=${action.id}`}
                                     target="_blank"
-                                  >{action.actionNumber}</a>
+                                  >{action.actionNumber}</a> */}
+
+                                  <Link
+                                        className={classes.actionLinkAudit}
+                                        display="block"
+                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${ JSON.parse(
+                                              localStorage.getItem("BaseUrl"))["actionClientID"]
+                                          }&response_type=code&companyId=${
+                                            JSON.parse(localStorage.getItem("company")).fkCompanyId
+                                          }&projectId=${
+                                            JSON.parse(
+                                              localStorage.getItem("projectName")).projectName.projectId
+                                          }&targetPage=/action/details/&targetId=${
+                                            action.id
+                                          }&projectStructure=${localStorage.getItem(
+                                            "selectBreakDown"
+                                          )}
+                                              `}
+                                              target="_blank"
+                                            >
+                                              { action.actionNumber }
+                                            </Link>
 
                                 </TableCell>
                                 <TableCell style={{ width: 50 }}>

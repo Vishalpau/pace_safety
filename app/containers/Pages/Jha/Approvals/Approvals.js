@@ -39,6 +39,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Link from "@material-ui/core/Link";
 
 import ApprovalValidator from "../Validation/ApprovalsValidation";
 
@@ -81,6 +82,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
     fontWeight: "600",
     color: "#063d55",
+  },
+  actionLinkAudit: {
+    inlineSize: "max-content",
   },
   updateLink: {
     float: "right",
@@ -677,22 +681,47 @@ const Approvals = () => {
                                 <>
                                   <TableRow>
                                     <TableCell style={{ width: 50 }}>
-                                      <a
-                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                          JSON.parse(
-                                            localStorage.getItem("BaseUrl")
-                                          )["actionClientID"]
-                                        }&response_type=code&companyId=${fkCompanyId}&projectId=${
-                                          JSON.parse(
-                                            localStorage.getItem("projectName")
-                                          ).projectName.projectId
-                                        }&targetPage=/action/details/&targetId=${
-                                          action.id
-                                        }`}
-                                        target="_blank"
-                                      >
-                                        {action.actionNumber}
-                                      </a>
+                                     
+                                      <Link
+                                              className={
+                                                classes.actionLinkAudit
+                                              }
+                                              display="block"
+                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "BaseUrl"
+                                                  )
+                                                )[
+                                                  "actionClientID"
+                                                ]
+                                              }&response_type=code&companyId=${
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "company"
+                                                  )
+                                                )
+                                                  .fkCompanyId
+                                              }&projectId=${
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "projectName"
+                                                  )
+                                                )
+                                                  .projectName
+                                                  .projectId
+                                              }&targetPage=/action/details/&targetId=${
+                                                action.id
+                                              }&projectStructure=${localStorage.getItem(
+                                                "selectBreakDown"
+                                              )}
+                                              `}
+                                              target="_blank"
+                                            >
+                                              {
+                                                action.actionNumber
+                                              }
+                                            </Link>
                                     </TableCell>
                                     <TableCell style={{ width: 50 }}>
                                       {action.actionTitle}

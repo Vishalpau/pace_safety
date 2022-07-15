@@ -341,6 +341,7 @@ const RootCauseAnalysisSummary = () => {
                           title={actionValue.actionTitle}
                           companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
                           projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                          projectStructure={localStorage.getItem("selectBreakDown")}
                         />
                       </>
                     ))}
@@ -400,6 +401,7 @@ const RootCauseAnalysisSummary = () => {
                           title={actionValue.actionTitle}
                           companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
                           projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                          projectStructure={localStorage.getItem("selectBreakDown")}
                         />
                       </>
                     ))}

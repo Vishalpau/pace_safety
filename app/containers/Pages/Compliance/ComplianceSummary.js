@@ -238,6 +238,18 @@ function ComplianceSummary(props) {
     "panel3"
   );
 
+  useEffect(() => {
+    console.log(colordata, 'colordata');
+  },[colordata])
+
+  useEffect(() => {
+    console.log(groupData, 'groupdata');
+  },[groupData])
+
+  useEffect(() => {
+    console.log(complianceData, 'complainceData');
+  },[complianceData])
+
   // for handle the accordian expand
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
@@ -1173,21 +1185,14 @@ function ComplianceSummary(props) {
                                       ) : (
                                         <>
                                           {groupData.map((val) => {
-                                            // console.log(val, 'val');
-                                            // console.log(quesData, 'quesData');
                                             return (
                                               <>
                                                 {groupNamrHandler(val)}
-
                                                 {val.checkListValues.map(
                                                   (subGrpData, index) => {
                                                     // console.log(subGrpData, 'subjiii');
                                                     return quesData.map(
                                                       (value, index) => {
-                                                        // console.log(
-                                                        //   value,
-                                                        //   "value.subGroupId"
-                                                        // );
                                                         return subGrpData.id ===
                                                           value.subGroupId ? (
                                                           <>
@@ -1216,19 +1221,13 @@ function ComplianceSummary(props) {
                                                                 className="accordionHeaderSection"
                                                               >
                                                                 <List
-                                                                  className={
-                                                                    classes.heading
-                                                                  }
+                                                                  className={ classes.heading }
                                                                 >
                                                                   <ListItem
-                                                                    className={
-                                                                      classes.accordingHeaderContentLeft
-                                                                    }
+                                                                    className={ classes.accordingHeaderContentLeft }
                                                                   >
                                                                     <ListItemText
-                                                                      primary={
-                                                                        value.question
-                                                                      }
+                                                                      primary={ value.question }
                                                                     />
                                                                   </ListItem>
                                                                 </List>
@@ -1285,15 +1284,9 @@ function ComplianceSummary(props) {
                                                                           <>
                                                                             <Grid
                                                                               item
-                                                                              md={
-                                                                                4
-                                                                              }
-                                                                              sm={
-                                                                                4
-                                                                              }
-                                                                              xs={
-                                                                                12
-                                                                              }
+                                                                              md={4}
+                                                                              sm={4}
+                                                                              xs={12}
                                                                             >
                                                                               <FormLabel
                                                                                 component="legend"
@@ -1310,15 +1303,9 @@ function ComplianceSummary(props) {
 
                                                                             <Grid
                                                                               item
-                                                                              md={
-                                                                                4
-                                                                              }
-                                                                              sm={
-                                                                                4
-                                                                              }
-                                                                              xs={
-                                                                                12
-                                                                              }
+                                                                              md={4}
+                                                                              sm={4}
+                                                                              xs={12}
                                                                             >
                                                                               <FormLabel
                                                                                 component="legend"
@@ -1331,48 +1318,15 @@ function ComplianceSummary(props) {
                                                                                 style={{
                                                                                   backgroundColor:
                                                                                     value.performance &&
-                                                                                    colordata.filter(
-                                                                                      (
-                                                                                        i
-                                                                                      ) =>
-                                                                                        i.matrixConstant ==
-                                                                                        (value.performance *
-                                                                                          5) /
-                                                                                          100
-                                                                                    )
-                                                                                      .length
-                                                                                      ? colordata.filter(
-                                                                                          (
-                                                                                            i
-                                                                                          ) =>
-                                                                                            i.matrixConstant ==
-                                                                                            (value.performance *
-                                                                                              5) /
-                                                                                              100
-                                                                                        )[0][
-                                                                                          "status"
-                                                                                        ] ===
-                                                                                        "Active"
-                                                                                        ? colordata.filter(
-                                                                                            (
-                                                                                              i
-                                                                                            ) =>
-                                                                                              i.matrixConstant ==
-                                                                                              (value.performance *
-                                                                                                5) /
-                                                                                                100
-                                                                                          )[0]
-                                                                                            .matrixConstantColor
-                                                                                        : "#fff"
+                                                                                    colordata.filter((i) => i.matrixConstant === (value.performance * 5) / 100).length
+                                                                                      // ? colordata.filter((i) => i.matrixConstant === (value.performance * 5) / 100 )
+                                                                                        ? colordata.filter((i) => i.matrixConstant === (value.performance * 5) / 100 )[0].matrixConstantColor
+                                                                                        // : "#fff"
                                                                                       : "#fff",
-                                                                                  border:
-                                                                                    "1px",
-                                                                                  width:
-                                                                                    "50%",
-                                                                                  height:
-                                                                                    "80%",
-                                                                                  textAlign:
-                                                                                    "center",
+                                                                                  border: "1px",
+                                                                                  width: "50%",
+                                                                                  height: "80%",
+                                                                                  textAlign: "center",
                                                                                 }}
                                                                                 className="viewLabelValue"
                                                                               >
@@ -1457,17 +1411,8 @@ function ComplianceSummary(props) {
                                                                     </Grid>
                                                                   )}
 
-                                                                  {actionData.filter(
-                                                                    (val) =>
-                                                                      val.id ==
-                                                                      value.questionId
-                                                                  )[0] &&
-                                                                  actionData.filter(
-                                                                    (val) =>
-                                                                      val.id ==
-                                                                      value.questionId
-                                                                  )[0].action
-                                                                    .length ? (
+                                                                  {actionData.filter((val) => val.id == value.questionId)[0] &&
+                                                                  actionData.filter((val) => val.id == value.questionId)[0].action.length ? (
                                                                     <Grid
                                                                       item
                                                                       md={12}
@@ -1481,26 +1426,15 @@ function ComplianceSummary(props) {
                                                                         Corrective
                                                                         Actions
                                                                       </FormLabel>
-                                                                      {actionData.map(
-                                                                        (
-                                                                          val
-                                                                        ) => (
+                                                                      {actionData.map((val) => (
                                                                           <>
-                                                                            {val.id ==
-                                                                            value.questionId ? (
+                                                                            {val.id == value.questionId ? (
                                                                               <>
-                                                                                {val
-                                                                                  .action
-                                                                                  .length >
-                                                                                  0 && (
+                                                                                {val.action.length > 0 && (
                                                                                   <Grid
                                                                                     item
-                                                                                    md={
-                                                                                      12
-                                                                                    }
-                                                                                    xs={
-                                                                                      12
-                                                                                    }
+                                                                                    md={12}
+                                                                                    xs={12}
                                                                                   >
                                                                                     <Table
                                                                                       component={
@@ -1521,66 +1455,33 @@ function ComplianceSummary(props) {
                                                                                         </TableRow>
                                                                                       </TableHead>
                                                                                       <TableBody>
-                                                                                        {actionData.map(
-                                                                                          (
-                                                                                            val
-                                                                                          ) => (
+                                                                                        {actionData.map((val) => (
                                                                                             <>
-                                                                                              {val.id ==
-                                                                                              value.questionId ? (
+                                                                                              {val.id == value.questionId ? (
                                                                                                 <>
-                                                                                                  {val
-                                                                                                    .action
-                                                                                                    .length >
-                                                                                                    0 &&
-                                                                                                    val.action.map(
-                                                                                                      (
-                                                                                                        valueAction
-                                                                                                      ) => (
+                                                                                                  {val.action.length > 0 &&
+                                                                                                    val.action.map((valueAction) => (
                                                                                                         <TableRow>
                                                                                                           <TableCell align="left">
                                                                                                             <Link
-                                                                                                              className={
-                                                                                                                classes.actionLinkAudit
-                                                                                                              }
+                                                                                                              className={classes.actionLinkAudit}
                                                                                                               display="block"
                                                                                                               href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                                                                                                JSON.parse(
-                                                                                                                  localStorage.getItem(
-                                                                                                                    "BaseUrl"
-                                                                                                                  )
-                                                                                                                )[
-                                                                                                                  "actionClientID"
-                                                                                                                ]
+                                                                                                                JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID" ]
                                                                                                               }&response_type=code&companyId=${
-                                                                                                                JSON.parse(
-                                                                                                                  localStorage.getItem(
-                                                                                                                    "company"
-                                                                                                                  )
-                                                                                                                )
-                                                                                                                  .fkCompanyId
+                                                                                                                JSON.parse(localStorage.getItem("company")).fkCompanyId
                                                                                                               }&projectId=${
-                                                                                                                JSON.parse(
-                                                                                                                  localStorage.getItem(
-                                                                                                                    "projectName"
-                                                                                                                  )
-                                                                                                                )
-                                                                                                                  .projectName
-                                                                                                                  .projectId
-                                                                                                              }&targetPage=/action/details/&targetId=${
-                                                                                                                valueAction.id
-                                                                                                              }`}
+                                                                                                                JSON.parse( localStorage.getItem("projectName")).projectName.projectId
+                                                                                                              }&targetPage=/action/details/&targetId=${valueAction.id}&projectStructure=${localStorage.getItem(
+                                                                                                                "selectBreakDown"
+                                                                                                              )}`}
                                                                                                               target="_blank"
                                                                                                             >
-                                                                                                              {
-                                                                                                                valueAction.number
-                                                                                                              }
+                                                                                                              {valueAction.number}
                                                                                                             </Link>
                                                                                                           </TableCell>
                                                                                                           <TableCell>
-                                                                                                            {
-                                                                                                              valueAction.title
-                                                                                                            }
+                                                                                                            {valueAction.title}
                                                                                                           </TableCell>
                                                                                                         </TableRow>
                                                                                                       )
@@ -1624,30 +1525,14 @@ function ComplianceSummary(props) {
                                                                         Evidence
                                                                       </FormLabel>
                                                                       <div
-                                                                        style={{
-                                                                          display:
-                                                                            "flex",
-                                                                          alignItems:
-                                                                            "center",
-                                                                          margin:
-                                                                            "0 -10px",
-                                                                        }}
+                                                                        style={{display: "flex", alignItems: "center", margin: "0 -10px"}}
                                                                       >
-                                                                        {value.files.map(
-                                                                          (
-                                                                            file
-                                                                          ) => {
+                                                                        {value.files.map((file) => {
                                                                             return (
                                                                               <Attachment
-                                                                                key={
-                                                                                  file.id
-                                                                                }
-                                                                                value={
-                                                                                  file.fileName
-                                                                                }
-                                                                                type={
-                                                                                  file.fileType
-                                                                                }
+                                                                                key={file.id}
+                                                                                value={file.fileName}
+                                                                                type={file.fileType}
                                                                               />
                                                                             );
                                                                           }

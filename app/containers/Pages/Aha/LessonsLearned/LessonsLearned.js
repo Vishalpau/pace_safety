@@ -158,6 +158,7 @@ const LessonsLearned = () => {
             companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
             projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
             updatePage={updatePage}
+            projectStructure={localStorage.getItem("selectBreakDown")}
           />
         </>
       ))}

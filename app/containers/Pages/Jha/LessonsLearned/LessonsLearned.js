@@ -164,6 +164,7 @@ const LessonsLearned = () => {
                 .projectId
             }
             updatePage={updatePage}
+            projectStructure={localStorage.getItem("selectBreakDown")}
           />
         </>
       ))}

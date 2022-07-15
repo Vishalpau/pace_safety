@@ -429,17 +429,15 @@ function Header(props) {
   const [projectOpen, setProjectOpen] = React.useState(false);
   const [projectListData, setProjectListData] = useState([]);
   const [projectDisable, setProjectDisable] = useState(false);
-  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+  // const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [currentCompany, setCurrentCompany] = useState({});
   const [currentProjectId, setCurrentProjectId] = useState(null);
 
-  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
+  // const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { fkid } = useParams();
   const dispatch = useDispatch();
-  const [breakDownData, setBreakDownData] = useState(
-    localStorage.getItem('selectBreakDown')
-  );
+  const [breakDownData, setBreakDownData] = useState(localStorage.getItem('selectBreakDown'));
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
 
@@ -475,54 +473,45 @@ function Header(props) {
     };
   }, []);
 
-  const openFullScreen = () => {
-    setFullScreen(true);
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-      /* Firefox */
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
-      /* Chrome, Safari & Opera */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      /* IE/Edge */
-      elem.msRequestFullscreen();
-    }
-  };
+  // const openFullScreen = () => {
+  //   setFullScreen(true);
+  //   if (elem.requestFullscreen) {
+  //     elem.requestFullscreen();
+  //   } else if (elem.mozRequestFullScreen) {
+  //     /* Firefox */
+  //     elem.mozRequestFullScreen();
+  //   } else if (elem.webkitRequestFullscreen) {
+  //     /* Chrome, Safari & Opera */
+  //     elem.webkitRequestFullscreen();
+  //   } else if (elem.msRequestFullscreen) {
+  //     /* IE/Edge */
+  //     elem.msRequestFullscreen();
+  //   }
+  // };
 
-  const closeFullScreen = () => {
-    setFullScreen(false);
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    }
-  };
+  // const closeFullScreen = () => {
+  //   setFullScreen(false);
+  //   if (document.exitFullscreen) {
+  //     document.exitFullscreen();
+  //   } else if (document.mozCancelFullScreen) {
+  //     document.mozCancelFullScreen();
+  //   } else if (document.webkitExitFullscreen) {
+  //     document.webkitExitFullscreen();
+  //   } else if (document.msExitFullscreen) {
+  //     document.msExitFullscreen();
+  //   }
+  // };
 
-  const turnMode = (mode) => {
-    if (mode === 'light') {
-      props.changeMode('dark');
-    } else {
-      props.changeMode('light');
-    }
-  };
+  // const turnMode = (mode) => {
+  //   if (mode === 'light') {
+  //     props.changeMode('dark');
+  //   } else {
+  //     props.changeMode('light');
+  //   }
+  // };
 
   const {
-    classes,
-    toggleDrawerOpen,
-    margin,
-    position,
-    gradient,
-    mode,
-    title,
-    openGuide,
-    history,
-    initialValues,
+    classes, toggleDrawerOpen, margin, position, gradient, mode, title, openGuide, history, initialValues,
   } = props;
 
   // check and store in localstorage
@@ -530,6 +519,8 @@ function Header(props) {
     localStorage.setItem('projectName', JSON.stringify(props.initialValues));
   }
   const projectData = JSON.parse(localStorage.getItem('projectName'));
+  // console.log(projectData, 'proj');
+
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === 'right-sidebar') {
       return classes.right;
@@ -542,9 +533,9 @@ function Header(props) {
 
   const [age, setAge] = React.useState('');
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   setAge(event.target.value);
+  // };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -589,8 +580,7 @@ function Header(props) {
     if (localStorage.getItem('company')) {
       const currentCompanyId = JSON.parse(localStorage.getItem('company'))
         .fkCompanyId;
-      JSON.parse(localStorage.getItem('userDetails')).companies.forEach(
-        (company) => {
+      JSON.parse(localStorage.getItem('userDetails')).companies.forEach((company) => {
           if (company.companyId === currentCompanyId) {
             setCurrentCompany(company);
           }
@@ -662,7 +652,7 @@ function Header(props) {
     setCompanyOpen(false);
   };
 
-  const ProjectChip = (props) => <Chip className={classes.projectChip} size="small" {...props} />;
+  // const ProjectChip = (props) => <Chip className={classes.projectChip} size="small" {...props} />;
 
   const DialogTitle = withStyles(styles)((props) => {
     const {
