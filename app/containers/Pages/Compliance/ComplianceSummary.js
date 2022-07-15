@@ -242,6 +242,8 @@ function ComplianceSummary(props) {
     console.log(quesData, 'quesData');
   },[quesData])
 
+
+
   // useEffect(() => {
   //   console.log(groupData, 'groupdata');
   // },[groupData])
@@ -1125,6 +1127,7 @@ function ComplianceSummary(props) {
                                                 {groupNamrHandler(val)}
                                                 {val.checkListValues.map((subGrpData, index) => {
                                                     return quesData.map((value, index) => {
+                                                        // console.log(value,'value');
                                                         return subGrpData.id === value.subGroupId ? (
                                                           <>
                                                             <Accordion
@@ -1183,12 +1186,7 @@ function ComplianceSummary(props) {
                                                                         </Typography>
                                                                       </Grid>
 
-                                                                      {value.criticality !==
-                                                                        "N/A" &&
-                                                                        value.criticality !==
-                                                                          "No" &&
-                                                                        value.criticality !==
-                                                                          "Yes" && (
+                                                                      {value.criticality !== "N/A" && value.criticality !== "No" && value.criticality !== "Yes" && (
                                                                           <>
                                                                             <Grid
                                                                               item
@@ -1216,6 +1214,8 @@ function ComplianceSummary(props) {
                                                                               <FormLabel component="legend" className="viewLabel">
                                                                                 Performance rating
                                                                               </FormLabel>
+                                                                              {console.log(value)}
+                                                                              {/* {console.log(colordata)} */}
                                                                               <Typography
                                                                                 style={{
                                                                                   backgroundColor:
@@ -1252,9 +1252,7 @@ function ComplianceSummary(props) {
                                                                         Is this control applicable ?
                                                                       </FormLabel>
                                                                       <Typography className="viewLabelValue">
-                                                                        {value.defaultResponse
-                                                                          ? value.defaultResponse
-                                                                          : "-"}
+                                                                        {value.defaultResponse ? value.defaultResponse : "-"}
                                                                       </Typography>
                                                                     </Grid>
                                                                   )}
@@ -1271,9 +1269,7 @@ function ComplianceSummary(props) {
                                                                       Findings
                                                                     </FormLabel>
                                                                     <Typography className="viewLabelValue">
-                                                                      {value.findings
-                                                                        ? value.findings
-                                                                        : "-"}
+                                                                      {value.findings ? value.findings : "-"}
                                                                     </Typography>
                                                                   </Grid>
                                                                   {value.score && (
@@ -1300,9 +1296,7 @@ function ComplianceSummary(props) {
                                                                           className="viewLabel"
                                                                         />
                                                                         <Typography className="viewLabelValue">
-                                                                          {value.score
-                                                                            ? value.score
-                                                                            : "-"}
+                                                                          {value.score ? value.score : "-"}
                                                                         </Typography>
                                                                       </Grid>
                                                                     </Grid>

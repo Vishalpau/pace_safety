@@ -1992,10 +1992,10 @@ function JhaSummary(props) {
                     className="quickActionSectionLink"
                     variant="subtitle"
                     name="Comments"
-                    disabled="true"
+                    // disabled="true"
                     to={{
-                      // pathname: `/app/comments/jha/${id}`,
-                      pathname: history.location.pathname,
+                      pathname: `/app/comments/jha/${id}`,
+                      // pathname: history.location.pathname,
                       state: commentPayload,
                     }}
                   >

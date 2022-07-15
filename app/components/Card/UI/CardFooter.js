@@ -69,8 +69,7 @@ const CardFooter = (props) => {
               {staticLabels.comment}:{" "}
             </Typography>
             <Link
-              style={{ cursor: "unset", textDecoration: "none" }}
-              // onClick={() => props.handleVisibilityComments()}
+              onClick={() => props.handleVisibilityComments()}
               color="secondary"
               aria-haspopup="true"
               className={classes.commentLink}

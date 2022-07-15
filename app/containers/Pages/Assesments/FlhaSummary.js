@@ -536,8 +536,8 @@ class SimpleTabs extends React.Component {
                         name="Comments"
                         disabled="true"
                         to={{
-                          // pathname: `/app/comments/flha/${id}`,
-                          pathname: this.props.history.location.pathname,
+                          pathname: `/app/comments/flha/${id}`,
+                          // pathname: this.props.history.location.pathname,
                           state: commentPayload,
                         }}
                       >

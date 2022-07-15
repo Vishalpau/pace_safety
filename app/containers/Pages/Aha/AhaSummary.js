@@ -1939,10 +1939,10 @@ function AhaSummary(props) {
                       className="quickActionSectionLink"
                       variant="subtitle"
                       name="Comments"
-                      disabled="true"
+                      // disabled="true"
                       to={{
-                        // pathname: `/app/comments/aha/${id}`,
-                        pathname: history.location.pathname,
+                        pathname: `/app/comments/aha/${id}`,
+                        // pathname: history.location.pathname,
                         state: commentPayload,
                       }}
                     >

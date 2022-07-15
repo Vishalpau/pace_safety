@@ -772,13 +772,13 @@ function ComplianceListNew(props) {
       setCommentsOpen(!open);
     }
 
-    function handleClickOpenAttachment() {
-      setopenAttachment(true);
-    }
+    // function handleClickOpenAttachment() {
+    //   setopenAttachment(true);
+    // }
 
-    function handleCloseAttachment() {
-      setopenAttachment(false);
-    }
+    // function handleCloseAttachment() {
+    //   setopenAttachment(false);
+    // }
 
     // console.log(showGrid);
 
@@ -928,7 +928,7 @@ function ComplianceListNew(props) {
                         size="small"
                         className="custmCancelBtn buttonStyle"
                         disableElevation
-                        onClick={handleCommentsClose}
+                        onClick={handleVisibilityComments}
                       >
                         Cancel
                       </Button>
