@@ -1,37 +1,37 @@
-import DateFnsUtils from '@date-io/date-fns';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import Snackbar from '@material-ui/core/Snackbar';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import MuiAlert from '@material-ui/lab/Alert';
+import DateFnsUtils from "@date-io/date-fns";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import Snackbar from "@material-ui/core/Snackbar";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import MuiAlert from "@material-ui/lab/Alert";
 import {
-  KeyboardDateTimePicker, MuiPickersUtilsProvider
-} from '@material-ui/pickers';
-import { PapperBlock } from 'dan-components';
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory, useParams } from 'react-router';
-import { tabViewMode } from '../../../redux/actions/initialDetails';
-import Type from '../../../styles/components/Fonts.scss';
-import '../../../styles/custom.css';
-import api from '../../../utils/axios';
+  KeyboardDateTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import { PapperBlock } from "dan-components";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory, useParams } from "react-router";
+import DateFormat from "../../../components/Date/DateFormat";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+import Type from "../../../styles/components/Fonts.scss";
+import "../../../styles/custom.css";
+import api from "../../../utils/axios";
 import {
-  ACCOUNT_API_URL, CLOSE_OUT_FORM,
-  SUMMERY_FORM
-} from '../../../utils/constants';
-import FormSideBar from '../FormSideBar';
+  ACCOUNT_API_URL,
+  CLOSE_OUT_FORM,
+  SUMMERY_FORM,
+} from "../../../utils/constants";
+import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-
-
-
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -39,13 +39,13 @@ function Alert(props) {
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: '100%',
+    width: "100%",
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
 }));
 
@@ -67,35 +67,37 @@ const CloseOut = () => {
     reviewedBy: 0,
     reviewDate: null,
     closedBy: 0,
-    closeDate: null
+    closeDate: null,
   });
 
-  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState('');
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   // fetch incident data
   const fetchIncidentsData = async () => {
-    await api.get(
-      `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
-    ).then((res) => {
-      if (res.status === 200) {
-        const result = res.data.data.results;
-        let temp = { ...form };
-        temp = result;
-        setForm(result);
-        setIncidentsListdata(result);
-        setIsLoading(true);
-      }
-    }).catch(err => history.push('/app/pages/error'));
+    await api
+      .get(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`)
+      .then((res) => {
+        if (res.status === 200) {
+          const result = res.data.data.results;
+          let temp = { ...form };
+          temp = result;
+          setForm(result);
+          setIncidentsListdata(result);
+          setIsLoading(true);
+        }
+      })
+      .catch((err) => history.push("/app/pages/error"));
   };
   // handle close snackbar
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setIsDateShow(false);
@@ -104,11 +106,11 @@ const CloseOut = () => {
   const handleCloseDate = (e) => {
     if (new Date(e) > new Date(form.reviewDate)) {
       setForm({ ...form, closeDate: moment(e).toISOString() });
-      error.closeDate = '';
+      error.closeDate = "";
       setError(error);
     } else {
       setForm({ ...form, closeDate: null });
-      const errorMessage = 'Closed date cannot be prior to reviewed date';
+      const errorMessage = "Closed date cannot be prior to reviewed date";
       error.closeDate = errorMessage;
       setError(error);
     }
@@ -117,11 +119,11 @@ const CloseOut = () => {
   const handleReviewDate = (e) => {
     if (new Date(e) < new Date()) {
       setForm({ ...form, reviewDate: moment(e).toISOString() });
-      error.reviewDate = '';
+      error.reviewDate = "";
       setError(error);
     } else {
       setForm({ ...form, reviewDate: null });
-      error.reviewDate = 'Invalid date-time selected';
+      error.reviewDate = "Invalid date-time selected";
       setError(error);
     }
   };
@@ -129,7 +131,12 @@ const CloseOut = () => {
   //   fetch user data
 
   const fetchUserList = async () => {
-    api.get(`${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/company-users/`,)
+    api
+      .get(
+        `${ACCOUNT_API_URL}api/v1/companies/${
+          JSON.parse(localStorage.getItem("company")).fkCompanyId
+        }/company-users/`
+      )
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results.users;
@@ -137,7 +144,7 @@ const CloseOut = () => {
         }
       })
       .catch((error) => {
-        history.push('/app/pages/error');
+        history.push("/app/pages/error");
       });
   };
 
@@ -152,34 +159,33 @@ const CloseOut = () => {
     temp.closeDate = form.closeDate || incidentsListData.closeDate;
     temp.updatedAt = new Date().toISOString();
     temp.updatedBy = parseInt(userId);
-    temp.incidentStage = 'Close out';
+    temp.incidentStage = "Close out";
     if (form.closeDate) {
-      temp.incidentStatus = 'Done';
+      temp.incidentStatus = "Done";
     } else {
-      temp.incidentStatus = 'pending';
+      temp.incidentStatus = "pending";
     }
 
-
     try {
-      await api.put(
-        `api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
-        temp
-      ).then((res) => {
-        if (res.status === 200) {
-          const viewMode = {
-            initialNotification: false,
-            investigation: false,
-            evidence: false,
-            rootcauseanalysis: false,
-            lessionlearn: false,
-            closeout: true
-          };
-          dispatch(tabViewMode(viewMode));
-          history.push(`${SUMMERY_FORM.Summary}${id}/`);
-        }
-      }).catch(err => history.push('/app/pages/error'));
+      await api
+        .put(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/`, temp)
+        .then((res) => {
+          if (res.status === 200) {
+            const viewMode = {
+              initialNotification: false,
+              investigation: false,
+              evidence: false,
+              rootcauseanalysis: false,
+              lessionlearn: false,
+              closeout: true,
+            };
+            dispatch(tabViewMode(viewMode));
+            history.push(`${SUMMERY_FORM.Summary}${id}/`);
+          }
+        })
+        .catch((err) => history.push("/app/pages/error"));
     } catch (error) {
-      history.push('/app/pages/error');
+      history.push("/app/pages/error");
     }
   };
 
@@ -187,7 +193,7 @@ const CloseOut = () => {
     fetchUserList();
     fetchIncidentsData();
   }, []);
-  const isDesktop = useMediaQuery('(min-width:992px)');
+  const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Close out" icon="ion-md-list-box">
       {isLoading ? (
@@ -201,7 +207,7 @@ const CloseOut = () => {
               <Typography varint="body1" className={Type.labelValue}>
                 {incidentsListData.incidentNumber
                   ? incidentsListData.incidentNumber
-                  : '-'}
+                  : "-"}
               </Typography>
             </Grid>
 
@@ -211,7 +217,7 @@ const CloseOut = () => {
               </Typography>
               <Typography className={Type.labelValue}>
                 {moment(incidentsListData.incidentOccuredOn).format(
-                  'Do MMMM YYYY, h:mm:ss a'
+                  "Do MMMM YYYY, h:mm:ss a"
                 )}
               </Typography>
             </Grid>
@@ -221,9 +227,7 @@ const CloseOut = () => {
                 Incident reported on
               </Typography>
               <Typography className={Type.labelValue}>
-                {moment(incidentsListData.incidentReportedOn).format(
-                  'Do MMMM YYYY, h:mm:ss a'
-                )}
+                {DateFormat(incidentsListData.incidentReportedOn, true)}
               </Typography>
             </Grid>
 
@@ -234,7 +238,7 @@ const CloseOut = () => {
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentReportedByName
                   ? incidentsListData.incidentReportedByName
-                  : '-'}
+                  : "-"}
               </Typography>
             </Grid>
 
@@ -245,8 +249,7 @@ const CloseOut = () => {
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentType
                   ? incidentsListData.incidentType
-                  : '-'}
-                {' '}
+                  : "-"}{" "}
               </Typography>
             </Grid>
 
@@ -257,7 +260,7 @@ const CloseOut = () => {
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentTitle
                   ? incidentsListData.incidentTitle
-                  : '-'}
+                  : "-"}
               </Typography>
             </Grid>
 
@@ -268,7 +271,7 @@ const CloseOut = () => {
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentDetails
                   ? incidentsListData.incidentDetails
-                  : '-'}
+                  : "-"}
               </Typography>
             </Grid>
 
@@ -279,7 +282,7 @@ const CloseOut = () => {
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentLocation
                   ? incidentsListData.incidentLocation
-                  : '-'}
+                  : "-"}
               </Typography>
             </Grid>
 
@@ -289,11 +292,7 @@ const CloseOut = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <FormControl
-                variant="outlined"
-
-                className={classes.formControl}
-              >
+              <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="demo-simple-select-label">
                   Reviewed by
                 </InputLabel>
@@ -301,8 +300,10 @@ const CloseOut = () => {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Reviewed by"
-                  defaultValue={form.reviewedBy || ''}
-                  onChange={(e) => setForm({ ...form, reviewedBy: e.target.value })}
+                  defaultValue={form.reviewedBy || ""}
+                  onChange={(e) =>
+                    setForm({ ...form, reviewedBy: e.target.value })
+                  }
                 >
                   {userList.map((selectValues, index) => (
                     <MenuItem
@@ -314,14 +315,9 @@ const CloseOut = () => {
                     </MenuItem>
                   ))}
                 </Select>
-
               </FormControl>
             </Grid>
-            <Snackbar
-              open={open}
-              autoHideDuration={6000}
-              onClose={handleClose}
-            >
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity={messageType}>
                 {message}
               </Alert>
@@ -330,9 +326,7 @@ const CloseOut = () => {
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDateTimePicker
                   error={error.reviewDate}
-                  helperText={
-                    error.reviewDate ? error.reviewDate : null
-                  }
+                  helperText={error.reviewDate ? error.reviewDate : null}
                   className={classes.formControl}
                   id="date-picker-dialog"
                   format="yyyy/MM/dd HH:mm"
@@ -343,9 +337,8 @@ const CloseOut = () => {
                   onClick={(e) => setIsReviewDateShow(true)}
                   open={isReviewDateShow}
                   onClose={(e) => setIsReviewDateShow(false)}
-
                   KeyboardButtonProps={{
-                    'aria-label': 'change date',
+                    "aria-label": "change date",
                   }}
                   disableFuture
                   InputProps={{ readOnly: true }}
@@ -358,20 +351,16 @@ const CloseOut = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <FormControl
-                variant="outlined"
-
-                className={classes.formControl}
-              >
-                <InputLabel id="demo-simple-select-label">
-                  Closed by
-                </InputLabel>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">Closed by</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Closed by"
-                  defaultValue={form.closedBy || ''}
-                  onChange={(e) => setForm({ ...form, closedBy: e.target.value })}
+                  defaultValue={form.closedBy || ""}
+                  onChange={(e) =>
+                    setForm({ ...form, closedBy: e.target.value })
+                  }
                 >
                   {userList.map((selectValues, index) => (
                     <MenuItem
@@ -383,7 +372,6 @@ const CloseOut = () => {
                     </MenuItem>
                   ))}
                 </Select>
-
               </FormControl>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -391,9 +379,7 @@ const CloseOut = () => {
                 <KeyboardDateTimePicker
                   className={classes.formControl}
                   error={error.closeDate}
-                  helperText={
-                    error.closeDate ? error.closeDate : null
-                  }
+                  helperText={error.closeDate ? error.closeDate : null}
                   value={form.closeDate || null}
                   onChange={(e) => handleCloseDate(e)}
                   format="yyyy/MM/dd HH:mm"
@@ -405,7 +391,7 @@ const CloseOut = () => {
                   open={isDateShow}
                   onClose={(e) => setIsDateShow(false)}
                   KeyboardButtonProps={{
-                    'aria-label': 'change date',
+                    "aria-label": "change date",
                   }}
                   InputProps={{ readOnly: true }}
                   disableFuture
@@ -413,7 +399,6 @@ const CloseOut = () => {
                 />
               </MuiPickersUtilsProvider>
             </Grid>
-
 
             <Grid item xs={12}>
               <Button

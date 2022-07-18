@@ -26,6 +26,7 @@ import classNames from "classnames";
 import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import { connect } from "react-redux";
+import DateFormat from "../../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -890,9 +891,7 @@ const FlhaDetails = (props) => {
                         <FormLabel className="viewLabel" component="legend">
                           Date
                         </FormLabel>
-                        <Typography>
-                          {moment(flha.dateTimeFlha).format("Do MMM YYYY")}
-                        </Typography>
+                        <Typography>{DateFormat(flha.dateTimeFlha)}</Typography>
                       </Grid>
 
                       <Grid item xs={6} className={classes.question}>

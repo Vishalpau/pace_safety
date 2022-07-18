@@ -39,6 +39,7 @@ import api from "../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
 import Loader from "../Loader";
+import DateFormat from "../../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -490,10 +491,10 @@ function JhaList(props) {
                     item[1]["jhaStage"],
                     item[1]["jhaStatus"],
                     item[1]["createdByName"],
-                    moment(item[1]["createdAt"]).format("Do MMMM YYYY"),
+                    DateFormat(item[1]["createdAt"]),
 
                     item[1]["closedDate"] !== null
-                      ? moment(item[1]["closedDate"]).format("Do MMMM YYYY")
+                      ? DateFormat(item[1]["closedDate"])
                       : "-",
                     item[1]["closedByName"],
                   ])}

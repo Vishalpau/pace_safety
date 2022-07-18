@@ -43,6 +43,7 @@ const UserDetailsView = lazy(() => import("../../UserDetails/UserDetail"));
 const Loader = lazy(() => import("../Loader"));
 import Delete from "../../Delete/Delete";
 import Attachment from "../../Attachment/Attachment";
+import DateFormat from "../../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -998,7 +999,7 @@ function Actions(props) {
             { label: icareLabels.body[1], value: item.location },
             {
               label: icareLabels.body[2],
-              value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+              value: DateFormat(item.createdAt, true),
             },
             { label: icareLabels.body[3], value: item.createdByName },
           ]}

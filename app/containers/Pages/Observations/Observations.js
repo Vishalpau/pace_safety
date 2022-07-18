@@ -25,7 +25,7 @@ import Print from "@material-ui/icons/Print";
 import SearchIcon from "@material-ui/icons/Search";
 import Share from "@material-ui/icons/Share";
 import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
-import Pagination from '@material-ui/lab/Pagination';
+import Pagination from "@material-ui/lab/Pagination";
 import axios from "axios";
 import { PapperBlock } from "dan-components";
 // import Fonts from "dan-styles/Fonts.scss";
@@ -35,16 +35,14 @@ import MUIDataTable from "mui-datatables";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router";
+import DateFormat from "../../../components/Date/DateFormat";
 import api from "../../../utils/axios";
-
-
-
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
     padding: "1rem 0",
     display: "flex",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   root: {
     flexGrow: 1,
@@ -143,9 +141,10 @@ function Observations(props) {
   const [projectDisable, setProjectDisable] = useState(false);
   const [pageCount, setPageCount] = useState(0);
 
-  const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).name
-    : null;
+  const userName =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).name
+      : null;
   const handelView = (e) => {
     setListToggle(false);
     history.push(`/app/icare`);
@@ -235,13 +234,15 @@ function Observations(props) {
     history.push(`/app/prints/${id}`);
   };
 
-
   const fetchInitialiObservation = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId;
-    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
     let struct = "";
@@ -250,13 +251,15 @@ function Observations(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    const result = res.data.data.results.results
-    await setAllInitialData(result)
-    let pageCount = Math.ceil(res.data.data.results.count / 25)
-    await setPageCount(pageCount)
+    const res = await api.get(
+      `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
+    );
+    const result = res.data.data.results.results;
+    await setAllInitialData(result);
+    let pageCount = Math.ceil(res.data.data.results.count / 25);
+    await setPageCount(pageCount);
 
-    await setIsLoading(true)
+    await setIsLoading(true);
   };
   const handleSearch = (e) => {
     // console.log(e.target.value)
@@ -265,10 +268,13 @@ function Observations(props) {
 
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId;
-    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
     let struct = "";
@@ -277,7 +283,9 @@ function Observations(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(
+      `api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`
+    );
     await setAllInitialData(res.data.data.results.results);
   };
   const classes = useStyles();
@@ -287,7 +295,12 @@ function Observations(props) {
   }, [props.projectName]);
 
   return (
-    <PapperBlock title="Observations" icon="ion-md-list-box" desc="" variant="h5">
+    <PapperBlock
+      title="Observations"
+      icon="ion-md-list-box"
+      desc=""
+      variant="h5"
+    >
       {isLoading ? (
         <Box>
           <div className={classes.root}>
@@ -333,12 +346,18 @@ function Observations(props) {
                 </div>
                 {/* /// */}
                 <div>
-                  {allInitialData.length < 2 ? <div>{Objects.entries(allInitialData).map((key, value) => (
-                    <>
-                      <p>{key}</p>
-                      <p>{value}</p>
-                    </>
-                  ))}</div> : ""}
+                  {allInitialData.length < 2 ? (
+                    <div>
+                      {Objects.entries(allInitialData).map((key, value) => (
+                        <>
+                          <p>{key}</p>
+                          <p>{value}</p>
+                        </>
+                      ))}
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
                 {/* ///// */}
                 <Button
@@ -360,237 +379,242 @@ function Observations(props) {
             <>
               {/* {allInitialData.map((data,index) => ( */}
               <div className="gridView">
-                {
-                  Object.entries(allInitialData)
-                    .filter(
-                      (item) => {
-                        return (
+                {Object.entries(allInitialData)
+                  .filter((item) => {
+                    return (
+                      item[1]["observationDetails"]
+                        .toLowerCase()
+                        .includes(searchIncident.toLowerCase()) ||
+                      item[1]["observationNumber"]
+                        .toLowerCase()
+                        .includes(searchIncident.toLowerCase())
+                    );
+                  })
+                  .map((item, index) => (
+                    <Card variant="outlined" className={Incidents.card}>
+                      <CardContent>
+                        <Grid container spacing={3}>
+                          <Grid item xs={12}>
+                            <Grid container spacing={3} alignItems="flex-start">
+                              <Grid item xs={10}>
+                                <Typography variant="h6">
+                                  {item[1]["observationDetails"]}
+                                </Typography>
+                              </Grid>
 
-                          item[1]["observationDetails"]
-                            .toLowerCase()
-                            .includes(searchIncident.toLowerCase()) ||
-                          item[1]["observationNumber"].toLowerCase().includes(
-                            searchIncident.toLowerCase()
-
-                          )
-                        )
-                      }
-
-                    )
-                    .map((item, index) => (
-                      <Card variant="outlined" className={Incidents.card}>
-                        <CardContent>
-                          <Grid container spacing={3}>
-                            <Grid item xs={12}>
                               <Grid
-                                container
-                                spacing={3}
-                                alignItems="flex-start"
+                                item
+                                xs={2}
+                                style={{ display: "flex" }}
+                                justify="flex-end"
                               >
-                                <Grid item xs={10}>
-                                  <Typography variant="h6">
-                                    {item[1]["observationDetails"]}
-                                  </Typography>
-                                </Grid>
-
-                                <Grid
-                                  item
-                                  xs={2}
-                                  style={{ display: "flex" }}
-                                  justify="flex-end"
-                                >
-                                  <Chip
-                                    avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
-                                    label={item[1]["username"] ? item[1]["username"] : "Admin"}
-                                  />
-                                </Grid>
-                              </Grid>
-                            </Grid>
-
-                            <Grid item xs={12}>
-                              <Grid container spacing={2}>
-                                <Grid item md={3}>
-                                  <Typography
-                                    display="inline"
-                                    className={classes.listingLabelName}
-                                  >
-                                    Number:
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    display="inline"
-                                    className={classes.listingLabelValue}
-                                  >
-                                    <Link
-                                      onClick={() => handleSummaryPush(index)}
-                                    >
-                                      {item[1]["observationNumber"]}
-                                    </Link>
-                                  </Typography>
-                                </Grid>
-
-                                <Grid item md={3}>
-                                  <Chip
-                                    variant="outlined"
-                                    label={item[1]["isCorrectiveActionTaken"] == null ? "Initial Notification" : "Action Tracking"}
-                                    color="primary"
-                                    size="small"
-                                  />
-                                </Grid>
-
-                                <Grid item md={3}>
-                                  <Typography display="inline">
-                                    {/* <i className="ion-ios-calendar-outline" /> */}
-                                    <CalendarTodayOutlinedIcon
-                                      className={classes.labelIcon}
+                                <Chip
+                                  avatar={
+                                    <Avatar
+                                      src={
+                                        item[1]["avatar"]
+                                          ? item[1]["avatar"]
+                                          : "/images/pp_boy.svg"
+                                      }
                                     />
-                                    <span className={classes.dateValue}>
-                                      {moment(item[1]["observedAt"]).format(
-                                        "Do MMMM YYYY, h:mm:ss a"
-                                      )}
-                                    </span>
-                                  </Typography>
-                                </Grid>
+                                  }
+                                  label={
+                                    item[1]["username"]
+                                      ? item[1]["username"]
+                                      : "Admin"
+                                  }
+                                />
                               </Grid>
                             </Grid>
+                          </Grid>
 
-                            <Grid item lg={3}>
-                              <Typography
-                                className={classes.listingLabelName}
-                                gutterBottom
-                              >
-                                Type
-                              </Typography>
+                          <Grid item xs={12}>
+                            <Grid container spacing={2}>
+                              <Grid item md={3}>
+                                <Typography
+                                  display="inline"
+                                  className={classes.listingLabelName}
+                                >
+                                  Number:
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  display="inline"
+                                  className={classes.listingLabelValue}
+                                >
+                                  <Link
+                                    onClick={() => handleSummaryPush(index)}
+                                  >
+                                    {item[1]["observationNumber"]}
+                                  </Link>
+                                </Typography>
+                              </Grid>
 
-                              <Typography className={classes.listingLabelValue}>
-                                {/* {item[1]["incidentReportedByName"]} */}
-                                {item[1]["observationType"]}
-                              </Typography>
-                            </Grid>
-                            <Grid item lg={3}>
-                              <Typography
-                                className={classes.listingLabelName}
-                                gutterBottom
-                              >
-                                Location
-                              </Typography>
-                              <Typography className={classes.listingLabelValue}>
-                                {/* {item[1]} */}
-                                {item[1]["location"]}
-                              </Typography>
-                            </Grid>
+                              <Grid item md={3}>
+                                <Chip
+                                  variant="outlined"
+                                  label={
+                                    item[1]["isCorrectiveActionTaken"] == null
+                                      ? "Initial Notification"
+                                      : "Action Tracking"
+                                  }
+                                  color="primary"
+                                  size="small"
+                                />
+                              </Grid>
 
-                            <Grid item lg={3}>
-                              <Typography
-                                className={classes.listingLabelName}
-                                gutterBottom
-                              >
-                                Reported on
-                              </Typography>
-
-                              <Typography
-                                variant="body1"
-                                className={classes.listingLabelValue}
-                              >
-                                {/* {item[3]} */}
-                                {moment(item[1]["createdAt"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                )}
-                              </Typography>
-                            </Grid>
-
-                            <Grid item lg={3}>
-                              <Typography
-                                className={classes.listingLabelName}
-                                gutterBottom
-                              >
-                                Reported By
-                              </Typography>
-
-                              <Typography className={classes.listingLabelValue}>
-                                {/* {item[1]} */}
-                                {item[1]["username"] ? item[1]["username"] : "Admin"}
-                              </Typography>
+                              <Grid item md={3}>
+                                <Typography display="inline">
+                                  {/* <i className="ion-ios-calendar-outline" /> */}
+                                  <CalendarTodayOutlinedIcon
+                                    className={classes.labelIcon}
+                                  />
+                                  <span className={classes.dateValue}>
+                                    {moment(item[1]["observedAt"]).format(
+                                      "Do MMMM YYYY, h:mm:ss a"
+                                    )}
+                                  </span>
+                                </Typography>
+                              </Grid>
                             </Grid>
                           </Grid>
-                        </CardContent>
-                        <Divider />
-                        <CardActions className={classes.cardActions}>
-                          <Grid
-                            container
-                            spacing={2}
-                            // justify="flex-end"
-                            alignItems="center"
-                          >
-                            <Grid item xs={6} md={3}>
-                              <Typography
-                                display="inline"
-                                className={classes.listingLabelName}
-                              >
-                                <MessageIcon fontSize="small" /> Comments:
-                              </Typography>
-                              <Typography variant="body2" display="inline">
-                                <Link href="#">{item[1].commentsCount}</Link>
-                              </Typography>
-                            </Grid>
 
-                            <Grid item xs={6} md={3}>
-                              <Typography
-                                variant="body2"
-                                display="inline"
-                                className={classes.listingLabelName}
-                              >
-                                <BuildIcon fontSize="small" /> Actions:
-                              </Typography>
-                              <Typography variant="body2" display="inline">
-                                <Link href="#">3</Link>
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6} md={3}>
-                              <Typography
-                                variant="body2"
-                                display="inline"
-                                className={classes.listingLabelName}
-                              >
-                                <AttachmentIcon fontSize="small" /> Attachments:
-                              </Typography>
-                              <Typography variant="body2" display="inline">
-                                <Link href="#">{item[1].attachmentCount}</Link>
-                              </Typography>
-                            </Grid>
+                          <Grid item lg={3}>
+                            <Typography
+                              className={classes.listingLabelName}
+                              gutterBottom
+                            >
+                              Type
+                            </Typography>
 
-                            <Grid item xs={6} md={3}>
-                              <Button
-                                disabled
-                                size="small"
-                                color="primary"
-                                startIcon={<Print />}
-                                className={Incidents.actionButton}
-                                onClick={() => handlePrintPush(index)}
-                              >
-                                Print
-                              </Button>
-
-                              <Button
-                                disabled
-                                size="small"
-                                color="primary"
-                                startIcon={<Share />}
-                                className={classes.actionButton}
-                              >
-                                Share
-                              </Button>
-                            </Grid>
+                            <Typography className={classes.listingLabelValue}>
+                              {/* {item[1]["incidentReportedByName"]} */}
+                              {item[1]["observationType"]}
+                            </Typography>
                           </Grid>
-                        </CardActions>
-                      </Card>
-                    ))}
+                          <Grid item lg={3}>
+                            <Typography
+                              className={classes.listingLabelName}
+                              gutterBottom
+                            >
+                              Location
+                            </Typography>
+                            <Typography className={classes.listingLabelValue}>
+                              {/* {item[1]} */}
+                              {item[1]["location"]}
+                            </Typography>
+                          </Grid>
+
+                          <Grid item lg={3}>
+                            <Typography
+                              className={classes.listingLabelName}
+                              gutterBottom
+                            >
+                              Reported on
+                            </Typography>
+
+                            <Typography
+                              variant="body1"
+                              className={classes.listingLabelValue}
+                            >
+                              {/* {item[3]} */}
+                              {DateFormat(item[1]["createdAt"], true)}
+                            </Typography>
+                          </Grid>
+
+                          <Grid item lg={3}>
+                            <Typography
+                              className={classes.listingLabelName}
+                              gutterBottom
+                            >
+                              Reported By
+                            </Typography>
+
+                            <Typography className={classes.listingLabelValue}>
+                              {/* {item[1]} */}
+                              {item[1]["username"]
+                                ? item[1]["username"]
+                                : "Admin"}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                      <Divider />
+                      <CardActions className={classes.cardActions}>
+                        <Grid
+                          container
+                          spacing={2}
+                          // justify="flex-end"
+                          alignItems="center"
+                        >
+                          <Grid item xs={6} md={3}>
+                            <Typography
+                              display="inline"
+                              className={classes.listingLabelName}
+                            >
+                              <MessageIcon fontSize="small" /> Comments:
+                            </Typography>
+                            <Typography variant="body2" display="inline">
+                              <Link href="#">{item[1].commentsCount}</Link>
+                            </Typography>
+                          </Grid>
+
+                          <Grid item xs={6} md={3}>
+                            <Typography
+                              variant="body2"
+                              display="inline"
+                              className={classes.listingLabelName}
+                            >
+                              <BuildIcon fontSize="small" /> Actions:
+                            </Typography>
+                            <Typography variant="body2" display="inline">
+                              <Link href="#">3</Link>
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={6} md={3}>
+                            <Typography
+                              variant="body2"
+                              display="inline"
+                              className={classes.listingLabelName}
+                            >
+                              <AttachmentIcon fontSize="small" /> Attachments:
+                            </Typography>
+                            <Typography variant="body2" display="inline">
+                              <Link href="#">{item[1].attachmentCount}</Link>
+                            </Typography>
+                          </Grid>
+
+                          <Grid item xs={6} md={3}>
+                            <Button
+                              disabled
+                              size="small"
+                              color="primary"
+                              startIcon={<Print />}
+                              className={Incidents.actionButton}
+                              onClick={() => handlePrintPush(index)}
+                            >
+                              Print
+                            </Button>
+
+                            <Button
+                              disabled
+                              size="small"
+                              color="primary"
+                              startIcon={<Share />}
+                              className={classes.actionButton}
+                            >
+                              Share
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </CardActions>
+                    </Card>
+                  ))}
 
                 {/* {showIncident.map((item, key) => (
 
                 ))} */}
               </div>
-
 
               {/* ))} */}
             </>
@@ -616,10 +640,7 @@ function Observations(props) {
           <div className={classes.pagination}>
             <Pagination count={pageCount} onChange={handleChange} />
           </div>
-
         </Box>
-
-
       ) : (
         <h1>Loading...</h1>
       )}
@@ -627,12 +648,14 @@ function Observations(props) {
   );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     projectName: state.getIn(["InitialDetailsReducer"]),
-    todoIncomplete: state
+    todoIncomplete: state,
+  };
+};
 
-  }
-}
-
-export default connect(mapStateToProps, null)(Observations);
+export default connect(
+  mapStateToProps,
+  null
+)(Observations);

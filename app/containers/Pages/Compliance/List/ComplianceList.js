@@ -39,6 +39,7 @@ import api from "../../../../utils/axios";
 import moment from "moment";
 import Loader from "../../Loader";
 import Pagination from "@material-ui/lab/Pagination";
+import DateFormat from "../../../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -470,7 +471,7 @@ function Actions(props) {
                     data["auditNumber"],
                     data["auditType"],
                     data["area"] ? data["area"] : "-",
-                    moment(data["createdAt"]).format("DD MMMM YYYY"),
+                    DateFormat(data["createdAt"]),
                     data["username"] !== null ? data["username"] : "-",
                   ])}
                   columns={columns}

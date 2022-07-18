@@ -86,6 +86,7 @@ import { checkValue } from "../Jha/Utils/checkValue";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { checkACL } from "../../../utils/helper";
+import DateFormat from "../../../components/Date/DateFormat";
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -236,8 +237,8 @@ function AhaSummary(props) {
   const [openSnackBar, setOpenSnackBar] = useState(false);
 
   useEffect(() => {
-    console.log(ahaData, 'ahaData');
-  },[ahaData])
+    console.log(ahaData, "ahaData");
+  }, [ahaData]);
 
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
@@ -388,18 +389,18 @@ function AhaSummary(props) {
   const fetchAHASummary = async () => {
     const res = await api.get(`/api/v1/ahas/${id}/`);
     const result = res.data.data.results;
-     setAHAData(result);
+    setAHAData(result);
     await handelWorkArea(result);
     await fetchBreakDownData(result.fkProjectStructureIds);
     await fetchNotificationSent(result.notifyTo);
     if (localStorage.getItem("lessonsLearned") === "Done") {
-       setLessonsLearned(true);
+      setLessonsLearned(true);
     } else if (localStorage.getItem("Approval") === "Done") {
-       setApprovals(true);
+      setApprovals(true);
     } else {
-       setAssessments(true);
+      setAssessments(true);
     }
-     setIsLoading(true);
+    setIsLoading(true);
   };
 
   useEffect(() => {
@@ -442,7 +443,7 @@ function AhaSummary(props) {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`
     );
     const result = res.data.data.results;
-     setTeamForm(result);
+    setTeamForm(result);
   };
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
@@ -577,7 +578,7 @@ function AhaSummary(props) {
       "all",
       "aha:hazard"
     );
-     setForm(resAction);
+    setForm(resAction);
     await handelActionTracker(result);
   };
 
@@ -698,11 +699,15 @@ function AhaSummary(props) {
                           <li>
                             <Button
                               color={
-                                ahaData.ahaStatus === "Assessment" || ahaData.ahaStatus === "Closed" ? "secondary" : "primary"
+                                ahaData.ahaStatus === "Assessment" ||
+                                ahaData.ahaStatus === "Closed"
+                                  ? "secondary"
+                                  : "primary"
                               }
                               // variant="contained"
                               variant={
-                                ahaData.ahaStatus === "Assessment" || ahaData.ahaStatus === "Closed"
+                                ahaData.ahaStatus === "Assessment" ||
+                                ahaData.ahaStatus === "Closed"
                                   ? "contained"
                                   : "outlined"
                               }
@@ -718,8 +723,12 @@ function AhaSummary(props) {
                               display="block"
                               align="center"
                             >
-                              {ahaData.ahaStatus === "Assessment" || ahaData.ahaStatus === "Closed" ? "Done" : "Pending"}
-                              {ahaData.ahaStatus === "Assessment" || ahaData.ahaStatus === "Closed" ? (
+                              {ahaData.ahaStatus === "Assessment" ||
+                              ahaData.ahaStatus === "Closed"
+                                ? "Done"
+                                : "Pending"}
+                              {ahaData.ahaStatus === "Assessment" ||
+                              ahaData.ahaStatus === "Closed" ? (
                                 <CheckCircle />
                               ) : (
                                 <AccessTime />
@@ -877,9 +886,10 @@ function AhaSummary(props) {
                                         Assessment started on
                                       </FormLabel>
                                       <Typography className="viewLabelValue">
-                                        {moment(
-                                          ahaData["assessmentDate"]
-                                        ).format("Do MMM YYYY")}
+                                        {DateFormat(
+                                          ahaData["assessmentDate"],
+                                          true
+                                        )}
                                       </Typography>
                                     </Grid>
 
@@ -1543,9 +1553,9 @@ function AhaSummary(props) {
                                           </FormLabel>
                                           <Typography className="viewLabelValue">
                                             {ahaData.wrpApprovalDateTime
-                                              ? moment(
+                                              ? DateFormat(
                                                   ahaData["wrpApprovalDateTime"]
-                                                ).format("Do MMM YYYY")
+                                                )
                                               : "-"}
                                           </Typography>
                                         </Grid>
@@ -1589,11 +1599,11 @@ function AhaSummary(props) {
                                               </FormLabel>
                                               <Typography className="viewLabelValue">
                                                 {ahaData.sapApprovalDateTime
-                                                  ? moment(
+                                                  ? DateFormat(
                                                       ahaData[
                                                         "sapApprovalDateTime"
                                                       ]
-                                                    ).format("Do MMM YYYY")
+                                                    )
                                                   : "-"}
                                               </Typography>
                                             </Grid>

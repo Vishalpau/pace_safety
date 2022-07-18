@@ -68,6 +68,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Loader from "../Loader";
 import { connect } from "react-redux";
 import { checkACL } from "../../../utils/helper";
+import DateFormat from "../../../components/Date/DateFormat";
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -462,7 +463,7 @@ function JhaSummary(props) {
 
   const handelApprovalViewChange = (side) => {
     // if (formStatus.assessmentStatus === true) {
-      if (jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed") {
+    if (jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed") {
       setAssessmentsView(false);
       if (handelApprovalTabStatus() && side === undefined) {
         setApprovalsView(true);
@@ -634,13 +635,15 @@ function JhaSummary(props) {
                         <li>
                           <Button
                             color={
-                              (jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed")
+                              jhaData.jhaStatus === "Assessment" ||
+                              jhaData.jhaStatus === "Closed"
                                 ? "secondary"
                                 : "primary"
                             }
                             size="large"
                             variant={
-                              (jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed")
+                              jhaData.jhaStatus === "Assessment" ||
+                              jhaData.jhaStatus === "Closed"
                                 ? "contained"
                                 : "outlined"
                             }
@@ -656,8 +659,12 @@ function JhaSummary(props) {
                             display="block"
                             align="center"
                           >
-                            {(jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed") ? "Done" : "Pending"}
-                            {(jhaData.jhaStatus === "Assessment" || jhaData.jhaStatus === "Closed") ? (
+                            {jhaData.jhaStatus === "Assessment" ||
+                            jhaData.jhaStatus === "Closed"
+                              ? "Done"
+                              : "Pending"}
+                            {jhaData.jhaStatus === "Assessment" ||
+                            jhaData.jhaStatus === "Closed" ? (
                               <CheckCircle />
                             ) : (
                               <AccessTime />
@@ -915,9 +922,9 @@ function JhaSummary(props) {
                                       Date
                                     </FormLabel>
                                     <Typography className="viewLabelValue">
-                                      {moment(
+                                      {DateFormat(
                                         assessment["jhaAssessmentDate"]
-                                      ).format("Do MMM YYYY")}
+                                      )}
                                     </Typography>
                                   </Grid>
 
@@ -1542,11 +1549,9 @@ function JhaSummary(props) {
                                       {assessment.wrpApprovalDateTime !==
                                       null ? (
                                         <>
-                                          {moment(
-                                            checkValue(
-                                              assessment.wrpApprovalDateTime
-                                            )
-                                          ).format("Do MMM YYYY")}
+                                          {DateFormat(
+                                            assessment.wrpApprovalDateTime
+                                          )}
                                         </>
                                       ) : (
                                         "-"
@@ -1592,11 +1597,9 @@ function JhaSummary(props) {
                                       {assessment.sapApprovalDateTime !==
                                       null ? (
                                         <>
-                                          {moment(
-                                            checkValue(
-                                              assessment.sapApprovalDateTime
-                                            )
-                                          ).format("Do MMM YYYY")}
+                                          {DateFormat(
+                                            assessment.sapApprovalDateTime
+                                          )}
                                         </>
                                       ) : (
                                         "-"

@@ -59,6 +59,7 @@ import Attachment from "../../../../containers/Attachment/Attachment";
 import Delete from "../../../Delete/Delete";
 import CardView from "../../../../components/Card/Index";
 import { complianceLabels } from "../../../../components/Card/CardConstants";
+import DateFormat from "../../../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -809,7 +810,7 @@ function ComplianceListNew(props) {
             { label: complianceLabels.body[0], value: value.area },
             {
               label: complianceLabels.body[1],
-              value: moment(value.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+              value: DateFormat(value.createdAt, true),
             },
             { label: complianceLabels.body[2], value: value.createdByName },
           ]}

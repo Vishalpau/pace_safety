@@ -52,6 +52,7 @@ import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 // import { Delete } from "@material-ui/icons";
 import Delete from "../../Delete/Delete";
+import DateFormat from "../../../components/Date/DateFormat";
 
 const Loader = lazy(() => import("../../Forms/Loader"));
 
@@ -179,8 +180,8 @@ function BlankPage(props) {
   // }, [isLoading]);
 
   useEffect(() => {
-    console.log(incidents, 'incidents');
-  },[incidents])
+    console.log(incidents, "incidents");
+  }, [incidents]);
 
   const handelViewTabel = (e) => {
     setListToggle(true);
@@ -232,7 +233,10 @@ function BlankPage(props) {
       //   history.push("/app/pages/error")
       // }
     } else {
-      const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
+      const res = await api
+        .get(
+          `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
+        )
         // alert('hey')
         .then(async (res) => {
           // debugger;
@@ -401,7 +405,10 @@ function BlankPage(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`)
+    const res = await api
+      .get(
+        `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
+      )
       .then((res) => {
         setIncidents(res.data.data.results.results);
         setPage(value);
@@ -502,7 +509,10 @@ function BlankPage(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`)
+    api
+      .get(
+        `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`
+      )
       .then((res) => {
         setIncidents(res.data.data.results.results);
         setTotalData(res.data.data.results.count);
@@ -798,9 +808,10 @@ function BlankPage(props) {
                                       variant="body1"
                                       className={Fonts.listingLabelValue}
                                     >
-                                      {moment(
-                                        item[1]["incidentReportedOn"]
-                                      ).format("Do MMM YYYY, h:mm a")}
+                                      {DateFormat(
+                                        item[1]["incidentReportedOn"],
+                                        true
+                                      )}
                                     </Typography>
                                   </Grid>
 
