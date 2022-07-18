@@ -1324,9 +1324,9 @@ function ComplianceSummary(props) {
                                                                                 rating
                                                                               </FormLabel>
                                                                               {console.log(
-                                                                                value
+                                                                                colordata,
+                                                                                "colordata"
                                                                               )}
-                                                                              {/* {console.log(colordata)} */}
                                                                               <Typography
                                                                                 style={{
                                                                                   backgroundColor:

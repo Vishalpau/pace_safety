@@ -990,7 +990,7 @@ function Actions(props) {
           itemId={item.id}
           headerFields={[
             { label: icareLabels.header[0], value: item.observationNumber },
-            { label: icareLabels.header[1], value: "" },
+            { label: icareLabels.header[1], value: item.assigneeName },
             { label: icareLabels.header[2], value: item.observationStage },
             { label: icareLabels.header[3], value: item.observationStatus },
           ]}

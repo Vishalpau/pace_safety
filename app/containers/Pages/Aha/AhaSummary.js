@@ -378,13 +378,14 @@ function AhaSummary(props) {
     }
   };
 
-  const handelFileName = (value) => {
-    const fileNameArray = value.split("/");
-    const fileName = fileNameArray[fileNameArray.length - 1].split("-");
-    const lastNameArray = fileName[fileName.length - 1];
-    // const lastName = fileName.split("-");
-    return lastNameArray;
-  };
+  // const handelFileName = (value) => {
+  //   const fileNameArray = value.split("/");
+  //   const fileName = fileNameArray[fileNameArray.length - 1].split("-");
+  //   const lastNameArray = fileName[fileName.length - 1];
+  //   // const lastName = fileName.split("-");
+  //   return lastNameArray;
+  // };
+
   const [projectStructName, setProjectStructName] = useState([]);
   const fetchAHASummary = async () => {
     const res = await api.get(`/api/v1/ahas/${id}/`);
@@ -403,9 +404,9 @@ function AhaSummary(props) {
     setIsLoading(true);
   };
 
-  useEffect(() => {
-    console.log(ahaData, "ahaData");
-  }, [ahaData]);
+  // useEffect(() => {
+  //   console.log(ahaData, "ahaData");
+  // }, [ahaData]);
 
   const handelWorkArea = async (assessment) => {
     const fkCompanyId =
@@ -699,10 +700,7 @@ function AhaSummary(props) {
                           <li>
                             <Button
                               color={
-                                ahaData.ahaStatus === "Assessment" ||
-                                ahaData.ahaStatus === "Closed"
-                                  ? "secondary"
-                                  : "primary"
+                                assessments === true ? "secondary" : "primary"
                               }
                               // variant="contained"
                               variant={

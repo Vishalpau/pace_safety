@@ -635,8 +635,10 @@ function JhaSummary(props) {
                         <li>
                           <Button
                             color={
-                              jhaData.jhaStatus === "Assessment" ||
-                              jhaData.jhaStatus === "Closed"
+                              (assessmentsView === true &&
+                                jhaData.jhaStatus === "Closed") ||
+                              (assessmentsView === true &&
+                                jhaData.jhaStatus === "Assessment")
                                 ? "secondary"
                                 : "primary"
                             }

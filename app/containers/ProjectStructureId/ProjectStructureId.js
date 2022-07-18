@@ -271,13 +271,13 @@ const ProjectStructure = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log(labelList);
-  }, [labelList])
+  // useEffect(() => {
+  //   console.log(labelList);
+  // }, [labelList])
 
-  useEffect(() => {
-    console.log(selectBreakDown)
-  }, [selectBreakDown])
+  // useEffect(() => {
+  //   console.log(selectBreakDown)
+  // }, [selectBreakDown])
 
   const setStateBreakDown = async (select, projectData) => {
 
