@@ -353,9 +353,13 @@ const Checks = (props) => {
   const [valueStar, setValueStar] = React.useState([]);
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    console.log(actionData, 'actionData');
-  },[actionData])
+  // useEffect(() => {
+  //   console.log(actionData, 'actionData');
+  // },[actionData])
+
+  // useEffect(() => {
+  //   console.log(ratingColor, 'ratingColor');
+  // },[ratingColor])
 
   const selectBreakdown =
       props.projectName.breakDown.length > 0
@@ -371,19 +375,11 @@ const Checks = (props) => {
 
   //fetch matrix color and color data
   const fetchMatrixData = async () => {
-    const res = await api.get(
-      `/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`
-    );
+    const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`);
     const result = res.data.data.results;
-    // console.log('result', result);
     const a = result.filter((a) => a.status !== "Inactive");
-    // console.log(a, 'aaaaaaaaaaaaa');
     setColorData(a);
   };
-
-  // useEffect(() => {
-  //   console.log(showCheckData, "showCheckData");
-  // }, [showCheckData]);
 
   const radioDecide = ["Yes", "No", "N/A"];
 
@@ -432,11 +428,7 @@ const Checks = (props) => {
   //post the project if the id is not present
   const postApi = (formData) => {
     return new Promise((resolve, reject) => {
-      api
-        .post(
-          `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`,
-          formData
-        )
+      api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData)
         .then((res) => {
           resolve(res);
         })
@@ -447,13 +439,7 @@ const Checks = (props) => {
   //put the project if the id is present
   const putApiData = (formData, id) => {
     return new Promise((resolve, reject) => {
-      api
-        .put(
-          `/api/v1/audits/${localStorage.getItem(
-            "fkComplianceId"
-          )}/response/${id}/`,
-          formData
-        )
+      api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${id}/`, formData)
         .then((res) => {
           resolve(res);
         })
@@ -463,7 +449,6 @@ const Checks = (props) => {
 
   // method to call when we click on submit
   const updateAccordian = async () => {
-    debugger;
     setLoading(true);
     const temp = [...checkData];
     for (const key in temp) {
@@ -473,19 +458,14 @@ const Checks = (props) => {
         const formData = new FormData();
         Object.keys(data).forEach((key) => {
           if (key === "fkAuditId") {
-            formData.append(key, data[key]);
+            formData.append("fkAuditId", data['fkAuditId']);
           }
-          if (key === "files") {
+          else if (key === "files") {
             data.files.map((file) => {
               formData.append(key, file);
             });
           }
-          if (
-            key !== "check" &&
-            key !== "id" &&
-            key !== "criticValue" &&
-            key !== "statValue"
-          ) {
+          else if (key !== "check" && key !== "id" && key !== "criticValue" && key !== "statValue") {
             formData.append(key, data[key]);
           }
         });
@@ -538,7 +518,6 @@ const Checks = (props) => {
       `/api/v1/core/checklists/compliance-groups/${project}/`
       // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
     );
-    // console.log(res.data.data.results);
     const result = res.data.data.results;
     await fetchComplianceData(result);
   };
@@ -558,11 +537,7 @@ const Checks = (props) => {
 
         for (let j = 0; j < data.length; j++) {
           for (let i = 0; i < data[j]["checklistGroups"].length; i++) {
-            if (
-              groupIds.includes(
-                data[j]["checklistGroups"][i]["checklistgroupId"]
-              )
-            ) {
+            if (groupIds.includes(data[j]["checklistGroups"][i]["checklistgroupId"])) {
               tempGroup.push(data[j]["checklistGroups"][i]);
             }
           }
@@ -593,9 +568,7 @@ const Checks = (props) => {
   };
 
   const fetchData = async () => {
-    const res = await api.get(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`
-    );
+    const res = await api.get(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`);
     const result = res.data.data.results;
     setShowCheckData(result);
     setCheckData(result);
@@ -604,7 +577,6 @@ const Checks = (props) => {
 
   //method to get the data according to groupName and subGroupName
   const fetchCheklist = async (data, groups, subGroups, strId) => {
-    // console.log(data);
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -632,11 +604,8 @@ const Checks = (props) => {
       let groupName = data[i].groupName;
       let subGroupName = data[i].subGroupName;
       categoriesData[groupName] = [];
-      // console.log(categoriesData);
 
-      const res = await api.get(
-        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${strId}`
-      );
+      const res = await api.get(`/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${strId}`);
 
       const result2 = res.data.data.results;
       temp.push(result2);
@@ -645,8 +614,6 @@ const Checks = (props) => {
 
     //here we are getting the data
     let fd = await fetchData();
-
-    // console.log(fd, "ffffffdddddddddd");
 
     //here we are making a separate array according to the key
     temp.map((tempvalue, i) => {
@@ -658,9 +625,9 @@ const Checks = (props) => {
           let crtic = fd.filter((f) => f.question == value.question).length
             ? fd.filter((f) => f.question == value.question)[0].criticality
             : "";
-          let auditS = fd.filter((f) => f.question == value.question).length
-            ? fd.filter((f) => f.question == value.question)[0].auditStatus
-            : "";
+          // let auditS = fd.filter((f) => f.question == value.question).length
+          //   ? fd.filter((f) => f.question == value.question)[0].auditStatus
+          //   : "";
 
           tempQuestionId.push({ id: value.id });
           tempCheckData.push({
@@ -682,6 +649,7 @@ const Checks = (props) => {
             performance: fd.filter((f) => f.question == value.question).length
               ? fd.filter((f) => f.question == value.question)[0].performance
               : "",
+            // matrixId: value.matrixId,
             groupId: null,
             groupName: value.groupName,
             subGroupId: null,
@@ -717,7 +685,6 @@ const Checks = (props) => {
               : null;
             categoriesData[key] = [value];
           }
-          // console.log(value,'value')
           // categoriesData[value["groupName"]].push(value);
         });
       }
@@ -739,14 +706,13 @@ const Checks = (props) => {
       }
     }
     handelCommonObject("commonObject", "audit", "qustionsIds", tempQuestionId);
-    await setCheckData(tempCheckData);
-    await setCategories(categoriesData);
+     setCheckData(tempCheckData);
+     setCategories(categoriesData);
     await handelActionTracker();
   };
 
   // method for uploading a file
   const handleFileUpload = (files, questionId, targetName) => {
-    debugger;
     let temp = [...checkData];
     const name = targetName;
     const file = files;
@@ -781,10 +747,6 @@ const Checks = (props) => {
     // }
   };
 
-  // useEffect(() => {
-  //   console.log(checkData);
-  // }, [checkData]);
-
   const handelSubmit = async () => {
     updateAccordian();
   };
@@ -816,44 +778,28 @@ const Checks = (props) => {
           }
         }
         temp[i]["check"] = false;
-        console.log(value, "value");
         temp[i][field] = value;
       }
     }
-    // console.log(temp, "tempppppppppppp");
     setCheckData(temp);
   };
 
-  // useEffect(() => {
-  //   console.log(checkData, "checkDataaaaaaaaaaa");
-  // }, [checkData]);
-
   // for get action tracker & showing
   const handelActionTracker = async () => {
-    if (
-      localStorage.getItem("fkComplianceId") != undefined &&
-      localStorage.getItem("commonObject") != undefined
-    ) {
+    if (localStorage.getItem("fkComplianceId") !== undefined && localStorage.getItem("commonObject") !== undefined) {
       let jhaId = localStorage.getItem("fkComplianceId");
-      let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
-        "qustionsIds"
-      ];
+      let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"]["qustionsIds"];
       let allAction = await handelActionData(jhaId, apiData);
-      // console.log(allAction, 'allAction');
       setActionData(allAction);
     }
   };
 
   //fetch factor data
   const fetchFectorData = async () => {
-    let res = await api.get(
-      `/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`
-    );
+    let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`);
     const result = res.data.data.results;
     // gettinng the type of factor data in dropdown
-    const factorCriticality = result.filter(
-      (item) => item.factorType === "Criticality"
-    );
+    const factorCriticality = result.filter((item) => item.factorType === "Criticality" );
     setCriticalityData(factorCriticality);
     const factorStatus = result.filter((item) => item.factorType === "Status");
     setStatusData(factorStatus);
@@ -865,18 +811,24 @@ const Checks = (props) => {
     const foundObject = temp.find((a) => a.questionId === id);
     if (selectType === "menuItem") {
       foundObject.criticValue = factorConstant;
-    } else if (selectType === "statusItem") {
+    } 
+    else if (selectType === "statusItem") {
       foundObject.statValue = factorConstant;
     }
     temp.splice(id, 1);
 
     // calculating the factor & get color code which set into configurations
     if (foundObject.criticValue >= 0 && foundObject.statValue >= 0) {
-      let ratingValue =
-        ((foundObject.criticValue * foundObject.statValue) / 5) * 100;
+      let ratingValue = ((foundObject.criticValue * foundObject.statValue) / 5) * 100;
       for (var i = 0; i < colordata.length; i++) {
         if ((ratingValue * 5) / 100 === colordata[i].matrixConstant) {
-          let clr_op = { ...ratingColor };
+          const matrixId = colordata[i].id;
+          let clr_op = {...ratingColor};
+          checkData.forEach(check => {
+            if (check.questionId === id) {
+              check.matrixId = matrixId;
+            }
+          })
           clr_op[index] = colordata[i].matrixConstantColor;
           setRatingColor(clr_op);
           break; // stop the loop
@@ -887,8 +839,8 @@ const Checks = (props) => {
       }
       let arr_op = { ...ratingData };
       arr_op[index] = ratingValue;
-      // console.log(arr_op[index], ratingValue, 'superrrrrrrrrrr');
       setRatingData(arr_op);
+      console.log(checkData, 'checkdata');
       let temp = [...checkData];
       for (let i = 0; i < temp.length; i++) {
         if (temp[i]["questionId"] == id) {
@@ -897,6 +849,10 @@ const Checks = (props) => {
       }
     }
   };
+
+  useEffect(() => {
+    console.log(checkData, 'checkDataaaaa');
+  },[checkData])
 
   //method when we change the criticality on accordian
   const handleCriticality = (option, selectType, index, id) => {
@@ -1074,7 +1030,6 @@ const Checks = (props) => {
 
                           {Categor.length > 0 ? (
                             Categor.map((value, index) => {
-                              // console.log(value, "value");
                               return (
                                 <>
                                   <Grid container item xs={12}>
@@ -1114,9 +1069,7 @@ const Checks = (props) => {
                                             >
                                               <List className={classes.heading}>
                                                 <ListItem
-                                                  className={
-                                                    classes.accordingHeaderContentLeft
-                                                  }
+                                                  className={classes.accordingHeaderContentLeft}
                                                 >
                                                   <ListItemText
                                                     primary={value.question}
@@ -1132,8 +1085,7 @@ const Checks = (props) => {
                                                       component="legend"
                                                       className="checkRadioLabel"
                                                     >
-                                                      Is this control applicable
-                                                      ?
+                                                      Is this control applicable ?
                                                     </FormLabel>
 
                                                     <RadioGroup
@@ -1208,8 +1160,7 @@ const Checks = (props) => {
                                                     className="formControl"
                                                   />
                                                 </Grid>
-                                                {value.scoreType ===
-                                                  "Stars" && (
+                                                {value.scoreType === "Stars" && (
                                                   <Grid
                                                     item
                                                     md={12}
@@ -1229,9 +1180,7 @@ const Checks = (props) => {
                                                       xs={12}
                                                     >
                                                       <Rating
-                                                        name={`simple-controlled ${
-                                                          value.id
-                                                        }`}
+                                                        name={`simple-controlled ${value.id}`}
                                                         defaultValue={
                                                           valueStar[index] !=
                                                           undefined
@@ -1251,13 +1200,8 @@ const Checks = (props) => {
                                                                 .length
                                                             : ""
                                                         }
-                                                        onChange={(
-                                                          event,
-                                                          newValue
-                                                        ) => {
-                                                          if (
-                                                            newValue !== null
-                                                          ) {
+                                                        onChange={(event, newValue) => {
+                                                          if (newValue !== null) {
                                                             handleChangeData(
                                                               newValue,
                                                               "score",
@@ -1403,10 +1347,7 @@ const Checks = (props) => {
                                                     />
                                                   </Grid>
                                                 )}
-                                                {checkACL(
-                                                  "action_tracker-actions",
-                                                  "add_actions"
-                                                ) && (
+                                                {checkACL("action_tracker-actions", "add_actions") && (
                                                   <Grid item md={12} xs={12}>
                                                     <FormLabel
                                                       className="checkRadioLabel"
@@ -1437,10 +1378,7 @@ const Checks = (props) => {
                                                     </Grid>
                                                   </Grid>
                                                 )}
-                                                {checkACL(
-                                                  "action_tracker-actions",
-                                                  "view_actions"
-                                                ) && (
+                                                {checkACL("action_tracker-actions", "view_actions") && (
                                                   <Grid item md={12} xs={12}>
                                                     <Table
                                                       component={Paper}
@@ -1544,9 +1482,7 @@ const Checks = (props) => {
                                                       Document{" "}
                                                     </FormLabel> */}
                                                       <Grid
-                                                        style={{
-                                                          marginTop: "-20px",
-                                                        }}
+                                                        style={{marginTop: "-20px"}}
                                                       >
                                                         <MultiAttachment
                                                           headerText="Documents & Evidences"
@@ -1682,26 +1618,13 @@ const Checks = (props) => {
                                             // expanded={expandedTableDetail === "panel4"}
                                             // onChange={handleTDChange("panel4")}
 
-                                            expanded={
-                                              expandedTableDetail ===
-                                              `panel6 ${value.id}`
-                                            }
-                                            onChange={handleTDChange(
-                                              `panel6 ${value.id}`,
-                                              value.id
-                                            )}
+                                            expanded={expandedTableDetail === `panel6 ${value.id}`}
+                                            onChange={handleTDChange(`panel6 ${value.id}`,value.id)}
                                             style={{
                                               border:
-                                                checkData.find(
-                                                  (a) =>
-                                                    value.id === a.questionId
-                                                ).check === false
+                                                checkData.find((a) => value.id === a.questionId).check === false
                                                   ? "3px solid red"
-                                                  : checkData.find(
-                                                      (a) =>
-                                                        value.id ===
-                                                        a.questionId
-                                                    ).check === true &&
+                                                  : checkData.find((a) => value.id === a.questionId).check === true &&
                                                     "3px solid green",
                                             }}
                                             defaultExpanded
@@ -1715,9 +1638,7 @@ const Checks = (props) => {
                                             >
                                               <List className={classes.heading}>
                                                 <ListItem
-                                                  className={
-                                                    classes.accordingHeaderContentLeft
-                                                  }
+                                                  className={classes.accordingHeaderContentLeft}
                                                 >
                                                   <ListItemText
                                                     primary={value.question}
@@ -1736,16 +1657,8 @@ const Checks = (props) => {
                                                     fullWidth
                                                     variant="outlined"
                                                     defaultValue={
-                                                      showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      ).length
-                                                        ? showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          )[0].criticality
+                                                      showCheckData.filter((cd) => cd.question == value.question).length
+                                                        ? showCheckData.filter((cd) => cd.question == value.question)[0].criticality
                                                         : ""
                                                     }
                                                     className="formControl"
@@ -1759,18 +1672,11 @@ const Checks = (props) => {
                                                     }
                                                   >
                                                     {criticalityData.map(
-                                                      (option) => {
-                                                        if (
-                                                          option.status ===
-                                                          "Active"
-                                                        ) {
+                                                      (option) => {if(option.status === "Active") {
                                                           return (
                                                             <MenuItem
                                                               key={option.id}
-                                                              value={
-                                                                option.factorName ||
-                                                                ""
-                                                              }
+                                                              value={option.factorName || ""}
                                                               id={option.id}
                                                               onClick={(e) => {
                                                                 handleCriticality(
@@ -1783,9 +1689,7 @@ const Checks = (props) => {
                                                                 );
                                                               }}
                                                             >
-                                                              {
-                                                                option.factorName
-                                                              }
+                                                              {option.factorName}
                                                             </MenuItem>
                                                           );
                                                         }
@@ -1799,16 +1703,8 @@ const Checks = (props) => {
                                                     name="status"
                                                     id="status"
                                                     defaultValue={
-                                                      showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      ).length
-                                                        ? showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          )[0].auditStatus
+                                                      showCheckData.filter((cd) => cd.question == value.question).length
+                                                        ? showCheckData.filter((cd) => cd.question == value.question)[0].auditStatus
                                                         : ""
                                                     }
                                                     select
@@ -1826,17 +1722,11 @@ const Checks = (props) => {
                                                   >
                                                     {statusData.map(
                                                       (option) => {
-                                                        if (
-                                                          option.status ===
-                                                          "Active"
-                                                        ) {
+                                                        if (option.status === "Active") {
                                                           return (
                                                             <MenuItem
                                                               key={option.id}
-                                                              value={
-                                                                option.factorName ||
-                                                                ""
-                                                              }
+                                                              value={option.factorName || ""}
                                                               id={option.id}
                                                               onClick={(e) => {
                                                                 handleCriticality(
@@ -1871,34 +1761,18 @@ const Checks = (props) => {
                                                     name="performancerating"
                                                     id="performancerating"
                                                     value={
-                                                      ratingData[
-                                                        catI + "-" + index
-                                                      ] >= 0
-                                                        ? ratingData[
-                                                            catI + "-" + index
-                                                          ]
-                                                        : showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          ).length > 0
-                                                        ? showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          )[0].performance
+                                                      ratingData[catI + "-" + index] >= 0
+                                                        ? ratingData[catI + "-" + index]
+                                                        : showCheckData.filter((cd) => cd.question == value.question).length > 0
+                                                        ? showCheckData.filter((cd) => cd.question == value.question)[0].performance
                                                         : ""
                                                     }
                                                     style={{
-                                                      backgroundColor: ratingColor[
-                                                        catI + "-" + index
-                                                      ]
-                                                        ? ratingColor[
-                                                            catI + "-" + index
-                                                          ]
-                                                        : showCheckData.filter((cd) => cd.question == value.question ).length > 0 &&
-                                                          colordata.filter((c) => c.matrixConstant == (showCheckData.filter((cd) => cd.question == value.question)[0].performance * 5)/100 ).length > 0
-                                                        ? colordata.filter((c) => c.matrixConstant == (showCheckData.filter((cd) => cd.question == value.question)[0].performance * 5) / 100 )[0]
+                                                      backgroundColor: ratingColor[catI + "-" + index]
+                                                        ? ratingColor[catI + "-" + index]
+                                                        : showCheckData.filter((cd) => cd.question == value.question).length > 0 &&
+                                                          colordata.filter((c) => c.matrixConstant == (showCheckData.filter((cd) => cd.question == value.question)[0].performance * 5)/100).length > 0
+                                                        ? colordata.filter((c) => c.matrixConstant == (showCheckData.filter((cd) => cd.question == value.question)[0].performance * 5) / 100)[0]
                                                             .matrixConstantColor
                                                         : "",
                                                     }}
@@ -1967,9 +1841,7 @@ const Checks = (props) => {
                                                       xs={12}
                                                     >
                                                       <Rating
-                                                        name={`simple-controlled ${
-                                                          value.id
-                                                        }`}
+                                                        name={`simple-controlled ${value.id}`}
                                                         defaultValue={
                                                           valueStar[index] !=
                                                           undefined

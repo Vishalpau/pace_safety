@@ -1,66 +1,73 @@
-import DateFnsUtils from "@date-io/date-fns";
-import { Button, FormHelperText, FormLabel, Grid, Select } from "@material-ui/core";
-import Box from "@material-ui/core/Box";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import InputLabel from "@material-ui/core/InputLabel";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import MenuItem from "@material-ui/core/MenuItem";
-import Paper from "@material-ui/core/Paper";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Snackbar from "@material-ui/core/Snackbar";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import AddIcon from "@material-ui/icons/Add";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import MuiAlert from "@material-ui/lab/Alert";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  Button,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  Select,
+} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import InputLabel from '@material-ui/core/InputLabel';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Snackbar from '@material-ui/core/Snackbar';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import MuiAlert from '@material-ui/lab/Alert';
 import {
   KeyboardDatePicker,
-  KeyboardTimePicker, MuiPickersUtilsProvider
-} from "@material-ui/pickers";
-import { PapperBlock } from "dan-components";
-import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
-import { Col, Row } from "react-grid-system";
-import { useHistory } from "react-router";
-import Attachment from "../../../containers/Attachment/Attachment";
-import api from "../../../utils/axios";
-import { INVESTIGATION_FORM } from "../../../utils/constants";
-import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
-import FormSideBar from "../FormSideBar";
-import Loader from "../Loader";
+  KeyboardTimePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+import { PapperBlock } from 'dan-components';
+import moment from 'moment';
+import React, { useEffect, useRef, useState } from 'react';
+import { Col, Row } from 'react-grid-system';
+import { useHistory } from 'react-router';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import allPickListDataValue from "../../../utils/Picklist/allPickList";
-import { OtherNA } from "../../../utils/CheckerValue"
-
+import Attachment from '../../Attachment/Attachment';
+import api from '../../../utils/axios';
+import { INVESTIGATION_FORM } from '../../../utils/constants';
+import PickListData from '../../../utils/Picklist/InvestigationPicklist';
+import WorkerDetailValidator from '../../Validator/InvestigationValidation/WorkerDetailsValidation';
+import FormSideBar from '../FormSideBar';
+import Loader from '../Loader';
+import allPickListDataValue from '../../../utils/Picklist/allPickList';
+import { OtherNA } from '../../../utils/CheckerValue';
+import MultiAttachment from '../../MultiAttachment/MultiAttachment';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: "100%",
+    width: '100%',
   },
   button: {
     margin: theme.spacing(1),
   },
   inlineRadioGroup: {
-    flexDirection: "row",
-    gap: "1.5rem",
+    flexDirection: 'row',
+    gap: '1.5rem',
   },
   textButton: {
-    color: "#3498db",
+    color: '#3498db',
     padding: 0,
-    textDecoration: "underline",
-    display: "inlineBlock",
-    marginBlock: "1.5rem",
-    backgroundColor: "transparent",
+    textDecoration: 'underline',
+    display: 'inlineBlock',
+    marginBlock: '1.5rem',
+    backgroundColor: 'transparent',
   },
   activeList: {
     color: theme.palette.primary.main,
@@ -96,115 +103,110 @@ const WorkerDetails = () => {
   const [supervisorTimeInCompany, setSupervisorTimeInCompany] = useState([]);
   const [supervisorTimeOnProject, setSupervisorTimeOnProject] = useState([]);
 
-  const putId = useRef("");
-  const investigationId = useRef("");
+  const putId = useRef('');
+  const investigationId = useRef('');
   const [form, setForm] = useState([]);
-  const [workerNumber, setWorkerNumber] = useState("");
+  const [workerNumber, setWorkerNumber] = useState('');
   const history = useHistory();
   const [workerid, setWorkerId] = useState();
-  let [localWorkerData, setLocalWorkerData] = useState([]);
+  const [localWorkerData, setLocalWorkerData] = useState([]);
   const [files] = useState([]);
-  const radioDecide = ["Yes", "No", "N/A"];
-  const radioYesNo = ["Yes", "No"];
+  const radioDecide = ['Yes', 'No', 'N/A'];
+  const radioYesNo = ['Yes', 'No'];
   const ref = useRef();
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
-  const fileRef = useRef("");
-  const [isDateShow, setIsDateShow] = useState(false)
-  const [isTimeShow, setIsTimeShow] = useState(false)
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+  const fileRef = useRef('');
+  const [isDateShow, setIsDateShow] = useState(false);
+  const [isTimeShow, setIsTimeShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [buttonLoading, setButtonLoading] = useState(false)
-  const TextFieldComponent = (props) => {
-    return <TextField {...props} inputProps={{ readOnly: true }} />
-  }
-  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
-  let ONA = OtherNA("on")
-  let [workerData, setworkerData] = useState({
-    name: "",
-    workerType: "",
-    department: "",
-    workHours: "",
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const TextFieldComponent = (props) => <TextField {...props} inputProps={{ readOnly: true }} />;
+  const pickListValues = JSON.parse(localStorage.getItem('pickList'));
+  const ONA = OtherNA('on');
+  const [workerData, setworkerData] = useState({
+    name: '',
+    workerType: '',
+    department: '',
+    workHours: '',
     shiftTimeStart: null,
-    shiftType: "",
-    occupation: "",
-    shiftCycle: "",
-    noOfDaysIntoShift: "",
-    timeInCompany: "",
-    timeOnProject: "",
-    timeInIndustry: "",
+    shiftType: '',
+    occupation: '',
+    shiftCycle: '',
+    noOfDaysIntoShift: '',
+    timeInCompany: '',
+    timeOnProject: '',
+    timeInIndustry: '',
     attachments: null,
-    eventLeadingToInjury: "",
-    injuryObject: "",
-    primaryBodyPartWithSide: "",
-    secondaryBodyPartWithSide: "",
-    typeOfInjury: "",
-    NoOfDaysAway: "",
-    medicalResponseTaken: "",
+    eventLeadingToInjury: '',
+    injuryObject: '',
+    primaryBodyPartWithSide: '',
+    secondaryBodyPartWithSide: '',
+    typeOfInjury: '',
+    NoOfDaysAway: '',
+    medicalResponseTaken: '',
     treatmentDate: null,
-    higherMedicalResponder: "",
-    injuryStatus: "",
-    firstAidTreatment: "",
-    mechanismOfInjury: "",
-    isMedicationIssued: "No",
-    isPrescriptionIssued: "No",
-    isNonPrescription: "No",
-    isAnyLimitation: "No",
-    supervisorName: "",
-    supervisorTimeInIndustry: "",
-    supervisorTimeInCompany: "",
-    supervisorTimeOnProject: "",
-    isAlcoholDrugTestTaken: "No",
+    higherMedicalResponder: '',
+    injuryStatus: '',
+    firstAidTreatment: '',
+    mechanismOfInjury: '',
+    isMedicationIssued: 'No',
+    isPrescriptionIssued: 'No',
+    isNonPrescription: 'No',
+    isAnyLimitation: 'No',
+    supervisorName: '',
+    supervisorTimeInIndustry: '',
+    supervisorTimeInCompany: '',
+    supervisorTimeOnProject: '',
+    isAlcoholDrugTestTaken: 'No',
     dateOfAlcoholDrugTest: null,
-    isWorkerClearedTest: "Yes",
-    reasonForTestNotDone: "",
-    status: "Active",
+    isWorkerClearedTest: 'Yes',
+    reasonForTestNotDone: '',
+    status: 'Active',
     createdBy: 0,
     fkInvestigationId: investigationId.current,
   });
 
   const handelUpdateCheck = async (e) => {
-    let page_url = window.location.href;
+    const page_url = window.location.href;
     const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
+      page_url.substring(page_url.lastIndexOf('/') + 1)
     );
-    let incidentId = !isNaN(lastItem)
+    const incidentId = !isNaN(lastItem)
       ? lastItem
-      : localStorage.getItem("fkincidentId");
+      : localStorage.getItem('fkincidentId');
     putId.current = incidentId;
     setError({});
 
     // getting person affected data
-    const url = window.location.pathname.split("/");
+    const url = window.location.pathname.split('/');
     const workerNum = url[url.length - 2];
     setWorkerNumber(workerNum);
-    let allEffectedPersonData = localStorage.getItem("personEffected");
-    let particularEffected = JSON.parse(allEffectedPersonData)[workerNum];
-    if (typeof particularEffected !== "undefined") {
+    const allEffectedPersonData = localStorage.getItem('personEffected');
+    const particularEffected = JSON.parse(allEffectedPersonData)[workerNum];
+    if (typeof particularEffected !== 'undefined') {
       setForm(particularEffected);
     }
-    if (
-      !particularEffected ||
-      particularEffected.id != ""
-    ) {
+    if (!particularEffected || particularEffected.id != '') {
       setWorkerId(particularEffected.id);
     }
     // getting person affected data end
-    setLocalWorkerData(JSON.parse(localStorage.getItem("personEffected")));
-    let investigationData = await api.get(
+    setLocalWorkerData(JSON.parse(localStorage.getItem('personEffected')));
+    const investigationData = await api.get(
       `api/v1/incidents/${incidentId}/investigations/`
     );
-    let allApiData = investigationData.data.data.results[0];
-    if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
+    const allApiData = investigationData.data.data.results[0];
+    if (typeof allApiData !== 'undefined' && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
     }
   };
 
   const handelTestTaken = async (e) => {
-    if (e.target.value == "Yes") {
+    if (e.target.value == 'Yes') {
       setForm({ ...form, isAlcoholDrugTestTaken: e.target.value });
       setTesttaken(true);
-    } else if (e.target.value == "No") {
+    } else if (e.target.value == 'No') {
       setForm({
         ...form,
         isAlcoholDrugTestTaken: e.target.value,
@@ -213,41 +215,11 @@ const WorkerDetails = () => {
     }
   };
 
-  let fileTypeError =
-    "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!";
+  const fileTypeError = 'Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!';
 
-  let fielSizeError = "Size less than 25Mb allowed";
-  const handleFile = async (e) => {
-
-    let acceptFileTypes = [
-      "pdf",
-      "png",
-      "jpeg",
-      "jpg",
-      "xls",
-      "xlsx",
-      "doc",
-      "word",
-      "ppt",
-    ];
-    let file = e.target.files[0].name.split(".");
-
-    if (
-      acceptFileTypes.includes(file[file.length - 1]) &&
-      e.target.files[0].size < 25670647
-    ) {
-
-      const temp = { ...form };
-      temp.attachments = e.target.files[0];
-      await setForm(temp);
-    } else {
-      ref.current.value = "";
-      !acceptFileTypes.includes(file[file.length - 1])
-        ? await setMessage(fileTypeError)
-        : await setMessage(`${fielSizeError}`);
-      await setMessageType("error");
-      await setOpen(true);
-    }
+  const fielSizeError = 'Size less than 25Mb allowed';
+  const handleFile = async (files) => {
+    setForm({ ...form, files });
   };
 
   function Alert(props) {
@@ -255,7 +227,7 @@ const WorkerDetails = () => {
   }
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       // setOpenError(false)
       return;
     }
@@ -265,85 +237,86 @@ const WorkerDetails = () => {
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
-    setButtonLoading(true)
+    setButtonLoading(true);
     if (Object.keys(error).length === 0) {
-      let data = new FormData();
-      data.append("name", form.name);
-      data.append("workerType", form.workerType);
-      data.append("department", form.department);
-      data.append("workHours", form.workHours);
+      const data = new FormData();
+      data.append('name', form.name);
+      data.append('workerType', form.workerType);
+      data.append('department', form.department);
+      data.append('workHours', form.workHours);
       if (form.shiftTimeStart != null) {
-        data.append("shiftTimeStart", form.shiftTimeStart);
+        data.append('shiftTimeStart', form.shiftTimeStart);
       } else if (form.shiftTimeStart == null) {
-        delete form["shiftTimeStart"];
+        delete form.shiftTimeStart;
       }
-      data.append("shiftType", form.shiftType);
-      data.append("occupation", form.occupation);
-      data.append("shiftCycle", form.shiftCycle);
-      data.append("noOfDaysIntoShift", form.noOfDaysIntoShift);
-      data.append("timeInCompany", form.timeInCompany);
-      data.append("timeOnProject", form.timeOnProject);
-      data.append("timeInIndustry", form.timeInIndustry);
+      data.append('shiftType', form.shiftType);
+      data.append('occupation', form.occupation);
+      data.append('shiftCycle', form.shiftCycle);
+      data.append('noOfDaysIntoShift', form.noOfDaysIntoShift);
+      data.append('timeInCompany', form.timeInCompany);
+      data.append('timeOnProject', form.timeOnProject);
+      data.append('timeInIndustry', form.timeInIndustry);
       if (
-        form.attachments !== null &&
-        typeof form.attachments !== "undefined"
+        form.files !== null
+        && typeof form.files !== 'undefined'
+        && typeof form.files !== 'string'
       ) {
-        if (typeof form.attachments !== "string") {
-          data.append("attachments", form.attachments);
-        }
-      } else if (form.attachments == null) {
-        delete form["attachments"];
+        form.files.map((file) => {
+          data.append('files', file);
+        });
       }
-      data.append("eventLeadingToInjury", form.eventLeadingToInjury);
-      data.append("injuryObject", form.injuryObject);
-      data.append("primaryBodyPartWithSide", form.primaryBodyPartWithSide);
-      data.append("secondaryBodyPartWithSide", form.secondaryBodyPartWithSide);
-      data.append("typeOfInjury", form.typeOfInjury);
-      data.append("NoOfDaysAway", form.NoOfDaysAway);
-      data.append("medicalResponseTaken", form.medicalResponseTaken);
+      data.append('eventLeadingToInjury', form.eventLeadingToInjury);
+      data.append('injuryObject', form.injuryObject);
+      data.append('primaryBodyPartWithSide', form.primaryBodyPartWithSide);
+      data.append('secondaryBodyPartWithSide', form.secondaryBodyPartWithSide);
+      data.append('typeOfInjury', form.typeOfInjury);
+      data.append('NoOfDaysAway', form.NoOfDaysAway);
+      data.append('medicalResponseTaken', form.medicalResponseTaken);
 
       if (form.treatmentDate != null) {
-        data.append("treatmentDate", form.treatmentDate);
+        data.append('treatmentDate', form.treatmentDate);
       } else if (form.shiftTimeStart == null) {
-        delete form["treatmentDate"];
+        delete form.treatmentDate;
       }
-      data.append("higherMedicalResponder", form.higherMedicalResponder);
-      data.append("injuryStatus", form.injuryStatus);
-      data.append("firstAidTreatment", form.firstAidTreatment);
-      data.append("mechanismOfInjury", form.mechanismOfInjury);
-      data.append("isMedicationIssued", form.isMedicationIssued);
-      data.append("isPrescriptionIssued", form.isPrescriptionIssued);
-      data.append("isNonPrescription", form.isNonPrescription);
-      data.append("isAnyLimitation", form.isAnyLimitation);
-      data.append("supervisorName", form.supervisorName);
-      data.append("supervisorTimeInIndustry", form.supervisorTimeInIndustry);
-      data.append("supervisorTimeInCompany", form.supervisorTimeInCompany);
-      data.append("supervisorTimeOnProject", form.supervisorTimeOnProject);
-      data.append("isAlcoholDrugTestTaken", form.isAlcoholDrugTestTaken);
+      data.append('higherMedicalResponder', form.higherMedicalResponder);
+      data.append('injuryStatus', form.injuryStatus);
+      data.append('firstAidTreatment', form.firstAidTreatment);
+      data.append('mechanismOfInjury', form.mechanismOfInjury);
+      data.append('isMedicationIssued', form.isMedicationIssued);
+      data.append('isPrescriptionIssued', form.isPrescriptionIssued);
+      data.append('isNonPrescription', form.isNonPrescription);
+      data.append('isAnyLimitation', form.isAnyLimitation);
+      data.append('supervisorName', form.supervisorName);
+      data.append('supervisorTimeInIndustry', form.supervisorTimeInIndustry);
+      data.append('supervisorTimeInCompany', form.supervisorTimeInCompany);
+      data.append('supervisorTimeOnProject', form.supervisorTimeOnProject);
+      data.append('isAlcoholDrugTestTaken', form.isAlcoholDrugTestTaken);
       if (form.dateOfAlcoholDrugTest != null) {
-        data.append("dateOfAlcoholDrugTest", form.dateOfAlcoholDrugTest);
+        data.append('dateOfAlcoholDrugTest', form.dateOfAlcoholDrugTest);
       } else if (form.shiftTimeStart == null) {
-        delete form["treatmentDate"];
+        delete form.treatmentDate;
       }
-      data.append("isWorkerClearedTest", form.isWorkerClearedTest);
-      data.append("reasonForTestNotDone", form.reasonForTestNotDone);
-      data.append("status", form.status);
-      data.append("createdBy", form.createdBy);
-      data.append("fkInvestigationId", investigationId.current);
+      data.append('isWorkerClearedTest', form.isWorkerClearedTest);
+      data.append('reasonForTestNotDone', form.reasonForTestNotDone);
+      data.append('status', form.status);
+      data.append('createdBy', form.createdBy);
+      data.append('fkInvestigationId', investigationId.current);
 
-      let res = [];
+      const res = [];
       if (!isNaN(form.id)) {
-        form["fkInvestigationId"] = investigationId.current;
+        form.fkInvestigationId = investigationId.current;
         const ress = await api.put(
-          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/workers/${workerid}/`,
           data
         );
         res.push(ress);
       } else {
-        form["fkInvestigationId"] = investigationId.current;
+        form.fkInvestigationId = investigationId.current;
         const ress = await api.post(
-          `/api/v1/incidents/${putId.current}/investigations/${investigationId.current
+          `/api/v1/incidents/${putId.current}/investigations/${
+            investigationId.current
           }/workers/`,
           data
         );
@@ -351,102 +324,103 @@ const WorkerDetails = () => {
       }
 
       if (res[0].status == 201 || res[0].status == 200) {
-        let worker = JSON.parse(localStorage.getItem("personEffected"));
-        form["id"] = res[0].data.data.results.id;
-        if (
-          res[0].data.data.results.attachments !== null &&
-          res[0].data.data.results.attachments !== {}
-        ) {
-          form["attachments"] = res[0].data.data.results.attachments;
-        }
+        const worker = JSON.parse(localStorage.getItem('personEffected'));
+        form.id = res[0].data.data.results.id;
+        // if (
+        //   res[0].data.data.results.files !== null &&
+        //   res[0].data.data.results.files !== {}
+        // ) {
+        //   form["files"] = res[0].data.data.results.files;
+        // }
 
         worker[workerNumber] = form;
-        await localStorage.setItem("personEffected", JSON.stringify(worker));
+        await localStorage.setItem('personEffected', JSON.stringify(worker));
 
-        if (typeof worker[parseInt(workerNumber) + 1] !== "undefined") {
+        if (typeof worker[parseInt(workerNumber) + 1] !== 'undefined') {
           await history.push(
             `/app/incident-management/registration/investigation/worker-details/${parseInt(
               workerNumber
-            ) + 1}/${localStorage.getItem("fkincidentId")}`
+            ) + 1}/${localStorage.getItem('fkincidentId')}`
           );
         } else {
           await history.push(
-            `/app/incident-management/registration/investigation/event-details/`
+            '/app/incident-management/registration/investigation/event-details/'
           );
         }
       }
 
       await handelUpdateCheck();
     }
-    document.getElementById("workerForm").reset();
-    setButtonLoading(false)
+    document.getElementById('workerForm').reset();
+    setButtonLoading(false);
   };
 
   const handelAddNew = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
-    if (form.name !== "" && form.workerType !== "" && form.department !== "") {
-      let worker = JSON.parse(localStorage.getItem("personEffected"));
+    if (form.name !== '' && form.workerType !== '' && form.department !== '') {
+      const worker = JSON.parse(localStorage.getItem('personEffected'));
       await worker.splice(parseInt(workerNumber) + 1, 0, workerData);
-      await localStorage.setItem("personEffected", JSON.stringify(worker));
+      await localStorage.setItem('personEffected', JSON.stringify(worker));
       await handleNext();
     }
-    fileRef.current.value !== undefined ? (fileRef.current.value = "") : null;
+    fileRef.current.value !== undefined ? (fileRef.current.value = '') : null;
   };
 
   const handelPrevious = async () => {
-    let worker = JSON.parse(localStorage.getItem("personEffected"));
-    if (typeof worker[parseInt(workerNumber) - 1] !== "undefined") {
+    const worker = JSON.parse(localStorage.getItem('personEffected'));
+    if (typeof worker[parseInt(workerNumber) - 1] !== 'undefined') {
       await history.push(
         `/app/incident-management/registration/investigation/worker-details/${parseInt(
           workerNumber
-        ) - 1}/${localStorage.getItem("fkincidentId")}`
+        ) - 1}/${localStorage.getItem('fkincidentId')}`
       );
     } else {
       await history.push(
-        `/app/incident-management/registration/investigation/severity-consequences/`
+        '/app/incident-management/registration/investigation/severity-consequences/'
       );
     }
     await handelUpdateCheck();
   };
 
   const handelRemove = async () => {
-    let worker_removed = JSON.parse(localStorage.getItem("personEffected"));
+    const worker_removed = JSON.parse(localStorage.getItem('personEffected'));
     if (!isNaN(worker_removed[workerNumber].id)) {
-      let deleteWorkerNumber = worker_removed[workerNumber];
+      const deleteWorkerNumber = worker_removed[workerNumber];
       const deleteWorker = await api.delete(
-        `api/v1/incidents/859/investigations/${deleteWorkerNumber.fkInvestigationId
+        `api/v1/incidents/859/investigations/${
+          deleteWorkerNumber.fkInvestigationId
         }/workers/${deleteWorkerNumber.id}/`
       );
     }
     await worker_removed.splice(workerNumber, 1);
     await localStorage.setItem(
-      "personEffected",
+      'personEffected',
       JSON.stringify(worker_removed)
     );
-    if (typeof worker_removed[parseInt(workerNumber - 1)] !== "undefined") {
+    if (typeof worker_removed[parseInt(workerNumber - 1)] !== 'undefined') {
       await history.push(
         `/app/incident-management/registration/investigation/worker-details/${parseInt(
           workerNumber - 1
-        )}/${localStorage.getItem("fkincidentId")}`
+        )}/${localStorage.getItem('fkincidentId')}`
       );
     } else if (
-      typeof worker_removed[parseInt(workerNumber + 1)] !== "undefined"
+      typeof worker_removed[parseInt(workerNumber + 1)] !== 'undefined'
     ) {
       await history.push(
         `/app/incident-management/registration/investigation/worker-details/${parseInt(
           workerNumber + 1
-        )}/${localStorage.getItem("fkincidentId")}`
+        )}/${localStorage.getItem('fkincidentId')}`
       );
-    } else if (typeof worker_removed[parseInt(0)] !== "undefined") {
+    } else if (typeof worker_removed[parseInt(0)] !== 'undefined') {
       await history.push(
         `/app/incident-management/registration/investigation/worker-details/${parseInt(
           0
-        )}/${localStorage.getItem("fkincidentId")}`
+        )}/${localStorage.getItem('fkincidentId')}`
       );
     } else {
       await history.push(
-        `/app/incident-management/registration/investigation/event-details/`
+        '/app/incident-management/registration/investigation/event-details/'
       );
     }
     await handelUpdateCheck();
@@ -456,7 +430,7 @@ const WorkerDetails = () => {
     await history.push(
       `/app/incident-management/registration/investigation/worker-details/${parseInt(
         index
-      )}/${localStorage.getItem("fkincidentId")}`
+      )}/${localStorage.getItem('fkincidentId')}`
     );
     await handelUpdateCheck();
   };
@@ -464,25 +438,25 @@ const WorkerDetails = () => {
   const handelCallBack = async () => {
     await setIsLoading(true);
     await handelUpdateCheck();
-    workerType.current = await pickListValues["71"];
-    setDepartmentName(await [...pickListValues["10"],ONA[0],ONA[1]]);
-    setworkHours(await pickListValues["70"]);
-    setShiftType(await pickListValues["47"]);
-    setOccupation(await pickListValues["48"]);
-    setShiftCycle(await pickListValues["49"]);
-    setNoOfDaysIntoShift(await pickListValues["50"]);
-    setTimeInCompany(await pickListValues["51"]);
-    setTimeOnProject(await pickListValues["52"]);
-    setTimeInIndustry(await pickListValues["53"]);
-    setPrimaryBodyPartWithSide(await pickListValues["57"]);
-    setSecondaryBodyPartWithSide(await pickListValues["58"]);
-    setTypeOfInjury(await pickListValues["59"]);
-    setHigherMedicalResponder(await pickListValues["60"]);
-    setTreatmentType(await pickListValues["61"]);
-    setMechanismOfInjury(await pickListValues["62"]);
-    setSupervisorTimeInIndustry(await pickListValues["54"]);
-    setSupervisorTimeOnProject(await pickListValues["55"]);
-    setSupervisorTimeInCompany(await pickListValues["56"]);
+    workerType.current = await pickListValues['71'];
+    setDepartmentName(await [...pickListValues['10'], ONA[0], ONA[1]]);
+    setworkHours(await pickListValues['70']);
+    setShiftType(await pickListValues['47']);
+    setOccupation(await pickListValues['48']);
+    setShiftCycle(await pickListValues['49']);
+    setNoOfDaysIntoShift(await pickListValues['50']);
+    setTimeInCompany(await pickListValues['51']);
+    setTimeOnProject(await pickListValues['52']);
+    setTimeInIndustry(await pickListValues['53']);
+    setPrimaryBodyPartWithSide(await pickListValues['57']);
+    setSecondaryBodyPartWithSide(await pickListValues['58']);
+    setTypeOfInjury(await pickListValues['59']);
+    setHigherMedicalResponder(await pickListValues['60']);
+    setTreatmentType(await pickListValues['61']);
+    setMechanismOfInjury(await pickListValues['62']);
+    setSupervisorTimeInIndustry(await pickListValues['54']);
+    setSupervisorTimeOnProject(await pickListValues['55']);
+    setSupervisorTimeInCompany(await pickListValues['56']);
     await setIsLoading(false);
   };
 
@@ -490,9 +464,13 @@ const WorkerDetails = () => {
     handelCallBack();
   }, []);
 
+  useEffect(() => {
+    console.log(form, 'form Data');
+  }, [form]);
+
   const classes = useStyles();
 
-  const isDesktop = useMediaQuery("(min-width:992px)");
+  const isDesktop = useMediaQuery('(min-width:992px)');
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
       {isLoading == false ? (
@@ -545,10 +523,7 @@ const WorkerDetails = () => {
                       }}
                     >
                       {workerType.current.map((value) => (
-                        <MenuItem
-                          value={value.value}>
-                          {value.label}
-                        </MenuItem>
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
                     {error && error.workerType && (
@@ -624,10 +599,9 @@ const WorkerDetails = () => {
                   >
                     <KeyboardTimePicker
                       className={classes.formControl}
-                      helperText={""}
+                      helperText=""
                       value={form.shiftTimeStart}
                       label="Start of shift time"
-                      value={form.shiftTimeStart}
                       onChange={(e) => {
                         setForm({
                           ...form,
@@ -752,7 +726,9 @@ const WorkerDetails = () => {
                     </Select>
                   </FormControl>
                   {error && error.noOfDaysIntoShift && (
-                    <FormHelperText style={{ color: "red" }}>{error.noOfDaysIntoShift}</FormHelperText>
+                    <FormHelperText style={{ color: 'red' }}>
+                      {error.noOfDaysIntoShift}
+                    </FormHelperText>
                   )}
                 </Grid>
 
@@ -1268,7 +1244,7 @@ const WorkerDetails = () => {
                       value={
                         form.isAlcoholDrugTestTaken
                           ? form.isAlcoholDrugTestTaken
-                          : "No"
+                          : 'No'
                       }
                       onChange={(e) => handelTestTaken(e)}
                     >
@@ -1282,7 +1258,7 @@ const WorkerDetails = () => {
                     </RadioGroup>
                   </FormControl>
                 </Grid>
-                {form.isAlcoholDrugTestTaken == "Yes" ? (
+                {form.isAlcoholDrugTestTaken == 'Yes' ? (
                   <>
                     <Grid item xs={12} md={6}>
                       <MuiPickersUtilsProvider
@@ -1484,8 +1460,13 @@ const WorkerDetails = () => {
                   </Typography>
                 </Grid>
 
-                <Grid item xs={12} md={4}>
-                  <input
+                <Grid item xs={12} md={12}>
+                  <MultiAttachment
+                    attachmentHandler={(files) => {
+                      handleFile(files);
+                    }}
+                  />
+                  {/* <input
                     id="selectFile"
                     type="file"
                     className={classes.fullWidth}
@@ -1499,29 +1480,40 @@ const WorkerDetails = () => {
                     onChange={(e) => {
                       handleFile(e);
                     }}
-                  />
+                  /> */}
                 </Grid>
 
                 <Grid item md={12}>
-                  {form.attachments != "" &&
-                    typeof form.attachments == "string" ? (
-                    <Attachment value={form.attachments} />
-                  ) : (
-                    <p />
-                  )}
+                  {typeof form.files === 'object' && form.files.length > 0 ? (
+                    <>
+                      {/* Mapping the files */}
+
+                      {form.files.map((file) => (
+                        <Attachment
+                          key={file.id}
+                          value={file.fileName || file.path}
+                          // type={file.filename}
+                        />
+                      ))}
+                    </>
+                  ) : null}
                 </Grid>
 
                 {localWorkerData.length > 1 ? (
                   <Grid item xs={12}>
                     <Button onClick={(e) => handelRemove()}>
-                      Delete <DeleteForeverIcon />
+                      Delete
+                      {' '}
+                      <DeleteForeverIcon />
                     </Button>
                   </Grid>
                 ) : null}
 
                 <Grid item xs={12}>
                   <Button onClick={(e) => handelAddNew()}>
-                    Add new worker <AddIcon />
+                    Add new worker
+                    {' '}
+                    <AddIcon />
                   </Button>
                 </Grid>
 
@@ -1541,7 +1533,8 @@ const WorkerDetails = () => {
                     onClick={() => handleNext()}
                     disabled={buttonLoading}
                   >
-                    Next{buttonLoading && <CircularProgress size={20} />}
+                    Next
+                    {buttonLoading && <CircularProgress size={20} />}
                   </Button>
                 </Grid>
               </Grid>
@@ -1576,15 +1569,14 @@ const WorkerDetails = () => {
                               )}
                             </ListItemIcon>
                             <ListItemText
-                              primary={
+                              primary={(
                                 <a
-                                  onClick={(e) =>
-                                    handelWorkerNavigate(e, index)
+                                  onClick={(e) => handelWorkerNavigate(e, index)
                                   }
                                 >
                                   {`Worker ${index + 1}`}
                                 </a>
-                              }
+                              )}
                             />
                           </ListItem>
                         ))}

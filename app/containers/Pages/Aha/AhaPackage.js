@@ -58,6 +58,7 @@ import Attachment from "../../Attachment/Attachment";
 import Delete from "../../Delete/Delete";
 import CardView from "../../../components/Card/Index";
 import { ahaLabels } from "../../../components/Card/CardConstants";
+import DateFormat from "../../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -754,6 +755,7 @@ function AhaPackage(props) {
               label: ahaLabels.header[3],
               value: item.ahaStatus === "Assessment" ? "Open" : item.ahaStatus,
             },
+            
           ]}
           bodyFields={[
             // Card body labels and values for each item
@@ -761,7 +763,7 @@ function AhaPackage(props) {
             { label: ahaLabels.body[1], value: item.location },
             {
               label: ahaLabels.body[2],
-              value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+              value: DateFormat(item.createdAt, true),
             },
             { label: ahaLabels.body[3], value: item.createdByName },
           ]}

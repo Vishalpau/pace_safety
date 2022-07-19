@@ -23,6 +23,7 @@ import Loader from "../Loader";
 import preplanning from "dan-images/preplanning.png";
 import progress from "dan-images/progress.png";
 import completed from "dan-images/completed.png";
+import DateFormat from "../../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -667,9 +668,7 @@ function ObservationsList(props) {
                     item[1]["observationNumber"],
                     item[1]["observationType"],
                     item[1]["location"] ? item[1]["location"] : "-",
-                    moment(item[1]["createdAt"]).format(
-                      "Do MMMM YYYY, h:mm:ss a"
-                    ),
+                    DateFormat(item[1]["createdAt"]),
                     item[1]["username"] ? item[1]["username"] : "-",
                   ])}
                   // title="Observations List"

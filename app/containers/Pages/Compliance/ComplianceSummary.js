@@ -71,6 +71,7 @@ import { connect } from "react-redux";
 import Attachment from "../../../containers/Attachment/Attachment";
 import { checkACL } from "../../../utils/helper";
 import "../../../styles/custom/customheader.css";
+import DateFormat from "../../../components/Date/DateFormat";
 
 // Sidebar Links Helper Function
 // function ListItemLink(props) {
@@ -239,16 +240,16 @@ function ComplianceSummary(props) {
   );
 
   useEffect(() => {
-    console.log(colordata, 'colordata');
-  },[colordata])
+    console.log(quesData, "quesData");
+  }, [quesData]);
 
-  useEffect(() => {
-    console.log(groupData, 'groupdata');
-  },[groupData])
+  // useEffect(() => {
+  //   console.log(groupData, 'groupdata');
+  // },[groupData])
 
-  useEffect(() => {
-    console.log(complianceData, 'complainceData');
-  },[complianceData])
+  // useEffect(() => {
+  //   console.log(complianceData, 'complainceData');
+  // },[complianceData])
 
   // for handle the accordian expand
   const handleTDChange = (panel) => (event, isExpanded) => {
@@ -356,14 +357,6 @@ function ComplianceSummary(props) {
       })
       .catch((error) => console.log(error));
   };
-
-  // useEffect(() => {
-  //   console.log(groupData, "GROUPTdATA");
-  // }, [groupData]);
-
-  // useEffect(() => {
-  //   console.log(quesData, "questionData");
-  // }, [quesData]);
 
   // for fetching the work area
   const handelWorkArea = async (complianceData) => {
@@ -480,7 +473,6 @@ function ComplianceSummary(props) {
         "qustionsIds"
       ];
       let allAction = await handelActionData(jhaId, apiData);
-      console.log(allAction, "allAction");
       setActionData(allAction);
     }
   };
@@ -800,9 +792,10 @@ function ComplianceSummary(props) {
                                       Date of compliance check
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                      {moment(
-                                        complianceData["createdAt"]
-                                      ).format("Do MMMM YYYY, h:mm A")}
+                                      {DateFormat(
+                                        complianceData["createdAt"],
+                                        true
+                                      )}
                                     </Typography>
                                   </Grid>
                                   <Grid
@@ -1178,8 +1171,6 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddBRemove"
                                     >
-                                      {/* {console.log(groupData, quesData, 'groupData')} */}
-
                                       {quesData.length <= 0 ? (
                                         <p>No question configured</p>
                                       ) : (
@@ -1190,9 +1181,9 @@ function ComplianceSummary(props) {
                                                 {groupNamrHandler(val)}
                                                 {val.checkListValues.map(
                                                   (subGrpData, index) => {
-                                                    // console.log(subGrpData, 'subjiii');
                                                     return quesData.map(
                                                       (value, index) => {
+                                                        // console.log(value,'value');
                                                         return subGrpData.id ===
                                                           value.subGroupId ? (
                                                           <>
@@ -1221,13 +1212,19 @@ function ComplianceSummary(props) {
                                                                 className="accordionHeaderSection"
                                                               >
                                                                 <List
-                                                                  className={ classes.heading }
+                                                                  className={
+                                                                    classes.heading
+                                                                  }
                                                                 >
                                                                   <ListItem
-                                                                    className={ classes.accordingHeaderContentLeft }
+                                                                    className={
+                                                                      classes.accordingHeaderContentLeft
+                                                                    }
                                                                   >
                                                                     <ListItemText
-                                                                      primary={ value.question }
+                                                                      primary={
+                                                                        value.question
+                                                                      }
                                                                     />
                                                                   </ListItem>
                                                                 </List>
@@ -1284,9 +1281,15 @@ function ComplianceSummary(props) {
                                                                           <>
                                                                             <Grid
                                                                               item
-                                                                              md={4}
-                                                                              sm={4}
-                                                                              xs={12}
+                                                                              md={
+                                                                                4
+                                                                              }
+                                                                              sm={
+                                                                                4
+                                                                              }
+                                                                              xs={
+                                                                                12
+                                                                              }
                                                                             >
                                                                               <FormLabel
                                                                                 component="legend"
@@ -1303,9 +1306,15 @@ function ComplianceSummary(props) {
 
                                                                             <Grid
                                                                               item
-                                                                              md={4}
-                                                                              sm={4}
-                                                                              xs={12}
+                                                                              md={
+                                                                                4
+                                                                              }
+                                                                              sm={
+                                                                                4
+                                                                              }
+                                                                              xs={
+                                                                                12
+                                                                              }
                                                                             >
                                                                               <FormLabel
                                                                                 component="legend"
@@ -1314,19 +1323,51 @@ function ComplianceSummary(props) {
                                                                                 Performance
                                                                                 rating
                                                                               </FormLabel>
+                                                                              {console.log(
+                                                                                colordata,
+                                                                                "colordata"
+                                                                              )}
                                                                               <Typography
                                                                                 style={{
                                                                                   backgroundColor:
                                                                                     value.performance &&
-                                                                                    colordata.filter((i) => i.matrixConstant === (value.performance * 5) / 100).length
-                                                                                      // ? colordata.filter((i) => i.matrixConstant === (value.performance * 5) / 100 )
-                                                                                        ? colordata.filter((i) => i.matrixConstant === (value.performance * 5) / 100 )[0].matrixConstantColor
-                                                                                        // : "#fff"
+                                                                                    colordata.filter(
+                                                                                      (
+                                                                                        i
+                                                                                      ) =>
+                                                                                        i.matrixConstant ===
+                                                                                        (value.performance *
+                                                                                          5) /
+                                                                                          100
+                                                                                    )
+                                                                                      .length
+                                                                                      ? colordata.filter(
+                                                                                          (
+                                                                                            i
+                                                                                          ) =>
+                                                                                            i.id ===
+                                                                                            value.matrixId
+                                                                                        )[0]
+                                                                                          .status ===
+                                                                                        "Active"
+                                                                                        ? colordata.filter(
+                                                                                            (
+                                                                                              i
+                                                                                            ) =>
+                                                                                              i.id ===
+                                                                                              value.matrixId
+                                                                                          )[0]
+                                                                                            .matrixConstantColor
+                                                                                        : "#fff"
                                                                                       : "#fff",
-                                                                                  border: "1px",
-                                                                                  width: "50%",
-                                                                                  height: "80%",
-                                                                                  textAlign: "center",
+                                                                                  border:
+                                                                                    "1px",
+                                                                                  width:
+                                                                                    "50%",
+                                                                                  height:
+                                                                                    "80%",
+                                                                                  textAlign:
+                                                                                    "center",
                                                                                 }}
                                                                                 className="viewLabelValue"
                                                                               >
@@ -1411,8 +1452,17 @@ function ComplianceSummary(props) {
                                                                     </Grid>
                                                                   )}
 
-                                                                  {actionData.filter((val) => val.id == value.questionId)[0] &&
-                                                                  actionData.filter((val) => val.id == value.questionId)[0].action.length ? (
+                                                                  {actionData.filter(
+                                                                    (val) =>
+                                                                      val.id ==
+                                                                      value.questionId
+                                                                  )[0] &&
+                                                                  actionData.filter(
+                                                                    (val) =>
+                                                                      val.id ==
+                                                                      value.questionId
+                                                                  )[0].action
+                                                                    .length ? (
                                                                     <Grid
                                                                       item
                                                                       md={12}
@@ -1426,15 +1476,26 @@ function ComplianceSummary(props) {
                                                                         Corrective
                                                                         Actions
                                                                       </FormLabel>
-                                                                      {actionData.map((val) => (
+                                                                      {actionData.map(
+                                                                        (
+                                                                          val
+                                                                        ) => (
                                                                           <>
-                                                                            {val.id == value.questionId ? (
+                                                                            {val.id ==
+                                                                            value.questionId ? (
                                                                               <>
-                                                                                {val.action.length > 0 && (
+                                                                                {val
+                                                                                  .action
+                                                                                  .length >
+                                                                                  0 && (
                                                                                   <Grid
                                                                                     item
-                                                                                    md={12}
-                                                                                    xs={12}
+                                                                                    md={
+                                                                                      12
+                                                                                    }
+                                                                                    xs={
+                                                                                      12
+                                                                                    }
                                                                                   >
                                                                                     <Table
                                                                                       component={
@@ -1455,33 +1516,68 @@ function ComplianceSummary(props) {
                                                                                         </TableRow>
                                                                                       </TableHead>
                                                                                       <TableBody>
-                                                                                        {actionData.map((val) => (
+                                                                                        {actionData.map(
+                                                                                          (
+                                                                                            val
+                                                                                          ) => (
                                                                                             <>
-                                                                                              {val.id == value.questionId ? (
+                                                                                              {val.id ==
+                                                                                              value.questionId ? (
                                                                                                 <>
-                                                                                                  {val.action.length > 0 &&
-                                                                                                    val.action.map((valueAction) => (
+                                                                                                  {val
+                                                                                                    .action
+                                                                                                    .length >
+                                                                                                    0 &&
+                                                                                                    val.action.map(
+                                                                                                      (
+                                                                                                        valueAction
+                                                                                                      ) => (
                                                                                                         <TableRow>
                                                                                                           <TableCell align="left">
                                                                                                             <Link
-                                                                                                              className={classes.actionLinkAudit}
+                                                                                                              className={
+                                                                                                                classes.actionLinkAudit
+                                                                                                              }
                                                                                                               display="block"
                                                                                                               href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                                                                                                JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID" ]
+                                                                                                                JSON.parse(
+                                                                                                                  localStorage.getItem(
+                                                                                                                    "BaseUrl"
+                                                                                                                  )
+                                                                                                                )[
+                                                                                                                  "actionClientID"
+                                                                                                                ]
                                                                                                               }&response_type=code&companyId=${
-                                                                                                                JSON.parse(localStorage.getItem("company")).fkCompanyId
+                                                                                                                JSON.parse(
+                                                                                                                  localStorage.getItem(
+                                                                                                                    "company"
+                                                                                                                  )
+                                                                                                                )
+                                                                                                                  .fkCompanyId
                                                                                                               }&projectId=${
-                                                                                                                JSON.parse( localStorage.getItem("projectName")).projectName.projectId
-                                                                                                              }&targetPage=/action/details/&targetId=${valueAction.id}&projectStructure=${localStorage.getItem(
+                                                                                                                JSON.parse(
+                                                                                                                  localStorage.getItem(
+                                                                                                                    "projectName"
+                                                                                                                  )
+                                                                                                                )
+                                                                                                                  .projectName
+                                                                                                                  .projectId
+                                                                                                              }&targetPage=/action/details/&targetId=${
+                                                                                                                valueAction.id
+                                                                                                              }&projectStructure=${localStorage.getItem(
                                                                                                                 "selectBreakDown"
                                                                                                               )}`}
                                                                                                               target="_blank"
                                                                                                             >
-                                                                                                              {valueAction.number}
+                                                                                                              {
+                                                                                                                valueAction.number
+                                                                                                              }
                                                                                                             </Link>
                                                                                                           </TableCell>
                                                                                                           <TableCell>
-                                                                                                            {valueAction.title}
+                                                                                                            {
+                                                                                                              valueAction.title
+                                                                                                            }
                                                                                                           </TableCell>
                                                                                                         </TableRow>
                                                                                                       )
@@ -1525,14 +1621,30 @@ function ComplianceSummary(props) {
                                                                         Evidence
                                                                       </FormLabel>
                                                                       <div
-                                                                        style={{display: "flex", alignItems: "center", margin: "0 -10px"}}
+                                                                        style={{
+                                                                          display:
+                                                                            "flex",
+                                                                          alignItems:
+                                                                            "center",
+                                                                          margin:
+                                                                            "0 -10px",
+                                                                        }}
                                                                       >
-                                                                        {value.files.map((file) => {
+                                                                        {value.files.map(
+                                                                          (
+                                                                            file
+                                                                          ) => {
                                                                             return (
                                                                               <Attachment
-                                                                                key={file.id}
-                                                                                value={file.fileName}
-                                                                                type={file.fileType}
+                                                                                key={
+                                                                                  file.id
+                                                                                }
+                                                                                value={
+                                                                                  file.fileName
+                                                                                }
+                                                                                type={
+                                                                                  file.fileType
+                                                                                }
                                                                               />
                                                                             );
                                                                           }
@@ -1780,6 +1892,7 @@ function ComplianceSummary(props) {
                 <List component="nav" aria-label="main mailbox folders">
                   <ListItem button>
                     <ListItemIcon>
+                      {" "}
                       {complianceData.performanceSummary !== null ? (
                         <Edit />
                       ) : (

@@ -65,6 +65,7 @@ import Attachment from "../../Attachment/Attachment";
 import Delete from "../../Delete/Delete";
 import CardView from "../../../components/Card/Index";
 import { jhaLabels } from "../../../components/Card/CardConstants";
+import DateFormat from "../../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -781,14 +782,15 @@ function JhaPackage(props) {
               { label: jhaLabels.header[2], value: item.jhaStage },
               {
                 label: jhaLabels.header[3],
-                value: item.jhaStatus === "Assessment" ? "Open" : item.jhaStatus,
+                value:
+                  item.jhaStatus === "Assessment" ? "Open" : item.jhaStatus,
               },
             ]}
             bodyFields={[
               { label: jhaLabels.body[0], value: item.location },
               {
                 label: jhaLabels.body[1],
-                value: moment(item.createdAt).format("Do MMMM YYYY, h:mm:ss a"),
+                value: DateFormat(item.createdAt, true),
               },
               {
                 label: jhaLabels.body[2],

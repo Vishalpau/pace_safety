@@ -52,6 +52,7 @@ import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
 // import { Delete } from "@material-ui/icons";
 import Delete from "../../Delete/Delete";
+import DateFormat from "../../../components/Date/DateFormat";
 
 const Loader = lazy(() => import("../../Forms/Loader"));
 
@@ -813,9 +814,16 @@ function BlankPage(props) {
                                       variant="body1"
                                       className={Fonts.listingLabelValue}
                                     >
+<<<<<<< HEAD
                                       {moment(
                                         item[1].incidentReportedOn
                                       ).format("Do MMM YYYY, h:mm a")}
+=======
+                                      {DateFormat(
+                                        item[1]["incidentReportedOn"],
+                                        true
+                                      )}
+>>>>>>> 896a7a54f9a2894e6278537887be7379b6f4b4a2
                                     </Typography>
                                   </Grid>
 

@@ -21,6 +21,7 @@ import { SSO_URL } from "../../utils/constants";
 import Attachment from "../Attachment/Attachment";
 import Loader from "../Forms/Loader";
 import { connect } from "react-redux";
+import DateFormat from "../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -253,9 +254,7 @@ const IncidentDetailsSummary = (props) => {
             </Typography>
 
             <Typography variant="body" className={Fonts.labelValue}>
-              {moment(incidents.incidentReportedOn).format(
-                "Do MMMM YYYY, h:mm:ss a"
-              )}
+              {DateFormat(incidents.incidentReportedOn, true)}
             </Typography>
           </Grid>
 
