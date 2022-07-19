@@ -93,7 +93,7 @@ const Styles = (theme) => ({
     borderLeft: "3px solid #cccccc",
     height: "8px",
     verticalAlign: "middle",
-    margin: "15px 15px 15px 8px",
+    margin: "15px 10px 15px 15px",
     fontSize: "10px",
     ["@media (max-width:480px)"]: {
       margin: "10px 5px 10px 5px",
@@ -115,7 +115,7 @@ const Styles = (theme) => ({
   },
   width100: {
     width: "100%",
-    padding: "14px 15px",
+    padding: "10px 15px",
   },
   commentLink: {
     marginLeft: "2px",
@@ -140,6 +140,10 @@ const Styles = (theme) => ({
     "&.latest": {
       borderColor: "#818181",
     },
+  },
+  iconteal: {
+    color: "#517b8d",
+    fontSize: "1.5rem",
   },
 });
 
