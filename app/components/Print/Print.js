@@ -66,11 +66,13 @@ const Print = (props) => {
 
   const printOutTheValue = async () => {
     setLoading(true);
-    const res = await api.get(
-      `https://dev-safety1-api.paceos.io/${props.printUrl}`
-    );
-    setLoading(false);
-    setPrintData({ __html: res.data });
+    await api
+      .get(`https://dev-safety1-api.paceos.io/${props.printUrl}`)
+      .then((res) => {
+        setLoading(false);
+        setPrintData({ __html: res.data });
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
