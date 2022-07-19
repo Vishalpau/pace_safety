@@ -353,13 +353,13 @@ const Checks = (props) => {
   const [valueStar, setValueStar] = React.useState([]);
   const [categories, setCategories] = useState([]);
 
-  // useEffect(() => {
-  //   console.log(actionData, 'actionData');
-  // },[actionData])
+  useEffect(() => {
+    console.log(showCheckData, 'showCheckData');
+  },[showCheckData])
 
-  // useEffect(() => {
-  //   console.log(ratingColor, 'ratingColor');
-  // },[ratingColor])
+  useEffect(() => {
+    console.log(checkData, 'checkData');
+  },[checkData])
 
   const selectBreakdown =
       props.projectName.breakDown.length > 0
@@ -757,28 +757,63 @@ const Checks = (props) => {
   const handleChangeData = (value, field, index, id, type = "") => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
+
+        // if (temp[i]["questionId"] == id) {
+        //   //when we handle score type value
+        //   if (field === "score") {
+        //     if (type === "Stars") {
+        //       let starvar = "";
+        //       for (let j = 0; j < value; j++) starvar += "*";
+        //       value = starvar;
+        //     } 
+        //     else if (type === "%") {
+        //       let pattern = /^[0-9]*$/;
+        //       if (pattern.test(value)) {
+        //         console.log(value <= 100, 'sfsjfjdsljfldsfldsklfj');
+        //         if (value <= 100) {
+        //           console.log(value, 'value');
+        //           value = value + "%";
+        //         }
+        //       } 
+        //       else {
+        //         value = "";
+        //       }
+        //     } 
+        //     else if (type === "1-10") {
+        //       value = value;
+        //     }
+        //   }
+        //   console.log(value);
+        //   temp[i]["check"] = false;
+        //   temp[i][field] = value;
+        // }
+
+
       if (temp[i]["questionId"] == id) {
-        //when we handle score type value
         if (field === "score") {
           if (type === "Stars") {
             let starvar = "";
             for (let j = 0; j < value; j++) starvar += "*";
             value = starvar;
-          } else if (type === "%") {
-            let pattern = /^[0-9]*$/;
-            if (pattern.test(value)) {
-              if (value <= 100) {
-                value = value + "%";
-              }
-            } else {
-              value = "";
-            }
-          } else if (type === "1-10") {
-            value = value;
+          } 
+
+          else if (type === "%" && value <= 100) {
+            temp[i]["check"] = false;
+            temp[i][field] = value + '%';
+            break;
+          }
+
+          else {
+            temp[i]['check'] = false;
+            temp[i][field] = value.substr(0, value.length - 1)
+            break;
           }
         }
-        temp[i]["check"] = false;
-        temp[i][field] = value;
+        
+        else {
+          temp[i]["check"] = false;
+          temp[i][field] = value;
+        }
       }
     }
     setCheckData(temp);
@@ -1030,6 +1065,7 @@ const Checks = (props) => {
 
                           {Categor.length > 0 ? (
                             Categor.map((value, index) => {
+                              // console.log(value, 'vlaueded');
                               return (
                                 <>
                                   <Grid container item xs={12}>
@@ -1318,19 +1354,15 @@ const Checks = (props) => {
                                                       label="Percentage"
                                                       name="performancerating"
                                                       id="performancerating"
-                                                      defaultValue={
-                                                        showCheckData.filter(
-                                                          (cd) =>
-                                                            cd.question ==
-                                                            value.question
-                                                        ).length
-                                                          ? showCheckData.filter(
-                                                              (cd) =>
-                                                                cd.question ==
-                                                                value.question
-                                                            )[0].score
-                                                          : ""
+                                                      // defaultValue={
+                                                      //   showCheckData.filter((cd) => cd.question == value.question).length
+                                                      //     ? showCheckData.filter((cd) => cd.question == value.question)[0].score : ""
+                                                      // }
+                                                      value={
+                                                        checkData.filter(cd => (cd.question === value.question[0].score) !== "")
+                                                          ? checkData.filter(cd => cd.question == value.question)[0].score.split("%")[0] : ""
                                                       }
+                                                      // value={checkData.filter(s => s.questionId === value.id).score.split('%')[1]}
                                                       // type="number"
                                                       fullWidth
                                                       variant="outlined"
@@ -1440,18 +1472,14 @@ const Checks = (props) => {
                                                                           }&projectStructure=${localStorage.getItem(
                                                                             "selectBreakDown"
                                                                           )}
-                                                                          `}
-                                                                          target="_blank"
-                                                                        >
-                                                                          {
-                                                                            valueAction.number
-                                                                          }
-                                                                        </Link>
-                                                                          </TableCell>
-                                                                          <TableCell>
-                                                                            {valueAction.title}
-                                                                          </TableCell>
-                                                                        </TableRow>
+                                                                          `} target="_blank" >
+                                                                      { valueAction.number }
+                                                                    </Link>
+                                                                      </TableCell>
+                                                                      <TableCell>
+                                                                        {valueAction.title}
+                                                                      </TableCell>
+                                                                    </TableRow>
                                                                       )
                                                                     )}
                                                                 </>
@@ -1779,41 +1807,20 @@ const Checks = (props) => {
                                                       <Rating
                                                         name={`simple-controlled ${value.id}`}
                                                         defaultValue={
-                                                          valueStar[index] !=
+                                                          valueStar[index] !==
                                                           undefined
                                                             ? valueStar[index]
-                                                            : showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              ).length
-                                                            ? showCheckData
-                                                                .filter(
-                                                                  (cd) =>
-                                                                    cd.question ==
-                                                                    value.question
-                                                                )[0]
-                                                                .score.split("")
-                                                                .length
+                                                            : showCheckData.filter(cd => cd.question == value.question ).length
+                                                            ? showCheckData.filter(cd => cd.question == value.question )[0].score.split("") .length
                                                             : ""
                                                         }
                                                         onChange={(
                                                           event,
                                                           newValue
                                                         ) => {
-                                                          if (
-                                                            newValue != null
-                                                          ) {
-                                                            handleChangeData(
-                                                              newValue,
-                                                              "score",
-                                                              index,
-                                                              value.id,
-                                                              value.scoreType
-                                                            );
-                                                            setValueStar(
-                                                              newValue
-                                                            );
+                                                          if ( newValue != null ) {
+                                                            handleChangeData(newValue, "score", index, value.id, value.scoreType);
+                                                            setValueStar(newValue);
                                                           }
                                                         }}
                                                         // onChange={(e) =>
@@ -1933,23 +1940,8 @@ const Checks = (props) => {
                                                         maxLength: 3,
                                                       }}
                                                       value={
-                                                        checkData.filter(
-                                                          (cd) =>
-                                                            (cd.question ===
-                                                              value.question[0]
-                                                                .score) !==
-                                                            ""
-                                                        )
-                                                          ? checkData
-                                                              .filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0]
-                                                              .score.split(
-                                                                "%"
-                                                              )[0]
-                                                          : ""
+                                                        checkData.filter(cd => (cd.question === value.question[0].score) !== "")
+                                                          ? checkData.filter(cd => cd.question == value.question)[0].score.split("%")[0] : ""
                                                       }
                                                       name="performancerating"
                                                       id="performancerating"
