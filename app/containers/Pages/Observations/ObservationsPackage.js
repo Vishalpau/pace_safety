@@ -1016,6 +1016,11 @@ function Actions(props) {
             yesBtn: "Yes",
             noBtn: "No",
           }}
+          printFields={{
+            typeOfModule: "Observation",
+            printUrl: `api/v1/observations/${item.id}/print/`,
+            number: item.observationNumber,
+          }}
           handleVisibility={() => handleVisibility()}
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
