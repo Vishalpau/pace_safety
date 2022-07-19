@@ -11,6 +11,7 @@ import Delete from "../../../containers/Delete/Delete";
 import Bookmark from "../../../containers/Bookmark/Bookmark";
 import Styles from "./Styles";
 import { staticLabels } from "../CardConstants";
+import Print from "../../Print/Print";
 
 /**
  * @file - CardFooter.js
@@ -38,6 +39,14 @@ const CardFooter = (props) => {
     yesBtn,
     noBtn,
   } = props.deleteFields;
+
+  let printUrl, typeOfModule, number;
+
+  if (Object.keys(props.printFields).length > 0) {
+    printUrl = props.printFields.printUrl;
+    typeOfModule = props.printFields.typeOfModule;
+    number = props.printFields.number;
+  }
 
   return (
     <>
@@ -87,7 +96,20 @@ const CardFooter = (props) => {
               <Typography variant="body1" display="inline">
                 <Bookmark />
               </Typography> */}
-              <span item xs={1} className={classes.sepHeightTen} />
+              {Object.keys(props.printFields).length > 0 ? (
+                <>
+                  <Typography variant="body1" display="inline">
+                    <Print
+                      printUrl={printUrl}
+                      typeOfModule={typeOfModule}
+                      number={number}
+                    />
+                  </Typography>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                </>
+              ) : (
+                ""
+              )}
               <Typography variant="body1" display="inline">
                 <Delete
                   deleteUrl={deleteUrl}
