@@ -850,9 +850,9 @@ const Checks = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log(checkData, 'checkDataaaaa');
-  },[checkData])
+  // useEffect(() => {
+  //   console.log(checkData, 'checkDataaaaa');
+  // },[checkData])
 
   //method when we change the criticality on accordian
   const handleCriticality = (option, selectType, index, id) => {
@@ -1463,80 +1463,34 @@ const Checks = (props) => {
                                                     </Table>
                                                   </Grid>
                                                 )}
-                                                {value.attachment === "Yes" ||
-                                                  (value.evidenceType ===
-                                                    "Yes" && (
+                                                {(value.attachment === "Yes" || value.evidenceType === "Yes") && (
                                                     <Grid
                                                       item
                                                       md={12}
                                                       sm={12}
                                                       xs={12}
-                                                      className={
-                                                        classes.formBox
-                                                      }
+                                                      className={ classes.formBox }
                                                     >
-                                                      {/* <FormLabel
-                                                      className="checkRadioLabel"
-                                                      component="legend"
-                                                    >
-                                                      Document{" "}
-                                                    </FormLabel> */}
-                                                      <Grid
-                                                        style={{marginTop: "-20px"}}
-                                                      >
+                                                      {/* <FormLabel className="checkRadioLabel" component="legend" > Document{" "} </FormLabel> */}
+                                                      <Grid style={{marginTop: "-20px"}} >
                                                         <MultiAttachment
                                                           headerText="Documents & Evidences"
-                                                          attachmentHandler={(
-                                                            files
-                                                          ) => {
-                                                            handleFileUpload(
-                                                              files,
-                                                              value.id,
-                                                              "attachment"
-                                                            );
+                                                          attachmentHandler={( files ) => {
+                                                            handleFileUpload( files, value.id, "attachment" );
                                                           }}
                                                         />
                                                       </Grid>
                                                       <Typography className="viewLabelValue">
-                                                        {/* <input
-                                                        type="file"
-                                                        id="attachment"
-                                                        name="attachment"
-                                                        // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].attachment : ""}
-                                                        accept={`.xls, xlsx, .ppt, .pptx, .doc, .docx, .text, .pdf`}
-                                                        onChange={(e) => {
-                                                          handleFileUpload(
-                                                            e,
-                                                            value.id
-                                                          );
-                                                        }}
-                                                      /> */}
-                                                        {showCheckData.filter(
-                                                          (cd) =>
-                                                            cd.question ==
-                                                            value.question
-                                                        ).length &&
-                                                        showCheckData.filter(
-                                                          (cd) =>
-                                                            cd.question ==
-                                                            value.question
-                                                        )[0].attachment !=
-                                                          null ? (
-                                                          <Attachment
-                                                            value={
-                                                              showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0].attachment
-                                                            }
-                                                          />
+                                                        
+                                                        {showCheckData.filter(cd => cd.question == value.question).length &&
+                                                        showCheckData.filter(cd => cd.question == value.question)[0].attachment !== null ? (
+                                                          <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />
                                                         ) : (
                                                           ""
                                                         )}
                                                       </Typography>
                                                     </Grid>
-                                                  ))}
+                                                  )}
                                                 {/* {value.evidenceType ===
                                                   "Yes" && (
                                                   <Grid
@@ -1678,16 +1632,7 @@ const Checks = (props) => {
                                                               key={option.id}
                                                               value={option.factorName || ""}
                                                               id={option.id}
-                                                              onClick={(e) => {
-                                                                handleCriticality(
-                                                                  option,
-                                                                  "menuItem",
-                                                                  catI +
-                                                                    "-" +
-                                                                    index,
-                                                                  value.id
-                                                                );
-                                                              }}
+                                                              onClick={(e) => handleCriticality(option, "menuItem", catI + "-" + index, value.id)}
                                                             >
                                                               {option.factorName}
                                                             </MenuItem>
@@ -1729,19 +1674,10 @@ const Checks = (props) => {
                                                               value={option.factorName || ""}
                                                               id={option.id}
                                                               onClick={(e) => {
-                                                                handleCriticality(
-                                                                  option,
-                                                                  "statusItem",
-                                                                  catI +
-                                                                    "-" +
-                                                                    index,
-                                                                  value.id
-                                                                );
+                                                                handleCriticality(option, "statusItem", catI + "-" + index, value.id);
                                                               }}
                                                             >
-                                                              {
-                                                                option.factorName
-                                                              }
+                                                              {option.factorName}
                                                             </MenuItem>
                                                           );
                                                         }
@@ -2175,9 +2111,7 @@ const Checks = (props) => {
                                                     </TableBody>
                                                   </Table>
                                                 </Grid>
-                                                {value.attachment === "Yes" ||
-                                                  (value.evidenceType ===
-                                                    "Yes" && (
+                                                {(value.attachment === "Yes" || value.evidenceType === "Yes") && (
                                                     <Grid
                                                       item
                                                       md={12}
@@ -2187,12 +2121,6 @@ const Checks = (props) => {
                                                         classes.formBox
                                                       }
                                                     >
-                                                      {/* <FormLabel
-                                                      className="checkRadioLabel"
-                                                      component="legend"
-                                                    >
-                                                      Document{" "}
-                                                    </FormLabel> */}
                                                       <Grid
                                                         style={{
                                                           marginTop: "-20px",
@@ -2212,48 +2140,15 @@ const Checks = (props) => {
                                                         />
                                                       </Grid>
                                                       <Typography className="viewLabelValue">
-                                                        {/* {(value.attachment === "Yes") && */}
-                                                        {/* <input
-                                                        type="file"
-                                                        name="attachment"
-                                                        id="evidence"
-                                                        // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].attachment : ""}
-                                                        accept={`.xls , .xlsx, .ppt, .pptx, .doc, .docx, .text , .pdf`}
-                                                        onChange={(e) => {
-                                                          handleFileUpload(
-                                                            e,
-                                                            value.id
-                                                          );
-                                                        }}
-                                                      /> */}
-                                                        {showCheckData.filter(
-                                                          (cd) =>
-                                                            cd.question ==
-                                                            value.question
-                                                        ).length &&
-                                                        showCheckData.filter(
-                                                          (cd) =>
-                                                            cd.question ==
-                                                            value.question
-                                                        )[0].attachment !=
-                                                          null ? (
-                                                          <Attachment
-                                                            value={
-                                                              showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0].attachment
-                                                            }
-                                                          />
+                                                        {showCheckData.filter(cd => cd.question == value.question ).length &&
+                                                        showCheckData.filter(cd => cd.question == value.question )[0].attachment != null ? (
+                                                          <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment}/>
                                                         ) : (
                                                           ""
                                                         )}
-
-                                                        {/* } */}
                                                       </Typography>
                                                     </Grid>
-                                                  ))}
+                                                  )}
                                                 {/* {value.evidenceType === "Yes" && (
                                                   <Grid
                                                     item
