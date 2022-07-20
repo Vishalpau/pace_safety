@@ -1578,9 +1578,8 @@ const Checks = (props) => {
                                                     >
                                                       <MultiAttachment
                                                         docTypes={{
-                                                          pdf: value.attachment,
-                                                          avi:
-                                                            value.evidenceType,
+                                                          pdf: value.attachment.toLowerCase(),
+                                                          avi: value.evidenceType.toLowerCase(),
                                                         }}
                                                         headerText="Documents & Evidences"
                                                         attachmentHandler={(
@@ -2373,9 +2372,8 @@ const Checks = (props) => {
                                                     >
                                                       <MultiAttachment
                                                         docTypes={{
-                                                          pdf: value.attachment,
-                                                          avi:
-                                                            value.evidenceType,
+                                                          pdf: value.attachment.toLowerCase(),
+                                                          avi: value.evidenceType.toLowerCase(),
                                                         }}
                                                         headerText="Documents & Evidences"
                                                         attachmentHandler={(
