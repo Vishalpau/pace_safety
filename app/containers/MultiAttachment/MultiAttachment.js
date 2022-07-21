@@ -6,39 +6,39 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { useDropzone } from "react-dropzone";
 
-const MultiAttachment = (props) => {
-  const useStyles = makeStyles((theme) => ({
-    formBox: {
-      flex: "1",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "0.75rem",
-      borderWidth: "2px",
-      borderRadius: "5px",
-      borderColor: "#CBCBCB",
-      borderStyle: "dashed",
-      backgroundColor: "#ffffff",
-      color: "#bdbdbd",
-      outline: "none",
-      transition: "border .24s ease-in-out",
-      marginTop: "0.625rem",
-      marginBottom: "0.625rem",
-      cursor: "pointer",
-      position: "relative",
-      textAlign: "center",
+const useStyles = makeStyles((theme) => ({
+  formBox: {
+    flex: "1",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "0.75rem",
+    borderWidth: "2px",
+    borderRadius: "5px",
+    borderColor: "#CBCBCB",
+    borderStyle: "dashed",
+    backgroundColor: "#ffffff",
+    color: "#bdbdbd",
+    outline: "none",
+    transition: "border .24s ease-in-out",
+    marginTop: "0.625rem",
+    marginBottom: "0.625rem",
+    cursor: "pointer",
+    position: "relative",
+    textAlign: "center",
 
-      "& input": {
-        position: "absolute",
-        left: 0,
-        top: 0,
-        opacity: 0,
-        width: "100%",
-        height: "100%",
-      },
+    "& input": {
+      position: "absolute",
+      left: 0,
+      top: 0,
+      opacity: 0,
+      width: "100%",
+      height: "100%",
     },
-  }));
+  },
+}));
 
+const MultiAttachment = (props) => {
   const classes = useStyles();
 
   let fileTypes;
@@ -133,13 +133,6 @@ const MultiAttachment = (props) => {
       });
 
       setNotSupported(notSupportedExt);
-
-      //   console.log(
-      //     notSupportedExt,
-      //     containsAll,
-      //     containsAllBool,
-      //     "notSupported"
-      //   );
 
       if (!containsAllBool) {
         setCheckExt(false);
@@ -239,7 +232,11 @@ const MultiAttachment = (props) => {
               fill="#06425c"
             />
           </svg>{" "}
-          {props.headerText ? props.headerText : "Attachment"}
+          {props.docTypes && props.docTypes.pdf === "yes"
+            ? "Attachments"
+            : props.docTypes && props.docTypes.avi === "yes"
+            ? "Evidences"
+            : "Attachments"}
         </Typography>
       </Grid>
       <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -305,6 +302,7 @@ const MultiAttachment = (props) => {
                 <p className="chooseFileDesign">
                   Drag and drop here or <span>Choose files</span>
                 </p>
+                <p style={{ marginTop: 15 }}>(.{fileTypes.join(", .")})</p>
                 <aside>
                   {files.length > 0 ? (
                     <ul style={{ marginTop: "15px" }}>
