@@ -302,7 +302,11 @@ const MultiAttachment = (props) => {
                 <p className="chooseFileDesign">
                   Drag and drop here or <span>Choose files</span>
                 </p>
-                <p style={{ marginTop: 15 }}>(.{fileTypes.join(", .")})</p>
+                {props.docTypes ? (
+                  <p style={{ marginTop: 15 }}>(.{fileTypes.join(", .")})</p>
+                ) : (
+                  ""
+                )}
                 <aside>
                   {files.length > 0 ? (
                     <ul style={{ marginTop: "15px" }}>
