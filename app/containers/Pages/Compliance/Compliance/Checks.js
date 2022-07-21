@@ -1582,7 +1582,6 @@ const Checks = (props) => {
                                                           pdf: value.attachment.toLowerCase(),
                                                           avi: value.evidenceType.toLowerCase(),
                                                         }}
-                                                        headerText="Documents & Evidences"
                                                         attachmentHandler={(
                                                           files
                                                         ) => {
@@ -1642,7 +1641,6 @@ const Checks = (props) => {
                                                       }}
                                                     >
                                                       <MultiAttachment
-                                                        headerText="Documents & Evidences"
                                                         attachmentHandler={(
                                                           files
                                                         ) => {
@@ -2376,7 +2374,6 @@ const Checks = (props) => {
                                                           pdf: value.attachment.toLowerCase(),
                                                           avi: value.evidenceType.toLowerCase(),
                                                         }}
-                                                        headerText="Documents & Evidences"
                                                         attachmentHandler={(
                                                           files
                                                         ) => {
@@ -2435,7 +2432,6 @@ const Checks = (props) => {
                                                       }}
                                                     >
                                                       <MultiAttachment
-                                                        headerText="Documents & Evidences"
                                                         attachmentHandler={(
                                                           files
                                                         ) => {
