@@ -765,14 +765,16 @@ const Checks = (props) => {
             for (let j = 0; j < value; j++) starvar += "*";
             value = starvar;
           } else if (type === "%") {
-            //let pattern = /^[0-9]*$/;
-            //let pattern = /[+-]?([0-9]*[.])?[0-9]+/;
-            let pattern = /[+-]?([0-9]*[.])?[0-9]+/;
+            let pattern = /^(100(?:\.00?)?|\d?\d(?:\.\d?\d?\d?\d?)?)$/gm;
             if (pattern.test(value)) {
               if (value <= 100) {
                 value = value + "%";
               }
-            } else {
+            } 
+            else if(value == 100){
+              value = value + "%";
+            }
+            else {
               value = "";
             }
           } else if (type === "1-10") {
@@ -1926,14 +1928,13 @@ const Checks = (props) => {
                                                       className="checkRadioLabel marginB5"
                                                       component="legend"
                                                     >
-                                                      Score kevin
+                                                      Score
                                                     </FormLabel>
                                                     <TextField
                                                       label="Percentage"
                                                       type="text"
                                                       inputProps={{
-                                                        //maxLength: 3,
-                                                        maxLength: 5,
+                                                        maxLength: 6,
                                                       }}
                                                       value={
                                                         checkData.filter(
