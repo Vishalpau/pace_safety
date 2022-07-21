@@ -211,7 +211,10 @@ function LookAhead() {
                     variant="caption"
                     className={classes.toggleTitle}
                   />
-                  <Tooltip title="My Observations" aria-label="My Observations">
+                  <Tooltip
+                    title="My Observations"
+                    aria-label="My Observations"
+                  >
                     <Button
                       variant="contained"
                       onClick={(e) => handelView(e)}

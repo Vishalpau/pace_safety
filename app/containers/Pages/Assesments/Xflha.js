@@ -1,76 +1,76 @@
-import React, { useState, useEffect } from "react";
-import { PapperBlock } from "dan-components";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Print from "@material-ui/icons/Print";
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import AddIcon from "@material-ui/icons/Add";
-import ReorderIcon from "@material-ui/icons/Reorder";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import EqualizerIcon from "@material-ui/icons/Equalizer";
-import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-import ViewWeekIcon from "@material-ui/icons/ViewWeek";
-import Share from "@material-ui/icons/Share";
-import flhaLogoSymbol from "dan-images/flhaLogoSymbol.png";
-import preplanning from "dan-images/preplanning.png";
-import progress from "dan-images/progress.png";
-import completed from "dan-images/completed.png";
-import Divider from "@material-ui/core/Divider";
-import Link from "@material-ui/core/Link";
-import AttachmentIcon from "@material-ui/icons/Attachment";
-import Box from "@material-ui/core/Box";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Chip from "@material-ui/core/Chip";
-import Avatar from "@material-ui/core/Avatar";
-import TableContainer from "@material-ui/core/TableContainer";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
-import Tooltip from "@material-ui/core/Tooltip";
-import Incidents from "dan-styles/IncidentsList.scss";
-import ListAltOutlinedIcon from "@material-ui/icons/ListAltOutlined";
-import CommentIcon from "@material-ui/icons/Comment";
-import RecentActorsIcon from "@material-ui/icons/RecentActors";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
-import classNames from "classnames";
-import MUIDataTable from "mui-datatables";
-import Checkbox from "@material-ui/core/Checkbox";
-import Fonts from "dan-styles/Fonts.scss";
-import moment from "moment";
-import { useHistory, useParams } from "react-router";
-import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
-import in_progress_small from "dan-images/in_progress_small.png";
-import draft_small from "dan-images/draft_small.png";
-import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
-import StarsIcon from "@material-ui/icons/Stars";
-import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import projectpj from "dan-images/projectpj.png";
-import TextField from "@material-ui/core/TextField";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import Dialog from "@material-ui/core/Dialog";
-import FormControl from "@material-ui/core/FormControl";
+import React, { useState, useEffect } from 'react';
+import { PapperBlock } from 'dan-components';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Print from '@material-ui/icons/Print';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import AddIcon from '@material-ui/icons/Add';
+import ReorderIcon from '@material-ui/icons/Reorder';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import ViewWeekIcon from '@material-ui/icons/ViewWeek';
+import Share from '@material-ui/icons/Share';
+import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
+import preplanning from 'dan-images/preplanning.png';
+import progress from 'dan-images/progress.png';
+import completed from 'dan-images/completed.png';
+import Divider from '@material-ui/core/Divider';
+import Link from '@material-ui/core/Link';
+import AttachmentIcon from '@material-ui/icons/Attachment';
+import Box from '@material-ui/core/Box';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
+import TableContainer from '@material-ui/core/TableContainer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
+import Tooltip from '@material-ui/core/Tooltip';
+import Incidents from 'dan-styles/IncidentsList.scss';
+import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
+import CommentIcon from '@material-ui/icons/Comment';
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
+import classNames from 'classnames';
+import MUIDataTable from 'mui-datatables';
+import Checkbox from '@material-ui/core/Checkbox';
+import Fonts from 'dan-styles/Fonts.scss';
+import moment from 'moment';
+import { useHistory, useParams } from 'react-router';
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import in_progress_small from 'dan-images/in_progress_small.png';
+import draft_small from 'dan-images/draft_small.png';
+import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
+import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
+import StarsIcon from '@material-ui/icons/Stars';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import projectpj from 'dan-images/projectpj.png';
+import TextField from '@material-ui/core/TextField';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import Dialog from '@material-ui/core/Dialog';
+import FormControl from '@material-ui/core/FormControl';
 
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import Pagination from "@material-ui/lab/Pagination";
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import Pagination from '@material-ui/lab/Pagination';
 // react-redux
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -93,338 +93,338 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
-    borderRadius: "4px",
+    borderRadius: '4px',
   },
   leftSide: {
     flexGrow: 1,
   },
   viewImageSection: {
-    textAlign: "center",
-    "& MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-1": {
-      textAlign: "center",
-      minHeight: "100px",
+    textAlign: 'center',
+    '& MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-1': {
+      textAlign: 'center',
+      minHeight: '100px',
     },
   },
   rightSide: {
     flexGrow: 8,
-    textAlign: "right",
+    textAlign: 'right',
   },
-  mb10: { marginBottom: "10px !important" },
+  mb10: { marginBottom: '10px !important' },
   newIncidentButton: {
     backgroundColor: theme.palette.primary.dark,
   },
   search: {
-    position: "relative",
-    border: "1px solid #ccc",
+    position: 'relative',
+    border: '1px solid #ccc',
     borderRadius: theme.shape.borderRadius,
     marginRight: theme.spacing(1),
     marginLeft: 0,
-    width: "97% !important",
-    margin: "14px 2px 9px 0px",
-    padding: "0px 0px",
-    [theme.breakpoints.up("sm")]: {
+    width: '97% !important',
+    margin: '14px 2px 9px 0px',
+    padding: '0px 0px',
+    [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(1),
-      width: "100%",
+      width: '100%',
     },
-    "& .MuiInputBase-root": {
-      width: "100%",
+    '& .MuiInputBase-root': {
+      width: '100%',
     },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "orange",
-    fontSize: "18px",
-    float: "right",
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'orange',
+    fontSize: '18px',
+    float: 'right',
   },
   inputRoot: {
-    color: "inherit",
+    color: 'inherit',
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
     },
   },
   filterIcon: {
     color: theme.palette.primary.dark,
-    fontSize: "1.8rem",
+    fontSize: '1.8rem',
   },
   toggleTitle: {
     marginRight: theme.spacing(1),
-    fontSize: "1rem",
+    fontSize: '1rem',
   },
   chipAction: {
-    textAlign: "right",
+    textAlign: 'right',
   },
   dataAction: {
     marginRight: theme.spacing(1),
   },
   actionMargin: {
-    marginLeft: "2.5rem",
-    lineHeight: "6rem",
+    marginLeft: '2.5rem',
+    lineHeight: '6rem',
   },
   marginLeft: {
-    marginLeft: "2px",
-    fontSize: "14px",
+    marginLeft: '2px',
+    fontSize: '14px',
   },
   mLeft: {
-    marginLeft: "2px",
+    marginLeft: '2px',
   },
   mLeftR5: {
-    marginLeft: "5px",
-    marginRight: "15px",
-    "@media (max-width:480px)": {
-      marginLeft: "3px",
-      marginRight: "3px",
+    marginLeft: '5px',
+    marginRight: '15px',
+    '@media (max-width:480px)': {
+      marginLeft: '3px',
+      marginRight: '3px',
     },
   },
   pLeft5: {
-    paddingLeft: "5px",
+    paddingLeft: '5px',
   },
   mLeftfont: {
-    marginLeft: "2px",
-    fontSize: "14px",
-    textDecoration: "none",
-    color: "rgba(0, 0, 0, 0.87) !important",
-    fontWeight: "500",
-    "&:hover": {
-      textDecoration: "none",
+    marginLeft: '2px',
+    fontSize: '14px',
+    textDecoration: 'none',
+    color: 'rgba(0, 0, 0, 0.87) !important',
+    fontWeight: '500',
+    '&:hover': {
+      textDecoration: 'none',
     },
   },
   spacerRight: {
-    marginRight: "4px",
+    marginRight: '4px',
   },
   paddZero: {
-    padding: "0px",
+    padding: '0px',
   },
   listingLabelName: {
-    color: "#7692a4",
-    fontSize: "0.88rem",
-    fontFamily: "Montserrat-Regular",
+    color: '#7692a4',
+    fontSize: '0.88rem',
+    fontFamily: 'Montserrat-Regular',
   },
   statusCompleted: {
-    color: "#024c9a",
-    fontSize: "0.88rem",
-    fontFamily: "Montserrat-Regular",
-    "& a": {
-      paddingLeft: "5px",
-      cursor: "pointer",
-      color: "rgba(0, 0, 0, 0.87)",
-      fontWeight: "600",
+    color: '#024c9a',
+    fontSize: '0.88rem',
+    fontFamily: 'Montserrat-Regular',
+    '& a': {
+      paddingLeft: '5px',
+      cursor: 'pointer',
+      color: 'rgba(0, 0, 0, 0.87)',
+      fontWeight: '600',
     },
   },
   listingLabelValue: {
-    color: "#333333",
-    fontSize: "0.88rem",
-    fontFamily: "Montserrat-Regular",
-    "& a": {
-      paddingLeft: "5px",
-      cursor: "pointer",
-      color: "rgba(0, 0, 0, 0.87)",
-      fontWeight: "600",
+    color: '#333333',
+    fontSize: '0.88rem',
+    fontFamily: 'Montserrat-Regular',
+    '& a': {
+      paddingLeft: '5px',
+      cursor: 'pointer',
+      color: 'rgba(0, 0, 0, 0.87)',
+      fontWeight: '600',
     },
   },
   textPrimary: {
-    color: "#06425c",
+    color: '#06425c',
   },
   dataTableNew: {
-    minWidth: "1360px !important",
+    minWidth: '1360px !important',
   },
 
   title: {
-    fontSize: "1.25rem",
-    fontFamily: "Montserrat-Regular",
-    color: "rgba(0, 0, 0, 0.87)",
-    fontWeight: "500",
-    lineHeight: "1.6",
+    fontSize: '1.25rem',
+    fontFamily: 'Montserrat-Regular',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontWeight: '500',
+    lineHeight: '1.6',
   },
   pt30: {
-    paddingTop: "30px",
+    paddingTop: '30px',
   },
 
   mTopThirtybtten: {
-    marginTop: "0rem",
-    float: "right",
+    marginTop: '0rem',
+    float: 'right',
   },
 
   TableToolbar: {
-    display: "none",
+    display: 'none',
   },
   pLTen: {
-    marginLeft: "5px",
+    marginLeft: '5px',
   },
   mTtop15: {
-    marginTop: "15px",
+    marginTop: '15px',
   },
   mTtop20: {
-    marginTop: "20px",
+    marginTop: '20px',
   },
   mTtop30: {
-    marginTop: "30px",
+    marginTop: '30px',
   },
   marginTopBottom: {
-    marginBottom: "16px",
-    borderRadius: "8px",
-    "@media (max-width:800px)": {
-      paddingTop: "55px",
+    marginBottom: '16px',
+    borderRadius: '8px',
+    '@media (max-width:800px)': {
+      paddingTop: '55px',
     },
   },
   searchHeaderTop: {
-    border: "1px solid #f1f1f1",
-    backgroundColor: "#ffffff",
-    padding: "0px 16px",
-    borderRadius: "5px",
-    marginTop: "20px",
+    border: '1px solid #f1f1f1',
+    backgroundColor: '#ffffff',
+    padding: '0px 16px',
+    borderRadius: '5px',
+    marginTop: '20px',
   },
   greyBg: {
-    backgroundColor: "#f3f3f3",
+    backgroundColor: '#f3f3f3',
   },
   AppBarHeader: {
-    color: "inherit",
-    backgroundColor: "#ffffff",
-    border: "1px solid #e4e4e4",
-    padding: "0px 5px 0px 5px",
-    borderRadius: "3px",
-    marginBottom: "30px",
-    boxShadow: "1px 1px 13px #e6e6e6",
+    color: 'inherit',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e4e4e4',
+    padding: '0px 5px 0px 5px',
+    borderRadius: '3px',
+    marginBottom: '30px',
+    boxShadow: '1px 1px 13px #e6e6e6',
   },
   buttonsNewChild: {
-    borderRadius: "5px",
-    backgroundColor: "#23343e",
-    color: "#ffffff",
+    borderRadius: '5px',
+    backgroundColor: '#23343e',
+    color: '#ffffff',
   },
   padd10: {
-    padding: "10px 10px 10px 10px",
+    padding: '10px 10px 10px 10px',
   },
   sepHeightTen: {
-    borderLeft: "3px solid #cccccc",
-    height: "8px",
-    verticalAlign: "middle",
-    margin: "15px 15px 15px 8px",
-    fontSize: "10px",
-    "@media (max-width:480px)": {
-      margin: "10px 5px 10px 5px",
+    borderLeft: '3px solid #cccccc',
+    height: '8px',
+    verticalAlign: 'middle',
+    margin: '15px 15px 15px 8px',
+    fontSize: '10px',
+    '@media (max-width:480px)': {
+      margin: '10px 5px 10px 5px',
     },
   },
   floatR: {
-    float: "right",
-    textTransform: "capitalize",
-    "@media (max-width:480px)": {
-      float: "left",
+    float: 'right',
+    textTransform: 'capitalize',
+    '@media (max-width:480px)': {
+      float: 'left',
     },
   },
   floatRR: {
-    float: "right",
-    marginTop: "5px",
-    textTransform: "capitalize",
-    "@media (max-width:480px)": {
-      float: "left",
+    float: 'right',
+    marginTop: '5px',
+    textTransform: 'capitalize',
+    '@media (max-width:480px)': {
+      float: 'left',
     },
   },
 
   newIncidentButton: {
-    marginTop: "20px",
-    marginLeft: "5px",
+    marginTop: '20px',
+    marginLeft: '5px',
   },
   mR10: {
-    marginRight: "20px",
-    float: "right",
-    "& img:hover": {
-      borderRadius: "50%",
-      boxShadow: "0px 0px 2px 2px #f47607",
+    marginRight: '20px',
+    float: 'right',
+    '& img:hover': {
+      borderRadius: '50%',
+      boxShadow: '0px 0px 2px 2px #f47607',
     },
   },
   Chip: {
-    backgroundColor: "#eaeaea",
-    borderRadius: " 50px",
-    paddingRight: "12px",
+    backgroundColor: '#eaeaea',
+    borderRadius: ' 50px',
+    paddingRight: '12px',
   },
   sepHeightOne: {
-    borderLeft: "3px solid #cccccc",
-    height: "8px",
-    verticalAlign: "middle",
-    margin: "15px",
-    fontSize: "10px",
+    borderLeft: '3px solid #cccccc',
+    height: '8px',
+    verticalAlign: 'middle',
+    margin: '15px',
+    fontSize: '10px',
   },
   mright5: {
-    marginRight: "5px",
-    color: "#a7a7a7",
+    marginRight: '5px',
+    color: '#a7a7a7',
   },
   iconColor: {
-    color: "#a7a7a7",
+    color: '#a7a7a7',
   },
   iconteal: {
-    color: "#06425c",
+    color: '#06425c',
   },
-  listHeadColor: { backgroundColor: "#fafafa" },
+  listHeadColor: { backgroundColor: '#fafafa' },
   marginTopBottom: {
-    "& .MuiTypography-h6 .MuiTypography-h5": {
-      fontFamily: "Montserrat-Regular",
+    '& .MuiTypography-h6 .MuiTypography-h5': {
+      fontFamily: 'Montserrat-Regular',
     },
   },
   textRight: {
-    textAlign: "right",
-    "@media (max-width:480px)": {
-      textAlign: "left",
-      padding: "0px 8px 15px 8px !important",
+    textAlign: 'right',
+    '@media (max-width:480px)': {
+      textAlign: 'left',
+      padding: '0px 8px 15px 8px !important',
     },
   },
   userImage: {
-    borderRadius: "50px",
-    width: "50px",
-    height: "50px",
-    marginRight: "10px",
+    borderRadius: '50px',
+    width: '50px',
+    height: '50px',
+    marginRight: '10px',
   },
   mrFifteen: {
-    marginRight: "15px",
+    marginRight: '15px',
   },
   card: {
-    boxShadow: "0px 0px 2px #ccc",
-    borderRadius: "10px",
-    marginBottom: "30px",
+    boxShadow: '0px 0px 2px #ccc',
+    borderRadius: '10px',
+    marginBottom: '30px',
   },
 
   cardLinkAction: {
-    width: "100%",
-    float: "left",
-    padding: "14px",
-    cursor: "pointer",
-    textDecoration: "none !important",
-    "@media (max-width:800px)": {
-      paddingTop: "85px",
+    width: '100%',
+    float: 'left',
+    padding: '14px',
+    cursor: 'pointer',
+    textDecoration: 'none !important',
+    '@media (max-width:800px)': {
+      paddingTop: '85px',
     },
   },
   userPictureBox: {
-    position: "absolute",
-    right: "0px",
-    "@media (max-width:800px)": {
-      right: "auto",
+    position: 'absolute',
+    right: '0px',
+    '@media (max-width:800px)': {
+      right: 'auto',
     },
   },
   cardContentSection: {
-    position: "relative",
-    "&:hover": {
-      backgroundColor: "#f0f0f0",
-      webkitBoxShadow: "0 1px 5px 2px #f0f0f0",
-      boxShadow: "0 1px 5px 2px #f0f0f0",
+    position: 'relative',
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+      webkitBoxShadow: '0 1px 5px 2px #f0f0f0',
+      boxShadow: '0 1px 5px 2px #f0f0f0',
     },
-    "&:hover .MuiGrid-align-items-xs-flex-start": {
-      backgroundColor: "#f0f0f0",
+    '&:hover .MuiGrid-align-items-xs-flex-start': {
+      backgroundColor: '#f0f0f0',
     },
   },
   cardBottomSection: {
-    "& p": {
-      "@media (max-width:480px)": {
-        fontSize: "12px !important",
+    '& p': {
+      '@media (max-width:480px)': {
+        fontSize: '12px !important',
       },
     },
     // '& p': {
@@ -434,239 +434,239 @@ const useStyles = makeStyles((theme) => ({
     // },
   },
   formControlOwnership: {
-    width: "100%",
-    marginBottom: "30px",
+    width: '100%',
+    marginBottom: '30px',
   },
   cardActionBottomBox: {
-    "@media (max-width:480px)": {
-      padding: "8px !important",
+    '@media (max-width:480px)': {
+      padding: '8px !important',
     },
   },
 
   fullWidth: {
-    width: "100%",
-    margin: ".5rem 0",
+    width: '100%',
+    margin: '.5rem 0',
   },
   usrProfileListBox: {
-    "& ul": {
-      paddingTop: "0px",
-      "& li": {
-        paddingLeft: "0px",
-        paddingTop: "0px",
-        paddingBottom: "0px",
-        "& div": {
-          "& span": {
-            display: "inline-block",
-            float: "left",
-            paddingRight: "14px",
-            fontSize: "15px",
-            fontWeight: "600",
+    '& ul': {
+      paddingTop: '0px',
+      '& li': {
+        paddingLeft: '0px',
+        paddingTop: '0px',
+        paddingBottom: '0px',
+        '& div': {
+          '& span': {
+            display: 'inline-block',
+            float: 'left',
+            paddingRight: '14px',
+            fontSize: '15px',
+            fontWeight: '600',
           },
-          "& p": {
-            display: "inline-block",
-            float: "left",
-            fontSize: "15px",
+          '& p': {
+            display: 'inline-block',
+            float: 'left',
+            fontSize: '15px',
           },
         },
       },
     },
   },
   borderTop: {
-    marginTop: "5px",
-    borderBottom: "1px solid #ccc",
-    paddingBottom: "10px",
-    "& .MuiTypography-h5": {
-      fontSize: "1.5rem !important",
-      fontFamily: "Xolonium",
-      fontWeight: "400",
-      lineHeight: "1.8",
-      color: "#23343e",
+    marginTop: '5px',
+    borderBottom: '1px solid #ccc',
+    paddingBottom: '10px',
+    '& .MuiTypography-h5': {
+      fontSize: '1.5rem !important',
+      fontFamily: 'Xolonium',
+      fontWeight: '400',
+      lineHeight: '1.8',
+      color: '#23343e',
     },
     textCenter: {
-      textAlign: "right",
-      verticalAlign: "middle",
-      margin: "20px 16px 12px 16px!important",
-      float: "right",
+      textAlign: 'right',
+      verticalAlign: 'middle',
+      margin: '20px 16px 12px 16px!important',
+      float: 'right',
     },
   },
   pagination: {
-    padding: "1rem 0",
-    display: "flex",
-    justifyContent: "flex-end",
+    padding: '1rem 0',
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
 
   viewAttachmentDialog: {
-    "& .MuiDialogContent-root": {
-      overflowY: "hidden !important",
-      height: "90px !important",
+    '& .MuiDialogContent-root': {
+      overflowY: 'hidden !important',
+      height: '90px !important',
     },
   },
   imageSectionHeight: {
-    "& .MuiDialogContent-root": {
-      height: "90px !important",
-      minHeight: "90px !important",
+    '& .MuiDialogContent-root': {
+      height: '90px !important',
+      minHeight: '90px !important',
     },
   },
   viewattch1: {
-    padding: "12px 30px",
-    backgroundColor: "#8a9299",
-    color: "#fff",
-    borderRadius: "2px",
-    border: "1px solid #fff",
-    display: "inline",
+    padding: '12px 30px',
+    backgroundColor: '#8a9299',
+    color: '#fff',
+    borderRadius: '2px',
+    border: '1px solid #fff',
+    display: 'inline',
   },
   viewattch2: {
-    padding: "12px 8px",
-    backgroundColor: "#06425c",
-    color: "#fff",
-    borderRadius: "2px",
-    border: "1px solid #fff",
-    display: "inline",
+    padding: '12px 8px',
+    backgroundColor: '#06425c',
+    color: '#fff',
+    borderRadius: '2px',
+    border: '1px solid #fff',
+    display: 'inline',
   },
   plusIcon: {
-    fontSize: "32px",
-    marginRight: "10px",
-    color: "#06425c",
+    fontSize: '32px',
+    marginRight: '10px',
+    color: '#06425c',
   },
   pL0: {
-    paddingLeft: "0px !important",
+    paddingLeft: '0px !important',
   },
   minusIcon: {
-    fontSize: "32px",
-    color: "#06425c",
+    fontSize: '32px',
+    color: '#06425c',
   },
   popUpButton: {
-    paddingRight: "5px",
-    marginLeft: "12px",
-    "& .MuiDialogActions-root, img": {
-      justifyContent: "flex-start",
+    paddingRight: '5px',
+    marginLeft: '12px',
+    '& .MuiDialogActions-root, img': {
+      justifyContent: 'flex-start',
     },
   },
   navTabBack: {
-    backgroundColor: "transparent",
-    marginTop: "13px",
-    "& button": {
-      "@media (max-width:480px)": {
-        fontSize: "9px",
+    backgroundColor: 'transparent',
+    marginTop: '13px',
+    '& button': {
+      '@media (max-width:480px)': {
+        fontSize: '9px',
       },
     },
-    "& .MuiTab-root": {
-      minWidth: "80px",
-      minHeight: "40px",
-      paddingLeft: "0px",
+    '& .MuiTab-root': {
+      minWidth: '80px',
+      minHeight: '40px',
+      paddingLeft: '0px',
     },
-    "& .MuiTab-wrapper": {
-      display: "inline",
-      textAlign: "left",
-      fontWeight: "600",
+    '& .MuiTab-wrapper': {
+      display: 'inline',
+      textAlign: 'left',
+      fontWeight: '600',
     },
-    "& .MuiTab-textColorInherit.Mui-selected": {
-      backgroundColor: "#f47607",
-      color: "#ffffff",
+    '& .MuiTab-textColorInherit.Mui-selected': {
+      backgroundColor: '#f47607',
+      color: '#ffffff',
     },
-    "& .MuiTab-textColorInherit": {
-      backgroundColor: "#06425c",
-      borderRadius: "5px 5px 5px 5px",
-      color: "#ffffff",
-      minWidth: "100px",
-      marginRight: "6px",
-      maxHeight: "40px",
-      minHeight: "40px",
-      marginLeft: "5px",
-      padding: "10px",
-      "@media (max-width:480px)": {
-        minWidth: "auto",
-        marginLeft: "2px",
-        marginRight: "2px",
+    '& .MuiTab-textColorInherit': {
+      backgroundColor: '#06425c',
+      borderRadius: '5px 5px 5px 5px',
+      color: '#ffffff',
+      minWidth: '100px',
+      marginRight: '6px',
+      maxHeight: '40px',
+      minHeight: '40px',
+      marginLeft: '5px',
+      padding: '10px',
+      '@media (max-width:480px)': {
+        minWidth: 'auto',
+        marginLeft: '2px',
+        marginRight: '2px',
       },
     },
-    "& .MuiTab-labelIcon .MuiTab-wrapper > *:first-child": {
-      marginBottom: "3px",
-      marginRight: "5px",
+    '& .MuiTab-labelIcon .MuiTab-wrapper > *:first-child': {
+      marginBottom: '3px',
+      marginRight: '5px',
     },
   },
   buckmarkIcon: {
-    height: "35px",
-    width: "35px",
+    height: '35px',
+    width: '35px',
   },
   searchSetionBox: {
-    paddingRight: "0px",
-    "@media (max-width:800px)": {
-      padding: "0px 12px !important",
+    paddingRight: '0px',
+    '@media (max-width:800px)': {
+      padding: '0px 12px !important',
     },
-    "& .MuiPaper-root": {
-      "@media (max-width:800px)": {
-        margin: "0px 0px 0px 8px",
+    '& .MuiPaper-root': {
+      '@media (max-width:800px)': {
+        margin: '0px 0px 0px 8px',
       },
     },
   },
   statusIconBox: {
-    textAlign: "center",
-    padding: "24px 0px !important",
-    "@media (max-width:800px)": {
-      padding: "0px 0px 25px 0px !important",
+    textAlign: 'center',
+    padding: '24px 0px !important',
+    '@media (max-width:800px)': {
+      padding: '0px 0px 25px 0px !important',
     },
-    "@media (max-width:480px)": {
-      padding: "12px 0px 25px 16px !important",
-      textAlign: "left",
+    '@media (max-width:480px)': {
+      padding: '12px 0px 25px 16px !important',
+      textAlign: 'left',
     },
   },
   buttonsNew: {
-    borderRadius: "5px",
-    backgroundColor: "#06425c",
-    padding: "7px 10px 7px 10px",
-    float: "right",
-    "@media (max-width:800px)": {
-      marginTop: "0px",
+    borderRadius: '5px',
+    backgroundColor: '#06425c',
+    padding: '7px 10px 7px 10px',
+    float: 'right',
+    '@media (max-width:800px)': {
+      marginTop: '0px',
     },
   },
   floatLTabs: {
-    float: "left",
-    paddingTop: "10px",
+    float: 'left',
+    paddingTop: '10px',
   },
   buttonsNTwo: {
-    borderRadius: "5px 5px 5px 5px !important",
-    backgroundColor: "#517b8d",
-    color: "#ffffff",
-    maxHeight: "40px",
-    minHeight: "40px",
-    opacity: "10",
-    "&:hover": {
-      backgroundColor: "#f47607",
+    borderRadius: '5px 5px 5px 5px !important',
+    backgroundColor: '#517b8d',
+    color: '#ffffff',
+    maxHeight: '40px',
+    minHeight: '40px',
+    opacity: '10',
+    '&:hover': {
+      backgroundColor: '#f47607',
     },
   },
   dataTableSectionDesign: {
-    "& th > div": {
-      cursor: "pointer",
+    '& th > div': {
+      cursor: 'pointer',
     },
   },
   dataTableSectionDesign: {
-    "& th > div": {
-      cursor: "pointer",
+    '& th > div': {
+      cursor: 'pointer',
     },
   },
   topNavTabBack: {
-    backgroundColor: "transparent",
-    color: "black",
-    "& .MuiTab-root": {
-      minWidth: "80px",
-      minHeight: "40px",
-      paddingLeft: "0px",
+    backgroundColor: 'transparent',
+    color: 'black',
+    '& .MuiTab-root': {
+      minWidth: '80px',
+      minHeight: '40px',
+      paddingLeft: '0px',
     },
-    "& .MuiTab-wrapper": {
-      display: "inline",
-      textAlign: "left",
-      fontWeight: "600",
-      "&:hover": {
-        color: "#f47607 !important",
+    '& .MuiTab-wrapper': {
+      display: 'inline',
+      textAlign: 'left',
+      fontWeight: '600',
+      '&:hover': {
+        color: '#f47607 !important',
       },
     },
-    "& .MuiTab-textColorInherit.Mui-selected": {
-      color: "#f47607",
+    '& .MuiTab-textColorInherit.Mui-selected': {
+      color: '#f47607',
     },
-    "& .MuiTab-labelIcon .MuiTab-wrapper > *:first-child": {
-      marginBottom: "3px",
-      marginRight: "5px",
+    '& .MuiTab-labelIcon .MuiTab-wrapper > *:first-child': {
+      marginBottom: '3px',
+      marginRight: '5px',
     },
   },
 }));
@@ -679,14 +679,14 @@ const handleAttachClose = () => {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
   };
 }
 const ILink = withStyles({
   root: {
-    display: "inline-block",
-    marginLeft: ".5rem",
-    color: "rgba(0, 0, 0, .85)",
+    display: 'inline-block',
+    marginLeft: '.5rem',
+    color: 'rgba(0, 0, 0, .85)',
   },
 })(Link);
 
@@ -696,23 +696,23 @@ function xflha(props) {
   const [flhas, setFlhas] = useState([]);
   const [showFlha, setShowFlha] = useState([]);
   const [hidden, setHidden] = useState(false);
-  const [searchFlha, setSeacrhFlha] = useState("");
+  const [searchFlha, setSeacrhFlha] = useState('');
   const [attachOpen, setAttachOpen] = useState(false);
   const [hiddenn, setHiddenn] = useState(false);
   const [openAttachment, setopenAttachment] = React.useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState('');
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
   const [valueTwo, setValueTwo] = React.useState(0);
-  const [assessments, setAssessments] = useState("My Assessments");
+  const [assessments, setAssessments] = useState('My Assessments');
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-  const [order, setOrder] = useState("");
+  const [order, setOrder] = useState('');
 
   const dispatch = useDispatch();
 
@@ -722,10 +722,10 @@ function xflha(props) {
 
   const handleFlhaSummaryPush = async (id, commentPayload) => {
     // console.log(id, "iddddddddd");
-    localStorage.setItem("flhaId", id);
+    localStorage.setItem('flhaId', id);
     history.push({
       pathname: `/app/pages/assesments/flhasummary/${id}`,
-      state: { commentPayload, redirectUrl: "/app/pages/assesments/flhaadd" },
+      state: { commentPayload, redirectUrl: '/app/pages/assesments/flhaadd' },
     });
   };
 
@@ -738,19 +738,19 @@ function xflha(props) {
   const history = useHistory();
   //   Data for the table view
   const columns = [
-    "Number",
-    "Type",
-    "Stage",
-    "Status",
-    "Requestedby",
-    "Submitted date",
-    "Approved date",
-    "Approved by",
+    'Number',
+    'Type',
+    'Stage',
+    'Status',
+    'Requestedby',
+    'Submitted date',
+    'Approved date',
+    'Approved by',
   ];
 
   const options = {
-    filterType: "dropdown",
-    responsive: "vertical",
+    filterType: 'dropdown',
+    responsive: 'vertical',
     print: false,
     filter: false,
     scroll: true,
@@ -769,29 +769,26 @@ function xflha(props) {
   };
 
   const classes = useStyles();
-  const createdBy =
-    JSON.parse(localStorage.getItem("userDetails")) !== null
-      ? JSON.parse(localStorage.getItem("userDetails")).id
-      : null;
+  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
   const fetchData = async () => {
     setIsLoading(true);
     setPage(1);
-    const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
-    const fkProjectId =
-      props.projectName.projectId ||
-      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
-    const selectBreakdown =
-      props.projectName.breakDown.length > 0
-        ? props.projectName.breakDown
-        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+    const fkProjectId = props.projectName.projectId
+      || JSON.parse(localStorage.getItem('projectName')).projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0
+      ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem('selectBreakDown')) !== null
+        ? JSON.parse(localStorage.getItem('selectBreakDown'))
         : null;
-    let struct = "";
+    let struct = '';
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    if (assessments === "My Assessments") {
+    if (assessments === 'My Assessments') {
       const res = await api.get(
         `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}&createdBy=${createdBy}`
       );
@@ -816,12 +813,11 @@ function xflha(props) {
   };
 
   let timer;
-  const debounce = (fn, v, d) =>
-    function() {
-      clearTimeout(timer);
+  const debounce = (fn, v, d) => function () {
+    clearTimeout(timer);
 
-      timer = setTimeout(() => setSeacrhFlha(v), d);
-    };
+    timer = setTimeout(() => setSeacrhFlha(v), d);
+  };
   const handleSearch = (e) => {
     debounce(fetchData, e.target.value.toLowerCase(), 500)();
   };
@@ -833,11 +829,11 @@ function xflha(props) {
   const handleAssment = (event, newValue) => {
     setValueTwo(newValue);
     if (newValue === 0) {
-      setAssessments("My Assessments");
-      setStatus("");
+      setAssessments('My Assessments');
+      setStatus('');
     } else if (newValue === 1) {
-      setAssessments("Big Picture");
-      setStatus("");
+      setAssessments('Big Picture');
+      setStatus('');
     }
   };
 
@@ -872,7 +868,7 @@ function xflha(props) {
     try {
       if (compId) {
         const config = {
-          method: "get",
+          method: 'get',
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
@@ -884,19 +880,19 @@ function xflha(props) {
               console.log(response);
               const hosting = response.data.data.results.data.companies
                 .filter((company) => company.companyId == compId)[0]
-                .subscriptions.filter((subs) => subs.appCode === "safety")[0]
+                .subscriptions.filter((subs) => subs.appCode === 'safety')[0]
                 .hostings[0].apiDomain;
 
               console.log(hosting);
               const data1 = {
-                method: "get",
+                method: 'get',
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
               console.log(data1);
               axios(data1).then((res) => {
                 localStorage.setItem(
-                  "userDetails",
+                  'userDetails',
                   JSON.stringify(response.data.data.results.data)
                 );
 
@@ -909,8 +905,8 @@ function xflha(props) {
                     fkCompanyId: companies[0].companyId,
                     fkCompanyName: companies[0].companyName,
                   };
-                  localStorage.setItem("company", JSON.stringify(companeyData));
-                  console.log("storage company in xlfha");
+                  localStorage.setItem('company', JSON.stringify(companeyData));
+                  console.log('storage company in xlfha');
                   dispatch(company(companeyData));
                 }
                 if (proId) {
@@ -922,13 +918,13 @@ function xflha(props) {
                   );
 
                   localStorage.setItem(
-                    "projectName",
+                    'projectName',
                     JSON.stringify(project[0])
                   );
                   dispatch(projectName(project[0]));
                 }
                 // fetchPermissionData();
-                localStorage.removeItem("direct_loading");
+                localStorage.removeItem('direct_loading');
               });
             }
           })
@@ -938,17 +934,15 @@ function xflha(props) {
   };
 
   const handleChange = async (event, value) => {
-    const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
-    const fkProjectId =
-      props.projectName.projectId ||
-      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
-    const selectBreakdown =
-      props.projectName.breakDown.length > 0
-        ? props.projectName.breakDown
-        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+    const fkProjectId = props.projectName.projectId
+      || JSON.parse(localStorage.getItem('projectName')).projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0
+      ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem('selectBreakDown')) !== null
+        ? JSON.parse(localStorage.getItem('selectBreakDown'))
         : null;
-    let struct = "";
+    let struct = '';
 
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -962,13 +956,13 @@ function xflha(props) {
   };
 
   useEffect(() => {
-    const state = JSON.parse(localStorage.getItem("direct_loading"));
+    const state = JSON.parse(localStorage.getItem('direct_loading'));
     if (state !== null) {
       userDetails(state.comId, state.proId);
     } else {
       fetchData();
     }
-    setCheckDeletePermission(checkACL("safety-flha", "delete_flha"));
+    setCheckDeletePermission(checkACL('safety-flha', 'delete_flha'));
   }, [props.projectName.breakDown, searchFlha, status, assessments]);
 
   useEffect(() => {
@@ -985,121 +979,117 @@ function xflha(props) {
   };
 
   window.onclick = (e) => {
-    if (e.target.innerHTML.toLowerCase() === "submitted date") {
-      order === "ascDate" ? setOrder("descDate") : setOrder("ascDate");
+    if (e.target.innerHTML.toLowerCase() === 'submitted date') {
+      order === 'ascDate' ? setOrder('descDate') : setOrder('ascDate');
     }
-    if (e.target.innerHTML.toLowerCase() === "approved date") {
-      order === "ascAppDate" ? setOrder("descAppDate") : setOrder("ascAppDate");
+    if (e.target.innerHTML.toLowerCase() === 'approved date') {
+      order === 'ascAppDate' ? setOrder('descAppDate') : setOrder('ascAppDate');
     }
-    if (e.target.innerHTML.toLowerCase() === "approved by") {
-      order === "ascAppBy" ? setOrder("descAppBy") : setOrder("ascAppBy");
+    if (e.target.innerHTML.toLowerCase() === 'approved by') {
+      order === 'ascAppBy' ? setOrder('descAppBy') : setOrder('ascAppBy');
     }
-    if (e.target.innerHTML.toLowerCase() === "type") {
-      order === "ascType" ? setOrder("descType") : setOrder("ascType");
+    if (e.target.innerHTML.toLowerCase() === 'type') {
+      order === 'ascType' ? setOrder('descType') : setOrder('ascType');
     }
-    if (e.target.innerHTML.toLowerCase() === "stage") {
-      order === "ascStg" ? setOrder("descStg") : setOrder("ascStg");
+    if (e.target.innerHTML.toLowerCase() === 'stage') {
+      order === 'ascStg' ? setOrder('descStg') : setOrder('ascStg');
     }
-    if (e.target.innerHTML.toLowerCase() === "status") {
-      order === "ascStts" ? setOrder("descStts") : setOrder("ascStts");
+    if (e.target.innerHTML.toLowerCase() === 'status') {
+      order === 'ascStts' ? setOrder('descStts') : setOrder('ascStts');
     }
-    if (e.target.innerHTML.toLowerCase() === "number") {
-      order === "ascNum" ? setOrder("descNum") : setOrder("ascNum");
+    if (e.target.innerHTML.toLowerCase() === 'number') {
+      order === 'ascNum' ? setOrder('descNum') : setOrder('ascNum');
     }
   };
 
   const SetDataOrder = () => {
     let newdata;
-    if (order === "ascDate") {
-      newdata = flhas.slice().sort(function(a, b) {
-        return moment(a.createdAt) - moment(b.createdAt);
-      });
+    if (order === 'ascDate') {
+      newdata = flhas.slice().sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
       setFlhas(newdata);
-    } else if (order === "descDate") {
-      newdata = flhas.slice().sort(function(a, b) {
-        return moment(b.createdAt) - moment(a.createdAt);
-      });
+    } else if (order === 'descDate') {
+      newdata = flhas.slice().sort((a, b) => moment(b.createdAt) - moment(a.createdAt));
       setFlhas(newdata);
-    } else if (order === "ascAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
-        if (b.dateTimeFlha === "" || b.dateTimeFlha === null) return -1;
-        return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
-      });
-      setFlhas(newdata);
-    } else if (order === "descAppDate") {
-      newdata = flhas.slice().sort(function(a, b) {
-        if (a.dateTimeFlha === "" || a.dateTimeFlha === null) return -1;
-        return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
-      });
-      setFlhas(newdata);
-    } else if (order === "ascType") {
+    } else if (order === 'ascAppDate') {
       newdata = flhas.slice().sort((a, b) => {
-        if (b.jobTitle === "" || b.jobTitle === null) return -1;
+        if (b.dateTimeFlha === '' || b.dateTimeFlha === null) return -1;
+        return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
+      });
+      setFlhas(newdata);
+    } else if (order === 'descAppDate') {
+      newdata = flhas.slice().sort((a, b) => {
+        if (a.dateTimeFlha === '' || a.dateTimeFlha === null) return -1;
+        return moment(b.dateTimeFlha) - moment(a.dateTimeFlha);
+      });
+      setFlhas(newdata);
+    } else if (order === 'ascType') {
+      newdata = flhas.slice().sort((a, b) => {
+        if (b.jobTitle === '' || b.jobTitle === null) return -1;
         if (a.jobTitle < b.jobTitle) return -1;
         if (a.jobTitle > b.jobTitle) return 1;
         return 0;
       });
       setFlhas(newdata);
-    } else if (order === "descType") {
+    } else if (order === 'descType') {
       newdata = flhas.slice().sort((a, b) => {
-        if (a.jobTitle === "" || a.jobTitle === null) return -1;
+        if (a.jobTitle === '' || a.jobTitle === null) return -1;
         if (a.jobTitle > b.jobTitle) return -1;
         if (a.jobTitle < b.jobTitle) return 1;
         return 0;
       });
       setFlhas(newdata);
-    } else if (order === "ascAppBy") {
+    } else if (order === 'ascAppBy') {
       newdata = flhas.slice().sort((a, b) => {
-        if (b.closedByName === "" || b.closedByName === null) return -1;
+        if (b.closedByName === '' || b.closedByName === null) return -1;
         if (a.closedByName < b.closedByName) return -1;
         if (a.closedByName > b.closedByName) return 1;
         return 0;
       });
       setFlhas(newdata);
-    } else if (order === "descAppBy") {
+    } else if (order === 'descAppBy') {
       newdata = flhas.slice().sort((a, b) => {
-        if (a.closedByName === "" || a.closedByName === null) return -1;
+        if (a.closedByName === '' || a.closedByName === null) return -1;
         if (a.closedByName > b.closedByName) return -1;
         if (a.closedByName < b.closedByName) return 1;
         return 0;
       });
       setFlhas(newdata);
-    } else if (order === "ascNum") {
+    } else if (order === 'ascNum') {
       newdata = flhas.slice().sort((a, b) => {
         if (a.flhaNumber < b.flhaNumber) return -1;
         if (a.flhaNumber > b.flhaNumber) return 1;
         return 0;
       });
       setFlhas(newdata);
-    } else if (order === "descNum") {
+    } else if (order === 'descNum') {
       newdata = flhas.slice().sort((a, b) => {
         if (a.flhaNumber > b.flhaNumber) return -1;
         if (a.flhaNumber < b.flhaNumber) return 1;
         return 0;
       });
       setFlhas(newdata);
-    } else if (order === "ascStg") {
+    } else if (order === 'ascStg') {
       newdata = flhas.slice().sort((a, b) => {
         if (a.flhaStage < b.flhaStage) return -1;
         if (a.flhaStage > b.flhaStage) return 1;
         return 0;
       });
       setFlhas(newdata);
-    } else if (order === "descStg") {
+    } else if (order === 'descStg') {
       newdata = flhas.slice().sort((a, b) => {
         if (a.flhaStage > b.flhaStage) return -1;
         if (a.flhaStage < b.flhaStage) return 1;
         return 0;
       });
       setFlhas(newdata);
-    } else if (order === "ascStts") {
+    } else if (order === 'ascStts') {
       newdata = flhas.slice().sort((a, b) => {
         if (a.flhaStatus < b.flhaStatus) return -1;
         if (a.flhaStatus > b.flhaStatus) return 1;
         return 0;
       });
       setFlhas(newdata);
-    } else if (order === "descStts") {
+    } else if (order === 'descStts') {
       newdata = flhas.slice().sort((a, b) => {
         if (a.flhaStatus > b.flhaStatus) return -1;
         if (a.flhaStatus < b.flhaStatus) return 1;
@@ -1113,7 +1103,7 @@ function xflha(props) {
     SetDataOrder();
   }, [order]);
 
-  /*********************all card data***************************************/
+  /** *******************all card data************************************** */
 
   const AllCardData = ({ item, index }) => {
     // console.log(item, "itemmmmmmmmm");
@@ -1123,7 +1113,7 @@ function xflha(props) {
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-    const [commentData, setCommentData] = useState("");
+    const [commentData, setCommentData] = useState('');
 
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
@@ -1141,13 +1131,13 @@ function xflha(props) {
     const commentPayload = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
-      commentContext: "flha",
+      commentContext: 'flha',
       contextReferenceIds: item.id,
-      commentTags: "",
+      commentTags: '',
       comment: commentData,
       parent: 0,
       thanksFlag: 0,
-      status: "Active",
+      status: 'Active',
       createdBy: item.createdBy,
     };
 
@@ -1155,7 +1145,7 @@ function xflha(props) {
       if (commentData) {
         setIsLoading(true);
         await api
-          .post("/api/v1/comments/", commentPayload)
+          .post('/api/v1/comments/', commentPayload)
           .then((res) => {
             // handleCommentsClose()
             setIsLoading(false);
@@ -1241,16 +1231,15 @@ function xflha(props) {
               item: deleteItem,
               loader: setIsLoading,
               loadingFlag: false,
-              deleteMsg: "Are you sure you want to delete this FLHA?",
-              yesBtn: "Yes",
-              noBtn: "No",
+              deleteMsg: 'Are you sure you want to delete this FLHA?',
+              yesBtn: 'Yes',
+              noBtn: 'No',
             }}
             handleVisibility={() => handleVisibility()}
             handleVisibilityComments={() => handleVisibilityComments()}
             files={item.files !== null ? item.files.length : 0}
             commentsCount={item.commentsCount}
-            handleSummaryPush={() =>
-              handleFlhaSummaryPush(item.id, commentPayload)
+            handleSummaryPush={() => handleFlhaSummaryPush(item.id, commentPayload)
             }
             checkDeletePermission={checkDeletePermission}
           />
@@ -1297,7 +1286,7 @@ function xflha(props) {
               </Paper>
             </Grid>
           ) : (
-            ""
+            ''
           )}
         </div>
         <Grid
@@ -1371,7 +1360,9 @@ function xflha(props) {
           maxWidth="sm"
         >
           <DialogTitle classNames={classes.mb10} id="alert-dialog-title">
-            <img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}
+            <img src={paceLogoSymbol} className={classes.userImage} />
+            {' '}
+            {'Admin'}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
@@ -1492,7 +1483,7 @@ function xflha(props) {
     <Acl
       module="safety-flha"
       action="view_flha"
-      html={
+      html={(
         <div>
           <Grid item sm={12} xs={12} className={classes.borderTop}>
             <Grid container spacing={3}>
@@ -1513,23 +1504,25 @@ function xflha(props) {
                   variant="contained"
                   color="primary"
                   className={classNames(classes.buttonsNew, classes.floatR)}
-                  onClick={() => history.push("/app/pages/assesments/flhaadd")}
+                  onClick={() => history.push('/app/pages/assesments/flhaadd')}
                   style={{
-                    background: checkACL("safety-flha", "add_flha")
-                      ? "#06425c"
-                      : "#c0c0c0",
-                    cursor: checkACL("safety-flha", "add_flha")
-                      ? "pointer"
-                      : "not-allowed",
+                    background: checkACL('safety-flha', 'add_flha')
+                      ? '#06425c'
+                      : '#c0c0c0',
+                    cursor: checkACL('safety-flha', 'add_flha')
+                      ? 'pointer'
+                      : 'not-allowed',
                   }}
                 >
-                  <AddIcon className={classes.floatR} /> Add new
+                  <AddIcon className={classes.floatR} />
+                  {' '}
+Add new
                 </Button>
               </Grid>
             </Grid>
           </Grid>
           <Box>
-            {" "}
+            {' '}
             <Grid container spacing={3}>
               <Grid item sm={6} xs={12} className={classes.listViewTab}>
                 <AppBar position="static" className={classes.topNavTabBack}>
@@ -1609,6 +1602,14 @@ function xflha(props) {
                           {...a11yProps(4)}
                           className={classes.hoverB}
                         />
+                        <Tab
+                          icon={<StarsIcon className={classes.buckmarkIcon} />}
+                          {...a11yProps(5)}
+                          className={classNames(
+                            classes.hoverB,
+                            classes.minWd55
+                          )}
+                        />
                         {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
                       </Tabs>
                     </div>
@@ -1632,7 +1633,7 @@ function xflha(props) {
                           root: classes.inputRoot,
                           input: classes.inputInput,
                         }}
-                        inputProps={{ "aria-label": "search" }}
+                        inputProps={{ 'aria-label': 'search' }}
                         onChange={(e) => handleSearch(e)}
                       />
                     </Paper>
@@ -1646,8 +1647,8 @@ function xflha(props) {
                   className={classes.statusIconBox}
                 >
                   <span className={classes.mR10}>
-                    <img src={preplanning} onClick={() => setStatus("Open")} />
-                    <img src={completed} onClick={() => setStatus("Close")} />
+                    <img src={preplanning} onClick={() => setStatus('Open')} />
+                    <img src={completed} onClick={() => setStatus('Close')} />
                   </span>
                 </Grid>
               </Grid>
@@ -1958,14 +1959,14 @@ function xflha(props) {
             </div>
           </Box>
         </div>
-      }
+      )}
     />
   );
 }
 
 // export default Actions;
 const mapStateToProps = (state) => ({
-  projectName: state.getIn(["InitialDetailsReducer"]),
+  projectName: state.getIn(['InitialDetailsReducer']),
   todoIncomplete: state,
 });
 

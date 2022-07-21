@@ -2,23 +2,15 @@ import React, { useState, useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import InputBase from '@material-ui/core/InputBase';
-import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 // import ObservationsKanban from './ObservationsKanban';
-import SearchIcon from '@material-ui/icons/Search';
 import StarsIcon from '@material-ui/icons/Stars';
 import classNames from 'classnames';
-import completed from 'dan-images/completed.png';
-import preplanning from 'dan-images/preplanning.png';
-import progress from 'dan-images/progress.png';
 import PropTypes from 'prop-types';
 // import ObservationsLookAhead from './ObservationsLookAhead';
-import JhaFilter from './JhaFilter';
-import Bookmarklist from './BookmarkList';
 
 function TabPanel(props) {
   const {
@@ -356,14 +348,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function JhaSearchSection() {
+export default function Bookmarklist() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const [search, setSearch] = useState('');
-  const [dummySearch, setDummySearch] = React.useState('');
-  const [blank, setBlank] = React.useState(true);
-  const [status, setStatus] = useState('');
-  const [assessment, setAssessments] = useState('My Assessments');
 
   // let timer
   // let debounce = ( v, d) => {
@@ -384,158 +371,32 @@ export default function JhaSearchSection() {
     }
   };
 
-  useEffect(() => {
-    // localStorage.setItem("SearchedText", JSON.stringify(search))
-    if (JSON.parse(localStorage.getItem('SearchedText')) !== '') {
-      const retreiveSearchText = JSON.parse(
-        localStorage.getItem('SearchedText')
-      );
-      setSearch(retreiveSearchText);
-      setDummySearch(retreiveSearchText);
-    }
-  }, []);
-
-  const handleSearch = (e) => {
-    setDummySearch(e.target.value.toLowerCase());
-  };
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setSearch(dummySearch);
-    }, 1000);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [dummySearch]);
-
-  useEffect(() => {
-    localStorage.setItem('SearchedText', JSON.stringify(search));
-  }, [search]);
-
-  useEffect(() => {
-    if (search === '') {
-      setBlank(true);
-    } else {
-      setBlank(false);
-    }
-  }, [search]);
-
   return (
     <div className={classes.root}>
-      <Grid item md={12} className={classes.AppBarHeader}>
-        <Grid container spacing={3}>
-          <Grid item md={7} sm={12} xs={12}>
-            <AppBar position="static" className={classes.navTabBack}>
-              <div className={classes.floatL}>
-                <Tabs
-                  className={classes.minwdTab}
-                  value={value}
-                  onChange={handleChange}
-                  aria-label="Tabs"
-                  indicatorColor="none"
-                >
-                  <Tab
-                    label="My Assessments"
-                    {...a11yProps(0)}
-                    className={classes.hoverB}
-                  />
-                  {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
-                  <Tab
-                    label="Big Picture"
-                    {...a11yProps(2)}
-                    className={classes.hoverB}
-                  />
-
-                  <Bookmarklist />
-
-                  {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
-                </Tabs>
-              </div>
-            </AppBar>
-          </Grid>
-
-          <Grid item md={3} sm={6} xs={12} className={classes.searchSetionBox}>
-            <Paper elevation={1} className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                value={dummySearch}
-                inputProps={{ 'aria-label': 'search' }}
-                onChange={(e) => handleSearch(e)}
-              />
-            </Paper>
-          </Grid>
-          <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
-            <span className={classes.mR10}>
-              <img
-                src={preplanning}
-                title="Open"
-                onClick={() => setStatus('Open')}
-              />
-              <img
-                src={completed}
-                title="Completed"
-                onClick={() => setStatus('Closed')}
-              />
-            </span>
-          </Grid>
-        </Grid>
-      </Grid>
+      <h5>Welcome to Bookmarked section</h5>
       <Grid container spacing={3}>
-        <Grid item sm={12} xs={12}>
-          <TabPanel value={value} index={0} className={classes.paddLRzero}>
-            <JhaFilter
-              search={
-                search || JSON.parse(localStorage.getItem('SearchedText')) || ''
-              }
-              assessment={assessment}
-              status={status}
-            />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <JhaFilter
-              search={
-                search !== ''
-                  ? search
-                  : JSON.parse(localStorage.getItem('SearchedText'))
-                    ? JSON.parse(localStorage.getItem('SearchedText'))
-                    : ''
-              }
-              assessment={assessment}
-              status={status}
-            />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <JhaFilter
-              search={
-                search !== ''
-                  ? search
-                  : JSON.parse(localStorage.getItem('SearchedText'))
-                    ? JSON.parse(localStorage.getItem('SearchedText'))
-                    : ''
-              }
-              assessment={assessment}
-              status={status}
-            />
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <JhaFilter
-              search={
-                search !== ''
-                  ? search
-                  : JSON.parse(localStorage.getItem('SearchedText'))
-                    ? JSON.parse(localStorage.getItem('SearchedText'))
-                    : ''
-              }
-              assessment={assessment}
-              status={status}
-            />
-          </TabPanel>
+        <Grid item md={7} sm={12} xs={12}>
+          <AppBar position="static" className={classes.navTabBack}>
+            <div className={classes.floatL}>
+              <Tabs
+                className={classes.minwdTab}
+                value={value}
+                onChange={handleChange}
+                aria-label="Tabs"
+                indicatorColor="none"
+              >
+                {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
+
+                <Tab
+                  icon={<StarsIcon className={classes.buckmarkIcon} />}
+                  {...a11yProps(0)}
+                  className={classNames(classes.hoverB, classes.minWd55)}
+                />
+
+                {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
+              </Tabs>
+            </div>
+          </AppBar>
         </Grid>
       </Grid>
     </div>

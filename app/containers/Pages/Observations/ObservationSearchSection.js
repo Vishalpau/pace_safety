@@ -15,6 +15,8 @@ import '../../../styles/custom/customheader.css';
 import preplanning from 'dan-images/preplanning.png';
 import progress from 'dan-images/progress.png';
 import completed from 'dan-images/completed.png';
+import StarsIcon from '@material-ui/icons/Stars';
+import classNames from 'classnames';
 
 const ObservationBookmarkFilter = lazy(() => import('./ObservationBookmarkFilter')
 );
@@ -343,6 +345,9 @@ const useStyles = makeStyles((theme) => ({
       opacity: '0.9',
     },
   },
+  minWd55: {
+    minWidth: '55px !important',
+  }
 }));
 
 export default function SimpleTabs(props) {
@@ -428,6 +433,12 @@ export default function SimpleTabs(props) {
                     {...a11yProps(2)}
                     className={classes.hoverB}
                   />
+                  <Tab
+                    icon={<StarsIcon className={classes.buckmarkIcon} />}
+                    {...a11yProps(3)}
+                    className={classNames(classes.hoverB, classes.minWd55)}
+                  />
+
                   {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} /> */}
                 </Tabs>
               </div>
