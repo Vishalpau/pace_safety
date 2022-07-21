@@ -765,15 +765,12 @@ const Checks = (props) => {
             for (let j = 0; j < value; j++) starvar += "*";
             value = starvar;
           } else if (type === "%") {
-            let pattern = /^(100(?:\.00?)?|\d?\d(?:\.\d?\d?\d?\d?)?)$/gm;
+            let pattern = /^(100(?:\.0?0?0?)?|\d?\d(?:\.\d?\d?\d?\d?)?)$/gm;
             if (pattern.test(value)) {
               if (value <= 100) {
                 value = value + "%";
               }
             } 
-            else if(value == 100){
-              value = value + "%";
-            }
             else {
               value = "";
             }
