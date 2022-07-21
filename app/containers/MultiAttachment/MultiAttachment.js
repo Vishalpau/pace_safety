@@ -100,6 +100,8 @@ const MultiAttachment = (props) => {
   const [checkExt, setCheckExt] = useState(true);
   const [checkBiggerFile, setCheckBiggerFile] = useState(false);
   const [notSupported, setNotSupported] = useState("");
+  const [files, setFiles] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: async (e) => {
@@ -181,9 +183,6 @@ const MultiAttachment = (props) => {
       await setFiles(temparray);
     },
   });
-
-  const [files, setFiles] = useState([]);
-  const [open, setOpen] = useState(false);
 
   // send selected files to parent component
 
