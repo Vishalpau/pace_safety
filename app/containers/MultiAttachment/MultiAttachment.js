@@ -41,23 +41,61 @@ const MultiAttachment = (props) => {
 
   const classes = useStyles();
 
-  const fileTypes = [
-    "png",
-    "jpg",
-    "xls",
-    "xlsx",
-    "ppt",
-    "pptx",
-    "doc",
-    "docx",
-    "text",
-    "pdf",
-    "mp4",
-    "mov",
-    "flv",
-    "avi",
-    "mkv",
-  ];
+  let fileTypes;
+
+  if (props.docTypes && Object.keys(props.docTypes).length > 0) {
+    if (props.docTypes.avi === "yes") {
+      fileTypes = [
+        "png",
+        "jpg",
+        "mp4",
+        "mov",
+        "flv",
+        "avi",
+        "mkv",
+        "mp3",
+        "wma",
+      ];
+    } else if (props.docTypes.pdf === "yes") {
+      fileTypes = ["xls", "xlsx", "ppt", "pptx", "doc", "docx", "text", "pdf"];
+    } else {
+      fileTypes = [
+        "png",
+        "jpg",
+        "xls",
+        "xlsx",
+        "ppt",
+        "pptx",
+        "doc",
+        "docx",
+        "text",
+        "pdf",
+        "mp4",
+        "mov",
+        "flv",
+        "avi",
+        "mkv",
+      ];
+    }
+  } else {
+    fileTypes = [
+      "png",
+      "jpg",
+      "xls",
+      "xlsx",
+      "ppt",
+      "pptx",
+      "doc",
+      "docx",
+      "text",
+      "pdf",
+      "mp4",
+      "mov",
+      "flv",
+      "avi",
+      "mkv",
+    ];
+  }
 
   const [checkExt, setCheckExt] = useState(true);
   const [checkBiggerFile, setCheckBiggerFile] = useState(false);
@@ -69,6 +107,8 @@ const MultiAttachment = (props) => {
       const temparray = [];
       console.log(e, "eeeeeeeeeeeeeeeeeee");
 
+      debugger;
+
       const tempArr2 = [];
 
       let notSupportedExt = "";
@@ -79,12 +119,12 @@ const MultiAttachment = (props) => {
         tempArr2.push(nameExtension);
       }
 
-      const containsAll = tempArr2.forEach((element) => {
+      tempArr2.forEach((element) => {
         if (!fileTypes.includes(element)) {
           notSupportedExt =
             notSupportedExt +
             element +
-            `${tempArr2[tempArr2.length - 1] === element ? "" : " "}`;
+            `${tempArr2[tempArr2.length - 1] === element ? " " : " "}`;
         }
       });
 
@@ -215,7 +255,7 @@ const MultiAttachment = (props) => {
                     name="file"
                     id="attachment"
                     style={{ display: "block" }}
-                    accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                    accept={`.${fileTypes.join(", .")}`}
                   />
                 </div>
                 <span align="center">
