@@ -788,12 +788,13 @@ const Checks = (props) => {
             for (let j = 0; j < value; j++) starvar += "*";
             value = starvar;
           } else if (type === "%") {
-            let pattern = /^[0-9]*$/;
+            let pattern = /^(100(?:\.0?0?0?)?|\d?\d(?:\.\d?\d?\d?\d?)?)$/gm;
             if (pattern.test(value)) {
               if (value <= 100) {
                 value = value + "%";
               }
-            } else {
+            } 
+            else {
               value = "";
             }
           } else if (type === "1-10") {
@@ -2163,7 +2164,7 @@ const Checks = (props) => {
                                                       label="Percentage"
                                                       type="text"
                                                       inputProps={{
-                                                        maxLength: 3,
+                                                        maxLength: 6,
                                                       }}
                                                       value={
                                                         checkData.filter(
