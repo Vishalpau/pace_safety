@@ -1348,12 +1348,12 @@ const AssessmentAndNotification = (props) => {
                     >
                       Submit
                     </Button>
-                    {submitLoader && (
+                    {/* {submitLoader && (
                       <CircularProgress
                         size={24}
                         className={classes.buttonProgress}
                       />
-                    )}
+                    )} */}
                   </div>
                   <Button
                     size="medium"
