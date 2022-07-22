@@ -701,9 +701,14 @@ function Header(props) {
   const id = filterOpen ? 'simple-popover' : undefined;
 
   const handleBreakdown = async (e, index, label) => {
+    
     const { value } = e.target;
     const temp = [...labelList];
+    //console.log(labelList)
+    //console.log(index)
     temp[index].selectValue = value;
+    //console.log(temp[index])
+    //console.log(selectBreakDown)
     if (
       selectBreakDown.filter(
         (filterItem) => filterItem.depth === `${index + 1}L`
@@ -714,7 +719,7 @@ function Header(props) {
           temp[i].breakdownValue = [];
           temp[i].selectValue = '';
         }
-      }
+      }console.log("I am now running")
       const removeSelectBreakDown = selectBreakDown.slice(0, index);
       const name = temp[index].breakdownValue.map(async (item) => {
         if (item.id === value) {
@@ -727,14 +732,43 @@ function Header(props) {
               label,
             },
           ]);
-          setBreakDownData([
+          console.log({
+              depth: item.depth,
+              id: item.id,
+              name: item.structureName,
+              label,
+            })
+          /* setBreakDownData([
             {
               depth: item.depth,
               id: item.id,
               name: item.structureName,
               label,
             },
-          ]);
+          ]);  */
+
+          setBreakDownData((prev) => {
+            console.log(index)
+            let updated = prev.filter(item => item.label === label)[0].label
+            console.log(updated)
+            /* updated  = {
+              ...updated,
+              id: item.id,
+              label
+            } */
+            console.log(updated)
+            let temp = prev.slice(0,index )
+            return [
+              ...temp,
+              {
+              depth: item.depth,
+              id: item.id,
+              name: item.structureName,
+              label,
+            },
+            ]
+          })
+          
           dispatch(
             breakDownDetails([
               ...removeSelectBreakDown,
@@ -756,6 +790,7 @@ function Header(props) {
         }
       });
     } else {
+      console.log(breakDownData)
       const name = temp[index].breakdownValue.map(async (item) => {
         if (item.id === value) {
           await setSelectBreakDown([
@@ -801,7 +836,7 @@ function Header(props) {
     temp.forEach((items, tempIndex) => {
       if (items.selectValue) {
         items.breakdownValue.forEach((item) => {
-          console.log(item.id, value, 'vvaaaaaalueeeee');
+          //console.log(item.id, value, 'vvaaaaaalueeeee');
           if (item.id === items.selectValue) {
             tempArray.push({
               depth: item.depth,
@@ -838,7 +873,6 @@ function Header(props) {
               if (response.status === 200) {
                 temp[key].breakdownValue = response.data.data.results;
                 // temp[key+1].breakdownValue= response.data.data.results;
-
                 setLabelList(temp);
               }
             })
@@ -849,6 +883,8 @@ function Header(props) {
       // dispatch(levelBDownDetails([]))
     }
   };
+
+  useEffect(() => console.log(breakDownData),[breakDownData])
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])
@@ -1827,6 +1863,7 @@ function Header(props) {
             </Dialog>
           </div>
           <Hidden smDown>
+            {/* start  here */}
             <div>
               {!history.location.pathname.includes('control-tower') ? (
                 <>
@@ -1939,7 +1976,7 @@ function Header(props) {
                 separator={<NavigateNextIcon fontSize="small" />}
               >
                 {/* Project Structure */}
-
+              {/* exact location now */}
                 {isLoading
                   ? labelList.map((item, index) => (
                     <Chip

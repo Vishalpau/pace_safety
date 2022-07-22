@@ -3,11 +3,33 @@ import IconButton from "@material-ui/core/IconButton";
 import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import api from "../../utils/axios";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogContent from "@material-ui/core/DialogContent";
-import Dialog from "@material-ui/core/Dialog";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import { CircularProgress } from "@material-ui/core";
+
+/**
+ * @file - Print.js
+ * @location /app/components/Print/Print.js
+ * @description Serves the functionality of printing the particular one card details
+ * @author Abhimanyu Soni <abhimanyus@teknobuilt.com>
+ * @since v2.1.0
+ **/
+
+/**
+ * Component name: Print
+ * Component description: Serves the functionality of printing the particular one card details
+ * @param printUrl string - API url to get the data to print
+ * @param typeOfModule string - Module type eg. iCare, AHA, JHA etc.
+ * @param number string - Number of particular card.
+ * @return returntype
+ * @since v2.1.0
+ * @author Abhimanyu Soni <abhimanyus@teknobuilt.com>
+ * @usedin CardFooter 
+ * @example 
+    <Print
+        printUrl={printUrl}
+        typeOfModule={typeOfModule}
+        number={number}
+    />
+ **/
 
 const useStyles = makeStyles((theme) => ({
   iconteal: {
@@ -20,6 +42,7 @@ const Print = (props) => {
   const classes = useStyles();
 
   const [printData, setPrintData] = useState({ __html: "" });
+  const [loading, setLoading] = useState(false);
 
   const printDiv = () => {
     let divContents = printData.__html;
@@ -42,10 +65,14 @@ const Print = (props) => {
   };
 
   const printOutTheValue = async () => {
-    const res = await api.get(
-      `https://dev-safety1-api.paceos.io/${props.printUrl}`
-    );
-    setPrintData({ __html: res.data });
+    setLoading(true);
+    await api
+      .get(`https://dev-safety1-api.paceos.io/${props.printUrl}`)
+      .then((res) => {
+        setLoading(false);
+        setPrintData({ __html: res.data });
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -60,8 +87,13 @@ const Print = (props) => {
         onClick={() => {
           printOutTheValue();
         }}
+        style={{ width: 45, height: 45 }}
       >
-        <PrintOutlinedIcon className={classes.iconteal} />
+        {loading ? (
+          <CircularProgress size={10} />
+        ) : (
+          <PrintOutlinedIcon className={classes.iconteal} />
+        )}
       </IconButton>
     </>
   );

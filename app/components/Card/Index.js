@@ -55,6 +55,12 @@ import Styles from "./UI/Styles";
           },
           { label: ahaLabels.body[3], value: item.createdByName },
         ]}
+        printFields={{
+          // Print component props
+          typeOfModule: "Observation",
+          printUrl: `api/v1/observations/${item.id}/print/`,
+          number: item.observationNumber,
+        }}
         deleteFields={{
           // Delete component props
           deleteUrl: `/api/v1/ahas/${item.id}/`,

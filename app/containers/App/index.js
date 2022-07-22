@@ -181,7 +181,7 @@ function App() {
           <Route component={Auth} />
           <Route component={NotFound} />
         </Switch>
-      ) : <Loading />}
+      ) : <Loading />} 
       {/* </Online>
         <Offline>Turn on internet</Offline>  */}
     </ThemeWrapper>
