@@ -957,6 +957,7 @@ function Actions(props) {
     const handleVisibilityComments = () => {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
+      setCommentData("");
     };
 
     const handleCommentsClick = () => {

@@ -723,6 +723,7 @@ function AhaPackage(props) {
     function handleVisibilityComments() {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
+      setCommentData("");
     }
 
     function handleCommentsOpen() {

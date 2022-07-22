@@ -744,6 +744,7 @@ function JhaPackage(props) {
     function handleVisibilityComments() {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
+      setCommentData("");
     }
 
     function handleCommentsOpen() {
