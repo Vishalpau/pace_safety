@@ -329,7 +329,7 @@ const CloseOut = () => {
                   helperText={error.reviewDate ? error.reviewDate : null}
                   className={classes.formControl}
                   id="date-picker-dialog"
-                  format="yyyy/MM/dd HH:mm"
+                  format="dd-MMM-yyyy hh:mm:s a"
                   inputVariant="outlined"
                   label="Reviewed on"
                   value={form.reviewDate || null}

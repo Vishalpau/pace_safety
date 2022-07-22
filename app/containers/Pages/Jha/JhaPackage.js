@@ -913,7 +913,7 @@ function JhaPackage(props) {
                         size="small"
                         className="buttonStyle custmCancelBtn"
                         disableElevation
-                        onClick={handleCommentsClose}
+                        onClick={handleVisibilityComments}
                       >
                         Cancel
                       </Button>

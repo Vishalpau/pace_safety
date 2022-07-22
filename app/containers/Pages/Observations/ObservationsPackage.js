@@ -1124,6 +1124,7 @@ function Actions(props) {
                           size="small"
                           className="custmCancelBtn buttonStyle"
                           disableElevation
+                          onClick={handleVisibilityComments}
                         >
                           Cancel
                         </Button>
