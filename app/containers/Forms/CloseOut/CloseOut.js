@@ -382,7 +382,7 @@ const CloseOut = () => {
                   helperText={error.closeDate ? error.closeDate : null}
                   value={form.closeDate || null}
                   onChange={(e) => handleCloseDate(e)}
-                  format="yyyy/MM/dd HH:mm"
+                  format="dd-MMM-yyyy hh:mm:s a"
                   inputVariant="outlined"
                   id="date-picker-dialog"
                   // format="yyyy/MM/dd HH:mm"

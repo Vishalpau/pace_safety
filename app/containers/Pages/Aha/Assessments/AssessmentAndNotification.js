@@ -736,7 +736,7 @@ const AssessmentAndNotification = (props) => {
               spacing={3}
               className={classes.observationNewSection}
             >
-              <Grid container spacing={3} item xs={12} md={9}>
+              <Grid container spacing={3} item xs={12} md={!submitLoader ? 9 : 12}>
                 {!submitLoader ? <>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Typography variant="h6" className="sectionHeading">
@@ -1324,8 +1324,9 @@ const AssessmentAndNotification = (props) => {
                 ) : null}
 
                 </> : <Box sx={{
-                    width: "100%",
-                    height: "70vh",
+                    width: "100vw",
+                    minWidth:"100vw",
+                    height: "90vh",
                     display:"flex",
                     alignItems:"center",
                     justifyContent:"center",

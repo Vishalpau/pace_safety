@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import { Button, Grid } from "@material-ui/core";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -14,15 +14,19 @@ import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import moment from "moment";
 
 import apiAction from "../../utils/axiosActionTracker";
-import { handelCommonObject, fetchReportedBy, fetchDepartmentName } from "../../utils/CheckerValue";
+import {
+  handelCommonObject,
+  fetchReportedBy,
+  fetchDepartmentName,
+} from "../../utils/CheckerValue";
 import { checkACL } from "../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
@@ -55,18 +59,16 @@ const useStyles = makeStyles((theme) => ({
   },
   disabledButton: {
     "& .MuiButton-contained.Mui-disabled": {
-      background: '#616161'
-    }
-  }
-
+      background: "#616161",
+    },
+  },
 }));
 
 export default function ActionTracker(props) {
-
   // console.log(props, 'fkprojectstructureid');
 
-  const userName = JSON.parse(localStorage.getItem('userDetails')).name
-  const userId = JSON.parse(localStorage.getItem('userDetails')).id
+  const userName = JSON.parse(localStorage.getItem("userDetails")).name;
+  const userId = JSON.parse(localStorage.getItem("userDetails")).id;
   const [form, setForm] = useState({
     fkCompanyId: props.fkCompanyId,
     fkProjectId: props.fkProjectId,
@@ -81,7 +83,7 @@ export default function ActionTracker(props) {
     priority: "",
     severity: "",
     approver: props.createdBy,
-    approverName: JSON.parse(localStorage.getItem('userDetails'))["name"],
+    approverName: JSON.parse(localStorage.getItem("userDetails"))["name"],
     assignTo: userId,
     assignToName: "",
     deligateTo: 0,
@@ -113,123 +115,131 @@ export default function ActionTracker(props) {
   });
 
   const [reportedByName, setReportedByName] = useState([]);
-  const [isLoading, setLoading] = useState(false)
-  const [isDateShow, setIsDateShow] = useState(false)
-  const [assigneeValue, setAssigneeValue] = useState("")
-  const [allDepartment, setallDepartment] = useState([])
+  const [isLoading, setLoading] = useState(false);
+  const [isDateShow, setIsDateShow] = useState(false);
+  const [assigneeValue, setAssigneeValue] = useState("");
+  const [allDepartment, setallDepartment] = useState([]);
 
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
-      const res = await apiAction.get(`/api/v1/actions/${props.actionID}/`)
+      const res = await apiAction.get(`/api/v1/actions/${props.actionID}/`);
     }
-  }
+  };
 
   const handelClose = () => {
-    setIsDateShow(false)
-    return true
-  }
+    setIsDateShow(false);
+    return true;
+  };
 
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({ actionTitle: "" });
 
   const fetchReported = async () => {
     try {
-      let commentObjectAction = JSON.parse(localStorage.getItem("commonObject"))["action"]["actionUser"]
-      setReportedByName(commentObjectAction)
-    }
-    catch {
-      let allUsers = await fetchReportedBy()
-      handelCommonObject("commonObject", "action", "actionUser", allUsers)
-      setReportedByName(allUsers)
+      let commentObjectAction = JSON.parse(
+        localStorage.getItem("commonObject")
+      )["action"]["actionUser"];
+      setReportedByName(commentObjectAction);
+    } catch {
+      let allUsers = await fetchReportedBy();
+      handelCommonObject("commonObject", "action", "actionUser", allUsers);
+      setReportedByName(allUsers);
     }
   };
 
   const fetchDepartment = async () => {
     try {
-      let commentObjectAction = JSON.parse(localStorage.getItem("commonObject"))["ActionDept"]["department"]
-      setallDepartment(commentObjectAction)
-    }
-    catch {
-      let allDepartment = await fetchDepartmentName()
-      handelCommonObject("commonObject", "ActionDept", "department", allDepartment)
-      setallDepartment(allDepartment)
+      let commentObjectAction = JSON.parse(
+        localStorage.getItem("commonObject")
+      )["ActionDept"]["department"];
+      setallDepartment(commentObjectAction);
+    } catch {
+      let allDepartment = await fetchDepartmentName();
+      handelCommonObject(
+        "commonObject",
+        "ActionDept",
+        "department",
+        allDepartment
+      );
+      setallDepartment(allDepartment);
     }
   };
 
-
-
   const select = async () => {
-    await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
-  }
+    await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`);
+  };
 
   const handleClickOpen = async () => {
     setOpen(true);
   };
 
   const handelCloseAndSubmit = () => {
-    setForm(
-      {
-        ...form,
-        plannedEndDate: null,
-        actionTitle: "",
-        severity: "",
-        department: "",
-        assignToName: ""
-      }
-    );
-  }
+    setForm({
+      ...form,
+      plannedEndDate: null,
+      actionTitle: "",
+      severity: "",
+      department: "",
+      assignToName: "",
+    });
+  };
 
   const handleClose = async () => {
     setError({ actionTitle: "" });
-    await handelCloseAndSubmit()
+    await handelCloseAndSubmit();
     await setOpen(false);
-    await props.setUpdatePage(!props.updatePage)
+    await props.setUpdatePage(!props.updatePage);
   };
 
   const handelSubmit = async () => {
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
     } else {
-      setLoading(true)
-      await select()
+      setLoading(true);
+      await select();
       if (form["severity"] === "") {
-        form["severity"] = "Normal"
+        form["severity"] = "Normal";
       }
-      form["assignToName"] === "" ? form["assignToName"] = userName : form["assignToName"] = form["assignToName"]
+      form["assignToName"] === ""
+        ? (form["assignToName"] = userName)
+        : (form["assignToName"] = form["assignToName"]);
       if (form["plannedEndDate"] === null) {
-        form.plannedEndDate = new Date()
+        form.plannedEndDate = new Date();
       }
-      let res = await apiAction.post("api/v1/actions/", form).then().catch(() => setLoading(false));
+      let res = await apiAction
+        .post("api/v1/actions/", form)
+        .then()
+        .catch(() => setLoading(false));
       if (res.status == 200) {
         await setError({ actionTitle: "" });
-        await handelCloseAndSubmit()
+        await handelCloseAndSubmit();
         await setOpen(false);
-        await props.setUpdatePage(!props.updatePage)
-        await props.handelShowData()
+        await props.setUpdatePage(!props.updatePage);
+        await props.handelShowData();
       }
-      setLoading(false)
+      setLoading(false);
     }
   };
 
   const handelAssigne = () => {
     let assigneName;
     if (form["department"] == "") {
-      assigneName = reportedByName
+      assigneName = reportedByName;
     } else {
-      let deptAssigneName = []
+      let deptAssigneName = [];
       reportedByName.map((value) => {
         if (value["department"].length > 0) {
           value["department"].map((valueDept) => {
             if (form["department"] === valueDept["departmentName"]) {
-              deptAssigneName.push(value)
+              deptAssigneName.push(value);
             }
-          })
+          });
         }
-      })
-      assigneName = deptAssigneName
+      });
+      assigneName = deptAssigneName;
     }
-    return assigneName
-  }
+    return assigneName;
+  };
 
   const handelDeparment = (value = "") => {
     setForm({
@@ -237,72 +247,114 @@ export default function ActionTracker(props) {
       department: value,
       assignTo: userId,
       assignToName: "",
-    })
+    });
     if (form["department"] == "") {
-      setAssigneeValue(userName)
+      setAssigneeValue(userName);
     } else {
-      console.log("here1")
-      let firstAssigneeName = handelAssigne()
+      console.log("here1");
+      let firstAssigneeName = handelAssigne();
       setAssigneeValue("");
     }
-  }
+  };
 
   let severity = ["Low", "Medium", "High"];
   const classes = useStyles();
 
   const handelCallBack = async () => {
-    await handelUpdate()
-    await fetchDepartment()
-    await fetchReported()
-  }
+    await handelUpdate();
+    await fetchDepartment();
+    await fetchReported();
+  };
 
   useEffect(() => {
-    handelCallBack()
-  }, [])
+    handelCallBack();
+  }, []);
 
   return (
     <>
-      {props.isCorrectiveActionTaken === null ?
+      {props.isCorrectiveActionTaken === null ? (
         <Button
           variant="contained"
           color="primary"
           onClick={handleClickOpen}
           disabled={props.isCorrectiveActionTaken === null ? true : false}
-        // style={{
-        //   background: props.isCorrectiveActionTaken ? '#616161!important' : '#c0c0c0',
-        //   cursor: props.isCorrectiveActionTaken ? 'pointer' : 'not-allowed'
-        // }}
+          // style={{
+          //   background: props.isCorrectiveActionTaken ? '#616161!important' : '#c0c0c0',
+          //   cursor: props.isCorrectiveActionTaken ? 'pointer' : 'not-allowed'
+          // }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 75 50">
-            <g id="Group_336" data-name="Group 336" transform="translate(-338 -858)">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="60"
+            height="30"
+            viewBox="0 0 75 50"
+          >
+            <g
+              id="Group_336"
+              data-name="Group 336"
+              transform="translate(-338 -858)"
+            >
               <g id="baseline-flash_auto-24px" transform="translate(364 871)">
-                <path id="Path_1634" data-name="Path 1634" d="M0,0H24V24H0Z" fill="none" />
-                <path id="Path_1635" data-name="Path 1635" d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z" fill="#ffffff" />
+                <path
+                  id="Path_1634"
+                  data-name="Path 1634"
+                  d="M0,0H24V24H0Z"
+                  fill="none"
+                />
+                <path
+                  id="Path_1635"
+                  data-name="Path 1635"
+                  d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z"
+                  fill="#ffffff"
+                />
               </g>
             </g>
           </svg>
         </Button>
-        :
+      ) : (
         <Button
           variant="contained"
           color="primary"
           onClick={handleClickOpen}
-          disabled={!checkACL('action_tracker-actions', 'add_actions')}
+          disabled={!checkACL("action_tracker-actions", "add_actions")}
           style={{
-            background: checkACL('action_tracker-actions', 'add_actions') ? '#616161!important' : '#c0c0c0',
-            cursor: checkACL('action_tracker-actions', 'add_actions') ? 'pointer' : 'not-allowed'
+            background: checkACL("action_tracker-actions", "add_actions")
+              ? "#616161!important"
+              : "#c0c0c0",
+            cursor: checkACL("action_tracker-actions", "add_actions")
+              ? "pointer"
+              : "not-allowed",
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 75 50">
-            <g id="Group_336" data-name="Group 336" transform="translate(-338 -858)">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="60"
+            height="30"
+            viewBox="0 0 75 50"
+          >
+            <g
+              id="Group_336"
+              data-name="Group 336"
+              transform="translate(-338 -858)"
+            >
               <g id="baseline-flash_auto-24px" transform="translate(364 871)">
-                <path id="Path_1634" data-name="Path 1634" d="M0,0H24V24H0Z" fill="none" />
-                <path id="Path_1635" data-name="Path 1635" d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z" fill="#ffffff" />
+                <path
+                  id="Path_1634"
+                  data-name="Path 1634"
+                  d="M0,0H24V24H0Z"
+                  fill="none"
+                />
+                <path
+                  id="Path_1635"
+                  data-name="Path 1635"
+                  d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z"
+                  fill="#ffffff"
+                />
               </g>
             </g>
           </svg>
         </Button>
-      }
+      )}
       {/* {console.log(form)} */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
@@ -326,7 +378,11 @@ export default function ActionTracker(props) {
                 error={error.actionTitle}
                 helperText={error ? error.actionTitle : null}
                 onChange={(e) =>
-                  setForm({ ...form, actionTitle: e.target.value, actionDetail: e.target.value })
+                  setForm({
+                    ...form,
+                    actionTitle: e.target.value,
+                    actionDetail: e.target.value,
+                  })
                 }
               />
             </Grid>
@@ -338,9 +394,7 @@ export default function ActionTracker(props) {
                 requirement
                 className="formControl"
               >
-                <InputLabel id="Department">
-                  Department
-                </InputLabel>
+                <InputLabel id="Department">Department</InputLabel>
                 <Select
                   labelId="Department"
                   id="Department"
@@ -361,7 +415,8 @@ export default function ActionTracker(props) {
 
             {/* assigen */}
             <Grid item xs={12}>
-              {reportedByName !== undefined && reportedByName[0] !== "No users found" ?
+              {reportedByName !== undefined &&
+              reportedByName[0] !== "No users found" ? (
                 <Autocomplete
                   id="combo-box-demo"
                   options={handelAssigne()}
@@ -371,15 +426,26 @@ export default function ActionTracker(props) {
                     setForm({
                       ...form,
                       assignTo: option.id,
-                      assignToName: option.name
+                      assignToName: option.name,
                     })
                   }
-                  renderInput={(params) => <TextField {...params}
-                    label="Assignee" variant="outlined" />}
-                  value={form.department == "" && form.assignToName == "" ? reportedByName.find(value => value.name == userName) : reportedByName.find(value => value.name == form.assignToName)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Assignee"
+                      variant="outlined"
+                    />
+                  )}
+                  value={
+                    form.department == "" && form.assignToName == ""
+                      ? reportedByName.find((value) => value.name == userName)
+                      : reportedByName.find(
+                          (value) => value.name == form.assignToName
+                        )
+                  }
                   error={error.assignTo}
                 />
-                :
+              ) : (
                 <TextField
                   className={classes.formControl}
                   id="filled-basic"
@@ -387,7 +453,7 @@ export default function ActionTracker(props) {
                   label="Assignee"
                   disabled={true}
                 />
-              }
+              )}
             </Grid>
 
             {/* due date */}
@@ -396,7 +462,7 @@ export default function ActionTracker(props) {
                 <KeyboardDatePicker
                   className={classes.formControl}
                   label="Due date"
-                  format="dd/MM/yyyy"
+                  format="dd-MMM-yyyy"
                   inputVariant="outlined"
                   value={form.plannedEndDate}
                   disablePast={true}
@@ -438,7 +504,8 @@ export default function ActionTracker(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          {reportedByName !== undefined && reportedByName[0] !== "No users found" ?
+          {reportedByName !== undefined &&
+          reportedByName[0] !== "No users found" ? (
             <>
               <div className={classes.loadingWrapper}>
                 <Button
@@ -457,16 +524,13 @@ export default function ActionTracker(props) {
                 )}
               </div>
             </>
-            :
+          ) : (
             <div style={{ marginRight: "29px", color: "red" }}>
               Please add user to add action
             </div>
-          }
+          )}
         </DialogActions>
       </Dialog>
     </>
   );
 }
-
-
-

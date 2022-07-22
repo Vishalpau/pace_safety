@@ -242,9 +242,7 @@ const IncidentDetailsSummary = (props) => {
               Incident on
             </Typography>
             <Typography className={Fonts.labelValue}>
-              {moment(incidents.incidentOccuredOn).format(
-                "Do MMMM YYYY, h:mm:ss a"
-              )}
+              {DateFormat(incidents.incidentOccuredOn, true)}
             </Typography>
           </Grid>
 

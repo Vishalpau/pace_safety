@@ -533,7 +533,7 @@ class SimpleTabs extends React.Component {
                         className="quickActionSectionLink"
                         variant="subtitle"
                         name="Comments"
-                        disabled="true"
+                        // disabled="true"
                         to={{
                           pathname: `/app/comments/flha/${id}`,
                           // pathname: this.props.history.location.pathname,
