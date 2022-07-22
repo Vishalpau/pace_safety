@@ -17,6 +17,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import { FormHelperText } from "@material-ui/core";
 import Checkbox from '@material-ui/core/Checkbox';
+import Box from '@material-ui/core/Box';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import {
@@ -209,7 +210,6 @@ const ProjectDetailsAndHazard = () => {
   const radioDecide = ['Yes', 'No']
   const [error, setError] = useState({});
   const permitType = useRef([])
-
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
     const value = e.target.value;
@@ -298,6 +298,7 @@ const ProjectDetailsAndHazard = () => {
 
   const handleSubmit = async (e) => {
     const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
+    
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -704,9 +705,10 @@ const ProjectDetailsAndHazard = () => {
         action={id ? "change_aha" : "add_aha"}
         html={(
           <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon ahaPageIcon'whiteBg>
-          {isLoading ?
+            {/* <Loader/> */}
+          {isLoading  ?
             <Grid container spacing={3} className={classes.observationNewSection}>
-              <Grid container spacing={3} item xs={12} md={9}>
+              {!loading ? <Grid container spacing={3} item xs={12} md={9}>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Typography variant="h6" className="sectionHeading">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24.961" height="30.053" viewBox="0 0 30.961 36.053">
@@ -1085,14 +1087,27 @@ const ProjectDetailsAndHazard = () => {
                         </Paper>
                   </Grid>
               </Grid>
+              : 
+              <Box sx={{
+                    width: "100%",
+                    height: "70vh",
+                    display:"flex",
+                    alignItems:"center",
+                    justifyContent:"center",
+        
+                  }}  
+                  >
+                    <Loader/>
+              </Box> 
+              }
   
-              <Grid item xs={12} md={3}>
+              {/* <Grid item xs={12} md={3}>
                 <FormSideBar
                   deleteForm={[1, 2, 3]}
                   listOfItems={AHA}
                   selectedItem="Project Details"
                 />
-              </Grid>
+              </Grid> */}
   
               <Grid
                 item
@@ -1127,7 +1142,7 @@ const ProjectDetailsAndHazard = () => {
               </Grid>
   
             </Grid>
-             : <Loader/>}
+              : <Loader/>}
             </CustomPapperBlock>
         )} />
       

@@ -25,6 +25,7 @@ import MenuOpenOutlinedIcon from "@material-ui/icons/MenuOpenOutlined";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
+import Box from '@material-ui/core/Box';
 import ControlPointIcon from "@material-ui/icons/ControlPoint";
 import Link from "@material-ui/core/Link";
 import Divider from "@material-ui/core/Divider";
@@ -736,6 +737,7 @@ const AssessmentAndNotification = (props) => {
               className={classes.observationNewSection}
             >
               <Grid container spacing={3} item xs={12} md={9}>
+                {!submitLoader ? <>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Typography variant="h6" className="sectionHeading">
                     <svg
@@ -1321,6 +1323,18 @@ const AssessmentAndNotification = (props) => {
                   </>
                 ) : null}
 
+                </> : <Box sx={{
+                    width: "100%",
+                    height: "70vh",
+                    display:"flex",
+                    alignItems:"center",
+                    justifyContent:"center",
+        
+                  }}  
+                  >
+                    <Loader/>
+              </Box> }
+
                 <Grid item md={12} xs={12}>
                   <div className={classes.loadingWrapper}>
                     <Button
@@ -1352,13 +1366,13 @@ const AssessmentAndNotification = (props) => {
                 </Grid>
               </Grid>
 
-              <Grid item xs={12} md={3}>
+              {!submitLoader && <Grid item xs={12} md={3}>
                 <FormSideBar
                   deleteForm={[1, 2, 3]}
                   listOfItems={AHA}
                   selectedItem="Area hazard analysis"
                 />
-              </Grid>
+              </Grid>}
             </Grid>
           </>
         ) : (
