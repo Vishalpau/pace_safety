@@ -541,8 +541,8 @@ const JobDetails = (props) => {
       );
       console.log(res, "res1");
       const fkJHAId = res.data.data.results.id;
-      console.log(fkJHAId, 'fkklkkfklkl');
-      localStorage.setItem('fkJHAId',fkJHAId);
+      console.log(fkJHAId, "fkklkkfklkl");
+      localStorage.setItem("fkJHAId", fkJHAId);
       let CreateJhaId = res.data.data.results.id;
       newJhaId = CreateJhaId;
       handelTeam(CreateJhaId);
@@ -553,14 +553,14 @@ const JobDetails = (props) => {
       newJhaId = CreateJhaId;
       handelTeam(CreateJhaId);
     }
-     handelCommonObject(
+    handelCommonObject(
       "commonObject",
       "jha",
       "projectStruct",
       form.fkProjectStructureIds
     );
-     setSubmitLoader(false);
-     setSubmitLoaderHazard(false);
+    setSubmitLoader(false);
+    setSubmitLoaderHazard(false);
     await handleSubmitHazard(newJhaId);
   };
 
@@ -667,7 +667,7 @@ const JobDetails = (props) => {
     if (otherHazards.length > 1) {
       let temp = otherHazards;
       let newData = otherHazards.filter((item, key) => key !== index);
-       setOtherHazards(newData);
+      setOtherHazards(newData);
     }
   };
 
@@ -699,7 +699,7 @@ const JobDetails = (props) => {
         fkJhaId: localStorage.getItem("fkJHAId"),
       });
     }
-     setFormHazard(temp);
+    setFormHazard(temp);
   };
 
   const handlePhysicalPpe = async (e, checkListId, hazard_value) => {
@@ -724,7 +724,7 @@ const JobDetails = (props) => {
         fkJhaId: localStorage.getItem("fkJHAId"),
       });
     }
-     setFormPpe(temp);
+    setFormPpe(temp);
   };
 
   const handelSelectOption = (checklistId, hazard) => {
@@ -789,7 +789,7 @@ const JobDetails = (props) => {
     const resNew = await api
       .post(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardNew)
       .catch(() => handelApiErrorHazard());
-     handelNavigateHazard("next");
+    handelNavigateHazard("next");
   };
 
   const [typeOfPremit, setTypeOfPremit] = useState([]);
@@ -800,7 +800,7 @@ const JobDetails = (props) => {
   };
 
   const handelCallBack = async () => {
-     setLoading(true);
+    setLoading(true);
     await fetchJhaData();
     await fetchTeamData();
     await fetchDepartment();
@@ -808,7 +808,7 @@ const JobDetails = (props) => {
     await checkList();
     await checkListControl();
     await pickListValue();
-     setLoading(false);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -1160,7 +1160,7 @@ const JobDetails = (props) => {
                             fullWidth
                             id="jha_assessment_date"
                             label="Date*"
-                            format="MM/dd/yyyy"
+                            format="dd-MMM-yyyy"
                             value={form.jhaAssessmentDate}
                             onChange={(e) => {
                               setForm({
