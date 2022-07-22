@@ -14,9 +14,10 @@ import FormGroup from "@material-ui/core/FormGroup";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import { FormHelperText } from "@material-ui/core";
-import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import Checkbox from '@material-ui/core/Checkbox';
+import Box from '@material-ui/core/Box';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import {
   DateTimePicker,
   KeyboardDateTimePicker,
@@ -209,8 +210,7 @@ const ProjectDetailsAndHazard = () => {
   const [checkGroups, setCheckListGroups] = useState([]);
   const radioDecide = ["Yes", "No"];
   const [error, setError] = useState({});
-  const permitType = useRef([]);
-
+  const permitType = useRef([])
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
     const value = e.target.value;
@@ -303,6 +303,7 @@ const ProjectDetailsAndHazard = () => {
 
   const handleSubmit = async (e) => {
     const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
+    
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -767,54 +768,33 @@ const ProjectDetailsAndHazard = () => {
       <Acl
         module="safety-aha"
         action={id ? "change_aha" : "add_aha"}
-        html={
-          <CustomPapperBlock
-            title="Assessments"
-            icon="customDropdownPageIcon ahaPageIcon"
-            whiteBg
-          >
-            {isLoading ? (
-              <Grid
-                container
-                spacing={3}
-                className={classes.observationNewSection}
-              >
-                <Grid container spacing={3} item xs={12} md={9}>
-                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                    <Typography variant="h6" className="sectionHeading">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24.961"
-                        height="30.053"
-                        viewBox="0 0 30.961 36.053"
-                      >
-                        <path
-                          id="generate-report"
-                          d="M28.937,25.517l.833.836a.557.557,0,0,1,0,.795l-.669.672a4.534,4.534,0,0,1,.416,1.112h.88a.563.563,0,0,1,.563.563v1.173a.566.566,0,0,1-.563.566h-.947a4.517,4.517,0,0,1-.49,1.076l.613.613a.566.566,0,0,1,0,.8l-.83.848a.566.566,0,0,1-.8,0l-.669-.669a4.658,4.658,0,0,1-1.126.416v.88a.566.566,0,0,1-.563.563H24.415a.566.566,0,0,1-.566-.563v-.947a4.494,4.494,0,0,1-1.079-.493l-.613.616a.566.566,0,0,1-.8,0l-.827-.848a.56.56,0,0,1,0-.795l.669-.672a4.658,4.658,0,0,1-.416-1.112H19.9a.566.566,0,0,1-.546-.563V29.21a.569.569,0,0,1,.563-.566h.933a4.526,4.526,0,0,1,.493-1.073l-.616-.613a.566.566,0,0,1,0-.8l.836-.833a.56.56,0,0,1,.795,0l.672.669a4.643,4.643,0,0,1,1.112-.416V24.7a.566.566,0,0,1,.563-.563h1.173a.566.566,0,0,1,.563.563v.947a4.4,4.4,0,0,1,1.076.493l.619-.622A.569.569,0,0,1,28.937,25.517Zm-11.263,8.8a.88.88,0,0,1,0,1.736H2.021A2.021,2.021,0,0,1,0,34.023V2.009A2,2,0,0,1,2.018,0H26.843a2.024,2.024,0,0,1,2.021,2.021V20.065a.88.88,0,0,1-1.742,0V2.021h0a.285.285,0,0,0-.282-.285H2.021a.276.276,0,0,0-.293.293V34.023h0a.285.285,0,0,0,.285.282H17.674ZM5.573,30.11V28.157h8.456V30.1H5.576Zm16.22-12.583V19.32H19.247V17.528ZM17.237,15.95v3.37H14.689V15.95Zm-4.555-4.828v8.213H10.134V11.122ZM8.124,7.746V19.32H5.573V7.746ZM20.238,8.6l3.845.015a3.854,3.854,0,0,1-1.147,2.725,3.974,3.974,0,0,1-.56.458Zm-.393-.763-.194-4.109a.15.15,0,0,1,.141-.155h.153a4.271,4.271,0,0,1,4.309,3.96.153.153,0,0,1-.138.158l-4.106.293a.144.144,0,0,1-.155-.135h0Zm.243-3.974.191,3.669,3.449-.311a3.426,3.426,0,0,0-1.173-2.305,3.268,3.268,0,0,0-2.44-1.05Zm-.7,4.558,2.053,3.57a4.121,4.121,0,1,1-2.651-7.646l.587,4.077ZM5.573,24.881V22.922H17.557v1.945Zm19.572,2.751a2.314,2.314,0,1,1-2.314,2.314,2.314,2.314,0,0,1,2.314-2.314Z"
-                          transform="translate(0 0)"
-                          fill="#06425c"
-                        />
-                      </svg>{" "}
-                      Project information
-                    </Typography>
-                  </Grid>
-                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                    <Paper elevation={1} className="paperSection">
-                      <Grid container spacing={3}>
-                        <Grid item md={12}>
-                          <Typography
-                            variant="h6"
-                            gutterBottom
-                            className={classes.labelName}
-                          >
-                            Project
-                          </Typography>
-                          <Typography className={classes.labelValue}>
-                            {project.projectName}
-                          </Typography>
-                        </Grid>
-                        {id ? (
-                          fetchSelectBreakDownList.map((data, key) => (
+        html={(
+          <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon ahaPageIcon'whiteBg>
+            {/* <Loader/> */}
+          {isLoading  ?
+            <Grid container spacing={3} className={classes.observationNewSection}>
+              {!loading ? <Grid container spacing={3} item xs={12} md={9}>
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <Typography variant="h6" className="sectionHeading">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24.961" height="30.053" viewBox="0 0 30.961 36.053">
+                      <path id="generate-report" d="M28.937,25.517l.833.836a.557.557,0,0,1,0,.795l-.669.672a4.534,4.534,0,0,1,.416,1.112h.88a.563.563,0,0,1,.563.563v1.173a.566.566,0,0,1-.563.566h-.947a4.517,4.517,0,0,1-.49,1.076l.613.613a.566.566,0,0,1,0,.8l-.83.848a.566.566,0,0,1-.8,0l-.669-.669a4.658,4.658,0,0,1-1.126.416v.88a.566.566,0,0,1-.563.563H24.415a.566.566,0,0,1-.566-.563v-.947a4.494,4.494,0,0,1-1.079-.493l-.613.616a.566.566,0,0,1-.8,0l-.827-.848a.56.56,0,0,1,0-.795l.669-.672a4.658,4.658,0,0,1-.416-1.112H19.9a.566.566,0,0,1-.546-.563V29.21a.569.569,0,0,1,.563-.566h.933a4.526,4.526,0,0,1,.493-1.073l-.616-.613a.566.566,0,0,1,0-.8l.836-.833a.56.56,0,0,1,.795,0l.672.669a4.643,4.643,0,0,1,1.112-.416V24.7a.566.566,0,0,1,.563-.563h1.173a.566.566,0,0,1,.563.563v.947a4.4,4.4,0,0,1,1.076.493l.619-.622A.569.569,0,0,1,28.937,25.517Zm-11.263,8.8a.88.88,0,0,1,0,1.736H2.021A2.021,2.021,0,0,1,0,34.023V2.009A2,2,0,0,1,2.018,0H26.843a2.024,2.024,0,0,1,2.021,2.021V20.065a.88.88,0,0,1-1.742,0V2.021h0a.285.285,0,0,0-.282-.285H2.021a.276.276,0,0,0-.293.293V34.023h0a.285.285,0,0,0,.285.282H17.674ZM5.573,30.11V28.157h8.456V30.1H5.576Zm16.22-12.583V19.32H19.247V17.528ZM17.237,15.95v3.37H14.689V15.95Zm-4.555-4.828v8.213H10.134V11.122ZM8.124,7.746V19.32H5.573V7.746ZM20.238,8.6l3.845.015a3.854,3.854,0,0,1-1.147,2.725,3.974,3.974,0,0,1-.56.458Zm-.393-.763-.194-4.109a.15.15,0,0,1,.141-.155h.153a4.271,4.271,0,0,1,4.309,3.96.153.153,0,0,1-.138.158l-4.106.293a.144.144,0,0,1-.155-.135h0Zm.243-3.974.191,3.669,3.449-.311a3.426,3.426,0,0,0-1.173-2.305,3.268,3.268,0,0,0-2.44-1.05Zm-.7,4.558,2.053,3.57a4.121,4.121,0,1,1-2.651-7.646l.587,4.077ZM5.573,24.881V22.922H17.557v1.945Zm19.572,2.751a2.314,2.314,0,1,1-2.314,2.314,2.314,2.314,0,0,1,2.314-2.314Z" transform="translate(0 0)" fill="#06425c"/>
+                    </svg> Project information
+                  </Typography>
+                </Grid>
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <Paper elevation={1} className="paperSection">
+                    <Grid container spacing={3}>
+                      <Grid item md={12}>
+                        <Typography variant="h6" gutterBottom className={classes.labelName}>
+                          Project
+                        </Typography>
+                        <Typography className={classes.labelValue}>
+                          {project.projectName}
+  
+                        </Typography>
+                      </Grid>
+                        {id ?
+                          fetchSelectBreakDownList.map((data, key) =>
                             <Grid item xs={3} md={3} key={key}>
                               <FormControl
                                 error={
@@ -862,7 +842,7 @@ const ProjectDetailsAndHazard = () => {
                                 )}
                               </FormControl>
                             </Grid>
-                          ))
+                          
                         ) : (
                           <ProjectStructureInit
                             selectDepthAndId={selectDepthAndId}
@@ -1278,15 +1258,50 @@ const ProjectDetailsAndHazard = () => {
                       </Grid>
                     </Paper>
                   </Grid>
-                </Grid>
-
-                <Grid item xs={12} md={3}>
-                  <FormSideBar
-                    deleteForm={[1, 2, 3]}
-                    listOfItems={AHA}
-                    selectedItem="Project Details"
-                  />
-                </Grid>
+              </Grid>
+              : 
+              <Box sx={{
+                    width: "100%",
+                    height: "70vh",
+                    display:"flex",
+                    alignItems:"center",
+                    justifyContent:"center",
+        
+                  }}  
+                  >
+                    <Loader/>
+              </Box> 
+              }
+  
+              {/* <Grid item xs={12} md={3}>
+                <FormSideBar
+                  deleteForm={[1, 2, 3]}
+                  listOfItems={AHA}
+                  selectedItem="Project Details"
+                />
+              </Grid> */}
+  
+              {/* <Grid
+                item
+                md={12}
+                xs={12}
+                style={{ marginTop: '15px' }}
+              >
+                <div className={classes.loadingWrapper}>
+                  <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
+                    onClick={(e) => handleSubmit()}
+                    style={{ marginLeft: "10px" }}
+                    disabled={loading}
+                  >
+                    Next
+                  </Button>
+                  {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />)}
+                  </div>
+                </Grid> */}
 
                 <Grid item md={12} xs={12} style={{ marginTop: "15px" }}>
                   <div className={classes.loadingWrapper}>
@@ -1301,12 +1316,12 @@ const ProjectDetailsAndHazard = () => {
                     >
                       Next
                     </Button>
-                    {loading && (
+                    {/* {loading && (
                       <CircularProgress
                         size={24}
                         className={classes.buttonProgress}
                       />
-                    )}
+                    )} */}
                   </div>
                   <Button
                     size="medium"
@@ -1319,12 +1334,11 @@ const ProjectDetailsAndHazard = () => {
                   </Button>
                 </Grid>
               </Grid>
-            ) : (
-              <Loader />
-            )}
-          </CustomPapperBlock>
-        }
-      />
+  
+              : <Loader/>}
+            </CustomPapperBlock>
+        )} />
+      
     </>
   );
 };

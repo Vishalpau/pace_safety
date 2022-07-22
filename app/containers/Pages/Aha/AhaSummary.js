@@ -848,7 +848,7 @@ function AhaSummary(props) {
                                       />
                                     </g>
                                   </svg>{" "}
-                                  Assessment details
+                                  Assessment details kevin
                                 </Typography>
                               </Grid>
                               <Grid
