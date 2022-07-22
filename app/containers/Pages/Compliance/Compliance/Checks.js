@@ -353,13 +353,13 @@ const Checks = (props) => {
   const [valueStar, setValueStar] = React.useState([]);
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    console.log(showCheckData, 'showCheckData');
-  },[showCheckData])
+  // useEffect(() => {
+  //   console.log(actionData, 'actionData');
+  // },[actionData])
 
-  useEffect(() => {
-    console.log(checkData, 'checkData');
-  },[checkData])
+  // useEffect(() => {
+  //   console.log(ratingColor, 'ratingColor');
+  // },[ratingColor])
 
   const selectBreakdown =
     props.projectName.breakDown.length > 0
@@ -780,39 +780,8 @@ const Checks = (props) => {
   const handleChangeData = (value, field, index, id, type = "") => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
-
-        // if (temp[i]["questionId"] == id) {
-        //   //when we handle score type value
-        //   if (field === "score") {
-        //     if (type === "Stars") {
-        //       let starvar = "";
-        //       for (let j = 0; j < value; j++) starvar += "*";
-        //       value = starvar;
-        //     } 
-        //     else if (type === "%") {
-        //       let pattern = /^[0-9]*$/;
-        //       if (pattern.test(value)) {
-        //         console.log(value <= 100, 'sfsjfjdsljfldsfldsklfj');
-        //         if (value <= 100) {
-        //           console.log(value, 'value');
-        //           value = value + "%";
-        //         }
-        //       } 
-        //       else {
-        //         value = "";
-        //       }
-        //     } 
-        //     else if (type === "1-10") {
-        //       value = value;
-        //     }
-        //   }
-        //   console.log(value);
-        //   temp[i]["check"] = false;
-        //   temp[i][field] = value;
-        // }
-
-
       if (temp[i]["questionId"] == id) {
+        //when we handle score type value
         if (field === "score") {
           if (type === "Stars") {
             let starvar = "";
@@ -832,11 +801,8 @@ const Checks = (props) => {
             value = value;
           }
         }
-        
-        else {
-          temp[i]["check"] = false;
-          temp[i][field] = value;
-        }
+        temp[i]["check"] = false;
+        temp[i][field] = value;
       }
     }
     setCheckData(temp);
@@ -1097,7 +1063,6 @@ const Checks = (props) => {
 
                           {Categor.length > 0 ? (
                             Categor.map((value, index) => {
-                              // console.log(value, 'vlaueded');
                               return (
                                 <>
                                   <Grid container item xs={12}>
@@ -1397,15 +1362,19 @@ const Checks = (props) => {
                                                       label="Percentage"
                                                       name="performancerating"
                                                       id="performancerating"
-                                                      // defaultValue={
-                                                      //   showCheckData.filter((cd) => cd.question == value.question).length
-                                                      //     ? showCheckData.filter((cd) => cd.question == value.question)[0].score : ""
-                                                      // }
-                                                      value={
-                                                        checkData.filter(cd => (cd.question === value.question[0].score) !== "")
-                                                          ? checkData.filter(cd => cd.question == value.question)[0].score.split("%")[0] : ""
+                                                      defaultValue={
+                                                        showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        ).length
+                                                          ? showCheckData.filter(
+                                                              (cd) =>
+                                                                cd.question ==
+                                                                value.question
+                                                            )[0].score
+                                                          : ""
                                                       }
-                                                      // value={checkData.filter(s => s.questionId === value.id).score.split('%')[1]}
                                                       // type="number"
                                                       fullWidth
                                                       variant="outlined"
@@ -1534,45 +1503,53 @@ const Checks = (props) => {
                                                                       ) => (
                                                                         <TableRow>
                                                                           <TableCell align="left">
-                                                                          <Link
-                                                                          className={ classes.actionLinkAudit }
-                                                                          display="block"
-                                                                          href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                                                            JSON.parse(
-                                                                              localStorage.getItem(
-                                                                                "BaseUrl"
-                                                                              )
-                                                                            )[
-                                                                              "actionClientID"
-                                                                            ]
-                                                                          }&response_type=code&companyId=${
-                                                                            JSON.parse(
-                                                                              localStorage.getItem(
-                                                                                "company"
-                                                                              )
-                                                                            )
-                                                                              .fkCompanyId
-                                                                          }&projectId=${
-                                                                            JSON.parse(
-                                                                              localStorage.getItem(
-                                                                                "projectName"
-                                                                              )
-                                                                            )
-                                                                              .projectName
-                                                                              .projectId
-                                                                          }&targetPage=/action/details/&targetId=${
-                                                                            valueAction.id
-                                                                          }&projectStructure=${localStorage.getItem(
-                                                                            "selectBreakDown"
-                                                                          )}
-                                                                          `} target="_blank" >
-                                                                      { valueAction.number }
-                                                                    </Link>
-                                                                      </TableCell>
-                                                                      <TableCell>
-                                                                        {valueAction.title}
-                                                                      </TableCell>
-                                                                    </TableRow>
+                                                                            <Link
+                                                                              className={
+                                                                                classes.actionLinkAudit
+                                                                              }
+                                                                              display="block"
+                                                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
+                                                                                JSON.parse(
+                                                                                  localStorage.getItem(
+                                                                                    "BaseUrl"
+                                                                                  )
+                                                                                )[
+                                                                                  "actionClientID"
+                                                                                ]
+                                                                              }&response_type=code&companyId=${
+                                                                                JSON.parse(
+                                                                                  localStorage.getItem(
+                                                                                    "company"
+                                                                                  )
+                                                                                )
+                                                                                  .fkCompanyId
+                                                                              }&projectId=${
+                                                                                JSON.parse(
+                                                                                  localStorage.getItem(
+                                                                                    "projectName"
+                                                                                  )
+                                                                                )
+                                                                                  .projectName
+                                                                                  .projectId
+                                                                              }&targetPage=/action/details/&targetId=${
+                                                                                valueAction.id
+                                                                              }&projectStructure=${localStorage.getItem(
+                                                                                "selectBreakDown"
+                                                                              )}
+                                                                          `}
+                                                                              target="_blank"
+                                                                            >
+                                                                              {
+                                                                                valueAction.number
+                                                                              }
+                                                                            </Link>
+                                                                          </TableCell>
+                                                                          <TableCell>
+                                                                            {
+                                                                              valueAction.title
+                                                                            }
+                                                                          </TableCell>
+                                                                        </TableRow>
                                                                       )
                                                                     )}
                                                                 </>
@@ -2036,20 +2013,41 @@ const Checks = (props) => {
                                                           value.id
                                                         }`}
                                                         defaultValue={
-                                                          valueStar[index] !==
+                                                          valueStar[index] !=
                                                           undefined
                                                             ? valueStar[index]
-                                                            : showCheckData.filter(cd => cd.question == value.question ).length
-                                                            ? showCheckData.filter(cd => cd.question == value.question )[0].score.split("") .length
+                                                            : showCheckData.filter(
+                                                                (cd) =>
+                                                                  cd.question ==
+                                                                  value.question
+                                                              ).length
+                                                            ? showCheckData
+                                                                .filter(
+                                                                  (cd) =>
+                                                                    cd.question ==
+                                                                    value.question
+                                                                )[0]
+                                                                .score.split("")
+                                                                .length
                                                             : ""
                                                         }
                                                         onChange={(
                                                           event,
                                                           newValue
                                                         ) => {
-                                                          if ( newValue != null ) {
-                                                            handleChangeData(newValue, "score", index, value.id, value.scoreType);
-                                                            setValueStar(newValue);
+                                                          if (
+                                                            newValue != null
+                                                          ) {
+                                                            handleChangeData(
+                                                              newValue,
+                                                              "score",
+                                                              index,
+                                                              value.id,
+                                                              value.scoreType
+                                                            );
+                                                            setValueStar(
+                                                              newValue
+                                                            );
                                                           }
                                                         }}
                                                         // onChange={(e) =>
@@ -2169,8 +2167,23 @@ const Checks = (props) => {
                                                         maxLength: 6,
                                                       }}
                                                       value={
-                                                        checkData.filter(cd => (cd.question === value.question[0].score) !== "")
-                                                          ? checkData.filter(cd => cd.question == value.question)[0].score.split("%")[0] : ""
+                                                        checkData.filter(
+                                                          (cd) =>
+                                                            (cd.question ===
+                                                              value.question[0]
+                                                                .score) !==
+                                                            ""
+                                                        )
+                                                          ? checkData
+                                                              .filter(
+                                                                (cd) =>
+                                                                  cd.question ==
+                                                                  value.question
+                                                              )[0]
+                                                              .score.split(
+                                                                "%"
+                                                              )[0]
+                                                          : ""
                                                       }
                                                       name="performancerating"
                                                       id="performancerating"
