@@ -289,7 +289,7 @@ export default function Observations() {
               </Grid>
               <Grid item sm={5} xs={12}>
                 {/* {false &&  */}
-                <Button
+                {/* <Button
                   variant="contained"
                   size="small"
                   className={classNames(classes.buttonsNew, classes.floatR)}
@@ -311,7 +311,7 @@ export default function Observations() {
                   }}
                 >
                   Upload
-                </Button>
+                </Button> */}
 
                 {canUploadPaperFile ? (
                   <Button
