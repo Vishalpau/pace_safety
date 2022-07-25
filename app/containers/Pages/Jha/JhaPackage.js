@@ -744,6 +744,7 @@ function JhaPackage(props) {
     function handleVisibilityComments() {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
+      setCommentData("");
     }
 
     function handleCommentsOpen() {
@@ -913,7 +914,7 @@ function JhaPackage(props) {
                         size="small"
                         className="buttonStyle custmCancelBtn"
                         disableElevation
-                        onClick={handleCommentsClose}
+                        onClick={handleVisibilityComments}
                       >
                         Cancel
                       </Button>

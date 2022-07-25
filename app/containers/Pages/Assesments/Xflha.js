@@ -1184,6 +1184,7 @@ function xflha(props) {
     function handleVisibilityComments() {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
+      setCommentData("");
     }
 
     function handleCommentsOpen() {
@@ -1339,7 +1340,7 @@ function xflha(props) {
                       size="small"
                       className="buttonStyle custmCancelBtn"
                       disableElevation
-                      onClick={handleCommentsClose}
+                      onClick={handleVisibilityComments}
                     >
                       Cancel
                     </Button>

@@ -23,11 +23,11 @@ import { saveAs } from "file-saver";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router";
+import DateFormat from "../../components/Date/DateFormat";
 import api from "../../utils/axios";
 import { checkValue } from "../../utils/CheckerValue";
 import Attachment from "../Attachment/Attachment";
 import Loader from "../Forms/Loader";
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,7 +73,7 @@ const InvestigationSummary = () => {
   const putId = useRef("");
   const eventId = useRef("");
   const investigationId = useRef("");
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [documentUrl, setDocumentUrl] = useState("");
   const [open, setOpen] = React.useState(false);
   const history = useHistory();
@@ -101,7 +101,8 @@ const InvestigationSummary = () => {
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
       const event = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
         }/events/`
       );
       const result = event.data.data.results;
@@ -113,7 +114,8 @@ const InvestigationSummary = () => {
 
       // Weather data
       const weather = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
         }/events/${eventId.current}/weatherconditions/`
       );
       const weatherData = weather.data.data.results;
@@ -121,7 +123,8 @@ const InvestigationSummary = () => {
 
       // event data
       const cost = await api.get(
-        `api/v1/incidents/${putId.current}/investigations/${investigationId.current
+        `api/v1/incidents/${putId.current}/investigations/${
+          investigationId.current
         }/events/${eventId.current}/cost/`
       );
       const costData = cost.data.data.results;
@@ -131,14 +134,13 @@ const InvestigationSummary = () => {
 
   const fecthWorkerData = async () => {
     let res = await api.get(
-      `api/v1/incidents/${id}/investigations/${investigationId.current
+      `api/v1/incidents/${id}/investigations/${
+        investigationId.current
       }/workers/`
     );
     let result = res.data.data.results;
     await setWorkerData(result);
   };
-
-
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -156,7 +158,6 @@ const InvestigationSummary = () => {
     setOpen(false);
   };
 
-
   const download = (image_link) => {
     let onlyImage_url = image_link.replace("https://", "");
     let image_url = onlyImage_url;
@@ -167,26 +168,29 @@ const InvestigationSummary = () => {
   };
 
   const handelInvestigation = (e, value) => {
-    if (value = "modify") {
-      history.push(`/app/incident-management/registration/investigation/investigation-overview/${id}`)
+    if ((value = "modify")) {
+      history.push(
+        `/app/incident-management/registration/investigation/investigation-overview/${id}`
+      );
+    } else if ((value = "add")) {
+      history.push(
+        `/app/incident-management/registration/investigation/investigation-overview/`
+      );
     }
-    else if (value = "add") {
-      history.push(`/app/incident-management/registration/investigation/investigation-overview/`)
-    }
-  }
+  };
 
   const handelCallBack = async () => {
     if (id) {
-      await setIsLoading(true)
+      await setIsLoading(true);
       await fetchInvestigationData();
       await fetchEventData();
       await fecthWorkerData();
-      await setIsLoading(false)
+      await setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    handelCallBack()
+    handelCallBack();
   }, []);
 
   const classes = useStyles();
@@ -194,20 +198,27 @@ const InvestigationSummary = () => {
   return (
     <Grid container spacing={3}>
       {!isDesktop && (
-
         <Grid item xs={12}>
-          {investigationOverview.length > 0 ?
-            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelInvestigation(e, "modify")}>
+          {investigationOverview.length > 0 ? (
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              onClick={(e) => handelInvestigation(e, "modify")}
+            >
               Modify Investigation
             </Button>
-            :
-            <Button variant="outlined" startIcon={<EditIcon />} onClick={(e) => handelInvestigation(e, "add")}>
+          ) : (
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              onClick={(e) => handelInvestigation(e, "add")}
+            >
               Add Investigation
             </Button>
-          }
+          )}
         </Grid>
       )}
-      {isLoading == false ?
+      {isLoading == false ? (
         <>
           <Grid item xs={12}>
             <Accordion
@@ -523,19 +534,16 @@ const InvestigationSummary = () => {
               onChange={handleExpand("panel3")}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                {expanded !== "panel3" ?
-                  <Typography className={classes.heading}>Worker details</Typography>
-                  :
-                  null
-                }
-
+                {expanded !== "panel3" ? (
+                  <Typography className={classes.heading}>
+                    Worker details
+                  </Typography>
+                ) : null}
               </AccordionSummary>
               <AccordionDetails>
                 <paper>
                   <Grid container item xs={12} spacing={3}>
-                    <Grid item xs={12}>
-
-                    </Grid>
+                    <Grid item xs={12} />
                     {workerData.map((value, index) => (
                       <>
                         {/* worker number */}
@@ -551,9 +559,6 @@ const InvestigationSummary = () => {
                           <Typography>Worker details</Typography>
                         </Grid>
 
-
-
-
                         {/* name */}
                         <Grid item xs={12} md={6}>
                           <Typography
@@ -563,7 +568,10 @@ const InvestigationSummary = () => {
                           >
                             Name
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {value.name}
                           </Typography>
                         </Grid>
@@ -577,7 +585,10 @@ const InvestigationSummary = () => {
                           >
                             Worker type
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {value.workerType}
                           </Typography>
                         </Grid>
@@ -591,7 +602,10 @@ const InvestigationSummary = () => {
                           >
                             Department
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {value.department}
                           </Typography>
                         </Grid>
@@ -606,7 +620,10 @@ const InvestigationSummary = () => {
                             Working hours
                           </Typography>
                           {value.workHours.toString().length > 0 ? (
-                            <Typography variant="body" className={Fonts.labelValue}>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
                               {value.workHours}
                             </Typography>
                           ) : (
@@ -624,8 +641,11 @@ const InvestigationSummary = () => {
                             shift time start
                           </Typography>
                           {value.shiftTimeStart !== null ? (
-                            <Typography variant="body" className={Fonts.labelValue}>
-                              {moment(value.shiftTimeStart).format("h:mm:ss a")}
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
+                              {DateFormat(value.shiftTimeStart, true)}
                             </Typography>
                           ) : (
                             "-"
@@ -654,7 +674,10 @@ const InvestigationSummary = () => {
                             Occupation
                           </Typography>
 
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.occupation)}
                           </Typography>
                         </Grid>
@@ -668,7 +691,10 @@ const InvestigationSummary = () => {
                           >
                             Shift cycle
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.shiftCycle)}
                           </Typography>
                         </Grid>
@@ -682,7 +708,10 @@ const InvestigationSummary = () => {
                           >
                             No of days into shift
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.noOfDaysIntoShift)}
                           </Typography>
                         </Grid>
@@ -696,7 +725,10 @@ const InvestigationSummary = () => {
                           >
                             Time in company
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.timeInCompany)}
                           </Typography>
                         </Grid>
@@ -711,11 +743,17 @@ const InvestigationSummary = () => {
                           >
                             Time on project
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
-                            {value.timeOnProject.toString().length > 0 ? <p>{value.timeOnProject}</p> : "-"}
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            {value.timeOnProject.toString().length > 0 ? (
+                              <p>{value.timeOnProject}</p>
+                            ) : (
+                              "-"
+                            )}
                           </Typography>
                         </Grid>
-
 
                         {/* time in industry*/}
                         <Grid item xs={12} md={6}>
@@ -726,7 +764,10 @@ const InvestigationSummary = () => {
                           >
                             Time in industry
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.timeInIndustry)}
                           </Typography>
                         </Grid>
@@ -745,7 +786,10 @@ const InvestigationSummary = () => {
                           >
                             Event leading to injury.
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.eventLeadingToInjury)}
                           </Typography>
                         </Grid>
@@ -759,7 +803,10 @@ const InvestigationSummary = () => {
                           >
                             Injury object
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.injuryObject)}
                           </Typography>
                         </Grid>
@@ -773,7 +820,10 @@ const InvestigationSummary = () => {
                           >
                             Primary body part with side
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.primaryBodyPartWithSide)}
                           </Typography>
                         </Grid>
@@ -787,7 +837,10 @@ const InvestigationSummary = () => {
                           >
                             Secondary body part with side
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.secondaryBodyPartWithSide)}
                           </Typography>
                         </Grid>
@@ -801,7 +854,10 @@ const InvestigationSummary = () => {
                           >
                             Type of injury
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.typeOfInjury)}
                           </Typography>
                         </Grid>
@@ -815,7 +871,10 @@ const InvestigationSummary = () => {
                           >
                             Number of days away
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.NoOfDaysAway)}
                           </Typography>
                         </Grid>
@@ -829,7 +888,10 @@ const InvestigationSummary = () => {
                           >
                             Medical response taken
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.medicalResponseTaken)}
                           </Typography>
                         </Grid>
@@ -843,9 +905,12 @@ const InvestigationSummary = () => {
                           >
                             Treatment date
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {value.treatmentDate !== null &&
-                              value.treatmentDate !== undefined ? (
+                            value.treatmentDate !== undefined ? (
                               value.treatmentDate.substring(0, 10)
                             ) : (
                               <p>-</p>
@@ -862,7 +927,10 @@ const InvestigationSummary = () => {
                           >
                             Injury status
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.injuryStatus)}
                           </Typography>
                         </Grid>
@@ -876,7 +944,10 @@ const InvestigationSummary = () => {
                           >
                             First aid treatment
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.firstAidTreatment)}
                           </Typography>
                         </Grid>
@@ -890,7 +961,10 @@ const InvestigationSummary = () => {
                           >
                             Mechanism of injury
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.mechanismOfInjury)}
                           </Typography>
                         </Grid>
@@ -909,7 +983,10 @@ const InvestigationSummary = () => {
                           >
                             Medical issue ?
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.isMedicationIssued)}
                           </Typography>
                         </Grid>
@@ -923,7 +1000,10 @@ const InvestigationSummary = () => {
                           >
                             Prescription issued ?
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.isPrescriptionIssued)}
                           </Typography>
                         </Grid>
@@ -937,7 +1017,10 @@ const InvestigationSummary = () => {
                           >
                             Non-prescription ?
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.isNonPrescription)}
                           </Typography>
                         </Grid>
@@ -952,7 +1035,10 @@ const InvestigationSummary = () => {
                           >
                             Any limitation
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.isAnyLimitation)}
                           </Typography>
                         </Grid>
@@ -973,13 +1059,16 @@ const InvestigationSummary = () => {
                           >
                             Was the test taken?
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.isAlcoholDrugTestTaken)}
                           </Typography>
                         </Grid>
 
                         {value.isAlcoholDrugTestTaken == "Yes" &&
-                          value.isWorkerClearedTest !== null ? (
+                        value.isWorkerClearedTest !== null ? (
                           <>
                             {value.dateOfAlcoholDrugTest !== null ? (
                               <Grid item xs={12} md={6}>
@@ -1005,7 +1094,8 @@ const InvestigationSummary = () => {
                                 gutterBottom
                                 className={Fonts.labelName}
                               >
-                                Was worker cleared to work following a&d testing ?
+                                Was worker cleared to work following a&d testing
+                                ?
                               </Typography>
 
                               <Typography
@@ -1016,8 +1106,8 @@ const InvestigationSummary = () => {
                               </Typography>
                             </Grid>
                           </>
-                        ) :
-                          // 
+                        ) : (
+                          //
                           <Grid item xs={12} md={6}>
                             <Typography
                               variant="h6"
@@ -1034,11 +1124,13 @@ const InvestigationSummary = () => {
                               {checkValue(value.reasonForTestNotDone)}
                             </Typography>
                           </Grid>
-                        }
+                        )}
 
                         {/* supervisor details */}
                         <Grid item xs={12}>
-                          <Typography variant="h6">Supervisor details</Typography>
+                          <Typography variant="h6">
+                            Supervisor details
+                          </Typography>
                         </Grid>
 
                         {/* supervisor name */}
@@ -1050,7 +1142,10 @@ const InvestigationSummary = () => {
                           >
                             Supervisor name
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.supervisorName)}
                           </Typography>
                         </Grid>
@@ -1064,7 +1159,10 @@ const InvestigationSummary = () => {
                           >
                             Supervisor time in industry?
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.supervisorTimeInIndustry)}
                           </Typography>
                         </Grid>
@@ -1078,7 +1176,10 @@ const InvestigationSummary = () => {
                           >
                             Supervisor time in company?
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.supervisorTimeInCompany)}
                           </Typography>
                         </Grid>
@@ -1092,7 +1193,10 @@ const InvestigationSummary = () => {
                           >
                             Supervisor time on project?
                           </Typography>
-                          <Typography variant="body" className={Fonts.labelValue}>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
                             {checkValue(value.supervisorTimeOnProject)}
                           </Typography>
                         </Grid>
@@ -1104,11 +1208,11 @@ const InvestigationSummary = () => {
 
                         <Grid item xs={12} md={6}>
                           {value.attachments != "" &&
-                            typeof value.attachments == "string" ? (
+                          typeof value.attachments == "string" ? (
                             <Attachment value={value.attachments} />
-                          ) :
+                          ) : (
                             "-"
-                          }
+                          )}
                         </Grid>
                         <Grid item md={12}>
                           <Divider />
@@ -1175,7 +1279,9 @@ const InvestigationSummary = () => {
               onChange={handleExpand("panel4")}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography className={classes.heading}>Event Details</Typography>
+                <Typography className={classes.heading}>
+                  Event Details
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container item xs={12} spacing={3}>
@@ -1227,7 +1333,10 @@ const InvestigationSummary = () => {
                             >
                               Weather {index + 1}
                             </Typography>
-                            <Typography variant="body" className={Fonts.labelValue}>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
                               {value.weatherCondition}
                             </Typography>
                           </Grid>
@@ -1365,7 +1474,10 @@ const InvestigationSummary = () => {
                             >
                               Cost type
                             </Typography>
-                            <Typography variant="body" className={Fonts.labelValue}>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
                               {value.costType}
                             </Typography>
                           </Grid>
@@ -1381,7 +1493,10 @@ const InvestigationSummary = () => {
                             >
                               Cost amount
                             </Typography>
-                            <Typography variant="body" className={Fonts.labelValue}>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
                               {value.costAmount}
                             </Typography>
                           </Grid>
@@ -1397,7 +1512,10 @@ const InvestigationSummary = () => {
                             >
                               Casual factor
                             </Typography>
-                            <Typography variant="body" className={Fonts.labelValue}>
+                            <Typography
+                              variant="body"
+                              className={Fonts.labelValue}
+                            >
                               {value.casualFactor}
                             </Typography>
                           </Grid>
@@ -1410,10 +1528,10 @@ const InvestigationSummary = () => {
             </Accordion>
           </Grid>
         </>
-        :
+      ) : (
         <Loader />
-      }
-    </Grid >
+      )}
+    </Grid>
   );
 };
 export default InvestigationSummary;

@@ -35,12 +35,15 @@ import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
 import Type from "../../../styles/components/Fonts.scss";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Loader from "../Loader";
 
 // redux
-import { connect } from 'react-redux'
-import { breakDownDetails, levelBDownDetails } from "../../../redux/actions/initialDetails";
+import { connect } from "react-redux";
+import {
+  breakDownDetails,
+  levelBDownDetails,
+} from "../../../redux/actions/initialDetails";
 import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 import Acl from "../../../components/Error/acl";
 
@@ -76,11 +79,11 @@ const IncidentDetails = (props) => {
   const [environmentAffectValue, setEnvironmentAffectValue] = useState([]);
   const [isNext, setIsNext] = useState(true);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
-  const [selectValue, setSelectValue] = useState([])
-  const [levelLenght, setLevelLenght] = useState(0)
+  const [selectValue, setSelectValue] = useState([]);
+  const [levelLenght, setLevelLenght] = useState(0);
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
-  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -91,9 +94,9 @@ const IncidentDetails = (props) => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [hideAffect, setHideAffect] = useState([]);
-  const [selectDepthAndId, setSelectDepthAndId] = useState([])
-  const [workArea, setWorkArea] = useState([])
-  const [isDateShow, setIsDateShow] = useState(false)
+  const [selectDepthAndId, setSelectDepthAndId] = useState([]);
+  const [workArea, setWorkArea] = useState([]);
+  const [isDateShow, setIsDateShow] = useState(false);
 
   const [nextPath, setNextPath] = useState({
     personAffect: "",
@@ -146,10 +149,12 @@ const IncidentDetails = (props) => {
 
   // Function called on next button click.
   const handelNext = async (e) => {
-    const uniqueProjectStructure = [... new Set(selectDepthAndId)]
-    let fkProjectStructureId = uniqueProjectStructure.map(depth => {
-      return depth;
-    }).join(':')
+    const uniqueProjectStructure = [...new Set(selectDepthAndId)];
+    let fkProjectStructureId = uniqueProjectStructure
+      .map((depth) => {
+        return depth;
+      })
+      .join(":");
     // Create case if id is not null and means it is an update case.
     if (isNext) {
       setIsNext(false);
@@ -173,7 +178,9 @@ const IncidentDetails = (props) => {
           id: parseInt(id),
           fkCompanyId: incidentsListData.fkCompanyId,
           fkProjectId: incidentsListData.fkProjectId,
-          fkProjectStructureIds: fkProjectStructureId.toString() || incidentsListData.fkProjectStructureIds,
+          fkProjectStructureIds:
+            fkProjectStructureId.toString() ||
+            incidentsListData.fkProjectStructureIds,
           incidentNumber: incidentsListData.incidentNumber,
           incidentType: form.incidentType,
           incidentTitle: form.incidentTitle,
@@ -220,9 +227,13 @@ const IncidentDetails = (props) => {
           contractor: form.contractor,
           subContractor: form.subContractor,
           incidentStage: incidentsListData.incidentStage,
-          incidentStatus: incidentsListData.incidentStatus
+          incidentStatus: incidentsListData.incidentStatus,
         };
-        const { error, isValid } = validate(form, selectDepthAndId, levelLenght);
+        const { error, isValid } = validate(
+          form,
+          selectDepthAndId,
+          levelLenght
+        );
         await setError(error);
         // check condition for error
         if (isValid === true) {
@@ -241,21 +252,13 @@ const IncidentDetails = (props) => {
 
               // Decide on which path to go next.
               if (nextPath.personAffect === "Yes") {
-                history.push(
-                  `/incident/${id}/modify/peoples-afftected/`
-                );
+                history.push(`/incident/${id}/modify/peoples-afftected/`);
               } else if (nextPath.propertyAffect === "Yes") {
-                history.push(
-                  `/incident/${id}/modify/property-affected/`
-                );
+                history.push(`/incident/${id}/modify/property-affected/`);
               } else if (nextPath.equipmentAffect === "Yes") {
-                history.push(
-                  `/incident/${id}/modify/equipment-affected/`
-                );
+                history.push(`/incident/${id}/modify/equipment-affected/`);
               } else if (nextPath.environmentAffect === "Yes") {
-                history.push(
-                  `/incident/${id}/modify/environment-affected/`
-                );
+                history.push(`/incident/${id}/modify/environment-affected/`);
               } else {
                 history.push(
                   `/incident/${id}/modify/reporting-and-notification/`
@@ -273,14 +276,17 @@ const IncidentDetails = (props) => {
         }
       } else {
         // Create case if id is not null and means it is an add new registration case.
-        const { error, isValid } = validate(form, selectDepthAndId, levelLenght);
+        const { error, isValid } = validate(
+          form,
+          selectDepthAndId,
+          levelLenght
+        );
         await setError(error);
         if (selectDepthAndId.length < levelLenght) {
           // alert("Please select all Level of project.")
           setIsNext(true);
         } else {
           if (isValid === true) {
-
             const formData = {
               fkCompanyId: parseInt(fkCompanyId),
               fkProjectId: parseInt(project.projectId),
@@ -327,7 +333,6 @@ const IncidentDetails = (props) => {
               subContractor: form.subContractor,
               incidentStage: "Initial notification",
               incidentStatus: "Pending",
-
             };
             // sent post api
             try {
@@ -341,23 +346,33 @@ const IncidentDetails = (props) => {
                 // Decide on which path to go next.
                 if (nextPath.personAffect === "Yes") {
                   history.push(
-                    `/incident/${res.data.data.results.id}/modify/peoples-afftected/`
+                    `/incident/${
+                      res.data.data.results.id
+                    }/modify/peoples-afftected/`
                   );
                 } else if (nextPath.propertyAffect === "Yes") {
                   history.push(
-                    `/incident/${res.data.data.results.id}/modify/property-affected/`
+                    `/incident/${
+                      res.data.data.results.id
+                    }/modify/property-affected/`
                   );
                 } else if (nextPath.equipmentAffect === "Yes") {
                   history.push(
-                    `/incident/${res.data.data.results.id}/modify/equipment-affected/`
+                    `/incident/${
+                      res.data.data.results.id
+                    }/modify/equipment-affected/`
                   );
                 } else if (nextPath.environmentAffect === "Yes") {
                   history.push(
-                    `/incident/${res.data.data.results.id}/modify/environment-affected/`
+                    `/incident/${
+                      res.data.data.results.id
+                    }/modify/environment-affected/`
                   );
                 } else {
                   history.push(
-                    `/incident/${res.data.data.results.id}/modify/reporting-and-notification/`
+                    `/incident/${
+                      res.data.data.results.id
+                    }/modify/reporting-and-notification/`
                   );
                 }
               }
@@ -379,48 +394,61 @@ const IncidentDetails = (props) => {
   const fetchIncidentTypeValue = async () => {
     try {
       const res = await api.get("api/v1/lists/1/value");
-      const result = res.data.data.results;let data = [];
-      data = result
-      await setIncidentTypeValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
-    
+      const result = res.data.data.results;
+      let data = [];
+      data = result;
+      await setIncidentTypeValue([
+        ...data,
+        { inputLabel: "Other", inputValue: "Other" },
+        { inputLabel: "NA", inputValue: "NA" },
+      ]);
+
       // await setIncidentTypeValue(result);
     } catch (error) {
-      history.push("/app/pages/error")
+      history.push("/app/pages/error");
     }
   };
 
   // get data contractor value for dropdown
   const fetchContractorValue = async () => {
     try {
-      const res = await api.get("api/v1/lists/2/value")
-        .catch(error => setMessage(error.message))
+      const res = await api
+        .get("api/v1/lists/2/value")
+        .catch((error) => setMessage(error.message));
       const result = res.data.data.results;
       let data = [];
-      data = result
-      await setContractorValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
+      data = result;
+      await setContractorValue([
+        ...data,
+        { inputLabel: "Other", inputValue: "Other" },
+        { inputLabel: "NA", inputValue: "NA" },
+      ]);
     } catch (error) {
       setIsNext(true);
 
-
-      history.push("/app/pages/error")
+      history.push("/app/pages/error");
     }
   };
 
   // get data sub-contractor value for dropdown
   const fetchSubContractorValue = async () => {
     try {
-      const res = await api.get("api/v1/lists/3/value")
-        .catch(error => setMessage(error.message))
+      const res = await api
+        .get("api/v1/lists/3/value")
+        .catch((error) => setMessage(error.message));
       const result = res.data.data.results;
       let data = [];
-      data = result
+      data = result;
 
-      await setSubContractorValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
-    
+      await setSubContractorValue([
+        ...data,
+        { inputLabel: "Other", inputValue: "Other" },
+        { inputLabel: "NA", inputValue: "NA" },
+      ]);
     } catch (error) {
       setIsNext(true);
 
-      history.push("/app/pages/error")
+      history.push("/app/pages/error");
     }
   };
 
@@ -433,7 +461,7 @@ const IncidentDetails = (props) => {
     } catch (error) {
       setIsNext(true);
 
-      history.push("/app/pages/error")
+      history.push("/app/pages/error");
     }
   };
 
@@ -446,7 +474,7 @@ const IncidentDetails = (props) => {
     } catch (error) {
       setIsNext(true);
 
-      history.push("/app/pages/error")
+      history.push("/app/pages/error");
     }
   };
 
@@ -459,7 +487,7 @@ const IncidentDetails = (props) => {
     } catch (error) {
       setIsNext(true);
 
-      history.push("/app/pages/error")
+      history.push("/app/pages/error");
     }
   };
 
@@ -471,7 +499,7 @@ const IncidentDetails = (props) => {
       await setEnvironmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      history.push("/app/pages/error")
+      history.push("/app/pages/error");
     }
   };
 
@@ -488,9 +516,8 @@ const IncidentDetails = (props) => {
           let temp = { ...form };
           temp = result;
           setForm(temp);
-          fetchBreakDownData(temp.fkProjectStructureIds)
-          await fetchBreakDownData(result.fkProjectStructureIds)
-
+          fetchBreakDownData(temp.fkProjectStructureIds);
+          await fetchBreakDownData(result.fkProjectStructureIds);
         }
 
         // const user = localStorage.getItem({})
@@ -507,54 +534,55 @@ const IncidentDetails = (props) => {
         if (result.isPersonAffected !== "Yes") {
           hideAffect.push("People affected");
         }
-
       } catch (error) {
         setIsNext(true);
 
-        history.push("/app/pages/error")
+        history.push("/app/pages/error");
       }
     }
   };
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    const projectData = JSON.parse(localStorage.getItem("projectName"));
 
     const value = e.target.value;
 
-    const temp = [...fetchSelectBreakDownList]
-    temp[index]["selectValue"].id = value
+    const temp = [...fetchSelectBreakDownList];
+    temp[index]["selectValue"].id = value;
     // let removeTemp = temp.slice(0, index)
     for (var i in temp) {
       if (i > index) {
-        temp[i].breakDownData = []
-        temp[i].selectValue.id = ""
+        temp[i].breakDownData = [];
+        temp[i].selectValue.id = "";
       }
-
     }
     let tempDepthAndId = selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index + 1}L`)
-    let sliceData = dataDepthAndId.slice(0, index)
-    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`]
-    setSelectDepthAndId(newdataDepthAndId)
+    let dataDepthAndId = tempDepthAndId.filter(
+      (filterItem) => filterItem.slice(0, 2) !== `${index + 1}L`
+    );
+    let sliceData = dataDepthAndId.slice(0, index);
+    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`];
+    setSelectDepthAndId(newdataDepthAndId);
     // await setFetchSelectBreakDownList(removeTemp)
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
-
-
-          await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${value}`)
-            .then(function (response) {
+          await api
+            .get(
+              `${SSO_URL}/${
+                projectData.projectName.breakdown[key].structure[0].url
+              }${value}`
+            )
+            .then(function(response) {
               if (response.status === 200) {
-
-                temp[key].breakDownData = response.data.data.results
+                temp[key].breakDownData = response.data.data.results;
 
                 //  temp[key].select=e.
-                setBreakdown1ListData(temp)
+                setBreakdown1ListData(temp);
               }
             })
-            .catch(function (error) {
-              history.push("/app/pages/error")
+            .catch(function(error) {
+              history.push("/app/pages/error");
             });
         }
       }
@@ -562,19 +590,19 @@ const IncidentDetails = (props) => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    let breakdownLength = projectData.projectName.breakdown.length
-    setLevelLenght(breakdownLength)
+    const projectData = JSON.parse(localStorage.getItem("projectName"));
+    let breakdownLength = projectData.projectName.breakdown.length;
+    setLevelLenght(breakdownLength);
     let selectBreakDown = [];
-    const breakDown = projectBreakdown.split(':');
-    setSelectDepthAndId(breakDown)
+    const breakDown = projectBreakdown.split(":");
+    setSelectDepthAndId(breakDown);
     for (var key in breakDown) {
-      if (breakDown[key].slice(0, 2) === '1L') {
+      if (breakDown[key].slice(0, 2) === "1L") {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[0].structure[0].url
+          }`,
           headers: HEADER_AUTH,
         };
 
@@ -584,56 +612,66 @@ const IncidentDetails = (props) => {
             await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
-
                 selectBreakDown = [
-                  ...selectBreakDown, {
-                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
-                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
-                    breakDownData: result
-                  }
-
+                  ...selectBreakDown,
+                  {
+                    breakDownLabel:
+                      projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: {
+                      depth: item.depth,
+                      id: item.id,
+                      name: item.name,
+                      label:
+                        projectData.projectName.breakdown[key].structure[0]
+                          .name,
+                    },
+                    breakDownData: result,
+                  },
                 ];
-
               }
             });
-            setFetchSelectBreakDownList(selectBreakDown)
+            setFetchSelectBreakDownList(selectBreakDown);
           })
           .catch((error) => {
-
             setIsNext(true);
           });
       } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].substring(2)}`,
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[key].structure[0].url
+          }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
         await api(config)
           .then(async (response) => {
-
             const result = response.data.data.results;
 
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
-
                 selectBreakDown = [
                   ...selectBreakDown,
                   {
-                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
-                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
-                    breakDownData: result
-                  }
+                    breakDownLabel:
+                      projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: {
+                      depth: item.depth,
+                      id: item.id,
+                      name: item.name,
+                      label:
+                        projectData.projectName.breakdown[key].structure[0]
+                          .name,
+                    },
+                    breakDownData: result,
+                  },
                 ];
-
               }
             });
-            setFetchSelectBreakDownList(selectBreakDown)
-
+            setFetchSelectBreakDownList(selectBreakDown);
           })
           .catch((error) => {
-            console.log(error)
+            console.log(error);
             setIsNext(true);
           });
       }
@@ -649,8 +687,7 @@ const IncidentDetails = (props) => {
     fetchEquipmentAffectValue();
     fetchEnviornmentAffectValue();
     fetchIncidentsData();
-  }, [])
-
+  }, []);
 
   //  set state for hide sidebar
   const handleHideAffect = (e, name, key) => {
@@ -665,541 +702,581 @@ const IncidentDetails = (props) => {
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
-  return ( 
-    <Acl 
+  return (
+    <Acl
       module="safety-incident"
       action={history.location.state && "add_incidents"}
-      html={(
+      html={
         <PapperBlock icon="ion-md-list-box" title="Initial Notification">
-        {isLoading ? (
-          <Row>
-            <Col md={9}>
-              <Grid container spacing={3}>
-  
-                {/* Project Name */}
-                <Grid item xs={3}>
-  
-                  <Typography
-                    variant="h6"
-                    className={Type.labelName}
-                    gutterBottom
-                    id="project-name-label"
-                  >
-                    Project name
-                  </Typography>
-  
-  
-                  <Typography className={Type.labelValue}>
-                    {project ? project.projectName : null}
-                  </Typography>
-                </Grid>
-                {id ?
-                  fetchSelectBreakDownList.map((data, key) =>
-                    <Grid item xs={3} md={3} key={key}>
-                      <FormControl
-                        error={error && error[`projectStructure${[key]}`]}
-                        variant="outlined"
-                        required
-                        className={classes.formControl}
-                      >
-                        <InputLabel id={data.breakDownLabel}>
-                          {data.breakDownLabel}
-                        </InputLabel>
-                        <Select
-                          labelId={data.breakDownLabel}
-                          id={data.breakDownLabel}
-                          label={data.breakDownLabel}
-                          value={data.selectValue.id || ""}
-                          disabled={data.breakDownData.length === 0}
-  
-                          onChange={(e) => {
-                            handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
-                          }}
+          {isLoading ? (
+            <Row>
+              <Col md={9}>
+                <Grid container spacing={3}>
+                  {/* Project Name */}
+                  <Grid item xs={3}>
+                    <Typography
+                      variant="h6"
+                      className={Type.labelName}
+                      gutterBottom
+                      id="project-name-label"
+                    >
+                      Project name
+                    </Typography>
+
+                    <Typography className={Type.labelValue}>
+                      {project ? project.projectName : null}
+                    </Typography>
+                  </Grid>
+                  {id ? (
+                    fetchSelectBreakDownList.map((data, key) => (
+                      <Grid item xs={3} md={3} key={key}>
+                        <FormControl
+                          error={error && error[`projectStructure${[key]}`]}
+                          variant="outlined"
+                          required
+                          className={classes.formControl}
                         >
-                          {data.breakDownData.length !== 0
-                            ? data.breakDownData.map((selectvalues, index) => (
-                              <MenuItem key={index}
-                                // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
-                                value={selectvalues.id}>
-                                {selectvalues.structureName}
+                          <InputLabel id={data.breakDownLabel}>
+                            {data.breakDownLabel}
+                          </InputLabel>
+                          <Select
+                            labelId={data.breakDownLabel}
+                            id={data.breakDownLabel}
+                            label={data.breakDownLabel}
+                            value={data.selectValue.id || ""}
+                            disabled={data.breakDownData.length === 0}
+                            onChange={(e) => {
+                              handleBreakdown(
+                                e,
+                                key,
+                                data.breakDownLabel,
+                                data.selectValue
+                              );
+                            }}
+                          >
+                            {data.breakDownData.length !== 0
+                              ? data.breakDownData.map(
+                                  (selectvalues, index) => (
+                                    <MenuItem
+                                      key={index}
+                                      // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                                      value={selectvalues.id}
+                                    >
+                                      {selectvalues.structureName}
+                                    </MenuItem>
+                                  )
+                                )
+                              : null}
+                          </Select>
+                          {error && error[`projectStructure${[key]}`] && (
+                            <FormHelperText>
+                              {error[`projectStructure${[key]}`]}
+                            </FormHelperText>
+                          )}
+                        </FormControl>
+                      </Grid>
+                    ))
+                  ) : (
+                    <ProjectStructureInit
+                      selectDepthAndId={selectDepthAndId}
+                      setLevelLenght={setLevelLenght}
+                      error={error}
+                      setWorkArea={setWorkArea}
+                      setSelectDepthAndId={setSelectDepthAndId}
+                    />
+                  )}
+                  {/* Unit Name */}
+
+                  {/* Incident Type */}
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      error={error.incidentType}
+                      variant="outlined"
+                      required
+                      className={classes.formControl}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        Incident type
+                      </InputLabel>
+                      <Select
+                        labelId="incident-type-label"
+                        id="incident-type"
+                        label="Incident type"
+                        value={form.incidentType || ""}
+                        onChange={(e) => {
+                          setForm({ ...form, incidentType: e.target.value });
+                        }}
+                      >
+                        {incidentTypeValue.length !== 0
+                          ? incidentTypeValue.map((selectValues, index) => (
+                              <MenuItem
+                                key={index}
+                                value={selectValues.inputValue}
+                              >
+                                {selectValues.inputLabel}
                               </MenuItem>
                             ))
-                            : null}
-                        </Select>
-                        {error && error[`projectStructure${[key]}`] && (
-                          <FormHelperText>
-                            {error[`projectStructure${[key]}`]}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
-  
-                  ) : <ProjectStructureInit
-                    selectDepthAndId={selectDepthAndId}
-                    setLevelLenght={setLevelLenght}
-                    error={error}
-                    setWorkArea={setWorkArea}
-                    setSelectDepthAndId={setSelectDepthAndId} />
-                }
-                {/* Unit Name */}
-  
-                {/* Incident Type */}
-                <Grid item xs={12} md={6}>
-                  <FormControl
-                    error={error.incidentType}
-                    variant="outlined"
-                    required
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="demo-simple-select-label">
-                      Incident type
-                    </InputLabel>
-                    <Select
-                      labelId="incident-type-label"
-                      id="incident-type"
-                      label="Incident type"
-                      value={form.incidentType || ""}
-                      onChange={(e) => {
-                        setForm({ ...form, incidentType: e.target.value });
-                      }}
+                          : null}
+                      </Select>
+                      {error && error.incidentType && (
+                        <FormHelperText>{error.incidentType}</FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+                  {/* Date and Time */}
+                  <Grid item xs={12} md={6}>
+                    <MuiPickersUtilsProvider
+                      variant="outlined"
+                      utils={DateFnsUtils}
                     >
-                      {incidentTypeValue.length !== 0
-                        ? incidentTypeValue.map((selectValues, index) => (
-                          <MenuItem key={index} value={selectValues.inputValue}>
-                            {selectValues.inputLabel}
-                          </MenuItem>
-                        ))
-                        : null}
-                    </Select>
-                    {error && error.incidentType && (
-                      <FormHelperText>{error.incidentType}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-                {/* Date and Time */}
-                <Grid item xs={12} md={6}>
-                  <MuiPickersUtilsProvider
-                    variant="outlined"
-                    utils={DateFnsUtils}
-                  >
-                    <KeyboardDateTimePicker
+                      <KeyboardDateTimePicker
+                        required
+                        error={error.incidentOccuredOn}
+                        className={classes.formControl}
+                        label="Incident date & time"
+                        helperText={
+                          error.incidentOccuredOn
+                            ? error.incidentOccuredOn
+                            : null
+                        }
+                        value={form.incidentOccuredOn || null}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            incidentOccuredOn: moment(e).toISOString(),
+                          });
+                        }}
+                        onClick={(e) => setIsDateShow(true)}
+                        open={isDateShow}
+                        onClose={(e) => {
+                          setIsDateShow(false);
+                        }}
+                        InputProps={{ readOnly: true }}
+                        format="dd-MMM-yyyy hh:mm:s a"
+                        inputVariant="outlined"
+                        disableFuture="true"
+                      />
+                    </MuiPickersUtilsProvider>
+                  </Grid>
+
+                  {/* Incident Title */}
+                  <Grid item xs={12} md={12}>
+                    <TextField
                       required
-                      error={error.incidentOccuredOn}
-                      className={classes.formControl}
-                      label="Incident date & time"
+                      id="title"
+                      error={error.incidentTitle}
+                      variant="outlined"
+                      label="Title"
+                      className={classes.fullWidth}
+                      value={form.incidentTitle || ""}
                       helperText={
-                        error.incidentOccuredOn ? error.incidentOccuredOn : null
+                        error.incidentTitle ? error.incidentTitle : ""
                       }
-                      value={form.incidentOccuredOn || null}
                       onChange={(e) => {
                         setForm({
                           ...form,
-                          incidentOccuredOn: moment(e).toISOString(),
+                          incidentTitle: e.target.value,
                         });
                       }}
-                      onClick={(e) => setIsDateShow(true)}
-                      open={isDateShow}
-                      onClose={(e) => { setIsDateShow(false) }}
-                      InputProps={{ readOnly: true }}
-                      format="yyyy/MM/dd HH:mm"
-                      inputVariant="outlined"
-                      disableFuture="true"
                     />
-                  </MuiPickersUtilsProvider>
-                </Grid>
-  
-                {/* Incident Title */}
-                <Grid item xs={12} md={12}>
-                  <TextField
-                    required
-                    id="title"
-                    error={error.incidentTitle}
-                    variant="outlined"
-                    label="Title"
-                    className={classes.fullWidth}
-                    value={form.incidentTitle || ""}
-                    helperText={error.incidentTitle ? error.incidentTitle : ""}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        incidentTitle: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-  
-                {/* Incident Description */}
-                <Grid item xs={12} md={12}>
-                  <TextField
-                    error={error.incidentDetails}
-                    multiline
-                    variant="outlined"
-                    rows="4"
-                    id="description"
-                    label="Description"
-                    value={form.incidentDetails || ""}
-                    className={classes.fullWidth}
-                    helperText={error.incidentDetails && error.incidentDetails}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        incidentDetails: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-  
-                {/* Incident immediate action taken */}
-                <Grid item xs={12} md={12}>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="4"
-                    label="Any immediate actions taken"
-                    value={form.immediateActionsTaken || ""}
-                    className={classes.fullWidth}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        immediateActionsTaken: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-  
-                {/* incident Location */}
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    id="initial-detail-location"
-                    variant="outlined"
-                    label="Location"
-                    error={error.incidentLocation}
-                    helperText={
-                      error.incidentLocation ? error.incidentLocation : ""
-                    }
-                    className={classes.fullWidth}
-                    value={form.incidentLocation || ""}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        incidentLocation: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-  
-                {/* Contractor */}
-                <Grid item xs={12} md={6}>
-                  <FormControl
-                    variant="outlined"
-                    error={error.contractor}
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="demo-simple-select-label">
-                      Contractor/Agency name
-                    </InputLabel>
-                    <Select
-                      labelId="contractor-type-label"
-                      id="contractor"
-                      label="Contractor/Agency name"
-                      value={form.contractor !== null && form.contractor.trim() || ""}
+                  </Grid>
+
+                  {/* Incident Description */}
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      error={error.incidentDetails}
+                      multiline
+                      variant="outlined"
+                      rows="4"
+                      id="description"
+                      label="Description"
+                      value={form.incidentDetails || ""}
+                      className={classes.fullWidth}
+                      helperText={
+                        error.incidentDetails && error.incidentDetails
+                      }
                       onChange={(e) => {
                         setForm({
                           ...form,
-                          contractor: e.target.value,
+                          incidentDetails: e.target.value,
                         });
                       }}
-                    >
-                      {contractorValue.length !== 0
-                        ? contractorValue.map((selectValues, index) => (
-                          <MenuItem key={index} value={selectValues.inputValue.trim()}>
-                            {selectValues.inputLabel}
-                          </MenuItem>
-                        ))
-                        : null}
-                    </Select>
-                    {error && error.contractor && (
-                      <FormHelperText>{error.contractor}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-  
-                {/* Sub-Contractor */}
-                <Grid item xs={12} md={6}>
-                  <FormControl
-                    variant="outlined"
-                    error={error.subContractor}
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="demo-simple-select-label">
-                      Sub-contractor
-                    </InputLabel>
-                    <Select
-                      labelId="sub-contractor-type-label"
-                      id="sub-contractor"
-                      label="Sub-Contractor"
-                      value={form.subContractor || ""}
+                    />
+                  </Grid>
+
+                  {/* Incident immediate action taken */}
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      variant="outlined"
+                      id="immediate-actions"
+                      multiline
+                      rows="4"
+                      label="Any immediate actions taken"
+                      value={form.immediateActionsTaken || ""}
+                      className={classes.fullWidth}
                       onChange={(e) => {
                         setForm({
                           ...form,
-                          subContractor: e.target.value,
+                          immediateActionsTaken: e.target.value,
                         });
                       }}
-                    >
-                      {subContractorValue.length !== 0
-                        ? subContractorValue.map((selectValues, index) => (
-                          <MenuItem key={index} value={selectValues.inputValue}>
-                            {selectValues.inputLabel}
-                          </MenuItem>
-                        ))
-                        : null}
-                    </Select>
-                    {error && error.subContractor && (
-                      <FormHelperText>{error.subContractor}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-  
-                {/* Person Affected */}
-                <Grid item xs={12} md={12}>
-                  <FormControl
-                    component="fieldset"
-                    required
-                    error={error && error.isPersonAffected}
-                    className={classes.formControl}
-                  >
-                    <FormLabel component="legend">
-                      Were any person affected during incident?
-                    </FormLabel>
-  
-                    <RadioGroup
-                      className={classes.inlineRadioGroup}
-                      aria-label="personaffected"
-                      name="personaffected"
-                      aria-required
-                      value={form.isPersonAffected || ""}
+                    />
+                  </Grid>
+
+                  {/* incident Location */}
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      id="initial-detail-location"
+                      variant="outlined"
+                      label="Location"
+                      error={error.incidentLocation}
+                      helperText={
+                        error.incidentLocation ? error.incidentLocation : ""
+                      }
+                      className={classes.fullWidth}
+                      value={form.incidentLocation || ""}
                       onChange={(e) => {
                         setForm({
                           ...form,
-                          isPersonAffected: e.target.value,
-                        });
-                        handleHideAffect(
-                          e.target.value,
-                          "People affected",
-                          "personAffect"
-                        );
-                        setNextPath({
-                          ...nextPath,
-                          personAffect: e.target.value,
+                          incidentLocation: e.target.value,
                         });
                       }}
+                    />
+                  </Grid>
+
+                  {/* Contractor */}
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      variant="outlined"
+                      error={error.contractor}
+                      className={classes.formControl}
                     >
-                      {personAffectedValue.length !== 0
-                        ? personAffectedValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
-                        : null}
-                    </RadioGroup>
-  
-                    {error && error.isPersonAffected && (
-                      <FormHelperText>{error.isPersonAffected}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-  
-                {/* Property Affected */}
-                <Grid item xs={12} md={12}>
-                  <FormControl
-                    component="fieldset"
-                    className={classes.formControl}
-                    required
-                    error={error && error.isPropertyDamaged}
-                  >
-                    <FormLabel component="legend">
-                      Was any property/material damaged during incident?
-                    </FormLabel>
-                    <RadioGroup
-                      className={classes.inlineRadioGroup}
-                      aria-label="propertyaffected"
-                      name="propertyaffected"
-                      aria-required
-                      value={form.isPropertyDamaged || ""}
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          isPropertyDamaged: e.target.value,
-                        });
-                        handleHideAffect(
-                          e.target.value,
-                          "Property/Material affected",
-                          "propertyAffect"
-                        );
-                        setNextPath({
-                          ...nextPath,
-                          propertyAffect: e.target.value,
-                        });
-                      }}
+                      <InputLabel id="demo-simple-select-label">
+                        Contractor/Agency name
+                      </InputLabel>
+                      <Select
+                        labelId="contractor-type-label"
+                        id="contractor"
+                        label="Contractor/Agency name"
+                        value={
+                          (form.contractor !== null &&
+                            form.contractor.trim()) ||
+                          ""
+                        }
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            contractor: e.target.value,
+                          });
+                        }}
+                      >
+                        {contractorValue.length !== 0
+                          ? contractorValue.map((selectValues, index) => (
+                              <MenuItem
+                                key={index}
+                                value={selectValues.inputValue.trim()}
+                              >
+                                {selectValues.inputLabel}
+                              </MenuItem>
+                            ))
+                          : null}
+                      </Select>
+                      {error && error.contractor && (
+                        <FormHelperText>{error.contractor}</FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+
+                  {/* Sub-Contractor */}
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      variant="outlined"
+                      error={error.subContractor}
+                      className={classes.formControl}
                     >
-                      {propertiesAffectValue.length !== 0
-                        ? propertiesAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
-                        : null}
-                    </RadioGroup>
-                    {error && error.isPropertyDamaged && (
-                      <FormHelperText>{error.isPropertyDamaged}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-  
-                {/* Equipment Damaged */}
-                <Grid item xs={12} md={12}>
-                  <FormControl
-                    component="fieldset"
-                    required
-                    error={error && error.isEquipmentDamaged}
-                    className={classes.formControl}
-                  >
-                    <FormLabel component="legend">
-                      Was there any equipment damaged?
-                    </FormLabel>
-                    <RadioGroup
-                      className={classes.inlineRadioGroup}
-                      aria-label="equiptmenteffected"
-                      name="equiptmenteffected"
-                      aria-required
-                      value={form.isEquipmentDamaged || ""}
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          isEquipmentDamaged: e.target.value,
-                        });
-                        handleHideAffect(
-                          e.target.value,
-                          "Equipment affected",
-                          "equipmentAffect"
-                        );
-                        setNextPath({
-                          ...nextPath,
-                          equipmentAffect: e.target.value,
-                        });
-                      }}
+                      <InputLabel id="demo-simple-select-label">
+                        Sub-contractor
+                      </InputLabel>
+                      <Select
+                        labelId="sub-contractor-type-label"
+                        id="sub-contractor"
+                        label="Sub-Contractor"
+                        value={form.subContractor || ""}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            subContractor: e.target.value,
+                          });
+                        }}
+                      >
+                        {subContractorValue.length !== 0
+                          ? subContractorValue.map((selectValues, index) => (
+                              <MenuItem
+                                key={index}
+                                value={selectValues.inputValue}
+                              >
+                                {selectValues.inputLabel}
+                              </MenuItem>
+                            ))
+                          : null}
+                      </Select>
+                      {error && error.subContractor && (
+                        <FormHelperText>{error.subContractor}</FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+
+                  {/* Person Affected */}
+                  <Grid item xs={12} md={12}>
+                    <FormControl
+                      component="fieldset"
+                      required
+                      error={error && error.isPersonAffected}
+                      className={classes.formControl}
                     >
-                      {eqiptmentAffectValue.length !== 0
-                        ? eqiptmentAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
-                        : null}
-                    </RadioGroup>
-                    {error && error.isEquipmentDamaged && (
-                      <FormHelperText>{error.isEquipmentDamaged}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-  
-                {/* Environmental Impact */}
-                <Grid item xs={12} md={12}>
-                  <FormControl
-                    component="fieldset"
-                    required
-                    error={error && error.isEnviromentalImpacted}
-                    className={classes.formControl}
-                  >
-                    <FormLabel component="legend">
-                      Was there any environment impact?
-                    </FormLabel>
-                    <RadioGroup
-                      aria-label="environmentaffected"
-                      aria-required
-                      name="environmentaffected"
-                      className={classes.inlineRadioGroup}
-                      value={form.isEnviromentalImpacted || ""}
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          isEnviromentalImpacted: e.target.value,
-                        });
-                        handleHideAffect(
-                          e.target.value,
-                          "Environment impact",
-                          "environmentAffect"
-                        );
-                        setNextPath({
-                          ...nextPath,
-                          environmentAffect: e.target.value,
-                        });
-                      }}
+                      <FormLabel component="legend">
+                        Were any person affected during incident?
+                      </FormLabel>
+
+                      <RadioGroup
+                        className={classes.inlineRadioGroup}
+                        aria-label="personaffected"
+                        name="personaffected"
+                        aria-required
+                        value={form.isPersonAffected || ""}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            isPersonAffected: e.target.value,
+                          });
+                          handleHideAffect(
+                            e.target.value,
+                            "People affected",
+                            "personAffect"
+                          );
+                          setNextPath({
+                            ...nextPath,
+                            personAffect: e.target.value,
+                          });
+                        }}
+                      >
+                        {personAffectedValue.length !== 0
+                          ? personAffectedValue.map((value, index) => (
+                              <FormControlLabel
+                                key={index}
+                                value={value.inputValue}
+                                control={<Radio />}
+                                label={value.inputLabel}
+                              />
+                            ))
+                          : null}
+                      </RadioGroup>
+
+                      {error && error.isPersonAffected && (
+                        <FormHelperText>
+                          {error.isPersonAffected}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+
+                  {/* Property Affected */}
+                  <Grid item xs={12} md={12}>
+                    <FormControl
+                      component="fieldset"
+                      className={classes.formControl}
+                      required
+                      error={error && error.isPropertyDamaged}
                     >
-                      {environmentAffectValue.length !== 0
-                        ? environmentAffectValue.map((value, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={value.inputValue}
-                            control={<Radio />}
-                            label={value.inputLabel}
-                          />
-                        ))
-                        : null}
-                    </RadioGroup>
-                    {error && error.isEnviromentalImpacted && (
-                      <FormHelperText>
-                        {error.isEnviromentalImpacted}
-                      </FormHelperText>
+                      <FormLabel component="legend">
+                        Was any property/material damaged during incident?
+                      </FormLabel>
+                      <RadioGroup
+                        className={classes.inlineRadioGroup}
+                        aria-label="propertyaffected"
+                        name="propertyaffected"
+                        aria-required
+                        value={form.isPropertyDamaged || ""}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            isPropertyDamaged: e.target.value,
+                          });
+                          handleHideAffect(
+                            e.target.value,
+                            "Property/Material affected",
+                            "propertyAffect"
+                          );
+                          setNextPath({
+                            ...nextPath,
+                            propertyAffect: e.target.value,
+                          });
+                        }}
+                      >
+                        {propertiesAffectValue.length !== 0
+                          ? propertiesAffectValue.map((value, index) => (
+                              <FormControlLabel
+                                key={index}
+                                value={value.inputValue}
+                                control={<Radio />}
+                                label={value.inputLabel}
+                              />
+                            ))
+                          : null}
+                      </RadioGroup>
+                      {error && error.isPropertyDamaged && (
+                        <FormHelperText>
+                          {error.isPropertyDamaged}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+
+                  {/* Equipment Damaged */}
+                  <Grid item xs={12} md={12}>
+                    <FormControl
+                      component="fieldset"
+                      required
+                      error={error && error.isEquipmentDamaged}
+                      className={classes.formControl}
+                    >
+                      <FormLabel component="legend">
+                        Was there any equipment damaged?
+                      </FormLabel>
+                      <RadioGroup
+                        className={classes.inlineRadioGroup}
+                        aria-label="equiptmenteffected"
+                        name="equiptmenteffected"
+                        aria-required
+                        value={form.isEquipmentDamaged || ""}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            isEquipmentDamaged: e.target.value,
+                          });
+                          handleHideAffect(
+                            e.target.value,
+                            "Equipment affected",
+                            "equipmentAffect"
+                          );
+                          setNextPath({
+                            ...nextPath,
+                            equipmentAffect: e.target.value,
+                          });
+                        }}
+                      >
+                        {eqiptmentAffectValue.length !== 0
+                          ? eqiptmentAffectValue.map((value, index) => (
+                              <FormControlLabel
+                                value={value.inputValue}
+                                control={<Radio />}
+                                label={value.inputLabel}
+                              />
+                            ))
+                          : null}
+                      </RadioGroup>
+                      {error && error.isEquipmentDamaged && (
+                        <FormHelperText>
+                          {error.isEquipmentDamaged}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+
+                  {/* Environmental Impact */}
+                  <Grid item xs={12} md={12}>
+                    <FormControl
+                      component="fieldset"
+                      required
+                      error={error && error.isEnviromentalImpacted}
+                      className={classes.formControl}
+                    >
+                      <FormLabel component="legend">
+                        Was there any environment impact?
+                      </FormLabel>
+                      <RadioGroup
+                        aria-label="environmentaffected"
+                        aria-required
+                        name="environmentaffected"
+                        className={classes.inlineRadioGroup}
+                        value={form.isEnviromentalImpacted || ""}
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            isEnviromentalImpacted: e.target.value,
+                          });
+                          handleHideAffect(
+                            e.target.value,
+                            "Environment impact",
+                            "environmentAffect"
+                          );
+                          setNextPath({
+                            ...nextPath,
+                            environmentAffect: e.target.value,
+                          });
+                        }}
+                      >
+                        {environmentAffectValue.length !== 0
+                          ? environmentAffectValue.map((value, index) => (
+                              <FormControlLabel
+                                key={index}
+                                value={value.inputValue}
+                                control={<Radio />}
+                                label={value.inputLabel}
+                              />
+                            ))
+                          : null}
+                      </RadioGroup>
+                      {error && error.isEnviromentalImpacted && (
+                        <FormHelperText>
+                          {error.isEnviromentalImpacted}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                    {/* Alert Message */}
+                    {open && (
+                      <AlertMessage
+                        message={message}
+                        type={messageType}
+                        setOpen={setOpen}
+                        open={open}
+                      />
                     )}
-                  </FormControl>
-                  {/* Alert Message */}
-                  {open && <AlertMessage message={message} type={messageType} setOpen={setOpen} open={open} />}
+                  </Grid>
+
+                  {/* Go to next button */}
+                  <Grid item xs={12} md={12}>
+                    <Button
+                      type="button"
+                      size="medium"
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => handelNext(e)}
+                      disabled={!isNext}
+                    >
+                      Next{isNext ? null : <CircularProgress size={20} />}
+                    </Button>
+                  </Grid>
                 </Grid>
-  
-                {/* Go to next button */}
-                <Grid item xs={12} md={12}>
-                  <Button
-                    type="button"
-                    size="medium"
-                    variant="contained"
-                    color="primary"
-                    onClick={(e) => handelNext(e)}
-                    disabled={!isNext}
-                  >
-                    Next{isNext ? null : <CircularProgress size={20} />}
-                  </Button>
-                </Grid>
-              </Grid>
-            </Col>
-  
-            {/* Right Sidebar */}
-            {isDesktop && (
-              <Col md={3}>
-                <FormSideBar
-                  deleteForm={hideAffect}
-                  listOfItems={INITIAL_NOTIFICATION_FORM}
-                  selectedItem="Incident details"
-                />
               </Col>
-            )}
-          </Row>
-        ) : (
-          <Loader />
-        )}
-      </PapperBlock>
-      )}
+
+              {/* Right Sidebar */}
+              {isDesktop && (
+                <Col md={3}>
+                  <FormSideBar
+                    deleteForm={hideAffect}
+                    listOfItems={INITIAL_NOTIFICATION_FORM}
+                    selectedItem="Incident details"
+                  />
+                </Col>
+              )}
+            </Row>
+          ) : (
+            <Loader />
+          )}
+        </PapperBlock>
+      }
     />
-  
   );
 };
 

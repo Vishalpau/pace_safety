@@ -957,6 +957,7 @@ function Actions(props) {
     const handleVisibilityComments = () => {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
+      setCommentData("");
     };
 
     const handleCommentsClick = () => {
@@ -1124,6 +1125,7 @@ function Actions(props) {
                           size="small"
                           className="custmCancelBtn buttonStyle"
                           disableElevation
+                          onClick={handleVisibilityComments}
                         >
                           Cancel
                         </Button>
