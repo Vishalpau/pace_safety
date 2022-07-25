@@ -249,14 +249,14 @@ export default function Observations() {
     localStorage.setItem('SearchedText', JSON.stringify(''));
   }, []);
 
-  return !showHTML ? (
+  // return !showHTML ? (
     
-  useEffect(() => {
-    return () => {
+  // useEffect(() => {
+  //   return () => {
       
-      localStorage.setItem("SearchedText", JSON.stringify(""));
-    };
-  }, [])):""
+  //     localStorage.setItem("SearchedText", JSON.stringify(""));
+  //   };
+  // }, [])):""
 
   const [canUploadPaperFile, setCanUploadPaperFile] = useState();
 
@@ -354,29 +354,16 @@ export default function Observations() {
                   onClick={() => handleInitialNotificationPush()}
                   style={{
                     background: checkACL(
-                      'safety-observations',
-                      'add_observations'
-                    )
-                      ? '#06425c'
-                      : '#c0c0c0',
-                    cursor: checkACL('safety-observations', 'add_observations')
-                      ? 'pointer'
-                      : 'not-allowed',
-                  }}
-                >
-                  <AddIcon className={classes.floatR} />
-                  {' '}
-Add new
                       "safety-observations",
                       "add_observations"
-                    
+                    )
                       ? "#06425c"
                       : "#c0c0c0",
                     cursor: checkACL("safety-observations", "add_observations")
                       ? "pointer"
                       : "not-allowed",
-                
-                
+                  }}
+                >
                   <AddIcon className={classes.floatR} /> Add new
                 </Button>
                 {/* )} */}
