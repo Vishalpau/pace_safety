@@ -7,14 +7,11 @@ import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-import IconButton from "@material-ui/core/IconButton";
-import StarsIcon from "@material-ui/icons/Stars";
 import Delete from "../../../containers/Delete/Delete";
 import Bookmark from "../../../containers/Bookmark/Bookmark";
-import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
-import BookmarkList from "../../../containers/Bookmark/BookmarkList";
-import Print from "@material-ui/icons/Print";
-import Share from "@material-ui/icons/Share";
+import Styles from "./Styles";
+import { staticLabels } from "../CardConstants";
+//import Print from "../../Print/Print";
 
 /**
  * @file - CardFooter.js
@@ -29,6 +26,8 @@ const useStyles = makeStyles((theme) => Styles());
 const CardFooter = (props) => {
   const classes = useStyles();
 
+  // Delete component props
+
   const {
     deleteUrl,
     axiosObj,
@@ -41,6 +40,14 @@ const CardFooter = (props) => {
     noBtn,
   } = props.deleteFields;
 
+  let printUrl, typeOfModule, number;
+
+  if (Object.keys(props.printFields).length > 0) {
+    printUrl = props.printFields.printUrl;
+    typeOfModule = props.printFields.typeOfModule;
+    number = props.printFields.number;
+  }
+
   return (
     <>
       <CardActions className={classes.width100}>
@@ -48,7 +55,7 @@ const CardFooter = (props) => {
           <Grid item xs={12} md={5} sm={12}>
             <Typography variant="body1" display="inline" color="textPrimary">
               <AttachmentIcon className={classes.mright5} />
-              Attachments:{" "}
+              {staticLabels.attachment}:{" "}
             </Typography>
             <Typography variant="body2" display="inline">
               <Link
@@ -57,7 +64,7 @@ const CardFooter = (props) => {
                 aria-haspopup="true"
                 className={classes.commentLink}
               >
-                {props.files !== null ? <>{props.files}</> : 0}
+                {props.files !== null ? props.files : 0}
               </Link>
             </Typography>
             <span item xs={1} className={classes.sepHeightTen} />
@@ -68,7 +75,7 @@ const CardFooter = (props) => {
               className={classes.mLeft}
             >
               <InsertCommentOutlinedIcon className={classes.mright5} />
-              Comments:{" "}
+              {staticLabels.comment}:{" "}
             </Typography>
             <Link
               onClick={() => props.handleVisibilityComments()}
@@ -85,35 +92,24 @@ const CardFooter = (props) => {
               className={classes.floatR}
               style={{ display: "flex", alignItems: "center" }}
             >
-              {/*<Typography variant="body1" display="inline">
-                  <Link href="#" className={classes.mLeftR5}>
-                    <IconButton>
-                      <Share className={classes.iconteal} />
-                    </IconButton>
-                    
-                  </Link>
-  </Typography>
-                <span item xs={1} className={classes.sepHeightTen} />*/}
-
+              {/* <span item xs={1} className={classes.sepHeightTen} />
               <Typography variant="body1" display="inline">
-                <Link href="#" className={classes.mLeftR5}>
-                  <IconButton>
-                    <Print className={classes.iconteal} />
-                  </IconButton>
-                </Link>
-              </Typography>
-
-              <span item xs={1} className={classes.sepHeightTen} />
-              <Typography variant="body1" display="inline">
-                <Typography variant="body1" display="inline">
-                  <Link href="#" className={classes.mLeftR5}>
-                    <IconButton>
-                      <StarsIcon className={classes.iconteal} />
-                    </IconButton>
-                  </Link>
-                </Typography>
-              </Typography>
-              <span item xs={1} className={classes.sepHeightTen} />
+                <Bookmark />
+              </Typography> */}
+              {Object.keys(props.printFields).length > 0 ? (
+                <>
+                  <Typography variant="body1" display="inline">
+                    <Print
+                      printUrl={printUrl}
+                      typeOfModule={typeOfModule}
+                      number={number}
+                    />
+                  </Typography>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                </>
+              ) : (
+                ""
+              )}
               <Typography variant="body1" display="inline">
                 <Delete
                   deleteUrl={deleteUrl}

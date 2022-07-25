@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
-    border: "1px solid rgba(0, 0, 0, .13)",
+    border: `1px solid rgba(0, 0, 0, .13)`,
     borderRadius: "4px",
   },
   search: {
@@ -225,7 +225,7 @@ function BlankPage(props) {
       setIncidents(res.data.data.results.results);
       setTotalData(res.data.data.results.count);
       setPageData(res.data.data.results.count / 25);
-      const pageCount = Math.ceil(res.data.data.results.count / 25);
+      let pageCount = Math.ceil(res.data.data.results.count / 25);
       setPageCount(pageCount);
       // }
       // catch (err) {
@@ -244,7 +244,7 @@ function BlankPage(props) {
           setIncidents(res.data.data.results.results);
           setTotalData(res.data.data.results.count);
           setPageData(res.data.data.results.count / 25);
-          const pageCount = Math.ceil(res.data.data.results.count / 25);
+          let pageCount = Math.ceil(res.data.data.results.count / 25);
           setPageCount(pageCount);
         });
       // .catch((err) => history.push("/app/pages/error"));
@@ -265,7 +265,7 @@ function BlankPage(props) {
     console.log("welcome user details");
     try {
       if (compId) {
-        const config = {
+        let config = {
           method: "get",
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
@@ -275,13 +275,13 @@ function BlankPage(props) {
           .then(function(response) {
             console.log(response);
             if (response.status === 200) {
-              const hosting = response.data.data.results.data.companies
+              let hosting = response.data.data.results.data.companies
                 .filter((company) => company.companyId == compId)[0]
                 .subscriptions.filter((subs) => subs.appCode === "safety")[0]
                 .hostings[0].apiDomain;
 
               console.log(hosting);
-              const data1 = {
+              let data1 = {
                 method: "get",
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
@@ -294,11 +294,11 @@ function BlankPage(props) {
                 );
 
                 if (compId) {
-                  const companies = response.data.data.results.data.companies.filter(
+                  let companies = response.data.data.results.data.companies.filter(
                     (item) => item.companyId == compId
                   );
 
-                  const companeyData = {
+                  let companeyData = {
                     fkCompanyId: companies[0].companyId,
                     fkCompanyName: companies[0].companyName,
                   };
@@ -307,10 +307,10 @@ function BlankPage(props) {
                   dispatch(company(companeyData));
                 }
                 if (proId) {
-                  const companies = response.data.data.results.data.companies.filter(
+                  let companies = response.data.data.results.data.companies.filter(
                     (item) => item.companyId == compId
                   );
-                  const project = companies[0].projects.filter(
+                  let project = companies[0].projects.filter(
                     (item) => item.projectId == proId
                   );
 
@@ -517,14 +517,14 @@ function BlankPage(props) {
         setIncidents(res.data.data.results.results);
         setTotalData(res.data.data.results.count);
         setPageData(res.data.data.results.count / 25);
-        const pageCount = Math.ceil(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
         setPageCount(pageCount);
       });
   };
 
   const handelCallBack = async () => {
     //  setIsLoading(true);
-    const state = JSON.parse(localStorage.getItem("direct_loading"));
+    let state = JSON.parse(localStorage.getItem("direct_loading"));
     if (state !== null) {
       await userDetails(state.comId, state.proId);
     } else {
@@ -598,13 +598,6 @@ function BlankPage(props) {
                       </Tooltip>
                     </div>
                   </Grid>
-
-                  {/* <Tab
-                    label="My BookmarkList"
-                    {...a11yProps(2)}
-                    className={classes.hoverB}
-                        /> */}
-
                   <Grid item xs={7} md={5}>
                     <Box display="flex" justifyContent="flex-end">
                       {isDesktop ? (
@@ -659,15 +652,16 @@ function BlankPage(props) {
                 <>
                   <div className="gridView">
                     {Object.entries(incidents)
-                      .filter(
-                        (searchText) =>
-                          searchText[1].incidentTitle
+                      .filter((searchText) => {
+                        return (
+                          searchText[1]["incidentTitle"]
                             .toLowerCase()
                             .includes(searchIncident.toLowerCase()) ||
-                          searchText[1].incidentNumber.includes(
+                          searchText[1]["incidentNumber"].includes(
                             searchIncident.toUpperCase()
                           )
-                      )
+                        );
+                      })
                       .map((item, index) => (
                         <Card
                           variant="outlined"
@@ -684,7 +678,7 @@ function BlankPage(props) {
                                 >
                                   <Grid item xs={12} md={10}>
                                     <Typography variant="h6">
-                                      {item[1].incidentTitle}
+                                      {item[1]["incidentTitle"]}
                                     </Typography>
                                   </Grid>
 
@@ -704,15 +698,15 @@ function BlankPage(props) {
                                         avatar={
                                           <Avatar
                                             src={
-                                              item[1].avatar
-                                                ? item[1].avatar
+                                              item[1]["avatar"]
+                                                ? item[1]["avatar"]
                                                 : "/images/pp_boy.svg"
                                             }
                                           />
                                         }
                                         label={
-                                          item[1].username
-                                            ? item[1].username
+                                          item[1]["username"]
+                                            ? item[1]["username"]
                                             : "Admin"
                                         }
                                       />
@@ -741,7 +735,7 @@ function BlankPage(props) {
                                         variant="subtitle2"
                                         className={Fonts.listingLabelValue}
                                       >
-                                        {item[1].incidentNumber}
+                                        {item[1]["incidentNumber"]}
                                       </ILink>
                                     </Typography>
                                   </Grid>
@@ -764,7 +758,7 @@ function BlankPage(props) {
                                         <CalendarTodayIcon fontSize="small" />
                                         <span className={Incidents.dateValue}>
                                           {moment(
-                                            item[1].incidentOccuredOn
+                                            item[1]["incidentOccuredOn"]
                                           ).format("Do MMM YYYY, h:mm a")}
                                         </span>
                                       </Box>
@@ -784,7 +778,7 @@ function BlankPage(props) {
                                     <Typography
                                       className={Fonts.listingLabelValue}
                                     >
-                                      {item[1].incidentType}
+                                      {item[1]["incidentType"]}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} lg={3}>
@@ -798,7 +792,7 @@ function BlankPage(props) {
                                       variant="body1"
                                       className={Fonts.listingLabelValue}
                                     >
-                                      {item[1].incidentLocation}
+                                      {item[1]["incidentLocation"]}
                                     </Typography>
                                   </Grid>
 
@@ -814,16 +808,10 @@ function BlankPage(props) {
                                       variant="body1"
                                       className={Fonts.listingLabelValue}
                                     >
-<<<<<<< HEAD
-                                      {moment(
-                                        item[1].incidentReportedOn
-                                      ).format("Do MMM YYYY, h:mm a")}
-=======
                                       {DateFormat(
                                         item[1]["incidentReportedOn"],
                                         true
                                       )}
->>>>>>> 896a7a54f9a2894e6278537887be7379b6f4b4a2
                                     </Typography>
                                   </Grid>
 
@@ -838,7 +826,7 @@ function BlankPage(props) {
                                     <Typography
                                       className={Fonts.listingLabelValue}
                                     >
-                                      {item[1].incidentReportedByName}
+                                      {item[1]["incidentReportedByName"]}
                                     </Typography>
                                   </Grid>
                                 </>
@@ -861,7 +849,7 @@ function BlankPage(props) {
                                   // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                                 >
                                   <MessageIcon fontSize="small" /> Comments:
-                                  {item[1].commentsCount}
+                                  {item[1]["commentsCount"]}
                                 </Typography>
                               </Grid>
 
@@ -958,24 +946,25 @@ function BlankPage(props) {
                 <div className="listView">
                   <MUIDataTable
                     data={Object.entries(incidents)
-                      .filter(
-                        (searchText) =>
-                          searchText[1].incidentTitle
+                      .filter((searchText) => {
+                        return (
+                          searchText[1]["incidentTitle"]
                             .toLowerCase()
                             .includes(searchIncident.toLowerCase()) ||
-                          searchText[1].incidentNumber.includes(
+                          searchText[1]["incidentNumber"].includes(
                             searchIncident.toUpperCase()
                           )
-                      )
+                        );
+                      })
                       .map((item) => [
-                        item[1].incidentNumber,
-                        item[1].incidentReportedByName,
-                        item[1].incidentLocation,
-                        moment(item[1].incidentReportedOn).format(
+                        item[1]["incidentNumber"],
+                        item[1]["incidentReportedByName"],
+                        item[1]["incidentLocation"],
+                        moment(item[1]["incidentReportedOn"]).format(
                           "Do MMMM YYYY, h:mm:ss a"
                         ),
-                        item[1].incidentReportedByName,
-                        item[1].id,
+                        item[1]["incidentReportedByName"],
+                        item[1]["id"],
                       ])}
                     columns={columns}
                     options={options}
@@ -1001,10 +990,12 @@ function BlankPage(props) {
     />
   );
 }
-const mapStateToProps = (state) => ({
-  projectName: state.getIn(["InitialDetailsReducer"]),
-  todoIncomplete: state,
-});
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
 
 export default connect(
   mapStateToProps,

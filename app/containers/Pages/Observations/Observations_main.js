@@ -83,7 +83,6 @@ const useStyles = makeStyles((theme) => ({
       marginRight: "5px",
     },
   },
-  pLtenPRten: { padding: '0px 10px 0px 10px' },
   pLtenPRten: { padding: "0px 10px 0px 10px" },
   // pLTen: {
   //   marginRight: '5px',
@@ -224,7 +223,6 @@ export default function Observations() {
   };
 
   const handleBulkUploadfilePush = async () => {
-    history.push('/app/icare-bulkupload');
     history.push("/app/icare-bulkupload");
   };
 
@@ -245,23 +243,19 @@ export default function Observations() {
     }, 100);
   }, [acls]);
 
-  useEffect(() => () => {
-    localStorage.setItem('SearchedText', JSON.stringify(''));
-  }, []);
-
-  return !showHTML ? (
-    
   useEffect(() => {
     return () => {
-      
       localStorage.setItem("SearchedText", JSON.stringify(""));
     };
-  }, [])):""
+  }, []);
 
   const [canUploadPaperFile, setCanUploadPaperFile] = useState();
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("app_acl"))["safety-observations"].upload_paper_file) {
+    if (
+      JSON.parse(localStorage.getItem("app_acl"))["safety-observations"]
+        .upload_paper_file
+    ) {
       setCanUploadPaperFile(
         JSON.parse(localStorage.getItem("app_acl"))["safety-observations"]
           .upload_paper_file
@@ -289,29 +283,6 @@ export default function Observations() {
               </Grid>
               <Grid item sm={5} xs={12}>
                 {/* {false &&  */}
-                <Button
-                  variant="contained"
-                  size="small"
-                  className={classNames(classes.buttonsNew, classes.floatR)}
-                  disableElevation
-                  startIcon={<CloudUploadIcon />}
-                  // style={{ marginLeft: '10px' }}
-                  onClick={() => handleBulkUploadfilePush()}
-                  style={{
-                    marginLeft: '10px',
-                    background: checkACL(
-                      'safety-observations',
-                      'add_observations'
-                    )
-                      ? '#06425c'
-                      : '#c0c0c0',
-                    cursor: checkACL('safety-observations', 'add_observations')
-                      ? 'pointer'
-                      : 'not-allowed',
-                  }}
-                >
-                  Upload
-                </Button>
 
                 {canUploadPaperFile ? (
                   <Button
@@ -354,29 +325,16 @@ export default function Observations() {
                   onClick={() => handleInitialNotificationPush()}
                   style={{
                     background: checkACL(
-                      'safety-observations',
-                      'add_observations'
-                    )
-                      ? '#06425c'
-                      : '#c0c0c0',
-                    cursor: checkACL('safety-observations', 'add_observations')
-                      ? 'pointer'
-                      : 'not-allowed',
-                  }}
-                >
-                  <AddIcon className={classes.floatR} />
-                  {' '}
-Add new
                       "safety-observations",
                       "add_observations"
-                    
+                    )
                       ? "#06425c"
                       : "#c0c0c0",
                     cursor: checkACL("safety-observations", "add_observations")
                       ? "pointer"
                       : "not-allowed",
-                
-                
+                  }}
+                >
                   <AddIcon className={classes.floatR} /> Add new
                 </Button>
                 {/* )} */}
