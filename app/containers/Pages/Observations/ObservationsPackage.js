@@ -957,6 +957,7 @@ function Actions(props) {
     const handleVisibilityComments = () => {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
+      setCommentData("");
     };
 
     const handleCommentsClick = () => {
@@ -1015,6 +1016,11 @@ function Actions(props) {
             deleteMsg: "Are you sure you want to delete this iCare?",
             yesBtn: "Yes",
             noBtn: "No",
+          }}
+          printFields={{
+            typeOfModule: "Observation",
+            printUrl: `api/v1/observations/${item.id}/print/`,
+            number: item.observationNumber,
           }}
           handleVisibility={() => handleVisibility()}
           handleVisibilityComments={() => handleVisibilityComments()}
@@ -1119,6 +1125,7 @@ function Actions(props) {
                           size="small"
                           className="custmCancelBtn buttonStyle"
                           disableElevation
+                          onClick={handleVisibilityComments}
                         >
                           Cancel
                         </Button>

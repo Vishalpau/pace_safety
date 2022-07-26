@@ -243,11 +243,21 @@ export default function Observations() {
     }, 100);
   }, [acls]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       localStorage.setItem("SearchedText", JSON.stringify(""));
-    };
-  }, []);
+    },
+    []
+  );
+
+  // return !showHTML ? (
+
+  // useEffect(() => {
+  //   return () => {
+
+  //     localStorage.setItem("SearchedText", JSON.stringify(""));
+  //   };
+  // }, [])):""
 
   const [canUploadPaperFile, setCanUploadPaperFile] = useState();
 
@@ -283,6 +293,29 @@ export default function Observations() {
               </Grid>
               <Grid item sm={5} xs={12}>
                 {/* {false &&  */}
+                {/* <Button
+                  variant="contained"
+                  size="small"
+                  className={classNames(classes.buttonsNew, classes.floatR)}
+                  disableElevation
+                  startIcon={<CloudUploadIcon />}
+                  // style={{ marginLeft: '10px' }}
+                  onClick={() => handleBulkUploadfilePush()}
+                  style={{
+                    marginLeft: '10px',
+                    background: checkACL(
+                      'safety-observations',
+                      'add_observations'
+                    )
+                      ? '#06425c'
+                      : '#c0c0c0',
+                    cursor: checkACL('safety-observations', 'add_observations')
+                      ? 'pointer'
+                      : 'not-allowed',
+                  }}
+                >
+                  Upload
+                </Button> */}
 
                 {canUploadPaperFile ? (
                   <Button

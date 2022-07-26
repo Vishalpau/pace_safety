@@ -6,68 +6,110 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { useDropzone } from "react-dropzone";
 
-const MultiAttachment = (props) => {
-  const useStyles = makeStyles((theme) => ({
-    formBox: {
-      flex: "1",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "0.75rem",
-      borderWidth: "2px",
-      borderRadius: "5px",
-      borderColor: "#CBCBCB",
-      borderStyle: "dashed",
-      backgroundColor: "#ffffff",
-      color: "#bdbdbd",
-      outline: "none",
-      transition: "border .24s ease-in-out",
-      marginTop: "0.625rem",
-      marginBottom: "0.625rem",
-      cursor: "pointer",
-      position: "relative",
-      textAlign: "center",
+const useStyles = makeStyles((theme) => ({
+  formBox: {
+    flex: "1",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "0.75rem",
+    borderWidth: "2px",
+    borderRadius: "5px",
+    borderColor: "#CBCBCB",
+    borderStyle: "dashed",
+    backgroundColor: "#ffffff",
+    color: "#bdbdbd",
+    outline: "none",
+    transition: "border .24s ease-in-out",
+    marginTop: "0.625rem",
+    marginBottom: "0.625rem",
+    cursor: "pointer",
+    position: "relative",
+    textAlign: "center",
 
-      "& input": {
-        position: "absolute",
-        left: 0,
-        top: 0,
-        opacity: 0,
-        width: "100%",
-        height: "100%",
-      },
+    "& input": {
+      position: "absolute",
+      left: 0,
+      top: 0,
+      opacity: 0,
+      width: "100%",
+      height: "100%",
     },
-  }));
+  },
+}));
 
+const MultiAttachment = (props) => {
   const classes = useStyles();
 
-  const fileTypes = [
-    "png",
-    "jpg",
-    "xls",
-    "xlsx",
-    "ppt",
-    "pptx",
-    "doc",
-    "docx",
-    "text",
-    "pdf",
-    "mp4",
-    "mov",
-    "flv",
-    "avi",
-    "mkv",
-  ];
+  let fileTypes;
+
+  if (props.docTypes && Object.keys(props.docTypes).length > 0) {
+    if (props.docTypes.avi === "yes") {
+      fileTypes = [
+        "png",
+        "jpg",
+        "mp4",
+        "mov",
+        "flv",
+        "avi",
+        "mkv",
+        "mp3",
+        "wma",
+      ];
+    } else if (props.docTypes.pdf === "yes") {
+      fileTypes = ["xls", "xlsx", "ppt", "pptx", "doc", "docx", "text", "pdf"];
+    } else {
+      fileTypes = [
+        "png",
+        "jpg",
+        "xls",
+        "xlsx",
+        "ppt",
+        "pptx",
+        "doc",
+        "docx",
+        "text",
+        "pdf",
+        "mp4",
+        "mov",
+        "flv",
+        "avi",
+        "mkv",
+      ];
+    }
+  } else {
+    fileTypes = [
+      "png",
+      "jpg",
+      "xls",
+      "xlsx",
+      "ppt",
+      "pptx",
+      "doc",
+      "docx",
+      "text",
+      "pdf",
+      "mp4",
+      "mov",
+      "flv",
+      "avi",
+      "mkv",
+    ];
+  }
 
   const [checkExt, setCheckExt] = useState(true);
   const [checkBiggerFile, setCheckBiggerFile] = useState(false);
   const [notSupported, setNotSupported] = useState("");
+  const [files, setFiles] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: async (e) => {
       const filesArray = e;
       const temparray = [];
       console.log(e, "eeeeeeeeeeeeeeeeeee");
+
+      debugger;
 
       const tempArr2 = [];
 
@@ -79,12 +121,12 @@ const MultiAttachment = (props) => {
         tempArr2.push(nameExtension);
       }
 
-      const containsAll = tempArr2.forEach((element) => {
+      tempArr2.forEach((element) => {
         if (!fileTypes.includes(element)) {
           notSupportedExt =
             notSupportedExt +
             element +
-            `${tempArr2[tempArr2.length - 1] === element ? "" : " "}`;
+            `${tempArr2[tempArr2.length - 1] === element ? " " : " "}`;
         }
       });
 
@@ -93,13 +135,6 @@ const MultiAttachment = (props) => {
       });
 
       setNotSupported(notSupportedExt);
-
-      //   console.log(
-      //     notSupportedExt,
-      //     containsAll,
-      //     containsAllBool,
-      //     "notSupported"
-      //   );
 
       if (!containsAllBool) {
         setCheckExt(false);
@@ -149,9 +184,6 @@ const MultiAttachment = (props) => {
     },
   });
 
-  const [files, setFiles] = useState([]);
-  const [open, setOpen] = useState(false);
-
   // send selected files to parent component
 
   const attachmentHandler = () => {
@@ -199,7 +231,11 @@ const MultiAttachment = (props) => {
               fill="#06425c"
             />
           </svg>{" "}
-          {props.headerText ? props.headerText : "Attachment"}
+          {props.docTypes && props.docTypes.pdf === "yes"
+            ? "Attachments"
+            : props.docTypes && props.docTypes.avi === "yes"
+            ? "Evidences"
+            : "Attachments"}
         </Typography>
       </Grid>
       <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -215,7 +251,7 @@ const MultiAttachment = (props) => {
                     name="file"
                     id="attachment"
                     style={{ display: "block" }}
-                    accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                    accept={`.${fileTypes.join(", .")}`}
                   />
                 </div>
                 <span align="center">
@@ -265,6 +301,11 @@ const MultiAttachment = (props) => {
                 <p className="chooseFileDesign">
                   Drag and drop here or <span>Choose files</span>
                 </p>
+                {props.docTypes ? (
+                  <p style={{ marginTop: 15 }}>(.{fileTypes.join(", .")})</p>
+                ) : (
+                  ""
+                )}
                 <aside>
                   {files.length > 0 ? (
                     <ul style={{ marginTop: "15px" }}>

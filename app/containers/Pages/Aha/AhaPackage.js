@@ -723,6 +723,7 @@ function AhaPackage(props) {
     function handleVisibilityComments() {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
+      setCommentData("");
     }
 
     function handleCommentsOpen() {
@@ -755,7 +756,6 @@ function AhaPackage(props) {
               label: ahaLabels.header[3],
               value: item.ahaStatus === "Assessment" ? "Open" : item.ahaStatus,
             },
-            
           ]}
           bodyFields={[
             // Card body labels and values for each item
@@ -890,7 +890,7 @@ function AhaPackage(props) {
                         size="small"
                         className="custmCancelBtn buttonStyle"
                         disableElevation
-                        onClick={handleCommentsClose}
+                        onClick={handleVisibilityComments}
                       >
                         Cancel
                       </Button>

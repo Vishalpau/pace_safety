@@ -11,7 +11,7 @@ import Delete from "../../../containers/Delete/Delete";
 import Bookmark from "../../../containers/Bookmark/Bookmark";
 import Styles from "./Styles";
 import { staticLabels } from "../CardConstants";
-//import Print from "../../Print/Print";
+import Print from "../../Print/Print";
 
 /**
  * @file - CardFooter.js

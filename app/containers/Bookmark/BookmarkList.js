@@ -1,46 +1,68 @@
-import { object } from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-
-import StarsIcon from '@material-ui/icons/Stars';
-import { makeStyles } from '@material-ui/core/styles';
-import Loading from 'dan-components/Loading';
-{/*import loadable from '../utils/loadable';*/}
-
-function handleBookmarkList() {
-  console.log('BookmarkList');
-  // adding bookmarked component in an empty array
-}
-
-// displaying the list of bookmarklist using filter and map
+import React, { useState } from "react";
+import StarsIcon from "@material-ui/icons/Stars";
+import IconButton from "@material-ui/core/IconButton";
+import api from "../../utils/axios";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import classNames from "classnames";
+//import api, { appapi, setApiUrl } from "../../../utils/axios";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  hoverB: {
-    '&:hover': {
-      backgroundColor: '#f47607 !important',
-      opacity: '0.9',
-    },
-  },
-  minWd55: {
-    minWidth: '55px !important',
-  },
-  hoverB: {
-    '&:hover': {
-      backgroundColor: '#f47607 !important',
-      opacity: '0.9',
-    },
+  iconteal: {
+    color: "#517b8d",
+    fontSize: "24px",
   },
   buckmarkIcon: {
-    height: '35px',
-    width: '35px',
+    height: "35px",
+    width: "35px",
+  },
+  minWd55: {
+    minWidth: "55px !important",
+  },
+  hoverB: {
+    "&:hover": {
+      backgroundColor: "#f47607",
+      opacity: "0.9",
+    },
   },
 }));
+const BookmarkList = () => {
+  const classes = useStyles();
+  const handleBookmarkList = async () => {
+    const currentCompanyId = JSON.parse(localStorage.getItem("company"))
+      .fkCompanyId;
+    const projectId = JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown =
+      JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : [];
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
 
-export default function BookmarkList() {
+    const response = await api.get(
+      setApiUrl() +
+        `api/v1/compliance/?companyId=${currentCompanyId}&projectId=${projectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+    );
+    //setApiUrl() +`api/v1/actions/export/?params=pdf&company=${currentCompanyId}&project=${projectId}
+  };
   return (
-  <>
-    <h1>Welcome to bookmarklist</h1>
-    
-   </>
-  )
-}
+    <>
+      <Tabs>
+        <Tab
+          icon={<StarsIcon className={classes.buckmarkIcon} />}
+          className={classNames(classes.hoverB, classes.minWd55)}
+          onClick={handleBookmarkList}
+        />
+      </Tabs>
+    </>
+  );
+};
+//
+
+export default BookmarkList;

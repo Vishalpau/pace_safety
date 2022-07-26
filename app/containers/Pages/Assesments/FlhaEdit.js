@@ -2210,7 +2210,7 @@ const FlhaDetails = () => {
                                 });
                               }}
                               InputProps={{ readOnly: true }}
-                              format="MM/dd/yyyy HH:mm"
+                              format="dd-MMM-yyyy hh:mm:s a"
                               inputVariant="outlined"
                               disableFuture="true"
                             />

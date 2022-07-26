@@ -61,6 +61,7 @@ import {
   SSO_URL,
 } from "../../../../utils/constants";
 import { checkACL } from "../../../../utils/helper";
+import DateFormat from "../../../../components/Date/DateFormat";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -459,9 +460,10 @@ const Approvals = () => {
                             Approved by
                           </FormLabel>
                           <Typography className="viewLabelValue">
-                            {`${form.wrpApprovalUser} , ${moment(
-                              form.wrpApprovalDateTime
-                            ).format("MMMM Do YYYY, h:mm:ss a")}`}
+                            {`${form.wrpApprovalUser} , ${DateFormat(
+                              form.wrpApprovalDateTime,
+                              true
+                            )}`}
                           </Typography>
                         </Grid>
                       ) : null}
@@ -492,9 +494,10 @@ const Approvals = () => {
                             Approved by
                           </FormLabel>
                           <Typography className="viewLabelValue">
-                            {`${form.sapApprovalUser} , ${moment(
-                              form.sapApprovalDateTime
-                            ).format("MMMM Do YYYY, h:mm:ss a")}`}
+                            {`${form.sapApprovalUser} , ${DateFormat(
+                              form.sapApprovalDateTime,
+                              true
+                            )}`}
                           </Typography>
                         </Grid>
                       ) : null}
@@ -681,47 +684,31 @@ const Approvals = () => {
                                 <>
                                   <TableRow>
                                     <TableCell style={{ width: 50 }}>
-                                     
                                       <Link
-                                              className={
-                                                classes.actionLinkAudit
-                                              }
-                                              display="block"
-                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "BaseUrl"
-                                                  )
-                                                )[
-                                                  "actionClientID"
-                                                ]
-                                              }&response_type=code&companyId=${
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "company"
-                                                  )
-                                                )
-                                                  .fkCompanyId
-                                              }&projectId=${
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "projectName"
-                                                  )
-                                                )
-                                                  .projectName
-                                                  .projectId
-                                              }&targetPage=/action/details/&targetId=${
-                                                action.id
-                                              }&projectStructure=${localStorage.getItem(
-                                                "selectBreakDown"
-                                              )}
+                                        className={classes.actionLinkAudit}
+                                        display="block"
+                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
+                                          JSON.parse(
+                                            localStorage.getItem("BaseUrl")
+                                          )["actionClientID"]
+                                        }&response_type=code&companyId=${
+                                          JSON.parse(
+                                            localStorage.getItem("company")
+                                          ).fkCompanyId
+                                        }&projectId=${
+                                          JSON.parse(
+                                            localStorage.getItem("projectName")
+                                          ).projectName.projectId
+                                        }&targetPage=/action/details/&targetId=${
+                                          action.id
+                                        }&projectStructure=${localStorage.getItem(
+                                          "selectBreakDown"
+                                        )}
                                               `}
-                                              target="_blank"
-                                            >
-                                              {
-                                                action.actionNumber
-                                              }
-                                            </Link>
+                                        target="_blank"
+                                      >
+                                        {action.actionNumber}
+                                      </Link>
                                     </TableCell>
                                     <TableCell style={{ width: 50 }}>
                                       {action.actionTitle}
