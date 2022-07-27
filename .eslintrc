@@ -10,14 +10,6 @@
   },
   "parser": "babel-eslint",
   "rules": {
-
-    "linebreak-style": [
-      "error",
-      "windows"
-    ],
-    "quotes": ["error", "double","error","single"],
-
-
     "no-nested-ternary": 0,
     "import/no-unresolved": 0,
     "import/no-named-as-default": 0,
