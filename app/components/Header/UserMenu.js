@@ -49,6 +49,7 @@ import {
   SELF_API,
   SSO_CLIENT_ID,
   SSO_URL,
+  APPCODE,
   API_VERSION
 } from "../../utils/constants";
 import axios from "axios";
@@ -228,12 +229,13 @@ function UserMenu(props) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
-        let hostings = subscriptionData.filter(item => item.appCode === "safety")[0].hostings[0].apiDomain
-        let appId = subscriptionData.filter(item => item.appCode === "safety")[0].appId
-        let subscriptionAction = subscriptionData.filter(item => item.appCode === "actions")
+        let hostings = subscriptionData.filter(item => item.appCode === APPCODE)[0].hostings[0].apiDomain
+        let appId = subscriptionData.filter(item => item.appCode === APPCODE)[0].appId
+        let subscriptionAction = subscriptionData.filter(item => item.appCode === APPCODE)
         let apiUrlDomain = {}
 
         if (subscriptionAction.length > 0) {
+          console.log(subscriptionAction, 'subscriptionAction')
           let actionHosting = subscriptionAction[0].hostings[0].apiDomain
           let actionUI = subscriptionAction[0].hostings[0].appDomain
           let actionClientId = subscriptionAction[0].hostings[0].clientId
