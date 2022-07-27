@@ -48,6 +48,14 @@ const CardFooter = (props) => {
     number = props.printFields.number;
   }
 
+  let itemId, typeOfModuleBookmark, bookmarkTrueFalse;
+
+  if (Object.keys(props.bookmarkFields).length > 0) {
+    itemId = props.bookmarkFields.itemId;
+    typeOfModuleBookmark = props.bookmarkFields.typeOfModule;
+    bookmarkTrueFalse = props.bookmarkFields.bookmarkTrueFalse;
+  }
+
   return (
     <>
       <CardActions className={classes.width100}>
@@ -92,10 +100,6 @@ const CardFooter = (props) => {
               className={classes.floatR}
               style={{ display: "flex", alignItems: "center" }}
             >
-              {/* <span item xs={1} className={classes.sepHeightTen} />
-              <Typography variant="body1" display="inline">
-                <Bookmark />
-              </Typography> */}
               {Object.keys(props.printFields).length > 0 ? (
                 <>
                   <Typography variant="body1" display="inline">
@@ -103,6 +107,20 @@ const CardFooter = (props) => {
                       printUrl={printUrl}
                       typeOfModule={typeOfModule}
                       number={number}
+                    />
+                  </Typography>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                </>
+              ) : (
+                ""
+              )}
+              {Object.keys(props.bookmarkFields).length > 0 ? (
+                <>
+                  <Typography variant="body1" display="inline">
+                    <Bookmark
+                      itemId={itemId}
+                      typeOfModule={typeOfModuleBookmark}
+                      bookmarkTrueFalse={bookmarkTrueFalse}
                     />
                   </Typography>
                   <span item xs={1} className={classes.sepHeightTen} />

@@ -61,6 +61,11 @@ import Styles from "./UI/Styles";
           printUrl: `api/v1/observations/${item.id}/print/`,
           number: item.observationNumber,
         }}
+        bookmarkFields={{
+          // Bookmark component props
+          typeOfModule: "observations",
+          itemId: item.id,
+        }}
         deleteFields={{
           // Delete component props
           deleteUrl: `/api/v1/ahas/${item.id}/`,
@@ -139,6 +144,7 @@ const CardView = (props) => {
           checkDeletePermission={props.checkDeletePermission} // Check delete permission
           deleteFields={props.deleteFields} // Delete component fields
           printFields={props.printFields ? props.printFields : ""}
+          bookmarkFields={props.bookmarkFields ? props.bookmarkFields : ""}
           handleVisibilityComments={() => {
             // Add comment box
             props.handleVisibilityComments();

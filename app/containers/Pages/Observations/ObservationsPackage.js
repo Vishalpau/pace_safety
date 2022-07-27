@@ -1022,6 +1022,11 @@ function Actions(props) {
             printUrl: `api/v1/observations/${item.id}/print/`,
             number: item.observationNumber,
           }}
+          bookmarkFields={{
+            typeOfModule: "observations",
+            itemId: item.id,
+            bookmarkTrueFalse: item.bookmark,
+          }}
           handleVisibility={() => handleVisibility()}
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}

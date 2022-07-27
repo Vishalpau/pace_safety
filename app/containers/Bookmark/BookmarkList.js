@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import StarsIcon from "@material-ui/icons/Stars";
 import IconButton from "@material-ui/core/IconButton";
 import api from "../../utils/axios";
@@ -9,10 +9,6 @@ import classNames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  iconteal: {
-    color: "#517b8d",
-    fontSize: "24px",
-  },
   buckmarkIcon: {
     height: "35px",
     width: "35px",
@@ -29,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const BookmarkList = () => {
   const classes = useStyles();
+
   const handleBookmarkList = async () => {
     const currentCompanyId = JSON.parse(localStorage.getItem("company"))
       .fkCompanyId;
@@ -46,11 +43,10 @@ const BookmarkList = () => {
     const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
 
     const response = await api.get(
-      setApiUrl() +
-        `api/v1/compliance/?companyId=${currentCompanyId}&projectId=${projectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+      `api/v1/observations/?companyId=${currentCompanyId}&projectId=${projectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
     );
-    //setApiUrl() +`api/v1/actions/export/?params=pdf&company=${currentCompanyId}&project=${projectId}
   };
+
   return (
     <>
       <Tabs>

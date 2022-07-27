@@ -17,6 +17,7 @@ import progress from "dan-images/progress.png";
 import completed from "dan-images/completed.png";
 import StarsIcon from "@material-ui/icons/Stars";
 import classNames from "classnames";
+import BookmarkList from "../../Bookmark/BookmarkList";
 
 const ObservationBookmarkFilter = lazy(() =>
   import("./ObservationBookmarkFilter")
@@ -432,13 +433,7 @@ export default function SimpleTabs(props) {
                     {...a11yProps(2)}
                     className={classes.hoverB}
                   />
-                  {/*<Tab
-                    icon={<StarsIcon className={classes.buckmarkIcon} />}
-                    {...a11yProps(3)}
-                    className={classNames(classes.hoverB, classes.minWd55)}
-  />*/}
-
-                  {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} /> */}
+                  <BookmarkList />
                 </Tabs>
               </div>
             </AppBar>
