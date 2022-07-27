@@ -380,6 +380,7 @@ function ObservationCorrectiveAction() {
     );
 
     const result = res.data.data.results;
+    console.log(result)
     await setFkProjectStructureId(result.fkProjectStructureIds);
     await setObservationNumber(result.observationNumber);
     if (result.isCorrectiveActionTaken === "Yes") {
@@ -918,11 +919,15 @@ function ObservationCorrectiveAction() {
                           {checkACL(
                             "action_tracker-actions",
                             "view_actions"
-                          ) && (
+                          ) ? (
                             <Typography className={classes.labelValue}>
                               {handelActionShow(id)}
                             </Typography>
-                          )}
+                          ) :
+                          <Typography className={classes.labelValue}>
+                              You do not have permissions to view the actions
+                            </Typography>
+                          }
                           {!checkACL(
                             "action_tracker-actions",
                             "add_actions"

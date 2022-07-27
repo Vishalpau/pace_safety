@@ -44,16 +44,19 @@ const Acl = (props) => {
   const classes = useStyles();
 
   const ButtonMailto = ({ mailto, label }) => (
+    <>
       <Link
-          to='#'
+          to="#"
           onClick={(e) => {
-              window.location.href = mailto;
-              e.preventDefault();
-          }}
+            e.preventDefault()
+             console.log(window.location)
+             window.open(mailto,'_blank')
+          }} 
           className={classes.linkColorOrgn}
       >
           {label}
-      </Link>
+      </Link> 
+      </>
     );
 
   // console.log(props.module, props.action, checkACL(props.module, props.action))
