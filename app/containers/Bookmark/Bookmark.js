@@ -72,11 +72,12 @@ const Bookmark = (props) => {
     if (props.bookmarkTrueFalse || orange === true) {
       console.log("u r in  if");
       const response = await api
-        .delete(`https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/114/`)
+        .delete(`https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/173/`)
         .then((res) => {
           console.log(res, "response");
-          if (res.data.data) {
-            setOpen(0);
+
+          if (res.data.data.results.data) {
+            setOpen(4);
             setLoading(false);
             setOrange(false);
           } else if (
@@ -136,13 +137,13 @@ const Bookmark = (props) => {
         )}
       </IconButton>
       <Snackbar
-        open={open === 1 || open === 2 || open === 3}
+        open={open === 1 || open === 2 || open === 3 || open === 4}
         autoHideDuration={800}
         onClose={handleClose}
       >
         <Alert
           onClose={handleClose}
-          severity={open === 3 ? "success" : "error"}
+          severity={open === 3 || open === 4 ? "success" : "error"}
         >
           {open === 1
             ? "Failed to add bookmark"
@@ -150,6 +151,8 @@ const Bookmark = (props) => {
             ? "Failed to remove the bookmark"
             : open === 3
             ? "Bookmark added successfully."
+            : open === 4
+            ? "Bookmark removed successfully."
             : ""}
         </Alert>
       </Snackbar>
