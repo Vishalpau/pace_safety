@@ -367,6 +367,9 @@ export default function SimpleTabs(props) {
     } else if (newValue === 1) {
       setObservation("Big Picture");
       setStatus("");
+    } else if (newValue === 2) {
+      setObservation("Bookmark List");
+      setStatus("");
     }
   };
   // const handleSearch = (e) => {
@@ -433,7 +436,11 @@ export default function SimpleTabs(props) {
                     {...a11yProps(2)}
                     className={classes.hoverB}
                   />
-                  <BookmarkList />
+                  <Tab
+                    {...a11yProps(3)}
+                    label={<BookmarkList />}
+                    style={{ minWidth: "unset", padding: "0 0 0" }}
+                  />
                 </Tabs>
               </div>
             </AppBar>
@@ -516,7 +523,19 @@ export default function SimpleTabs(props) {
             />
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <ObservationBookmarkFilter />
+            <ObservationsFilter
+              observation={observation}
+              search={
+                searchIncident !== ""
+                  ? searchIncident
+                  : JSON.parse(localStorage.getItem("SearchedText"))
+                  ? JSON.parse(localStorage.getItem("SearchedText"))
+                  : ""
+              }
+              status={status}
+              value={props.value}
+            />
+            {/* <ObservationBookmarkFilter /> */}
           </TabPanel>
         </Grid>
       </Grid>

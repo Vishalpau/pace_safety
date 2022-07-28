@@ -20,7 +20,6 @@ import ViewWeekIcon from "@material-ui/icons/ViewWeek";
 import SearchIcon from "@material-ui/icons/Search";
 import StarsIcon from "@material-ui/icons/Stars";
 import { Link } from "react-router-dom";
-
 import Paper from "@material-ui/core/Paper";
 import Toolbar from "@material-ui/core/Toolbar";
 import InputBase from "@material-ui/core/InputBase";
@@ -30,20 +29,11 @@ import progress from "dan-images/progress.png";
 import completed from "dan-images/completed.png";
 import ComplianceBookmark from "./ComplianceBookmark";
 import ComplianceFilterCard from "./ComplianceFilterCard";
-import ComplianceBookmarkFilter from "./ComplianceBookmarkFilter";
-
+import BookmarkList from "../../../../containers/Bookmark/BookmarkList";
 import StatusFilter from "./StatusFilter";
-import Bookmarklist from "../../Jha/BookmarkList";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
-  {
-    /*const navigate =useNavigate();
-  const navigateToBookmarkList = () =>{
-    navigate('/Bookmarklist')
-  }*/
-  }
 
   return (
     <div
@@ -408,8 +398,11 @@ export default function ComplianceSearchSectionCard() {
     if (newValue === 0) {
       setCompliancesetValue("My Inspections");
       setValue(newValue);
-    } else {
+    } else if (newValue === 1) {
       setCompliancesetValue("Big Picture");
+      setValue(newValue);
+    } else if (newValue === 2) {
+      setCompliancesetValue("Bookmark List");
       setValue(newValue);
     }
   };
@@ -486,15 +479,11 @@ export default function ComplianceSearchSectionCard() {
                     {...a11yProps(2)}
                     className={classes.hoverB}
                   />
-
-                  {/*<Tab
-                    icon={<StarsIcon className={classes.buckmarkIcon} />}
+                  <Tab
                     {...a11yProps(3)}
-            className={classNames(classes.hoverB, classes.minWd55)}
-                    
-            />*/}
-
-                  {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
+                    label={<BookmarkList />}
+                    style={{ minWidth: "unset", padding: "0 0 0" }}
+                  />
                 </Tabs>
               </div>
             </AppBar>

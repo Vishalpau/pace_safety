@@ -550,6 +550,18 @@ function ComplianceListNew(props) {
         let pageCount = Math.ceil(res.data.data.results.count / 25);
         setPageCount(pageCount);
         setIsLoading(false);
+      } else if (props.compliance === "Bookmark List") {
+        const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+        const res = await api.get(
+          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+        );
+        const result = res.data.data.results.results;
+        setAllComplianceData(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        setPageCount(pageCount);
+        setIsLoading(false);
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${
@@ -573,6 +585,19 @@ function ComplianceListNew(props) {
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
             props.type
           }&createdBy=${createdBy}`
+        );
+        const result = res.data.data.results.results;
+        setAllComplianceData(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        setPageCount(pageCount);
+        setIsLoading(false);
+      } else if (props.compliance === "Bookmark List") {
+        setIsLoading(true);
+        const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+        const res = await api.get(
+          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
         );
         const result = res.data.data.results.results;
         setAllComplianceData(result);
@@ -632,6 +657,13 @@ function ComplianceListNew(props) {
         );
         setAllComplianceData(res.data.data.results.results);
         setPage(value);
+      } else if (props.compliance === "Bookmark List") {
+        const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+        const res = await api.get(
+          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+        );
+        setAllComplianceData(res.data.data.results.results);
+        setPage(value);
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${
@@ -649,6 +681,13 @@ function ComplianceListNew(props) {
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
             props.type
           }&createdBy=${createdBy}&page=${value}`
+        );
+        setAllComplianceData(res.data.data.results.results);
+        setPage(value);
+      } else if (props.compliance === "Bookmark List") {
+        const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+        const res = await api.get(
+          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
         );
         setAllComplianceData(res.data.data.results.results);
         setPage(value);
@@ -827,6 +866,11 @@ function ComplianceListNew(props) {
             deleteMsg: "Are you sure you want to delete this Compliance?",
             yesBtn: "Yes",
             noBtn: "No",
+          }}
+          bookmarkFields={{
+            typeOfModule: "audits",
+            itemId: value.id,
+            bookmarkTrueFalse: value.bookmark,
           }}
           handleVisibilityComments={() => handleVisibilityComments()}
           handleVisibility={() => handleVisibility()}

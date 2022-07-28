@@ -88,6 +88,7 @@ import Attachment from "../../Attachment/Attachment";
 import CardView from "../../../components/Card/Index";
 import { flhaLabels } from "../../../components/Card/CardConstants";
 import DateFormat from "../../../components/Date/DateFormat";
+import BookmarkList from "../../Bookmark/BookmarkList";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -801,6 +802,17 @@ function xflha(props) {
       setPageData(res.data.data.results.count / 25);
       const pageCount = Math.ceil(res.data.data.results.count / 25);
       setPageCount(pageCount);
+    } else if (assessments === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const res = await api.get(
+        `api/v1/flhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+      );
+      const result = res.data.data.results.results;
+      setFlhas(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
+      const pageCount = Math.ceil(res.data.data.results.count / 25);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}`
@@ -837,6 +849,9 @@ function xflha(props) {
       setStatus("");
     } else if (newValue === 1) {
       setAssessments("Big Picture");
+      setStatus("");
+    } else if (newValue === 2) {
+      setAssessments("Bookmark List");
       setStatus("");
     }
   };
@@ -1246,6 +1261,11 @@ function xflha(props) {
               yesBtn: "Yes",
               noBtn: "No",
             }}
+            bookmarkFields={{
+              typeOfModule: "flhas",
+              itemId: item.id,
+              bookmarkTrueFalse: item.bookmark,
+            }}
             handleVisibility={() => handleVisibility()}
             handleVisibilityComments={() => handleVisibilityComments()}
             files={item.files !== null ? item.files.length : 0}
@@ -1609,6 +1629,11 @@ function xflha(props) {
                           label="Big Picture"
                           {...a11yProps(4)}
                           className={classes.hoverB}
+                        />
+                        <Tab
+                          {...a11yProps(3)}
+                          label={<BookmarkList />}
+                          style={{ minWidth: "unset", padding: "0 0 0" }}
                         />
                         {/* <Tab
                           icon={<StarsIcon className={classes.buckmarkIcon} />}

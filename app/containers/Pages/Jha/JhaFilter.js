@@ -344,7 +344,9 @@ class JhaFilter extends React.Component {
                     color="inherit"
                     noWrap
                   >
-                    My Assessments
+                    {this.props.assessment === "Bookmark List"
+                      ? "Bookmark List"
+                      : "My Assessments"}
                   </Typography>
                 </Grid>
               </Grid>

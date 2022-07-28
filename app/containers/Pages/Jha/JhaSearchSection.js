@@ -18,8 +18,7 @@ import progress from "dan-images/progress.png";
 import PropTypes from "prop-types";
 // import ObservationsLookAhead from './ObservationsLookAhead';
 import JhaFilter from "./JhaFilter";
-import Bookmarklist from "./BookmarkList";
-
+import BookmarkList from "../../Bookmark/BookmarkList";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -379,6 +378,8 @@ export default function JhaSearchSection() {
       setAssessments("My Assessments");
     } else if (newValue === 1) {
       setAssessments("Big Picture");
+    } else if (newValue === 2) {
+      setAssessments("Bookmark List");
     }
   };
 
@@ -442,10 +443,11 @@ export default function JhaSearchSection() {
                     {...a11yProps(2)}
                     className={classes.hoverB}
                   />
-
-                  {/*  <Bookmarklist />*/}
-
-                  {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
+                  <Tab
+                    {...a11yProps(3)}
+                    label={<BookmarkList />}
+                    style={{ minWidth: "unset", padding: "0 0 0" }}
+                  />
                 </Tabs>
               </div>
             </AppBar>

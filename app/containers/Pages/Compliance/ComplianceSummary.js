@@ -1331,9 +1331,31 @@ function ComplianceSummary(props) {
                                                                                 style={{
                                                                                   backgroundColor:
                                                                                     value.performance &&
-                                                                                    colordata.filter(i => i.id === value.matrixId).length
-                                                                                      ? colordata.filter(i => i.id === value.matrixId)[0].status === "Active"
-                                                                                        ? colordata.filter(i => i.id === value.matrixId)[0].matrixConstantColor
+                                                                                    colordata.filter(
+                                                                                      (
+                                                                                        i
+                                                                                      ) =>
+                                                                                        i.id ===
+                                                                                        value.matrixId
+                                                                                    )
+                                                                                      .length
+                                                                                      ? colordata.filter(
+                                                                                          (
+                                                                                            i
+                                                                                          ) =>
+                                                                                            i.id ===
+                                                                                            value.matrixId
+                                                                                        )[0]
+                                                                                          .status ===
+                                                                                        "Active"
+                                                                                        ? colordata.filter(
+                                                                                            (
+                                                                                              i
+                                                                                            ) =>
+                                                                                              i.id ===
+                                                                                              value.matrixId
+                                                                                          )[0]
+                                                                                            .matrixConstantColor
                                                                                         : "#fff"
                                                                                       : "#fff",
                                                                                   border:

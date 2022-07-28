@@ -58,21 +58,23 @@ const Bookmark = (props) => {
     };
 
     if (props.bookmarkTrueFalse || orange === true) {
+      console.log("u r in  if");
       const response = await api
-        .delete(`https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/6/`)
+        .delete(`https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/114/`)
         .then((res) => {
-          console.log(res, "response");
+          // console.log(res, "response");
           setOrange(false);
         })
         .catch((err) => console.log(err));
     } else {
+      console.log("u r in  else");
       const response = await api
         .post(
           "https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/",
           bookmarkPayload
         )
         .then((res) => {
-          console.log(res, "response");
+          // console.log(res, "response");
           setOrange(true);
         })
         .catch((err) => console.log(err));
@@ -84,7 +86,7 @@ const Bookmark = (props) => {
     }
   }, []);
   useEffect(() => {
-    console.log(orange, "orange");
+    // console.log(orange, "orange");
   }, [orange]);
   return (
     <>

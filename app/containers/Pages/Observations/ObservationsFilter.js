@@ -30,9 +30,9 @@ const styles = (theme) => ({
   },
   nested: {
     paddingLeft: theme.spacing(4),
-    backgroundColor: '#7692a4'
+    backgroundColor: "#7692a4",
   },
-  selected: { backgroundColor: '#f47607' },
+  selected: { backgroundColor: "#f47607" },
   appFrame: {
     height: "auto",
     zIndex: 1,
@@ -241,7 +241,7 @@ class ObservationsFilter extends React.Component {
     button: true,
     type: "Type",
   };
-  componentDidMount() { }
+  componentDidMount() {}
   // props = {
   //   observations: props.observations,
   // }
@@ -280,7 +280,6 @@ class ObservationsFilter extends React.Component {
 
     const drawer = (
       <div className="catDrawerSection">
-
         <Drawer
           variant="persistent"
           anchor={anchor}
@@ -334,7 +333,9 @@ class ObservationsFilter extends React.Component {
             <ListItem
               button
               className={
-                this.state.type === "Comments" ? classes.selected : classes.nested
+                this.state.type === "Comments"
+                  ? classes.selected
+                  : classes.nested
               }
               onClick={(e) => this.handleType("Comments")}
             >
@@ -410,7 +411,7 @@ class ObservationsFilter extends React.Component {
 
     return (
       <div className={classes.root}>
-        {this.props.value === 0 &&
+        {this.props.value === 0 && (
           <div className={classes.appFrame}>
             <AppBar
               className={classNames(classes.appBar, classes.MuiAppBarColor, {
@@ -426,7 +427,11 @@ class ObservationsFilter extends React.Component {
                   color="inherit"
                   noWrap
                 >
-                  {this.props.observation === "My Observations" ? "My Observations" : "All Observations"}
+                  {this.props.observation === "My Observations"
+                    ? "My Observations"
+                    : this.props.observation === "Bookmark List"
+                    ? "Bookmark List"
+                    : "All Observations"}
                 </Typography>
 
                 <Typography
@@ -474,10 +479,10 @@ class ObservationsFilter extends React.Component {
               />
             </main>
             {after}
-          </div>}
-        {this.props.value === 1 &&
+          </div>
+        )}
+        {this.props.value === 1 && (
           <div className={classes.appFrame}>
-
             <main
               className={classNames(
                 classes.content,
@@ -497,8 +502,7 @@ class ObservationsFilter extends React.Component {
             </main>
             {after}
           </div>
-
-        }
+        )}
       </div>
     );
   }

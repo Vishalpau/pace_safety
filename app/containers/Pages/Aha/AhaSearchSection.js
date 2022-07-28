@@ -33,6 +33,7 @@ import GamesOutlinedIcon from "@material-ui/icons/GamesOutlined";
 import StarsIcon from "@material-ui/icons/Stars";
 import AhaBookmarkFilter from "./AhaBookmarkFilter";
 import AhaFilter from "./AhaFilter";
+import BookmarkList from "../../Bookmark/BookmarkList";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -396,6 +397,9 @@ export default function SimpleTabs(props) {
     } else if (newValue === 1) {
       setAssessments("Big Picture");
       setStatus("");
+    } else if (newValue === 2) {
+      setAssessments("Bookmark List");
+      setStatus("");
     }
   };
 
@@ -459,13 +463,11 @@ export default function SimpleTabs(props) {
                     {...a11yProps(2)}
                     className={classes.hoverB}
                   />
-
-                  {/**  <Tab
-                    icon={<StarsIcon className={classes.buckmarkIcon} />}
+                  <Tab
                     {...a11yProps(3)}
-                    className={classNames(classes.hoverB, classes.minWd55)}
-                  />*/}
-                  {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
+                    label={<BookmarkList />}
+                    style={{ minWidth: "unset", padding: "0 0 0" }}
+                  />
                 </Tabs>
               </div>
             </AppBar>

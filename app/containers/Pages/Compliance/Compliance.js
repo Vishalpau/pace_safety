@@ -247,7 +247,7 @@ export default function Compliance() {
   };
 
   const handleNewCompliancePush = async () => {
-    localStorage.setItem('compliance-navigation', 'Add New');
+    localStorage.setItem("compliance-navigation", "Add New");
     localStorage.removeItem("fkComplianceId");
     history.push("/app/pages/compliance/compliance-details");
   };
@@ -260,9 +260,9 @@ export default function Compliance() {
 
   useEffect(() => {
     return () => {
-      localStorage.setItem("SearchedText", JSON.stringify(''))
-    }
-  }, [])
+      localStorage.setItem("SearchedText", JSON.stringify(""));
+    };
+  }, []);
 
   return (
     <Acl
@@ -285,8 +285,12 @@ export default function Compliance() {
                   color="primary"
                   onClick={(e) => handleNewCompliancePush(e)}
                   style={{
-                    background: checkACL('safety-compliance', 'add_compliance') ? '#06425c' : '#c0c0c0',
-                    cursor: checkACL('safety-compliance', 'add_compliance') ? 'pointer' : 'not-allowed'
+                    background: checkACL("safety-compliance", "add_compliance")
+                      ? "#06425c"
+                      : "#c0c0c0",
+                    cursor: checkACL("safety-compliance", "add_compliance")
+                      ? "pointer"
+                      : "not-allowed",
                   }}
                 >
                   <AddIcon className={classes.spacerRight} /> Add New
@@ -353,6 +357,5 @@ export default function Compliance() {
         </div>
       }
     />
-
   );
 }

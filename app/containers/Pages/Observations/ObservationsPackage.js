@@ -552,6 +552,19 @@ function Actions(props) {
           allLogInUserData.data.data.results.count / 25
         );
         setPageCount(pageCount);
+      } else if (props.observation == "Bookmark List") {
+        const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+        const allLogInUserData = await api.get(
+          `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+        );
+        const result = allLogInUserData.data.data.results.results;
+        setAllInitialData(result);
+        setTotalData(allLogInUserData.data.data.results.count);
+        setPageData(allLogInUserData.data.data.results.count / 25);
+        const pageCount = Math.ceil(
+          allLogInUserData.data.data.results.count / 25
+        );
+        setPageCount(pageCount);
       } else {
         const res = await api.get(
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`
@@ -568,6 +581,19 @@ function Actions(props) {
         if (props.observation == "My Observations") {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`
+          );
+          const result = allLogInUserData.data.data.results.results;
+          setAllInitialData(result);
+          setTotalData(allLogInUserData.data.data.results.count);
+          setPageData(allLogInUserData.data.data.results.count / 25);
+          const pageCount = Math.ceil(
+            allLogInUserData.data.data.results.count / 25
+          );
+          setPageCount(pageCount);
+        } else if (props.observation == "Bookmark List") {
+          const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+          const allLogInUserData = await api.get(
+            `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
           );
           const result = allLogInUserData.data.data.results.results;
           setAllInitialData(result);
@@ -604,6 +630,19 @@ function Actions(props) {
             allLogInUserData.data.data.results.count / 25
           );
           setPageCount(pageCount);
+        } else if (props.observation == "Bookmark List") {
+          const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+          const allLogInUserData = await api.get(
+            `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+          );
+          const result = allLogInUserData.data.data.results.results;
+          setAllInitialData(result);
+          setTotalData(allLogInUserData.data.data.results.count);
+          setPageData(allLogInUserData.data.data.results.count / 25);
+          const pageCount = Math.ceil(
+            allLogInUserData.data.data.results.count / 25
+          );
+          setPageCount(pageCount);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`
@@ -630,6 +669,19 @@ function Actions(props) {
             allLogInUserData.data.data.results.count / 25
           );
           setPageData(allLogInUserData.data.data.results.count / 25);
+          setPageCount(pageCount);
+        } else if (props.observation == "Bookmark List") {
+          const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+          const allLogInUserData = await api.get(
+            `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+          );
+          const result = allLogInUserData.data.data.results.results;
+          setAllInitialData(result);
+          setTotalData(allLogInUserData.data.data.results.count);
+          setPageData(allLogInUserData.data.data.results.count / 25);
+          const pageCount = Math.ceil(
+            allLogInUserData.data.data.results.count / 25
+          );
           setPageCount(pageCount);
         } else {
           const allLogInUserData = await api.get(
@@ -675,6 +727,14 @@ function Actions(props) {
         const result = allLogInUserData.data.data.results.results;
         setAllInitialData(result);
         setPage(value);
+      } else if (props.observation == "Bookmark List") {
+        const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+        const allLogInUserData = await api.get(
+          `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
+        );
+        const result = allLogInUserData.data.data.results.results;
+        setAllInitialData(result);
+        setPage(value);
       } else {
         const res = await api.get(
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&observationStage=${status}`
@@ -688,6 +748,14 @@ function Actions(props) {
         if (props.observation == "My Observations") {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}&observationStage=${status}`
+          );
+          const result = allLogInUserData.data.data.results.results;
+          setAllInitialData(result);
+          setPage(value);
+        } else if (props.observation == "Bookmark List") {
+          const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+          const allLogInUserData = await api.get(
+            `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
           );
           const result = allLogInUserData.data.data.results.results;
           setAllInitialData(result);
@@ -709,6 +777,14 @@ function Actions(props) {
           const result = allLogInUserData.data.data.results.results;
           setAllInitialData(result);
           setPage(value);
+        } else if (props.observation == "Bookmark List") {
+          const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+          const allLogInUserData = await api.get(
+            `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
+          );
+          const result = allLogInUserData.data.data.results.results;
+          setAllInitialData(result);
+          setPage(value);
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`
@@ -722,6 +798,14 @@ function Actions(props) {
         if (props.observation == "My Observations") {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}&observationStage=${status}`
+          );
+          const result = allLogInUserData.data.data.results.results;
+          await setAllInitialData(result);
+          await setPage(value);
+        } else if (props.observation == "Bookmark List") {
+          const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+          const allLogInUserData = await api.get(
+            `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
           );
           const result = allLogInUserData.data.data.results.results;
           await setAllInitialData(result);

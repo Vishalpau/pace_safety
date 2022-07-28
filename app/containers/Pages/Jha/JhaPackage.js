@@ -539,6 +539,17 @@ function JhaPackage(props) {
       setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
       setPageCount(pageCount);
+    } else if (props.assessment === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const res = await api.get(
+        `api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+      );
+      const result = res.data.data.results.results;
+      setAllJHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
+      let pageCount = Math.ceil(res.data.data.results.count / 25);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${
@@ -582,6 +593,13 @@ function JhaPackage(props) {
     if (props.observation === "My Assessments") {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`
+      );
+      setAllJHAData(res.data.data.results.results);
+      setPage(value);
+    } else if (props.observation === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const res = await api.get(
+        `api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
       setAllJHAData(res.data.data.results.results);
       setPage(value);
@@ -810,6 +828,11 @@ function JhaPackage(props) {
               deleteMsg: "Are you sure you want to delete this JSA?",
               yesBtn: "Yes",
               noBtn: "No",
+            }}
+            bookmarkFields={{
+              typeOfModule: "jhas",
+              itemId: item.id,
+              bookmarkTrueFalse: item.bookmark,
             }}
             handleVisibility={() => handleVisibility()}
             handleVisibilityComments={() => handleVisibilityComments()}

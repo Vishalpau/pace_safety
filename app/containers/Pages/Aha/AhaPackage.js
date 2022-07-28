@@ -578,6 +578,17 @@ function AhaPackage(props) {
       setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
       setPageCount(pageCount);
+    } else if (props.assessments === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const res = await api.get(
+        `api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+      );
+      const result = res.data.data.results.results;
+      setAllAHAData(result);
+      setTotalData(res.data.data.results.count);
+      setPageData(res.data.data.results.count / 25);
+      let pageCount = Math.ceil(res.data.data.results.count / 25);
+      setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStage=${status}`
@@ -619,6 +630,13 @@ function AhaPackage(props) {
         `api/v1/ahas/?search=${
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
+      );
+      setAllAHAData(res.data.data.results.results);
+      setPage(value);
+    } else if (props.assessments === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const res = await api.get(
+        `api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
       setAllAHAData(res.data.data.results.results);
       setPage(value);
@@ -780,6 +798,11 @@ function AhaPackage(props) {
             deleteMsg: "Are you sure you want to delete this AHA?",
             yesBtn: "Yes",
             noBtn: "No",
+          }}
+          bookmarkFields={{
+            typeOfModule: "ahas",
+            itemId: item.id,
+            bookmarkTrueFalse: item.bookmark,
           }}
           handleVisibility={() => handleVisibility()} // Show attachment box
           handleVisibilityComments={() => handleVisibilityComments()} // Show "add comment" box

@@ -47,7 +47,7 @@ const CardFooter = (props) => {
     typeOfModule = props.printFields.typeOfModule;
     number = props.printFields.number;
   }
-
+  //Bookmarks Props
   let itemId, typeOfModuleBookmark, bookmarkTrueFalse;
 
   if (Object.keys(props.bookmarkFields).length > 0) {
