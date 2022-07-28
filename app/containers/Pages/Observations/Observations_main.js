@@ -83,7 +83,6 @@ const useStyles = makeStyles((theme) => ({
       marginRight: "5px",
     },
   },
-  pLtenPRten: { padding: '0px 10px 0px 10px' },
   pLtenPRten: { padding: "0px 10px 0px 10px" },
   // pLTen: {
   //   marginRight: '5px',
@@ -224,7 +223,6 @@ export default function Observations() {
   };
 
   const handleBulkUploadfilePush = async () => {
-    history.push('/app/icare-bulkupload');
     history.push("/app/icare-bulkupload");
   };
 
@@ -245,15 +243,18 @@ export default function Observations() {
     }, 100);
   }, [acls]);
 
-  useEffect(() => () => {
-    localStorage.setItem('SearchedText', JSON.stringify(''));
-  }, []);
+  useEffect(
+    () => () => {
+      localStorage.setItem("SearchedText", JSON.stringify(""));
+    },
+    []
+  );
 
   // return !showHTML ? (
-    
+
   // useEffect(() => {
   //   return () => {
-      
+
   //     localStorage.setItem("SearchedText", JSON.stringify(""));
   //   };
   // }, [])):""
@@ -261,7 +262,10 @@ export default function Observations() {
   const [canUploadPaperFile, setCanUploadPaperFile] = useState();
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("app_acl"))["safety-observations"].upload_paper_file) {
+    if (
+      JSON.parse(localStorage.getItem("app_acl"))["safety-observations"]
+        .upload_paper_file
+    ) {
       setCanUploadPaperFile(
         JSON.parse(localStorage.getItem("app_acl"))["safety-observations"]
           .upload_paper_file
