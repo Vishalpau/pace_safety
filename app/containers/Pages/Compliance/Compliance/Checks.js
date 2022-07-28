@@ -386,7 +386,8 @@ const Checks = (props) => {
   const radioDecide = ["Yes", "No", "N/A"];
 
   //method when we change the accordian and change the state
-  const handleTDChange = (panel, valueId) => (event, isExpanded) => {
+  const handleTDChange = (panel, valueId,isYesNo = false) => (event, isExpanded) => {
+    
     if (isExpanded) {
       setStateToggle(true);
     }
@@ -397,35 +398,26 @@ const Checks = (props) => {
     }
 
     if (expandedTableDetail === `panel6 ${valueId}`) {
+      
       setQuestionId(valueId);
       const temp = [...checkData];
 
-      temp.forEach((a) => {
-        if (a.criticality !== "") {
-          setErrorBoundary("");
-          a.check = true;
-        } else {
-          a.check = false;
-        }
-      });
-    }
+      const currentTemp = temp.filter(item => item.questionId === valueId)[0]
 
-    if (expandedTableDetail !== `panel6 ${valueId}`) {
-      const temp = [...checkData];
-      temp.forEach((a) => {
-        if (a.criticality !== "") {
+      if (!isYesNo && currentTemp.criticality !== "" &&  currentTemp.auditStatus !== "") {
           setErrorBoundary("");
-          a.check = true;
-        } else {
-          a.check = false;
-        }
-      });
-      setCheckData(temp);
-      setStateToggle(!stateToggle);
-    }
+          currentTemp.check = true;
+        } 
 
+        else if(isYesNo && currentTemp.criticality !== "" && currentTemp.auditStatus === ""  ){
+          setErrorBoundary("");
+          currentTemp.check = true;
+        }
+    }
     setExpandedTableDetail(isExpanded ? panel : false);
   };
+
+ 
 
   //post the project if the id is not present
   const postApi = (formData) => {
@@ -1076,7 +1068,8 @@ const Checks = (props) => {
                                             }
                                             onChange={handleTDChange(
                                               `panel6 ${value.id}`,
-                                              value.id
+                                              value.id,
+                                              true
                                             )}
                                             className="backPaperAccordian"
                                             style={{
