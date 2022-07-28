@@ -21,9 +21,9 @@ import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
 import {
   handelCommonObject,
-  handelValueToLabel
+  handelValueToLabel,
 } from "../../../utils/CheckerValue";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import {
   DETAILS,
@@ -31,12 +31,11 @@ import {
   PACEHIDE,
   RCAOPTION,
   ROOTHIDE,
-  ROOT_CAUSE_ANALYSIS_FORM
+  ROOT_CAUSE_ANALYSIS_FORM,
 } from "../../../utils/constants";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -80,8 +79,8 @@ const Details = () => {
   let [hideArray, setHideArray] = useState([]);
   let [investigationData, setInvestigationData] = useState({});
   let [rcaDisable, setRcaDisable] = useState("");
-  let [loading, setLoading] = useState(false)
-  let [buttonLoading, setButtonLoading] = useState(false)
+  let [loading, setLoading] = useState(false);
+  let [buttonLoading, setButtonLoading] = useState(false);
   // get data for put
 
   const handelUpdateCheck = async () => {
@@ -129,9 +128,11 @@ const Details = () => {
         classification: investigationApiData.classification,
       });
     }
-    if (localStorage.getItem("rcaRecommended") == `No${localStorage.getItem("fkincidentId")}`
-      &&
-      investigationApiData.rcaRecommended != "") {
+    if (
+      localStorage.getItem("rcaRecommended") ==
+        `No${localStorage.getItem("fkincidentId")}` &&
+      investigationApiData.rcaRecommended != ""
+    ) {
       setForm({
         ...form,
         rcaRecommended: investigationApiData.rcaRecommended,
@@ -144,8 +145,13 @@ const Details = () => {
     const allIncidents = await api.get(
       `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
-    let result = allIncidents.data.data.results
-    handelCommonObject("commonObject", "incident", "projectStruct", result.fkProjectStructureIds)
+    let result = allIncidents.data.data.results;
+    handelCommonObject(
+      "commonObject",
+      "incident",
+      "projectStruct",
+      result.fkProjectStructureIds
+    );
     await setIncidents(result);
   };
 
@@ -159,15 +165,15 @@ const Details = () => {
   const handelRcaRecommended = async (value) => {
     if (value == "Five why analysis") {
       await setHideArray(FIVEWHYHIDE);
-      localStorage.setItem("deleteForm", FIVEWHYHIDE)
+      localStorage.setItem("deleteForm", FIVEWHYHIDE);
     } else if (value == "PACE cause analysis") {
       await setHideArray(PACEHIDE);
-      localStorage.setItem("deleteForm", PACEHIDE)
+      localStorage.setItem("deleteForm", PACEHIDE);
     } else if (value == "Cause analysis") {
       await setHideArray(ROOTHIDE);
-      localStorage.setItem("deleteForm", ROOTHIDE)
+      localStorage.setItem("deleteForm", ROOTHIDE);
     } else {
-      localStorage.setItem("deleteForm", [])
+      localStorage.setItem("deleteForm", []);
     }
     setForm({ ...form, rcaRecommended: value });
   };
@@ -177,20 +183,20 @@ const Details = () => {
     let nextPageLink = 0;
     setError(error);
     if (Object.keys(error).length == 0) {
-      setButtonLoading(true)
+      setButtonLoading(true);
       if (checkPost.current !== false) {
         try {
-          const temp = incidents
+          const temp = incidents;
           temp.updatedAt = new Date().toISOString();
 
-          temp.incidentStage = "Root cause & analysis"
-          temp.incidentStatus = "pending"
+          temp.incidentStage = "Root cause & analysis";
+          temp.incidentStatus = "pending";
           const res = await api.put(
             `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
             temp
           );
         } catch (error) {
-          history.push("/app/pages/error")
+          history.push("/app/pages/error");
         }
         const res = await api.post(
           `/api/v1/incidents/${localStorage.getItem(
@@ -204,7 +210,8 @@ const Details = () => {
       } else {
         form["pk"] = pkValue.current;
         const res = await api.put(
-          `/api/v1/incidents/${putId.current}/causeanalysis/${pkValue.current
+          `/api/v1/incidents/${putId.current}/causeanalysis/${
+            pkValue.current
           }/`,
           form
         );
@@ -226,44 +233,53 @@ const Details = () => {
       if (form.rcaRecommended == "Five why analysis") {
         history.push(ROOT_CAUSE_ANALYSIS_FORM["Five Why analysis"]);
       } else if (form.rcaRecommended == "PACE cause analysis") {
-        history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Hazardous acts"]}${putId.current}`);
+        history.push(
+          `${ROOT_CAUSE_ANALYSIS_FORM["Hazardous acts"]}${putId.current}`
+        );
       } else if (form.rcaRecommended == "Cause analysis") {
-        history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Cause analysis"]}${putId.current}`);
+        history.push(
+          `${ROOT_CAUSE_ANALYSIS_FORM["Cause analysis"]}${putId.current}`
+        );
       }
     }
 
     // e.preventDefault();
     localStorage.setItem("deleteForm", hideArray);
-    localStorage.setItem("details", true)
-    localStorage.setItem("rcaRecommended", `Yes${localStorage.getItem("fkincidentId")}`)
-    setButtonLoading(false)
+    localStorage.setItem("details", true);
+    localStorage.setItem(
+      "rcaRecommended",
+      `Yes${localStorage.getItem("fkincidentId")}`
+    );
+    setButtonLoading(false);
   };
 
-
-
   const handelCallBack = async () => {
-    await setLoading(true)
+    await setLoading(true);
     await handelUpdateCheck();
     await fetchIncidentData();
     await setHideArray(localStorage.getItem("deleteForm"));
     await handelInvestigationData();
-    await setLoading(false)
-  }
+    await setLoading(false);
+  };
 
   useEffect(() => {
-    handelCallBack()
+    handelCallBack();
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
-      {loading == false ?
+      {loading == false ? (
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
                   Incident number
                 </Typography>
                 <Typography className={Type.labelValue}>
@@ -272,7 +288,11 @@ const Details = () => {
               </Grid>
 
               <Grid item xs={12}>
-                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
                   Incident description
                 </Typography>
                 <Typography className={Type.labelValue}>
@@ -287,6 +307,7 @@ const Details = () => {
                     inputVariant="outlined"
                     className={classes.formControl}
                     ampm={false}
+                    format="DD-MMM-yyyy HH:mm A"
                     value={moment(investigationData["startData"]).toISOString()}
                     onChange={handleDateChange}
                     label="Investigation start date"
@@ -302,6 +323,7 @@ const Details = () => {
                     inputVariant="outlined"
                     className={classes.formControl}
                     ampm={false}
+                    format="DD-MMM-yyyy HH:mm A"
                     value={moment(investigationData["endData"]).toISOString()}
                     onChange={handleDateChange}
                     label="Investigation end date"
@@ -311,7 +333,11 @@ const Details = () => {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
                   Level of classification
                 </Typography>
                 <Typography className={Type.labelValue}>
@@ -326,7 +352,9 @@ const Details = () => {
                   className={classes.formControl}
                   error={error && error.rcaRecommended}
                 >
-                  <InputLabel id="project-name-label">RCA recommended</InputLabel>
+                  <InputLabel id="project-name-label">
+                    RCA recommended
+                  </InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -407,7 +435,9 @@ const Details = () => {
                     ))}
                   </RadioGroup>
                   {error && error.evidenceContradiction && (
-                    <FormHelperText>{error.evidenceContradiction}</FormHelperText>
+                    <FormHelperText>
+                      {error.evidenceContradiction}
+                    </FormHelperText>
                   )}
                 </FormControl>
               </Grid>
@@ -457,26 +487,25 @@ const Details = () => {
           </Col>
           {isDesktop && (
             <Col md={3}>
-              {form.rcaRecommended !== "" ?
+              {form.rcaRecommended !== "" ? (
                 <FormSideBar
                   deleteForm={hideArray || []}
                   listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
                   selectedItem={"RCA Details"}
                 />
-                :
+              ) : (
                 <FormSideBar
                   deleteForm={hideArray || []}
                   listOfItems={DETAILS}
                   selectedItem={"RCA Details"}
                 />
-              }
-
+              )}
             </Col>
           )}
         </Row>
-        :
+      ) : (
         <Loader />
-      }
+      )}
     </PapperBlock>
   );
 };
