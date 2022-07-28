@@ -656,7 +656,11 @@ function Header(props) {
 
   // company selections
   const handleCompanyOpen = () => {
-    setCompanyOpen(true);
+    console.log(localStorage.getItem("projectName"))
+    if(localStorage.getItem("projectName")){
+        setCompanyOpen(true);
+    }
+    
   };
 
   const handleCompanyClose = () => {
@@ -1190,7 +1194,7 @@ function Header(props) {
               <DialogContent>
                 <DialogContentText>
                   <Typography gutterBottom variant="h5" component="h2">
-                    Are you sure to switch another project?
+                    Are you sure to switch another project? yes
                   </Typography>
                 </DialogContentText>
               </DialogContent>
