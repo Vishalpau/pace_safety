@@ -438,6 +438,7 @@ export default function SimpleTabs(props) {
                   />
                   <Tab
                     {...a11yProps(3)}
+                    className={classes.hoverB}
                     label={<BookmarkList />}
                     style={{ minWidth: "unset", padding: "0 0 0" }}
                   />
