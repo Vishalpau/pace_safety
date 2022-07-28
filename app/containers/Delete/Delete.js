@@ -43,7 +43,7 @@ const Delete = (props) => {
         })
         .catch((err) => {
           props.loader(props.loadingFlag);
-        })
+        });
     } else {
       const res = await props.axiosObj
         .delete(props.deleteUrl)
@@ -53,7 +53,7 @@ const Delete = (props) => {
         })
         .catch((err) => {
           props.loader(props.loadingFlag);
-        })
+        });
     }
     // let apiData = { deleteUrl: props.deleteUrl };
     // let routeType = "";
@@ -82,37 +82,50 @@ const Delete = (props) => {
 
   return (
     <>
-      <Button
-        // className={classes.mLeftR5}
-        onClick={() => setDeleteQ(true)}
-      >
-        {props.deleteItem ? (
-          <DeleteForeverOutlinedIcon className={classes.iconteal} />
-        ) : (
-          // <Link href="#">
-          <svg
-            id="baseline-delete-24px"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              id="Path_221"
-              data-name="Path 221"
-              d="M6,19a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V7H6ZM19,4H15.5l-1-1h-5l-1,1H5V6H19Z"
-              fill="#7890a4"
-            />
-            <path
-              id="Path_222"
-              data-name="Path 222"
-              d="M0,0H24V24H0Z"
-              fill="none"
-            />
-          </svg>
-          // </Link>
-        )}
-      </Button>
+      {props.checkDeletePermission ? (
+        <Button
+          // className={classes.mLeftR5}
+          onClick={() => setDeleteQ(true)}
+        >
+          {props.deleteItem ? (
+            <DeleteForeverOutlinedIcon className={classes.iconteal} />
+          ) : (
+            // <Link href="#">
+            <svg
+              id="baseline-delete-24px"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                id="Path_221"
+                data-name="Path 221"
+                d="M6,19a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V7H6ZM19,4H15.5l-1-1h-5l-1,1H5V6H19Z"
+                fill="#7890a4"
+              />
+              <path
+                id="Path_222"
+                data-name="Path 222"
+                d="M0,0H24V24H0Z"
+                fill="none"
+              />
+            </svg>
+            // </Link>
+          )}
+        </Button>
+      ) : (
+        <Button>
+          <DeleteForeverOutlinedIcon
+            className={classes.iconteal}
+            style={{
+              color: "#c0c0c0",
+              cursor: "not-allowed",
+              background: "white",
+            }}
+          />
+        </Button>
+      )}
 
       <Dialog
         open={deleteQ}

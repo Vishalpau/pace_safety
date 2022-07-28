@@ -139,6 +139,7 @@ const CardFooter = (props) => {
                   deleteMsg={deleteMsg}
                   yesBtn={yesBtn}
                   noBtn={noBtn}
+                  checkDeletePermission={props.checkDeletePermission}
                 />
               </Typography>
             </div>

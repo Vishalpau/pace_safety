@@ -216,9 +216,7 @@ const CloseOut = () => {
                 Incident occured on
               </Typography>
               <Typography className={Type.labelValue}>
-                {moment(incidentsListData.incidentOccuredOn).format(
-                  "Do MMMM YYYY, h:mm:ss a"
-                )}
+                {DateFormat(incidentsListData.incidentOccuredOn, true)}
               </Typography>
             </Grid>
 

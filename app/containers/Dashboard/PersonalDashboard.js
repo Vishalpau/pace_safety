@@ -622,6 +622,7 @@ function PersonalDashboard(props) {
       const laststate = localStorage.getItem("lastState");
       localStorage.removeItem("lastState");
       history.push(laststate);
+      console.log(laststate,"laststate");
     }
     if (localStorage.getItem("projectName") != null) {
       setTimeout(() => history.push("app/icare"), 1000);
@@ -1002,12 +1003,16 @@ function PersonalDashboard(props) {
   };
 
   useEffect(() => {
+    console.log("hello world");
+    console.log(localStorage.getItem("projectName"),"local storage")
     handelCallBack();
-    // redirectionAccount()
-    if (localStorage.getItem("projectName") != null) {
+    redirectionAccount();
+    /* if (localStorage.getItem("projectName") != null) {
+      console.log("redirect me")
       setTimeout(() => history.push("app/icare"), 1000);
-    }
+    }   */
   }, []);
+
 
   const handlePhaseChange = (panel, phases, index, id) => async (
     event,

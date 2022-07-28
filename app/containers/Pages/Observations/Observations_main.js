@@ -233,6 +233,10 @@ export default function Observations() {
   };
 
   useEffect(() => {
+    console.log("hello")
+  },[])
+
+  useEffect(() => {
     const int = setInterval(() => {
       if (localStorage.getItem("app_acl") != null) {
         clearInterval(int);

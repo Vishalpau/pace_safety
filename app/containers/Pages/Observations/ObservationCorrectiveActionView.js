@@ -317,7 +317,7 @@ const ObservationCorrectiveActionView = () => {
                     </Grid>
                   </Grid>
                 ) : (
-                  "You do not have permissions to access actions."
+                  "You do not have permissions to view actions."
                 )}
               </Paper>
             </Grid>

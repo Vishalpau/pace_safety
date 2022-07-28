@@ -207,8 +207,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -272,7 +272,7 @@ function BlankPage(props) {
         };
 
         await api(config)
-          .then(function (response) {
+          .then(function(response) {
             console.log(response);
             if (response.status === 200) {
               let hosting = response.data.data.results.data.companies
@@ -325,9 +325,9 @@ function BlankPage(props) {
               });
             }
           })
-          .catch(function (error) { });
+          .catch(function(error) {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handlePush = async () => {
@@ -397,8 +397,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -413,7 +413,7 @@ function BlankPage(props) {
         setIncidents(res.data.data.results.results);
         setPage(value);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   // const handleDelete = async (item) => {
@@ -472,8 +472,8 @@ function BlankPage(props) {
     props.projectName.breakDown.length > 0
       ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
   let struct1 = "";
 
   for (const i in selectBreakdown1) {
@@ -501,8 +501,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -726,8 +726,9 @@ function BlankPage(props) {
                                       <ILink
                                         onClick={(e) =>
                                           history.push({
-                                            pathname: `/incident/details/${item[1].id
-                                              }/`,
+                                            pathname: `/incident/details/${
+                                              item[1].id
+                                            }/`,
                                             state: "change_incident",
                                           })
                                         }
@@ -756,9 +757,10 @@ function BlankPage(props) {
                                       <Box display="flex" alignItems="center">
                                         <CalendarTodayIcon fontSize="small" />
                                         <span className={Incidents.dateValue}>
-                                          {moment(
-                                            item[1]["incidentOccuredOn"]
-                                          ).format("Do MMM YYYY, h:mm a")}
+                                          {DateFormat(
+                                            item[1]["incidentOccuredOn"],
+                                            true
+                                          )}
                                         </span>
                                       </Box>
                                     </Typography>
@@ -845,7 +847,7 @@ function BlankPage(props) {
                                   variant="body2"
                                   display="inline"
                                   className={Fonts.listingLabelName}
-                                // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
+                                  // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                                 >
                                   <MessageIcon fontSize="small" /> Comments:
                                   {item[1]["commentsCount"]}
@@ -899,8 +901,9 @@ function BlankPage(props) {
                                       //   />
                                       // </Link>
                                       <Delete
-                                        deleteUrl={`/api/v1/incidents/${item[1].id
-                                          }/`}
+                                        deleteUrl={`/api/v1/incidents/${
+                                          item[1].id
+                                        }/`}
                                         afterDelete={() => {
                                           fetchData();
                                         }}
