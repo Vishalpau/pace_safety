@@ -1158,7 +1158,7 @@ const ReportingAndNotification = (props) => {
                   <KeyboardDateTimePicker
                     className={classes.formControl}
                     id="date-picker-dialog"
-                    format="yyyy/MM/dd HH:mm"
+                    format="dd-MMM-yyyy HH:mm a"
                     inputVariant="outlined"
                     label="Reporting date"
                     value={incidentsListData.incidentReportedOn}

@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import { PapperBlock } from "dan-components";
 import moment from "moment";
@@ -26,16 +26,21 @@ import { useHistory } from "react-router";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
 import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
-import { handelActionData, handelValueToLabel } from "../../../utils/CheckerValue";
-import { RCAOPTION, ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
+import {
+  handelActionData,
+  handelValueToLabel,
+} from "../../../utils/CheckerValue";
+import {
+  RCAOPTION,
+  ROOT_CAUSE_ANALYSIS_FORM,
+  SUMMERY_FORM,
+} from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
 import ActionShow from "../ActionShow";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -53,8 +58,8 @@ const useStyles = makeStyles((theme) => ({
 const RootCauseAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
   const putId = useRef("");
-  const dispatch = useDispatch()
-  const [fkid, setFkid] = useState("")
+  const dispatch = useDispatch();
+  const [fkid, setFkid] = useState("");
 
   const [form, setForm] = useState({
     causeOfIncident: "",
@@ -77,11 +82,11 @@ const RootCauseAnalysis = () => {
   const pkValue = useRef("");
   const investigationData = useRef({});
   const classificationValues = useRef([]);
-  const [loading, setLoading] = useState(false)
-  const [buttonLoading, setButtonLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
   const [updatePage, setUpdatePage] = useState(false);
-  const [actionData, setActionData] = useState([])
-  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+  const [actionData, setActionData] = useState([]);
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"));
 
   const handelUpdateCheck = async () => {
     const page_url = window.location.href;
@@ -92,7 +97,7 @@ const RootCauseAnalysis = () => {
       ? lastItem
       : localStorage.getItem("fkincidentId");
 
-    setFkid(incidentId)
+    setFkid(incidentId);
 
     const previousData = await api.get(
       `/api/v1/incidents/${incidentId}/rootcauses/`
@@ -141,23 +146,26 @@ const RootCauseAnalysis = () => {
         action={{ id: value.id, number: value.actionNumber }}
         title={value.actionTitle}
         companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+        projectId={
+          JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        }
         updatePage={updatePage}
       />
     </Grid>
   );
 
   const handelActionTracker = async () => {
-    let incidentID = localStorage.getItem("fkincidentId")
-    let allAction = await handelActionData(incidentID, [], "one")
+    let incidentID = localStorage.getItem("fkincidentId");
+    let allAction = await handelActionData(incidentID, [], "one");
     await setActionData(allAction);
   };
 
   const fetchIncidentData = async () => {
     const allIncidents = await api.get(
-      `api/v1/incidents/${putId.current !== ""
-        ? putId.current
-        : localStorage.getItem("fkincidentId")
+      `api/v1/incidents/${
+        putId.current !== ""
+          ? putId.current
+          : localStorage.getItem("fkincidentId")
       }/`
     );
     await setIncidents(allIncidents.data.data.results);
@@ -169,18 +177,18 @@ const RootCauseAnalysis = () => {
   const handelNext = async (e) => {
     const { error, isValid } = RootCauseValidation(form);
     setError(error);
-    setButtonLoading(true)
+    setButtonLoading(true);
     let nextPageLink = 0;
     if (incidents.incidentStage === "Root cause & analysis") {
-      const temp = incidents
-      temp.incidentStatus = "Done"
+      const temp = incidents;
+      temp.incidentStatus = "Done";
       try {
         const res = await api.put(
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
       } catch (error) {
-        history.push("/app/pages/error")
+        history.push("/app/pages/error");
       }
     }
     if (Object.keys(error).length == 0) {
@@ -206,27 +214,35 @@ const RootCauseAnalysis = () => {
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-        }
-        dispatch(tabViewMode(viewMode))
+          initialNotification: false,
+          investigation: false,
+          evidence: false,
+          rootcauseanalysis: true,
+          lessionlearn: false,
+        };
+        dispatch(tabViewMode(viewMode));
         history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         let viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-
-        }
-        dispatch(tabViewMode(viewMode))
+          initialNotification: false,
+          investigation: false,
+          evidence: false,
+          rootcauseanalysis: true,
+          lessionlearn: false,
+        };
+        dispatch(tabViewMode(viewMode));
         history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       }
     }
     localStorage.setItem("RootCause", "Done");
-    setButtonLoading(false)
+    setButtonLoading(false);
   };
 
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/details/${putId.current
+        `/app/incident-management/registration/root-cause-analysis/details/${
+          putId.current
         }`
       );
     } else if (isNaN(putId.current)) {
@@ -237,28 +253,31 @@ const RootCauseAnalysis = () => {
   };
 
   const handelCallBack = async () => {
-    await setLoading(true)
+    await setLoading(true);
     await handelUpdateCheck();
-    await fetchIncidentData()
-    await handelActionTracker()
-    await setLoading(false)
-  }
+    await fetchIncidentData();
+    await handelActionTracker();
+    await setLoading(false);
+  };
 
   useEffect(() => {
-    handelCallBack()
+    handelCallBack();
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock title="Cause Analysis" icon="ion-md-list-box">
-      {loading == false ?
+      {loading == false ? (
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
-
               <Grid item xs={12}>
-                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
                   Incident number
                 </Typography>
                 <Typography className={Type.labelValue}>
@@ -267,7 +286,11 @@ const RootCauseAnalysis = () => {
               </Grid>
 
               <Grid item xs={12}>
-                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
                   Incident description
                 </Typography>
                 <Typography className={Type.labelValue}>
@@ -282,7 +305,7 @@ const RootCauseAnalysis = () => {
                     className={classes.formControl}
                     inputVariant="outlined"
                     id="date-picker-dialog"
-                    format="dd/mm/yyyy"
+                    format="DD-MMM-yyyy"
                     value={selectedDate}
                     disabled
                   />
@@ -297,7 +320,7 @@ const RootCauseAnalysis = () => {
                     inputVariant="outlined"
                     required
                     id="date-picker-dialog"
-                    format="dd/mm/yyyy"
+                    format="DD-MMM-yyyy"
                     value={selectedDate}
                     disabled
                   />
@@ -306,7 +329,9 @@ const RootCauseAnalysis = () => {
 
               <Grid item xs={12} md={6}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id="project-name-label">RCA recommended</InputLabel>
+                  <InputLabel id="project-name-label">
+                    RCA recommended
+                  </InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -322,11 +347,17 @@ const RootCauseAnalysis = () => {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                <Typography
+                  variant="h6"
+                  className={Type.labelName}
+                  gutterBottom
+                >
                   Level of classification
                 </Typography>
                 <Typography className={Type.labelValue}>
-                  {handelValueToLabel(investigationData.current["classification"])}
+                  {handelValueToLabel(
+                    investigationData.current["classification"]
+                  )}
                 </Typography>
               </Grid>
 
@@ -351,7 +382,7 @@ const RootCauseAnalysis = () => {
                     inputVariant="outlined"
                     required
                     id="date-picker-dialog"
-                    format="dd/mm/yyyy"
+                    format="DD-MMM-yyyy"
                     value={selectedDate}
                     disabled
                   />
@@ -469,9 +500,9 @@ const RootCauseAnalysis = () => {
             </Col>
           )}
         </Row>
-        :
+      ) : (
         <Loader />
-      }
+      )}
     </PapperBlock>
   );
 };
