@@ -339,15 +339,6 @@ function UserMenu(props) {
   const handleCompanyDialog = () => {
     localStorage.clear();
     window.location.href = "/";
-    // const companiesData = [];
-    // JSON.parse(localStorage.getItem('userDetails')).companies.forEach(company => {
-    //   companiesData.push({
-    //     fkCompanyId: company.companyId,
-    //     fkCompanyName: company.companyName
-    //   })
-    // })
-    // setCompanyList([...companiesData])
-    // setOpenCompanyList(!openCompanyList)
   };
 
   // const handleCompany = (index) => {
