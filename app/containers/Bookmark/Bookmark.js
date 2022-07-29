@@ -68,29 +68,29 @@ const Bookmark = (props) => {
       entityReferenceId: props.itemId,
       bookmarkedBy: loginId,
     };
-
+    const entity = props.typeOfModule;
+    const entityReferenceId = props.itemId;
+    const bookmarkedBy = loginId;
     if (props.bookmarkTrueFalse || orange === true) {
-      console.log("u r in  if");
-      const response = await api
-        .delete(`https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/173/`)
+      console.log("came in if");
+      const res = await api
+        .delete(
+          `/api/v1/core/bookmarks/entity/${entity}/${entityReferenceId}/users/${bookmarkedBy}/`
+        )
         .then((res) => {
-          console.log(res, "response");
-
-          if (res.data.data.results.data) {
+          if (res.status === 204) {
+            console.log("came in 204");
             setOpen(4);
             setLoading(false);
             setOrange(false);
-          } else if (
-            res.data.status_code === 400 ||
-            res.data.status_code === 401
-          ) {
+          }
+          if (res.data.status_code === 400 || res.data.status_code === 401) {
             setOpen(2);
             setLoading(false);
           }
         })
         .catch((err) => console.log(err));
     } else {
-      console.log("u r in  else");
       const response = await api
         .post(
           "https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/",

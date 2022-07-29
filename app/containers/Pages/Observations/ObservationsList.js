@@ -490,7 +490,7 @@ function ObservationsList(props) {
       }
     } else if (props.observation === "Bookmark List") {
       const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-      const allLogInUserData = await api.get(
+      const res = await api.get(
         `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
       if (res.status === 200) {
@@ -547,7 +547,7 @@ function ObservationsList(props) {
       await setPage(value);
     } else if (props.observation === "Bookmark List") {
       const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-      const allLogInUserData = await api.get(
+      const res = await api.get(
         `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
       await setAllInitialData(res.data.data.results.results);

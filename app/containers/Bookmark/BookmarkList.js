@@ -19,14 +19,18 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const BookmarkList = () => {
+const BookmarkList = (props) => {
   const classes = useStyles();
+  //const [orange, setOrange] = useState(false);
 
   return (
     <>
       <IconButton
         className={classNames(classes.hoverB, classes.minWd55)}
         style={{ color: "#fff" }}
+        // color={
+        //   props.bookmarkTrueFalse || orange === true ? "secondary" : "primary"
+        // }
       >
         <StarsIcon className={classes.buckmarkIcon} />
       </IconButton>

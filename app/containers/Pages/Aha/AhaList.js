@@ -227,8 +227,8 @@ function AhaList(props) {
       await setPageCount(pageCount);
     } else if (props.assessments === "Bookmark List") {
       const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-      const allLogInUserData = await api.get(
-        `api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
+      const res = await api.get(
+        `api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
 
       const result = res.data.data.results.results;
@@ -284,8 +284,8 @@ function AhaList(props) {
       await setPage(value);
     } else if (props.assessments === "Bookmark List") {
       const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-      const allLogInUserData = await api.get(
-        `api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
+      const res = await api.get(
+        `api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
       await setAllAHAData(res.data.data.results.results);
       await setPage(value);
