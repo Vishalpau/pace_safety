@@ -34,6 +34,7 @@ import DateRangeOutlinedIcon from "@material-ui/icons/DateRangeOutlined";
 import GamesOutlinedIcon from "@material-ui/icons/GamesOutlined";
 import StarsIcon from "@material-ui/icons/Stars";
 import StatusFilter from "./StatusFilter";
+import BookmarkList from "../../../../containers/Bookmark/BookmarkList";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -403,8 +404,11 @@ export default function SimpleTabs() {
     if (newValue === 0) {
       setCompliancesetValue("My Inspections");
       setValue(newValue);
-    } else {
+    } else if (newValue === 1) {
       setCompliancesetValue("Big Picture");
+      setValue(newValue);
+    } else {
+      setCompliancesetValue("Bookmark List");
       setValue(newValue);
     }
   };
@@ -423,15 +427,15 @@ export default function SimpleTabs() {
 
   const handleSearch = (e) => {
     setDummySearch(e.target.value.toLowerCase());
-  }
+  };
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      setSearch(dummySearch)
-    }, 1000)
+      setSearch(dummySearch);
+    }, 1000);
 
-    return () => clearTimeout(delayDebounceFn)
-  }, [dummySearch])
+    return () => clearTimeout(delayDebounceFn);
+  }, [dummySearch]);
 
   useEffect(() => {
     localStorage.setItem("SearchedText", JSON.stringify(search));
@@ -469,6 +473,12 @@ export default function SimpleTabs() {
                     label="Big Picture"
                     {...a11yProps(2)}
                     className={classes.hoverB}
+                  />
+                  <Tab
+                    {...a11yProps(3)}
+                    label={<BookmarkList />}
+                    className={classes.hoverB}
+                    style={{ minWidth: "unset", padding: "0 0 0" }}
                   />
                   {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
                 </Tabs>
@@ -509,9 +519,11 @@ export default function SimpleTabs() {
             <ComplianceFilterList
               compliance={compliance}
               search={
-                search !== ''
+                search !== ""
                   ? search
-                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+                  : JSON.parse(localStorage.getItem("SearchedText"))
+                  ? JSON.parse(localStorage.getItem("SearchedText"))
+                  : ""
               }
               blank={blank}
             />
@@ -520,9 +532,11 @@ export default function SimpleTabs() {
             <ComplianceFilterList
               compliance={compliance}
               search={
-                search !== ''
+                search !== ""
                   ? search
-                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+                  : JSON.parse(localStorage.getItem("SearchedText"))
+                  ? JSON.parse(localStorage.getItem("SearchedText"))
+                  : ""
               }
               blank={blank}
             />
@@ -531,9 +545,11 @@ export default function SimpleTabs() {
             <ComplianceFilterList
               compliance={compliance}
               search={
-                search !== ''
+                search !== ""
                   ? search
-                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+                  : JSON.parse(localStorage.getItem("SearchedText"))
+                  ? JSON.parse(localStorage.getItem("SearchedText"))
+                  : ""
               }
               blank={blank}
             />
@@ -542,9 +558,11 @@ export default function SimpleTabs() {
             <ComplianceFilterList
               compliance={compliance}
               search={
-                search !== ''
+                search !== ""
                   ? search
-                  : JSON.parse(localStorage.getItem("SearchedText")) ? JSON.parse(localStorage.getItem("SearchedText")) : ''
+                  : JSON.parse(localStorage.getItem("SearchedText"))
+                  ? JSON.parse(localStorage.getItem("SearchedText"))
+                  : ""
               }
               blank={blank}
             />

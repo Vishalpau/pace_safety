@@ -446,6 +446,7 @@ export default function JhaSearchSection() {
                   <Tab
                     {...a11yProps(3)}
                     label={<BookmarkList />}
+                    className={classes.hoverB}
                     style={{ minWidth: "unset", padding: "0 0 0" }}
                   />
                 </Tabs>

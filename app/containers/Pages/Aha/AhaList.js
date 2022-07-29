@@ -225,6 +225,18 @@ function AhaList(props) {
       await setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
       await setPageCount(pageCount);
+    } else if (props.assessments === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const allLogInUserData = await api.get(
+        `api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
+      );
+
+      const result = res.data.data.results.results;
+      await setAllAHAData(result);
+      await setTotalData(res.data.data.results.count);
+      await setPageData(res.data.data.results.count / 25);
+      let pageCount = Math.ceil(res.data.data.results.count / 25);
+      await setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`
@@ -267,6 +279,13 @@ function AhaList(props) {
         `api/v1/ahas/?search=${
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
+      );
+      await setAllAHAData(res.data.data.results.results);
+      await setPage(value);
+    } else if (props.assessments === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const allLogInUserData = await api.get(
+        `api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
       );
       await setAllAHAData(res.data.data.results.results);
       await setPage(value);

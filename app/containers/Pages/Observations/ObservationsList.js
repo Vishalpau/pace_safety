@@ -388,6 +388,11 @@ function ObservationsList(props) {
       fetchInitialiObservation("Big Picture");
       setIsLoading(false);
       setStatus("");
+    } else if (newValue === 2) {
+      setObs("Bookmark List");
+      fetchInitialiObservation("Bookmark List");
+      setIsLoading(false);
+      setStatus("");
     }
   };
   const handleSearch = (e) => {
@@ -481,7 +486,20 @@ function ObservationsList(props) {
         await setPageData(res.data.data.results.count / 25);
         await setTotalData(res.data.data.results.count);
         await setPageCount(pageCount);
-
+        await setIsLoading(true);
+      }
+    } else if (props.observation === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const allLogInUserData = await api.get(
+        `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+      );
+      if (res.status === 200) {
+        const result = res.data.data.results.results;
+        await setAllInitialData(result);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageData(res.data.data.results.count / 25);
+        await setTotalData(res.data.data.results.count);
+        await setPageCount(pageCount);
         await setIsLoading(true);
       }
     } else {
@@ -495,7 +513,6 @@ function ObservationsList(props) {
         await setPageData(res.data.data.results.count / 25);
         await setTotalData(res.data.data.results.count);
         await setPageCount(pageCount);
-
         await setIsLoading(true);
       }
     }
@@ -525,6 +542,13 @@ function ObservationsList(props) {
     if (props.observation === "My Observations") {
       const res = await api.get(
         `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}&page=${value}`
+      );
+      await setAllInitialData(res.data.data.results.results);
+      await setPage(value);
+    } else if (props.observation === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const allLogInUserData = await api.get(
+        `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
       await setAllInitialData(res.data.data.results.results);
       await setPage(value);

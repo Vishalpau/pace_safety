@@ -281,6 +281,18 @@ function JhaList(props) {
       await setPageData(res.data.data.results.count / 25);
       let pageCount = Math.ceil(res.data.data.results.count / 25);
       await setPageCount(pageCount);
+    } else if (props.assessment === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const allLogInUserData = await api.get(
+        `api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
+      );
+
+      const result = res.data.data.results.results;
+      await setAllJHAData(result);
+      await setTotalData(res.data.data.results.count);
+      await setPageData(res.data.data.results.count / 25);
+      let pageCount = Math.ceil(res.data.data.results.count / 25);
+      await setPageCount(pageCount);
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
@@ -320,6 +332,13 @@ function JhaList(props) {
     if (props.assessment === "My Assessments") {
       const res = await api.get(
         `api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`
+      );
+      await setAllJHAData(res.data.data.results.results);
+      await setPage(value);
+    } else if (props.assessment === "Bookmark List") {
+      const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
+      const allLogInUserData = await api.get(
+        `api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}&page=${value}`
       );
       await setAllJHAData(res.data.data.results.results);
       await setPage(value);
