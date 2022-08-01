@@ -1353,22 +1353,31 @@ const Checks = (props) => {
                                                     </FormLabel>
                                                     <TextField
                                                       label="Percentage"
-                                                      name="performancerating"
-                                                      id="performancerating"
-                                                      defaultValue={
-                                                        showCheckData.filter(
+                                                      type="text"
+                                                      inputProps={{
+                                                        maxLength: 6,
+                                                      }}
+                                                      value={
+                                                        checkData.filter(
                                                           (cd) =>
-                                                            cd.question ==
-                                                            value.question
-                                                        ).length
-                                                          ? showCheckData.filter(
-                                                              (cd) =>
-                                                                cd.question ==
-                                                                value.question
-                                                            )[0].score
+                                                            (cd.question ===
+                                                              value.question[0]
+                                                                .score) !==
+                                                            ""
+                                                        )
+                                                          ? checkData
+                                                              .filter(
+                                                                (cd) =>
+                                                                  cd.question ==
+                                                                  value.question
+                                                              )[0]
+                                                              .score.split(
+                                                                "%"
+                                                              )[0]
                                                           : ""
                                                       }
-                                                      // type="number"
+                                                      name="performancerating"
+                                                      id="performancerating"
                                                       fullWidth
                                                       variant="outlined"
                                                       className="formControl"
@@ -1384,6 +1393,7 @@ const Checks = (props) => {
                                                     />
                                                   </Grid>
                                                 )}
+
                                                 {checkACL(
                                                   "action_tracker-actions",
                                                   "add_actions"
