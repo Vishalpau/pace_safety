@@ -66,6 +66,7 @@ import Styles from "./UI/Styles";
           typeOfModule: "observations",
           itemId: item.id,
         }}
+        RefreshBookmarkData={fetchInitialiObservation} // Refreshing data after removing as bookmark
         deleteFields={{
           // Delete component props
           deleteUrl: `/api/v1/ahas/${item.id}/`,
@@ -102,6 +103,10 @@ const useStyles = makeStyles((theme) => Styles());
 const CardView = (props) => {
   const classes = useStyles();
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+
+  const RefreshBookmarkData = () => {
+    props.RefreshBookmarkData();
+  };
 
   return (
     <>
@@ -149,6 +154,7 @@ const CardView = (props) => {
             // Add comment box
             props.handleVisibilityComments();
           }}
+          RefreshBookmarkData={RefreshBookmarkData}
           handleVisibility={() => props.handleVisibility()} // Show attachment box
         />
         <UserProfile

@@ -1110,7 +1110,9 @@ function Actions(props) {
             typeOfModule: "observations",
             itemId: item.id,
             bookmarkTrueFalse: item.bookmark,
+            getBookmarkView: props.observation,
           }}
+          RefreshBookmarkData={fetchInitialiObservation}
           handleVisibility={() => handleVisibility()}
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}

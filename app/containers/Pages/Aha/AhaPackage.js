@@ -803,7 +803,9 @@ function AhaPackage(props) {
             typeOfModule: "ahas",
             itemId: item.id,
             bookmarkTrueFalse: item.bookmark,
+            getBookmarkView: props.assessments,
           }}
+          RefreshBookmarkData={fetchAllAHAData}
           handleVisibility={() => handleVisibility()} // Show attachment box
           handleVisibilityComments={() => handleVisibilityComments()} // Show "add comment" box
           files={item.files !== null ? item.files.length : 0} // Attachment counts

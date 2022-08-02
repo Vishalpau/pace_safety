@@ -1271,7 +1271,9 @@ function xflha(props) {
               typeOfModule: "flhas",
               itemId: item.id,
               bookmarkTrueFalse: item.bookmark,
+              getBookmarkView: assessments,
             }}
+            RefreshBookmarkData={fetchData}
             handleVisibility={() => handleVisibility()}
             handleVisibilityComments={() => handleVisibilityComments()}
             files={item.files !== null ? item.files.length : 0}

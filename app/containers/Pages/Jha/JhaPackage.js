@@ -833,7 +833,9 @@ function JhaPackage(props) {
               typeOfModule: "jhas",
               itemId: item.id,
               bookmarkTrueFalse: item.bookmark,
+              getBookmarkView: props.assessment,
             }}
+            RefreshBookmarkData={fetchData}
             handleVisibility={() => handleVisibility()}
             handleVisibilityComments={() => handleVisibilityComments()}
             handleSummaryPush={() => handleSummaryPush(item, commentPayload)}

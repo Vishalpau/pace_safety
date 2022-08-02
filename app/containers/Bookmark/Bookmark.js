@@ -75,7 +75,7 @@ const Bookmark = (props) => {
       console.log("came in if");
       const res = await api
         .delete(
-          `/api/v1/core/bookmarks/entity/${entity}/${entityReferenceId}/users/${bookmarkedBy}/`
+          `https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/entity/${entity}/${entityReferenceId}/users/${bookmarkedBy}/`
         )
         .then((res) => {
           if (res.status === 204) {
@@ -83,6 +83,9 @@ const Bookmark = (props) => {
             setOpen(4);
             setLoading(false);
             setOrange(false);
+            if (props.getBookmarkView === "Bookmark List") {
+              props.RefreshBookmarkData();
+            }
           }
           if (res.data.status_code === 400 || res.data.status_code === 401) {
             setOpen(2);
@@ -117,7 +120,7 @@ const Bookmark = (props) => {
     }
   }, []);
   useEffect(() => {
-    // console.log(orange, "orange");
+    console.log(orange, "orange");
   }, [orange]);
   return (
     <>
@@ -126,11 +129,7 @@ const Bookmark = (props) => {
           <CircularProgress size={10} />
         ) : (
           <StarsIcon
-            color={
-              props.bookmarkTrueFalse || orange === true
-                ? "secondary"
-                : "primary"
-            }
+            color={orange === true ? "secondary" : "primary"}
             className={classes.buckmarkIcon}
             style={{ width: 24, height: 24 }}
           />

@@ -48,13 +48,18 @@ const CardFooter = (props) => {
     number = props.printFields.number;
   }
   //Bookmarks Props
-  let itemId, typeOfModuleBookmark, bookmarkTrueFalse;
+  let itemId, typeOfModuleBookmark, bookmarkTrueFalse, getBookmarkView;
 
   if (Object.keys(props.bookmarkFields).length > 0) {
     itemId = props.bookmarkFields.itemId;
     typeOfModuleBookmark = props.bookmarkFields.typeOfModule;
     bookmarkTrueFalse = props.bookmarkFields.bookmarkTrueFalse;
+    getBookmarkView = props.bookmarkFields.getBookmarkView;
   }
+
+  const RefreshBookmarkData = () => {
+    props.RefreshBookmarkData();
+  };
 
   return (
     <>
@@ -121,6 +126,8 @@ const CardFooter = (props) => {
                       itemId={itemId}
                       typeOfModule={typeOfModuleBookmark}
                       bookmarkTrueFalse={bookmarkTrueFalse}
+                      RefreshBookmarkData={RefreshBookmarkData}
+                      getBookmarkView={getBookmarkView}
                     />
                   </Typography>
                   <span item xs={1} className={classes.sepHeightTen} />

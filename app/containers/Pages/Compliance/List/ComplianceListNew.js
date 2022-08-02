@@ -871,7 +871,9 @@ function ComplianceListNew(props) {
             typeOfModule: "audits",
             itemId: value.id,
             bookmarkTrueFalse: value.bookmark,
+            getBookmarkView: props.compliance,
           }}
+          RefreshBookmarkData={fetchAllComplianceData}
           handleVisibilityComments={() => handleVisibilityComments()}
           handleVisibility={() => handleVisibility()}
           files={
