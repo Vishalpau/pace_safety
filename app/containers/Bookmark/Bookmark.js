@@ -72,14 +72,14 @@ const Bookmark = (props) => {
     const entityReferenceId = props.itemId;
     const bookmarkedBy = loginId;
     if (props.bookmarkTrueFalse || orange === true) {
-      console.log("came in if");
+      //console.log("came in if");
       const res = await api
         .delete(
           `https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/entity/${entity}/${entityReferenceId}/users/${bookmarkedBy}/`
         )
         .then((res) => {
           if (res.status === 204) {
-            console.log("came in 204");
+            // console.log("came in 204");
             setOpen(4);
             setLoading(false);
             setOrange(false);
@@ -120,7 +120,7 @@ const Bookmark = (props) => {
     }
   }, []);
   useEffect(() => {
-    console.log(orange, "orange");
+    // console.log(orange, "orange");
   }, [orange]);
   return (
     <>
