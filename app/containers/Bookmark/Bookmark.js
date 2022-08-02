@@ -97,7 +97,7 @@ const Bookmark = (props) => {
           bookmarkPayload
         )
         .then((res) => {
-          console.log(res, "response");
+          //console.log(res, "response");
           if (res.data.data) {
             setOpen(3);
             setLoading(false);

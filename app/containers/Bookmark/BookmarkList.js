@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const BookmarkList = (props) => {
+const BookmarkList = () => {
   const classes = useStyles();
   //const [orange, setOrange] = useState(false);
 
