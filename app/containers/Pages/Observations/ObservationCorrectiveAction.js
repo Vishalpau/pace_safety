@@ -148,7 +148,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ObservationCorrectiveAction() {
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({isCorrectiveActionTaken:"No"});
   const [isLoading, setIsLoading] = useState(false);
   const radioDecide = ["Yes", "No"];
   const history = useHistory();
@@ -883,23 +883,26 @@ function ObservationCorrectiveAction() {
                             });
                           }}
                         >
-                          {radioDecide.map((value) => (
+                          {radioDecide.map((value) => {
+                            console.log(form.isCorrectiveActionTaken,value)
+                            return(
                             <FormControlLabel
                               value={value}
-                              checked={form.isCorrectiveActionTaken === value}
+                              checked={(form.isCorrectiveActionTaken ? form.isCorrectiveActionTaken : "No") === value }
                               className="selectLabel"
                               onClick={(e) => handleAction(e)}
                               control={<Radio />}
                               label={value}
                             />
-                          ))}
+                            )
+})}
                         </RadioGroup>
-                        <p style={{ color: "red" }}>
+                        {form.isCorrectiveActionTaken === "Yes" && <p style={{ color: "red" }}>
                           {error.isCorrectiveActionTaken}
-                        </p>
+                        </p>}
                       </FormControl>
                     </Grid>
-                    {actionData.length == 0 ? (
+                    {actionData.length == 0 && form.isCorrectiveActionTaken === "Yes"  ? (
                       <Grid item md={8}>
                         <p style={{ color: "red" }}>{error.action}</p>
                       </Grid>
