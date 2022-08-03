@@ -247,10 +247,13 @@ function UserMenu(props) {
           let apiUrlDomain = {};
 
           if (subscriptionAction.length > 0) {
-            console.log(subscriptionAction, "subscriptionAction");
-            let actionHosting = subscriptionAction[0].hostings[0].apiDomain;
-            let actionUI = subscriptionAction[0].hostings[0].appDomain;
-            let actionClientId = subscriptionAction[0].hostings[0].clientId;
+            // console.log(subscriptionAction, "subscriptionAction");
+            // let actionHosting = subscriptionAction[0].hostings[0].apiDomain;
+            // let actionUI = subscriptionAction[0].hostings[0].appDomain;
+            // let actionClientId = subscriptionAction[0].hostings[0].clientId;
+            let actionHosting = subscriptionData.filter(sd => sd.appName === 'Action Tracker')[0].hostings[0].apiDomain;
+            let actionUI = subscriptionData.filter(sd => sd.appName === 'Action Tracker')[0].hostings[0].appDomain;
+            let actionClientId = subscriptionData.filter(sd => sd.appName === 'Action Tracker')[0].hostings[0].clientId;
 
             apiUrlDomain = {
               safety: hostings,
