@@ -90,7 +90,7 @@ const Print = (props) => {
         style={{ width: 45, height: 45 }}
       >
         {loading ? (
-          <CircularProgress size={10} />
+          <CircularProgress size={12} />
         ) : (
           <PrintOutlinedIcon className={classes.iconteal} />
         )}

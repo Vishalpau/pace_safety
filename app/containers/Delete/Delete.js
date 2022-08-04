@@ -98,7 +98,7 @@ const Delete = (props) => {
           onClick={() => setDeleteQ(true)}
         >
           {loading ? (
-            <CircularProgress size={10} />
+            <CircularProgress size={12} />
           ) : (
             <>
               {props.deleteItem ? (

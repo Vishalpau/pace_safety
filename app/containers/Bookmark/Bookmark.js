@@ -71,7 +71,7 @@ const Bookmark = (props) => {
     const entity = props.typeOfModule;
     const entityReferenceId = props.itemId;
     const bookmarkedBy = loginId;
-    if (props.bookmarkTrueFalse || orange === true) {
+    if (orange === true) {
       console.log("came in if");
       const res = await api
         .delete(
@@ -81,15 +81,22 @@ const Bookmark = (props) => {
           if (res.status === 204) {
             console.log("came in 204");
             setOpen(4);
-            setLoading(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 200);
             setOrange(false);
             if (props.getBookmarkView === "Bookmark List") {
               props.RefreshBookmarkData();
             }
-          }
-          if (res.data.status_code === 400 || res.data.status_code === 401) {
+          } else if (
+            res.data.status_code === 400 ||
+            res.data.status_code === 401 ||
+            !res
+          ) {
             setOpen(2);
-            setLoading(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 200);
           }
         })
         .catch((err) => console.log(err));
@@ -103,12 +110,19 @@ const Bookmark = (props) => {
           //console.log(res, "response");
           if (res.data.data) {
             setOpen(3);
-            setLoading(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 200);
             setOrange(true);
-          }
-          if (res.data.status_code === 400 || res.data.status_code === 401) {
+          } else if (
+            res.data.status_code === 400 ||
+            res.data.status_code === 401 ||
+            !res
+          ) {
             setOpen(1);
-            setLoading(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 200);
           }
         })
         .catch((err) => console.log(err));
@@ -126,7 +140,7 @@ const Bookmark = (props) => {
     <>
       <IconButton onClick={handleBookmark} style={{ width: 45, height: 45 }}>
         {loading ? (
-          <CircularProgress size={10} />
+          <CircularProgress size={12} />
         ) : (
           <StarsIcon
             color={orange === true ? "secondary" : "primary"}
