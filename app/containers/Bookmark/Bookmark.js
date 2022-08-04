@@ -135,7 +135,10 @@ const Bookmark = (props) => {
           />
         )}
       </IconButton>
+
+      {/* <div style={{ willChange: "transform" }}> */}
       <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={open === 1 || open === 2 || open === 3 || open === 4}
         autoHideDuration={800}
         onClose={handleClose}
@@ -155,9 +158,8 @@ const Bookmark = (props) => {
             : ""}
         </Alert>
       </Snackbar>
+      {/* </> </div> */}
     </>
   );
 };
-//
-
 export default Bookmark;
