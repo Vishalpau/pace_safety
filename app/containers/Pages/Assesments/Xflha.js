@@ -781,7 +781,7 @@ function xflha(props) {
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
   const fetchData = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     setPage(1);
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
     const fkProjectId =
@@ -830,7 +830,7 @@ function xflha(props) {
       const pageCount = Math.ceil(res.data.data.results.count / 25);
       setPageCount(pageCount);
     }
-    setIsLoading(false);
+    setIsLoading(true);
   };
 
   let timer;
@@ -1266,6 +1266,7 @@ function xflha(props) {
               deleteMsg: "Are you sure you want to delete this FLHA?",
               yesBtn: "Yes",
               noBtn: "No",
+              dataLength: flhas.length,
             }}
             bookmarkFields={{
               typeOfModule: "flhas",
@@ -1695,7 +1696,7 @@ function xflha(props) {
                 </Grid>
               </Grid>
             </Grid>
-            {!isLoading ? (
+            {isLoading ? (
               // <>
               listToggle == false ? (
                 <div>

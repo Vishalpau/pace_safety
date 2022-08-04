@@ -38,6 +38,7 @@ const CardFooter = (props) => {
     deleteMsg,
     yesBtn,
     noBtn,
+    dataLength,
   } = props.deleteFields;
 
   let printUrl, typeOfModule, number;
@@ -147,6 +148,7 @@ const CardFooter = (props) => {
                   yesBtn={yesBtn}
                   noBtn={noBtn}
                   checkDeletePermission={props.checkDeletePermission}
+                  dataLength={dataLength}
                 />
               </Typography>
             </div>

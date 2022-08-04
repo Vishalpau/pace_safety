@@ -798,6 +798,7 @@ function AhaPackage(props) {
             deleteMsg: "Are you sure you want to delete this AHA?",
             yesBtn: "Yes",
             noBtn: "No",
+            dataLength: allAHAData.length,
           }}
           bookmarkFields={{
             typeOfModule: "ahas",
