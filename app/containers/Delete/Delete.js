@@ -11,6 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   iconteal: {
@@ -30,16 +31,22 @@ const useStyles = makeStyles((theme) => ({
 const Delete = (props) => {
   const classes = useStyles();
   const [deleteQ, setDeleteQ] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [dataLength, setDataLength] = useState(props.dataLength);
 
   const sendValue = async () => {
-    props.loader(!props.loadingFlag);
+    // props.loader(!props.loadingFlag);
+    setLoading(true);
     setDeleteQ(false);
     if (props.item) {
       const res = await props.axiosObj
         .put(props.deleteUrl, props.item)
         .then((res) => {
-          props.loader(props.loadingFlag);
+          // props.loader(props.loadingFlag);
           props.afterDelete();
+          if (props.dataLength === dataLength - 1) {
+            setLoading(false);
+          }
         })
         .catch((err) => {
           props.loader(props.loadingFlag);
@@ -48,8 +55,11 @@ const Delete = (props) => {
       const res = await props.axiosObj
         .delete(props.deleteUrl)
         .then((res) => {
-          props.loader(props.loadingFlag);
+          // props.loader(props.loadingFlag);
           props.afterDelete();
+          if (props.dataLength === dataLength - 1) {
+            setLoading(false);
+          }
         })
         .catch((err) => {
           props.loader(props.loadingFlag);
@@ -87,31 +97,37 @@ const Delete = (props) => {
           // className={classes.mLeftR5}
           onClick={() => setDeleteQ(true)}
         >
-          {props.deleteItem ? (
-            <DeleteForeverOutlinedIcon className={classes.iconteal} />
+          {loading ? (
+            <CircularProgress size={12} />
           ) : (
-            // <Link href="#">
-            <svg
-              id="baseline-delete-24px"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                id="Path_221"
-                data-name="Path 221"
-                d="M6,19a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V7H6ZM19,4H15.5l-1-1h-5l-1,1H5V6H19Z"
-                fill="#7890a4"
-              />
-              <path
-                id="Path_222"
-                data-name="Path 222"
-                d="M0,0H24V24H0Z"
-                fill="none"
-              />
-            </svg>
-            // </Link>
+            <>
+              {props.deleteItem ? (
+                <DeleteForeverOutlinedIcon className={classes.iconteal} />
+              ) : (
+                // <Link href="#">
+                <svg
+                  id="baseline-delete-24px"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    id="Path_221"
+                    data-name="Path 221"
+                    d="M6,19a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V7H6ZM19,4H15.5l-1-1h-5l-1,1H5V6H19Z"
+                    fill="#7890a4"
+                  />
+                  <path
+                    id="Path_222"
+                    data-name="Path 222"
+                    d="M0,0H24V24H0Z"
+                    fill="none"
+                  />
+                </svg>
+                // </Link>
+              )}
+            </>
           )}
         </Button>
       ) : (
