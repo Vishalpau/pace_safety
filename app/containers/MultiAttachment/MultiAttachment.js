@@ -109,7 +109,7 @@ const MultiAttachment = (props) => {
       const temparray = [];
       console.log(e, "eeeeeeeeeeeeeeeeeee");
 
-      debugger;
+      //debugger;
 
       const tempArr2 = [];
 

@@ -392,7 +392,7 @@ const Evidence = () => {
     if (isValid === true) {
       setIsNext(false);
       let status = 0;
-      debugger;
+      //debugger;
       if (evideceData.length > 0) {
         for (let i = 0; i < form.length; i++) {
           try {

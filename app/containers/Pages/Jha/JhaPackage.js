@@ -504,7 +504,7 @@ function JhaPackage(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
-    setIsLoading(false);
+    // setIsLoading(false);
     setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
@@ -828,6 +828,7 @@ function JhaPackage(props) {
               deleteMsg: "Are you sure you want to delete this JSA?",
               yesBtn: "Yes",
               noBtn: "No",
+              dataLength: allJHAData.length,
             }}
             bookmarkFields={{
               typeOfModule: "jhas",
