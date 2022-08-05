@@ -1,40 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Card from "@material-ui/core/Card";
-import classNames from "classnames";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
-import Share from "@material-ui/icons/Share";
-import Divider from "@material-ui/core/Divider";
-import Link from "@material-ui/core/Link";
-import AttachmentIcon from "@material-ui/icons/Attachment";
 import Box from "@material-ui/core/Box";
-import Chip from "@material-ui/core/Chip";
-import Avatar from "@material-ui/core/Avatar";
-import TableContainer from "@material-ui/core/TableContainer";
 import { makeStyles } from "@material-ui/core/styles";
-import Incidents from "dan-styles/IncidentsList.scss";
-import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-import MUIDataTable from "mui-datatables";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import { useHistory, useParams } from "react-router";
-//import "../../../styles/custom/customheader.css";
-import StarsIcon from "@material-ui/icons/Stars";
-import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import FormLabel from "@material-ui/core/FormLabel";
 
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
@@ -44,23 +21,16 @@ import Dialog from "@material-ui/core/Dialog";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import projectpj from "dan-images/projectpj.png";
-import TextField from "@material-ui/core/TextField";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import IconButton from "@material-ui/core/IconButton";
 import api from "../../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
 import Loader from "../../Loader";
-import moment from "moment";
 import { checkACL } from "../../../../utils/helper";
 import Attachment from "../../../../containers/Attachment/Attachment";
-import Delete from "../../../Delete/Delete";
 import CardView from "../../../../components/Card/Index";
 import { complianceLabels } from "../../../../components/Card/CardConstants";
 import DateFormat from "../../../../components/Date/DateFormat";
-import addCommentsComponent from "../../../addComments/Comments";
+import AddCommentsComponent from "../../../addComments/AddComments";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -524,8 +494,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -540,8 +510,7 @@ function ComplianceListNew(props) {
       setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -565,8 +534,7 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -581,10 +549,8 @@ function ComplianceListNew(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -609,10 +575,8 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -636,8 +600,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -652,8 +616,7 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -667,8 +630,7 @@ function ComplianceListNew(props) {
         setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -677,10 +639,8 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -694,10 +654,8 @@ function ComplianceListNew(props) {
         setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -776,25 +734,25 @@ function ComplianceListNew(props) {
     //   setHidden(!hidden);
     // }
 
-    // function handleVisibilityComments() {
-    //   setCommentsOpen(true);
-    //   setHiddenn(!hiddenn);
-    //   setCommentData("");
-    // }
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
+      setCommentData("");
+    }
 
-    // function handleAttachClose() {
-    //   setShowGrid(false);
-    // }
+    function handleAttachClose() {
+      setShowGrid(false);
+    }
 
-    // function handleAttachClick() {
-    //   setShowGrid(!open);
-    // }
+    function handleAttachClick() {
+      setShowGrid(!open);
+    }
 
-    // function handleAttachOpen() {
-    //   if (!hidden) {
-    //     setShowGrid(true);
-    //   }
-    // }
+    function handleAttachOpen() {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    }
 
     // function handleCommentsOpen() {
     //   if (!hiddenn) {
@@ -828,11 +786,11 @@ function ComplianceListNew(props) {
       else if (type === 'handleCommentsOpen') {
         setCommentsOpen(true);
       }
-      else if ('handleVisibilityComments') {
-        setCommentsOpen(true);
-        setHiddenn(!hiddenn);
-        setCommentData("");
-      }
+      // else if ('handleVisibilityComments') {
+      //   setCommentsOpen(true);
+      //   setHiddenn(!hiddenn);
+      //   setCommentData("");
+      // }
       else if ('visibility') {
         setShowGrid(true);
         setHidden(!hidden);
@@ -943,16 +901,18 @@ function ComplianceListNew(props) {
           ""
         )}
 
-        <addCommentsComponent
-         commentPayload = {commentPayload} 
-         commentOpen = {commentsOpen}
-         commentData = {commentData}
-         hiddenn = {hiddenn}
-         isLoading = {isLoading}
-         fetchAllComplianceData = {fetchAllComplianceData}
-         setIsLoading = {(val) => setIsLoading(val)}
-         handleComments = {(type) => handleComments(type)}
-         />
+        <AddCommentsComponent
+          commentPayload={commentPayload}
+          commentOpen={commentsOpen}
+          commentData={commentData}
+          hiddenn={hiddenn}
+          isLoading={isLoading}
+          setIsLoading={(val) => setIsLoading(val)}
+          fetchAllComplianceData={fetchAllComplianceData}
+          handleComments={(type) => handleComments(type)}
+          handleVisibilityComments={handleVisibilityComments}
+          addComments={(value) => setCommentData(value)}
+        />
       </>
     );
   };

@@ -1,4 +1,12 @@
-const addCommentsComponent = (props) => {
+import React from 'react';
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import api from '../../utils/axios'
+
+function AddComments(props) {
 
     const handleSendComments = async () => {
         if (props.commentData) {
@@ -15,9 +23,9 @@ const addCommentsComponent = (props) => {
         }
     };
 
-    const addComments = (event) => {
-        setCommentData(event.target.value);
-    };
+    const addCommentData = (e) => {
+        props.addComments(e.target.value)
+    }
     
     return (
         <Grid
@@ -49,7 +57,7 @@ const addCommentsComponent = (props) => {
                                         label="Add your comments here"
                                         className="formControl"
                                         value={props.commentData}
-                                        onChange={(e) => addComments(e)}
+                                        onChange={(e) => addCommentData(e)}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -69,7 +77,7 @@ const addCommentsComponent = (props) => {
                                         size="small"
                                         className="custmCancelBtn buttonStyle"
                                         disableElevation
-                                        onClick={props.handleComments('handleVisibilityComments')}
+                                        onClick={props.handleVisibilityComments}
                                     >
                                         Cancel
                                     </Button>
@@ -83,7 +91,7 @@ const addCommentsComponent = (props) => {
     )
 }
 
-export default addCommentsComponent;
+export default AddComments;
 
 
 
