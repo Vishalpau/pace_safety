@@ -103,6 +103,7 @@ const useStyles = makeStyles((theme) => Styles());
 const CardView = (props) => {
   const classes = useStyles();
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+  const [deleting, setDeleting] = React.useState(false);
 
   const RefreshBookmarkData = () => {
     props.RefreshBookmarkData();
@@ -115,6 +116,15 @@ const CardView = (props) => {
         className={`${classes.card} ${
           props.ifPaperUpload ? props.ifPaperUpload : ""
         }`}
+        style={
+          deleting
+            ? {
+                opacity: 0.4,
+                transition: "0.3s all ease",
+                borderColor: "#f4760798",
+              }
+            : { opacity: 1, transition: "0.3s all ease" }
+        }
       >
         <CardContent>
           <Grid container spacing={3} className={classes.cardContentSection}>
@@ -156,6 +166,7 @@ const CardView = (props) => {
           }}
           RefreshBookmarkData={RefreshBookmarkData}
           handleVisibility={() => props.handleVisibility()} // Show attachment box
+          deleting={(bool) => setDeleting(bool)}
         />
         <UserProfile
           ifJsa={
