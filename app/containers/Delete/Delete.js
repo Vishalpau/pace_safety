@@ -33,11 +33,13 @@ const Delete = (props) => {
   const [deleteQ, setDeleteQ] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dataLength, setDataLength] = useState(props.dataLength);
+  const [deleting, setDeleting] = useState(false);
 
   const sendValue = async () => {
     // props.loader(!props.loadingFlag);
     setLoading(true);
     setDeleteQ(false);
+    setDeleting(true);
     if (props.item) {
       const res = await props.axiosObj
         .put(props.deleteUrl, props.item)
@@ -50,6 +52,7 @@ const Delete = (props) => {
         })
         .catch((err) => {
           props.loader(props.loadingFlag);
+          setDeleting(false);
         });
     } else {
       const res = await props.axiosObj
@@ -63,32 +66,16 @@ const Delete = (props) => {
         })
         .catch((err) => {
           props.loader(props.loadingFlag);
+          setDeleting(false);
         });
     }
-    // let apiData = { deleteUrl: props.deleteUrl };
-    // let routeType = "";
-    // console.log(routeType, apiData, props.deleteItem, "props;");
-    // if (props.item) {
-    //   apiData = { item: props.item };
-    //   routeType = "put";
-    // } else {
-    //   routeType = "delete";
-    // }
-
-    // console.log(props.axiosObj);
-    // console.log(routeType, apiData, "routeData");
-    // const res = await props.axiosObj[routeType](
-    //   apiData.deleteUrl,
-    //   apiData.item && apiData.item
-    // )
-    //   .then((res) => {
-    //     props.loader(props.loadingFlag);
-    //     props.afterDelete();
-    //   })
-    //   .catch((err) => {
-    //     props.loader(props.loadingFlag);
-    //   });
   };
+
+  useEffect(() => {
+    if (deleting) {
+      props.deleting(deleting);
+    }
+  }, [deleting]);
 
   return (
     <>
