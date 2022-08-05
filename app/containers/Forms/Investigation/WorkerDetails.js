@@ -222,6 +222,10 @@ const WorkerDetails = () => {
     setForm({ ...form, files });
   };
 
+  useEffect(() => {
+    console.log(form, 'formmmmmmmmmmmmmmm');
+  },[form])
+  
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -1484,19 +1488,17 @@ const WorkerDetails = () => {
                 </Grid>
 
                 <Grid item md={12}>
-                  {typeof form.files === 'object' && form.files.length > 0 ? (
+                  {form.files && (
                     <>
-                      {/* Mapping the files */}
-
                       {form.files.map((file) => (
                         <Attachment
                           key={file.id}
                           value={file.fileName || file.path}
-                          // type={file.filename}
                         />
                       ))}
                     </>
-                  ) : null}
+                    ) 
+                  }
                 </Grid>
 
                 {localWorkerData.length > 1 ? (

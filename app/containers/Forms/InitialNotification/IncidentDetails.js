@@ -457,7 +457,8 @@ const IncidentDetails = (props) => {
     try {
       const res = await api.get("api/v1/lists/4/value");
       const result = res.data.data.results;
-      await setPersonAffectedValue(result);
+      console.log(result, 'resulttttt');
+      setPersonAffectedValue(result);
     } catch (error) {
       setIsNext(true);
 

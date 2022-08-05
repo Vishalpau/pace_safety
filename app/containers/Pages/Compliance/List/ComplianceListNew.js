@@ -60,6 +60,7 @@ import Delete from "../../../Delete/Delete";
 import CardView from "../../../../components/Card/Index";
 import { complianceLabels } from "../../../../components/Card/CardConstants";
 import DateFormat from "../../../../components/Date/DateFormat";
+import addCommentsComponent from "../../../addComments/Comments";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -741,10 +742,6 @@ function ComplianceListNew(props) {
     //   console.log(commentsOpen, "commnentspjeo");
     // }, [commentsOpen]);
 
-    const addComments = (event) => {
-      setCommentData(event.target.value);
-    };
-
     const commentPayload = {
       fkCompanyId: value.fkCompanyId,
       fkProjectId: value.fkProjectId,
@@ -758,60 +755,60 @@ function ComplianceListNew(props) {
       createdBy: value.createdBy,
     };
 
-    const handleSendComments = async () => {
-      if (commentData) {
-        setIsLoading(true);
-        await api
-          .post("/api/v1/comments/", commentPayload)
-          .then((res) => {
-            fetchAllComplianceData();
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            console.log(err);
-            setIsLoading(false);
-          });
-      }
-    };
+    // const handleSendComments = async () => {
+    //   if (commentData) {
+    //     setIsLoading(true);
+    //     await api
+    //       .post("/api/v1/comments/", commentPayload)
+    //       .then((res) => {
+    //         fetchAllComplianceData();
+    //         setIsLoading(false);
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //         setIsLoading(false);
+    //       });
+    //   }
+    // };
 
-    function handleVisibility() {
-      setShowGrid(true);
-      setHidden(!hidden);
-    }
+    // function handleVisibility() {
+    //   setShowGrid(true);
+    //   setHidden(!hidden);
+    // }
 
-    function handleVisibilityComments() {
-      setCommentsOpen(true);
-      setHiddenn(!hiddenn);
-      setCommentData("");
-    }
+    // function handleVisibilityComments() {
+    //   setCommentsOpen(true);
+    //   setHiddenn(!hiddenn);
+    //   setCommentData("");
+    // }
 
-    function handleAttachClose() {
-      setShowGrid(false);
-    }
+    // function handleAttachClose() {
+    //   setShowGrid(false);
+    // }
 
-    function handleAttachClick() {
-      setShowGrid(!open);
-    }
+    // function handleAttachClick() {
+    //   setShowGrid(!open);
+    // }
 
-    function handleAttachOpen() {
-      if (!hidden) {
-        setShowGrid(true);
-      }
-    }
+    // function handleAttachOpen() {
+    //   if (!hidden) {
+    //     setShowGrid(true);
+    //   }
+    // }
 
-    function handleCommentsOpen() {
-      if (!hiddenn) {
-        setCommentsOpen(true);
-      }
-    }
+    // function handleCommentsOpen() {
+    //   if (!hiddenn) {
+    //     setCommentsOpen(true);
+    //   }
+    // }
 
-    function handleCommentsClose() {
-      setCommentsOpen(false);
-    }
+    // function handleCommentsClose() {
+    //   setCommentsOpen(false);
+    // }
 
-    function handleCommentsClick() {
-      setCommentsOpen(!open);
-    }
+    // function handleCommentsClick() {
+    //   setCommentsOpen(!open);
+    // }
 
     // function handleClickOpenAttachment() {
     //   setopenAttachment(true);
@@ -821,7 +818,26 @@ function ComplianceListNew(props) {
     //   setopenAttachment(false);
     // }
 
-    // console.log(showGrid);
+    const handleComments = (type) => {
+      if (type === 'handleCommentsClose') {
+        setCommentsOpen(false);
+      }
+      else if ('handleCommentsClick') {
+        setCommentsOpen(!open);
+      }
+      else if (type === 'handleCommentsOpen') {
+        setCommentsOpen(true);
+      }
+      else if ('handleVisibilityComments') {
+        setCommentsOpen(true);
+        setHiddenn(!hiddenn);
+        setCommentData("");
+      }
+      else if ('visibility') {
+        setShowGrid(true);
+        setHidden(!hidden);
+      }
+    }
 
     const groupNames = value.groups.map((one) => {
       return (
@@ -927,66 +943,16 @@ function ComplianceListNew(props) {
           ""
         )}
 
-        <Grid
-          item
-          md={12}
-          sm={12}
-          xs={12}
-          hidden={!hiddenn}
-          onBlur={handleCommentsClose}
-          onClick={handleCommentsClick}
-          onClose={handleCommentsClose}
-          onFocus={handleCommentsOpen}
-          onMouseEnter={handleCommentsOpen}
-          onMouseLeave={handleCommentsClose}
-          open={commentsOpen}
-          className="commentsShowSection"
-        >
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-              <Grid item md={12} xs={12}>
-                <Box padding={3}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        multiline
-                        variant="outlined"
-                        rows="1"
-                        id="JobTitle"
-                        label="Add your comments here"
-                        className="formControl"
-                        value={commentData}
-                        onChange={(e) => addComments(e)}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        className="spacerRight buttonStyle"
-                        disableElevation
-                        onClick={handleSendComments}
-                      >
-                        Respond
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        className="custmCancelBtn buttonStyle"
-                        disableElevation
-                        onClick={handleVisibilityComments}
-                      >
-                        Cancel
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+        <addCommentsComponent
+         commentPayload = {commentPayload} 
+         commentOpen = {commentsOpen}
+         commentData = {commentData}
+         hiddenn = {hiddenn}
+         isLoading = {isLoading}
+         fetchAllComplianceData = {fetchAllComplianceData}
+         setIsLoading = {(val) => setIsLoading(val)}
+         handleComments = {(type) => handleComments(type)}
+         />
       </>
     );
   };
