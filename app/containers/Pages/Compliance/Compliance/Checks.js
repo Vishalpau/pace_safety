@@ -865,7 +865,7 @@ const Checks = (props) => {
       let arr_op = { ...ratingData };
       arr_op[index] = ratingValue;
       setRatingData(arr_op);
-      console.log(checkData, "checkdata");
+      // console.log(checkData, "checkdata");
       let temp = [...checkData];
       for (let i = 0; i < temp.length; i++) {
         if (temp[i]["questionId"] == id) {

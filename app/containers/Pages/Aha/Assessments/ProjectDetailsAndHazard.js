@@ -337,7 +337,7 @@ const ProjectDetailsAndHazard = () => {
     }
     form["workArea"] = structName[structName.length - 1];
     form["qrCodeUrl"] = undefined;
-    await setLoading(true);
+    setLoading(true);
     if (form.id) {
       delete form["ahaAssessmentAttachment"];
       form["updatedBy"] = userId;

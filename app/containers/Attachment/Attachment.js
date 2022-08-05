@@ -144,15 +144,17 @@ export const Attachment = ({ value, src }) => {
     );
   } else {
     return (
-      <IconButton onClick={() => setOpen(true)}>
-        <Tooltip title={fileName}>
-          <Avatar
-            alt="image"
-            src={value}
-            variant="square"
-            className={classes.square}
-          />
-        </Tooltip>
+      <IconButton >
+        <div onClick={() => setOpen(true)}>
+          <Tooltip title={fileName}>
+            <Avatar
+              alt="image"
+              src={value}
+              variant="square"
+              className={classes.square}
+            />
+          </Tooltip>
+        </div>
         <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
       </IconButton>
     );

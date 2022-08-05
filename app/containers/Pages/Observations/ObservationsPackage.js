@@ -1100,6 +1100,7 @@ function Actions(props) {
             deleteMsg: "Are you sure you want to delete this iCare?",
             yesBtn: "Yes",
             noBtn: "No",
+            dataLength: allInitialData.length,
           }}
           printFields={{
             typeOfModule: "Observation",

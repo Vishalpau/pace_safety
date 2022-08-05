@@ -282,7 +282,6 @@ function JhaList(props) {
       let pageCount = Math.ceil(res.data.data.results.count / 25);
       await setPageCount(pageCount);
     } else if (props.assessment === "Bookmark List") {
-      debugger;
       const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
       const res = await api.get(
         `api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`

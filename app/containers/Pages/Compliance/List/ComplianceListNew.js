@@ -507,7 +507,7 @@ function ComplianceListNew(props) {
         : null;
     // for types filter
     if (props.type === "Categories" || props.type === "All") {
-      setIsLoading(true);
+      // setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
           `api/v1/audits/?search=${props.search
@@ -840,6 +840,7 @@ function ComplianceListNew(props) {
             deleteMsg: "Are you sure you want to delete this Compliance?",
             yesBtn: "Yes",
             noBtn: "No",
+            dataLength: allComplianceData.length,
           }}
           bookmarkFields={{
             typeOfModule: "audits",

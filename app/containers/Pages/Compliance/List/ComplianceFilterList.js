@@ -22,6 +22,15 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ComplianceList from "./ComplianceList";
+import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
+import Menu from "@material-ui/core/Menu";
+import {
+  CircularProgress,
+  Select,
+  Tooltip,
+  InputLabel,
+  FormControl,
+} from "@material-ui/core";
 
 const drawerWidth = 240;
 
@@ -252,6 +261,40 @@ const styles = (theme) => ({
     backgroundColor: "#7692a4",
   },
   selected: { backgroundColor: "#f47607" },
+  tableActionIcons: {
+    color: "#546e7a",
+    "& svg": {
+      fontSize: "30px",
+      padding: "5px",
+    },
+  },
+  downloadListBox: {
+    textAlign: "right",
+    margin: "8px 0px",
+  },
+  menuPopUpBox: {
+    "& li": {
+      padding: "0px",
+
+      "& svg": {
+        marginRight: "5px",
+
+        color: "#546e7a",
+
+        verticalAlign: "middle",
+      },
+
+      "& a": {
+        width: "100%",
+        padding: "10px 15px",
+        display: "inline-block",
+        color: "#263238",
+        fontSize: "14px",
+        fontFamily: "Montserrat-Regular",
+        textDecoration: "none",
+      },
+    },
+  },
 });
 
 class ComplianceFilterList extends React.Component {
@@ -470,9 +513,100 @@ class ComplianceFilterList extends React.Component {
                           : this.state.type}
                       </Typography>
                     )}
+
                     {afterBtn}
                   </Button>
                 </Grid>
+                {/*Download Section */}
+                {/* <div className={classes.drawerHeader} />
+                <Grid container spacing={2}>
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    className={classes.downloadListBox}
+                  />
+                  <Tooltip title="Download Files" arrow>
+                    <IconButton
+                      size="small"
+                      className={classes.tableActionIcons}
+                      aria-controls="simple-menu"
+                      aria-haspopup="true"
+                      ///disabled={this.props.actions.length > 0 ? false : true}
+                      //onClick={this.handleClick}
+                    >
+                      <CloudDownloadIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    TransitionComponent={this.Fade}
+                    className={classes.menuPopUpBox}
+                    elevation={3}
+                    id="simple-menu"
+                    // anchorEl={anchorEl}
+                    // open={Boolean(anchorEl)}
+                    //onClose={this.handleClose}
+                  >
+                    <MenuItem>
+                      <Tooltip title="Download in PDF" arrow>
+                        <Button
+                          //onClick={this.handleDownloadPdf}
+                          // disabled={this.state.loadingPDF}
+                          style={{ margin: 5 }}
+                        >
+                           {this.state.loadingPDF && (
+                            <CircularProgress size={14} />
+                          )} 
+                          {!this.state.loadingPDF && (
+                            <img
+                              src="https://media.pace-os.com/icons/svg/pdf-24x24.svg"
+                              alt="PDF file"
+                            />
+                          )}
+                        </Button>
+                      </Tooltip>
+                    </MenuItem>
+                    <MenuItem>
+                    <Tooltip title="Download in Excel" arrow>
+                      <Button
+                        onClick={this.handleDownloadExcel}
+                        disabled={this.state.loadingXLS}
+                        style={{ margin: 5 }}
+                      >
+                        {this.state.loadingXLS && (
+                          <CircularProgress size={14} />
+                        )}
+                        {!this.state.loadingXLS && (
+                          <img
+                            src="https://media.pace-os.com/icons/svg/excel-24x24.svg"
+                            alt="Excel File"
+                          />
+                        )}
+                      </Button>
+                    </Tooltip>
+                  </MenuItem> 
+                    <MenuItem>
+                      <Tooltip title="Download in CSV" arrow>
+                        <Button
+                          onClick={this.handleDownloadCSV}
+                          disabled={this.state.loadingCSV}
+                          style={{ margin: 5 }}
+                        >
+                          {this.state.loadingCSV && (
+                            <CircularProgress size={14} />
+                          )}
+                           {!this.state.loadingCSV && (
+                          <img
+                            src="https://media.pace-os.com/icons/svg/csv-24x24.svg"
+                            alt="CSV File"
+                          />
+                        )} 
+                        </Button>
+                      </Tooltip>
+                    </MenuItem>
+                  </Menu>
+                </Grid>*/}
               </Grid>
             </Toolbar>
           </AppBar>

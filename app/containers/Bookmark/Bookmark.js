@@ -41,7 +41,7 @@ const Bookmark = (props) => {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setOpen(0);
   };
 
   const handleBookmark = async () => {
@@ -72,24 +72,31 @@ const Bookmark = (props) => {
     const entityReferenceId = props.itemId;
     const bookmarkedBy = loginId;
     if (props.bookmarkTrueFalse || orange === true) {
-      console.log("came in if");
+      //console.log("came in if");
       const res = await api
         .delete(
           `https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/entity/${entity}/${entityReferenceId}/users/${bookmarkedBy}/`
         )
         .then((res) => {
           if (res.status === 204) {
-            console.log("came in 204");
+            // console.log("came in 204");
             setOpen(4);
-            setLoading(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 200);
             setOrange(false);
             if (props.getBookmarkView === "Bookmark List") {
               props.RefreshBookmarkData();
             }
-          }
-          if (res.data.status_code === 400 || res.data.status_code === 401) {
+          } else if (
+            res.data.status_code === 400 ||
+            res.data.status_code === 401 ||
+            !res
+          ) {
             setOpen(2);
-            setLoading(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 200);
           }
         })
         .catch((err) => console.log(err));
@@ -103,12 +110,19 @@ const Bookmark = (props) => {
           //console.log(res, "response");
           if (res.data.data) {
             setOpen(3);
-            setLoading(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 200);
             setOrange(true);
-          }
-          if (res.data.status_code === 400 || res.data.status_code === 401) {
+          } else if (
+            res.data.status_code === 400 ||
+            res.data.status_code === 401 ||
+            !res
+          ) {
             setOpen(1);
-            setLoading(false);
+            setTimeout(() => {
+              setLoading(false);
+            }, 200);
           }
         })
         .catch((err) => console.log(err));
@@ -119,14 +133,11 @@ const Bookmark = (props) => {
       setOrange(true);
     }
   }, []);
-  // useEffect(() => {
-  //   console.log(orange, "orange");
-  // }, [orange]);
   return (
     <>
       <IconButton onClick={handleBookmark} style={{ width: 45, height: 45 }}>
         {loading ? (
-          <CircularProgress size={10} />
+          <CircularProgress size={12} />
         ) : (
           <StarsIcon
             color={orange === true ? "secondary" : "primary"}
@@ -135,7 +146,10 @@ const Bookmark = (props) => {
           />
         )}
       </IconButton>
+
+      {/* <div style={{ willChange: "transform" }}> */}
       <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={open === 1 || open === 2 || open === 3 || open === 4}
         autoHideDuration={800}
         onClose={handleClose}
@@ -155,9 +169,8 @@ const Bookmark = (props) => {
             : ""}
         </Alert>
       </Snackbar>
+      {/* </> </div> */}
     </>
   );
 };
-//
-
 export default Bookmark;
