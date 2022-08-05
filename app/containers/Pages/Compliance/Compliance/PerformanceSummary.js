@@ -162,8 +162,13 @@ const PerformanceSummary = (props) => {
     let complianceId = localStorage.getItem("fkComplianceId");
     // loading call
     setLoading(true);
+    const apiData = {
+      ...form,
+      complianceStage: 'Open',
+      complianceStatus: 'Compliance'
+    }
     const res = await api
-      .put(`/api/v1/audits/${complianceId}/`, form)
+      .put(`/api/v1/audits/${complianceId}/`, apiData)
       .then((response) => {
         history.push(
           `/app/pages/compliance/compliance-summary/${complianceId}`
@@ -208,16 +213,12 @@ const PerformanceSummary = (props) => {
   const handleNotification = (e, value) => {
     if (e.target.checked === true) {
       let temp = [];
-
       temp.push(value);
-      let uniq = [...new Set(temp)];
-
+      // let uniq = [...new Set(temp)];
       setForm({ ...form, notifyTo: temp.toString() });
     } else {
       let temp = [];
-
       let newData = temp.filter((item) => item !== value);
-
       setForm({ ...form, notifyTo: newData.toString() });
     }
   };
@@ -228,6 +229,7 @@ const PerformanceSummary = (props) => {
     fetchNotificationSent();
     fetchComplianceData();
   }, []);
+
   return (
     <CustomPapperBlock
       title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
