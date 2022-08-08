@@ -26,7 +26,7 @@ function AddComments(props) {
     const addCommentData = (e) => {
         props.addComments(e.target.value)
     }
-    
+
     return (
         <Grid
             item
@@ -46,7 +46,7 @@ function AddComments(props) {
             <Paper elevation={1} className="paperSection">
                 <Grid container spacing={3}>
                     <Grid item md={12} xs={12}>
-                        <Box padding={3}>
+                        {/* <Box padding={3}> */}
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <TextField
@@ -83,7 +83,7 @@ function AddComments(props) {
                                     </Button>
                                 </Grid>
                             </Grid>
-                        </Box>
+                        {/* </Box> */}
                     </Grid>
                 </Grid>
             </Paper>

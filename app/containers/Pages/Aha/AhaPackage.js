@@ -470,12 +470,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AhaPackage(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
-  const [cardView, setCardView] = useState(true);
-  const [tableView, setTableView] = useState(false);
   const [allAHAData, setAllAHAData] = useState([]);
-  const [data, setData] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
@@ -485,29 +481,6 @@ function AhaPackage(props) {
 
   const search = props.search;
   const status = props.status;
-
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
-  const [incidents] = useState([]);
-  const [listToggle, setListToggle] = useState(false);
-
-  // const handelView = (e) => {
-  //   setListToggle(false);
-  // };
-  // const handelViewTabel = (e) => {
-  //   setListToggle(true);
-  // };
-
-  // const [value, setValue] = React.useState(2);
-
-  //dialog
-  // const [MyFavopen, setMyFavOpen] = React.useState(false);
 
   useEffect(() => {
     console.log(myUserPOpen, "myUserPOpen");

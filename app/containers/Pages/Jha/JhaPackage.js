@@ -445,31 +445,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JhaPackage(props) {
-  // const [cardView, setCardView] = useState(true);
   const [allJHAData, setAllJHAData] = useState([]);
   const search = props.search;
   const status = props.status;
   const history = useHistory();
-  // const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
-  const [openAttachment, setopenAttachment] = React.useState(false);
-  const [attachOpen, setAttachOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-
-  const handleClickOpenAttachment = () => {
-    setopenAttachment(true);
-  };
-
-  const handleCloseAttachment = () => {
-    setopenAttachment(false);
-  };
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
     // setIsLoading(false);
@@ -580,43 +565,7 @@ function JhaPackage(props) {
     }
   };
 
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
-  // const [incidents] = useState([]);
-  // const [listToggle, setListToggle] = useState(false);
-
-  // const handelView = (e) => {
-  //   setListToggle(false);
-  // };
-  // const handelViewTabel = (e) => {
-  //   setListToggle(true);
-  // };
-
-  const [value, setValue] = React.useState(2);
-
-  // const handleChangeOne = (event, newValue) => {
-  //   setValue(newValue);
-  // };
-
-  //dialog
-
-  // const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-
   const classes = useStyles();
-
-  //view comments
-
-  // const handleSummaryPush = async (index) => {
-  //   const itemid = index;
-
-  //   const filtered = allJHAData.filter((one) => one.id === index);
-  //   const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
 
   const handleSummaryPush = async (selectedJha, commentPayload) => {
     const jha = selectedJha;

@@ -276,19 +276,19 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#23343e",
     color: "#ffffff",
   },
-  padd10: {
-    padding: "10px 10px 10px 10px",
-  },
-  sepHeightTen: {
-    borderLeft: "3px solid #cccccc",
-    height: "8px",
-    verticalAlign: "middle",
-    margin: "15px 15px 15px 8px",
-    fontSize: "10px",
-    "@media (max-width:480px)": {
-      margin: "10px 5px 10px 5px",
-    },
-  },
+  // padd10: {
+  //   padding: "10px 10px 10px 10px",
+  // },
+  // sepHeightTen: {
+  //   borderLeft: "3px solid #cccccc",
+  //   height: "8px",
+  //   verticalAlign: "middle",
+  //   margin: "15px 15px 15px 8px",
+  //   fontSize: "10px",
+  //   "@media (max-width:480px)": {
+  //     margin: "10px 5px 10px 5px",
+  //   },
+  // },
   floatR: {
     float: "right",
     textTransform: "capitalize",
@@ -1169,99 +1169,99 @@ function xflha(props) {
 
     return (
       <>
-          <CardView
-            cardTitle={item.jobTitle}
-            avatar={item.avatar}
-            username={item.username}
-            itemId={item.id}
-            headerFields={[
-              { label: flhaLabels.header[0], value: item.flhaNumber },
-              { label: flhaLabels.header[1], value: "FLHA" },
-              { label: flhaLabels.header[2], value: item.flhaStage },
-              { label: flhaLabels.header[3], value: item.flhaStatus },
-            ]}
-            bodyFields={[
-              {
-                label: flhaLabels.body[0],
-                value: DateFormat(item.createdAt, true),
-              },
-              { label: flhaLabels.body[1], value: item.createdByName },
-            ]}
-            deleteFields={{
-              deleteUrl: `/api/v1/flhas/${item.id}/`,
-              afterDelete: () => {
-                fetchData();
-              },
-              axiosObj: api,
-              item: deleteItem,
-              loader: setIsLoading,
-              loadingFlag: false,
-              deleteMsg: "Are you sure you want to delete this FLHA?",
-              yesBtn: "Yes",
-              noBtn: "No",
-              dataLength: flhas.length,
-            }}
-            bookmarkFields={{
-              typeOfModule: "flhas",
-              itemId: item.id,
-              bookmarkTrueFalse: item.bookmark,
-              getBookmarkView: assessments,
-            }}
-            RefreshBookmarkData={fetchData}
-            handleVisibility={() => handleVisibility()}
-            handleVisibilityComments={() => handleVisibilityComments()}
-            files={item.files !== null ? item.files.length : 0}
-            commentsCount={item.commentsCount}
-            handleSummaryPush={() =>
-              handleFlhaSummaryPush(item.id, commentPayload)
-            }
-            checkDeletePermission={checkDeletePermission}
-          />
+        <CardView
+          cardTitle={item.jobTitle}
+          avatar={item.avatar}
+          username={item.username}
+          itemId={item.id}
+          headerFields={[
+            { label: flhaLabels.header[0], value: item.flhaNumber },
+            { label: flhaLabels.header[1], value: "FLHA" },
+            { label: flhaLabels.header[2], value: item.flhaStage },
+            { label: flhaLabels.header[3], value: item.flhaStatus },
+          ]}
+          bodyFields={[
+            {
+              label: flhaLabels.body[0],
+              value: DateFormat(item.createdAt, true),
+            },
+            { label: flhaLabels.body[1], value: item.createdByName },
+          ]}
+          deleteFields={{
+            deleteUrl: `/api/v1/flhas/${item.id}/`,
+            afterDelete: () => {
+              fetchData();
+            },
+            axiosObj: api,
+            item: deleteItem,
+            loader: setIsLoading,
+            loadingFlag: false,
+            deleteMsg: "Are you sure you want to delete this FLHA?",
+            yesBtn: "Yes",
+            noBtn: "No",
+            dataLength: flhas.length,
+          }}
+          bookmarkFields={{
+            typeOfModule: "flhas",
+            itemId: item.id,
+            bookmarkTrueFalse: item.bookmark,
+            getBookmarkView: assessments,
+          }}
+          RefreshBookmarkData={fetchData}
+          handleVisibility={() => handleVisibility()}
+          handleVisibilityComments={() => handleVisibilityComments()}
+          files={item.files !== null ? item.files.length : 0}
+          commentsCount={item.commentsCount}
+          handleSummaryPush={() =>
+            handleFlhaSummaryPush(item.id, commentPayload)
+          }
+          checkDeletePermission={checkDeletePermission}
+        />
 
-          {item.files && item.files.length ? (
-            <Grid
-              item
-              md={12}
-              sm={12}
-              xs={12}
-              hidden={!hidden}
-              onBlur={handleAttachClose}
-              onClick={handleAttachClick}
-              onClose={handleAttachClose}
-              onFocus={handleAttachOpen}
-              onMouseEnter={handleAttachOpen}
-              onMouseLeave={handleAttachClose}
-              open={showGrid}
-              className="paddTBRemove attactmentShowSection"
-            >
-              <Paper elevation={1} className="cardSectionBottom">
-                <Grid container spacing={3}>
-                  <Grid
-                    item
-                    md={12}
-                    sm={12}
-                    xs={12}
-                    style={{ margin: "0 -10px" }}
-                  >
-                    {item.files.map((a) => (
-                      <div
-                        className="attachFileThumb"
-                        style={{ width: "auto", margin: "0 10px" }}
-                      >
-                        <Attachment
-                          key={a.id}
-                          value={a.fileName}
-                          type={a.fileType}
-                        />
-                      </div>
-                    ))}
-                  </Grid>
+        {item.files && item.files.length ? (
+          <Grid
+            item
+            md={12}
+            sm={12}
+            xs={12}
+            hidden={!hidden}
+            onBlur={handleAttachClose}
+            onClick={handleAttachClick}
+            onClose={handleAttachClose}
+            onFocus={handleAttachOpen}
+            onMouseEnter={handleAttachOpen}
+            onMouseLeave={handleAttachClose}
+            open={showGrid}
+            className="paddTBRemove attactmentShowSection"
+          >
+            <Paper elevation={1} className="cardSectionBottom">
+              <Grid container spacing={3}>
+                <Grid
+                  item
+                  md={12}
+                  sm={12}
+                  xs={12}
+                  style={{ margin: "0 -10px" }}
+                >
+                  {item.files.map((a) => (
+                    <div
+                      className="attachFileThumb"
+                      style={{ width: "auto", margin: "0 10px" }}
+                    >
+                      <Attachment
+                        key={a.id}
+                        value={a.fileName}
+                        type={a.fileType}
+                      />
+                    </div>
+                  ))}
                 </Grid>
-              </Paper>
-            </Grid>
-          ) : (
-            ""
-          )}
+              </Grid>
+            </Paper>
+          </Grid>
+        ) : (
+          ""
+        )}
 
         <AddComments
           commentPayload={commentPayload}

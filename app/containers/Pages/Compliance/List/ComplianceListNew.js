@@ -694,7 +694,6 @@ function ComplianceListNew(props) {
       updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
     };
-    // const [openAttachment, setopenAttachment] = React.useState(false);
 
     const commentPayload = {
       fkCompanyId: value.fkCompanyId,
