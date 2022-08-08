@@ -59,6 +59,7 @@ import Delete from "../../Delete/Delete";
 import CardView from "../../../components/Card/Index";
 import { ahaLabels } from "../../../components/Card/CardConstants";
 import DateFormat from "../../../components/Date/DateFormat";
+import AddComments from "../../addComments/AddComments";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -484,28 +485,29 @@ function AhaPackage(props) {
 
   const search = props.search;
   const status = props.status;
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
 
-  const handelView = (e) => {
-    setListToggle(false);
-  };
-  const handelViewTabel = (e) => {
-    setListToggle(true);
-  };
+  // const handelView = (e) => {
+  //   setListToggle(false);
+  // };
+  // const handelViewTabel = (e) => {
+  //   setListToggle(true);
+  // };
 
-  const [value, setValue] = React.useState(2);
+  // const [value, setValue] = React.useState(2);
 
   //dialog
-  const [MyFavopen, setMyFavOpen] = React.useState(false);
+  // const [MyFavopen, setMyFavOpen] = React.useState(false);
 
   useEffect(() => {
     console.log(myUserPOpen, "myUserPOpen");
@@ -557,8 +559,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -613,8 +615,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -627,8 +629,7 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -642,8 +643,7 @@ function AhaPackage(props) {
       setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -683,11 +683,6 @@ function AhaPackage(props) {
       status: "Delete",
     };
 
-    const addComments = (event) => {
-      // console.log(event.target.value);
-      setCommentData(event.target.value);
-    };
-
     const commentPayload = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
@@ -699,24 +694,6 @@ function AhaPackage(props) {
       thanksFlag: 0,
       status: "Active",
       createdBy: item.createdBy,
-    };
-
-    const handleSendComments = async () => {
-      if (commentData) {
-        console.log(api, "apiiiiiiii");
-        setIsLoading(true);
-        await api
-          .post("/api/v1/comments/", commentPayload)
-          .then((res) => {
-            // handleCommentsClose()
-            setIsLoading(false);
-            fetchAllAHAData();
-          })
-          .catch((err) => {
-            console.log(err);
-            setIsLoading(false);
-          });
-      }
     };
 
     function handleVisibility() {
@@ -744,18 +721,20 @@ function AhaPackage(props) {
       setCommentData("");
     }
 
-    function handleCommentsOpen() {
-      if (!hiddenn) {
+    const handleComments = (type) => {
+      if (type === 'handleCommentsClose') {
+        setCommentsOpen(false);
+      }
+      else if ('handleCommentsClick') {
+        setCommentsOpen(!open);
+      }
+      else if (type === 'handleCommentsOpen') {
         setCommentsOpen(true);
       }
-    }
-
-    function handleCommentsClose() {
-      setCommentsOpen(false);
-    }
-
-    function handleCommentsClick() {
-      setCommentsOpen(!open);
+      else if ('visibility') {
+        setShowGrid(true);
+        setHidden(!hidden);
+      }
     }
 
     return (
@@ -860,73 +839,18 @@ function AhaPackage(props) {
           ""
         )}
 
-        <Grid
-          item
-          md={12}
-          sm={12}
-          xs={12}
-          hidden={!hiddenn}
-          onBlur={handleCommentsClose}
-          onClick={handleCommentsClick}
-          onClose={handleCommentsClose}
-          onFocus={handleCommentsOpen}
-          onMouseEnter={handleCommentsOpen}
-          onMouseLeave={handleCommentsClose}
-          open={commentsOpen}
-          className="commentsShowSection"
-        >
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-              <Grid item md={12} xs={12}>
-                <Box padding={3}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        multiline
-                        variant="outlined"
-                        rows="1"
-                        id="JobTitle"
-                        label="Add your comments here"
-                        className="formControl"
-                        value={commentData}
-                        onChange={(e) => addComments(e)}
-                      />
-                    </Grid>
-                    {/* <Grid item xs={3}>
-                      <input type="file" />
-                    </Grid>
-                    <Grid item xs={9}>
-                      <AddCircleOutlineIcon className={classes.plusIcon} />
-                      <RemoveCircleOutlineIcon className={classes.minusIcon} />
-                    </Grid> */}
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        className="spacerRight buttonStyle"
-                        disableElevation
-                        onClick={handleSendComments}
-                      >
-                        Respond
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        className="custmCancelBtn buttonStyle"
-                        disableElevation
-                        onClick={handleVisibilityComments}
-                      >
-                        Cancel
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+        <AddComments
+          commentPayload={commentPayload}
+          commentOpen={commentsOpen}
+          commentData={commentData}
+          hiddenn={hiddenn}
+          isLoading={isLoading}
+          setIsLoading={(val) => setIsLoading(val)}
+          fetchAllData={fetchAllAHAData}
+          handleComments={(type) => handleComments(type)}
+          handleVisibilityComments={handleVisibilityComments}
+          addComments={(value) => setCommentData(value)}
+        />
       </>
     );
   };

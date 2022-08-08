@@ -30,7 +30,7 @@ import Attachment from "../../../../containers/Attachment/Attachment";
 import CardView from "../../../../components/Card/Index";
 import { complianceLabels } from "../../../../components/Card/CardConstants";
 import DateFormat from "../../../../components/Date/DateFormat";
-import AddCommentsComponent from "../../../addComments/AddComments";
+import AddComments from "../../../addComments/AddComments";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -696,10 +696,6 @@ function ComplianceListNew(props) {
     };
     // const [openAttachment, setopenAttachment] = React.useState(false);
 
-    // useEffect(() => {
-    //   console.log(commentsOpen, "commnentspjeo");
-    // }, [commentsOpen]);
-
     const commentPayload = {
       fkCompanyId: value.fkCompanyId,
       fkProjectId: value.fkProjectId,
@@ -712,27 +708,6 @@ function ComplianceListNew(props) {
       status: "Active",
       createdBy: value.createdBy,
     };
-
-    // const handleSendComments = async () => {
-    //   if (commentData) {
-    //     setIsLoading(true);
-    //     await api
-    //       .post("/api/v1/comments/", commentPayload)
-    //       .then((res) => {
-    //         fetchAllComplianceData();
-    //         setIsLoading(false);
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //         setIsLoading(false);
-    //       });
-    //   }
-    // };
-
-    // function handleVisibility() {
-    //   setShowGrid(true);
-    //   setHidden(!hidden);
-    // }
 
     function handleVisibilityComments() {
       setCommentsOpen(true);
@@ -754,28 +729,6 @@ function ComplianceListNew(props) {
       }
     }
 
-    // function handleCommentsOpen() {
-    //   if (!hiddenn) {
-    //     setCommentsOpen(true);
-    //   }
-    // }
-
-    // function handleCommentsClose() {
-    //   setCommentsOpen(false);
-    // }
-
-    // function handleCommentsClick() {
-    //   setCommentsOpen(!open);
-    // }
-
-    // function handleClickOpenAttachment() {
-    //   setopenAttachment(true);
-    // }
-
-    // function handleCloseAttachment() {
-    //   setopenAttachment(false);
-    // }
-
     const handleComments = (type) => {
       if (type === 'handleCommentsClose') {
         setCommentsOpen(false);
@@ -786,11 +739,6 @@ function ComplianceListNew(props) {
       else if (type === 'handleCommentsOpen') {
         setCommentsOpen(true);
       }
-      // else if ('handleVisibilityComments') {
-      //   setCommentsOpen(true);
-      //   setHiddenn(!hiddenn);
-      //   setCommentData("");
-      // }
       else if ('visibility') {
         setShowGrid(true);
         setHidden(!hidden);
@@ -902,14 +850,14 @@ function ComplianceListNew(props) {
           ""
         )}
 
-        <AddCommentsComponent
+        <AddComments
           commentPayload={commentPayload}
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
           isLoading={isLoading}
           setIsLoading={(val) => setIsLoading(val)}
-          fetchAllComplianceData={fetchAllComplianceData}
+          fetchAllData={fetchAllComplianceData}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}
           addComments={(value) => setCommentData(value)}

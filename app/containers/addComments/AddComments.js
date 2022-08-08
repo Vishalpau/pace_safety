@@ -13,7 +13,7 @@ function AddComments(props) {
             props.setIsLoading(true);
             await api.post("/api/v1/comments/", props.commentPayload)
                 .then((res) => {
-                    props.fetchAllComplianceData();
+                    props.fetchAllData();
                     props.setIsLoading(false);
                 })
                 .catch((err) => {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { PapperBlock } from "dan-components";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Card from "@material-ui/core/Card";
@@ -7,19 +6,13 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import Print from "@material-ui/icons/Print";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import AddIcon from "@material-ui/icons/Add";
 import ReorderIcon from "@material-ui/icons/Reorder";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import EqualizerIcon from "@material-ui/icons/Equalizer";
-import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-import ViewWeekIcon from "@material-ui/icons/ViewWeek";
-import Share from "@material-ui/icons/Share";
 import flhaLogoSymbol from "dan-images/flhaLogoSymbol.png";
 import preplanning from "dan-images/preplanning.png";
-import progress from "dan-images/progress.png";
 import completed from "dan-images/completed.png";
 import Divider from "@material-ui/core/Divider";
 import Link from "@material-ui/core/Link";
@@ -31,36 +24,17 @@ import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
 import TableContainer from "@material-ui/core/TableContainer";
 import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
-import Tooltip from "@material-ui/core/Tooltip";
 import Incidents from "dan-styles/IncidentsList.scss";
-import ListAltOutlinedIcon from "@material-ui/icons/ListAltOutlined";
-import CommentIcon from "@material-ui/icons/Comment";
-import RecentActorsIcon from "@material-ui/icons/RecentActors";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
 import classNames from "classnames";
 import MUIDataTable from "mui-datatables";
-import Checkbox from "@material-ui/core/Checkbox";
-import Fonts from "dan-styles/Fonts.scss";
 import moment from "moment";
 import { useHistory, useParams } from "react-router";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
-import in_progress_small from "dan-images/in_progress_small.png";
-import draft_small from "dan-images/draft_small.png";
-import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
-import StarsIcon from "@material-ui/icons/Stars";
-import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import projectpj from "dan-images/projectpj.png";
-import TextField from "@material-ui/core/TextField";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -79,16 +53,15 @@ import { projectName, company } from "../../../redux/actions/initialDetails";
 import { SELF_API, HEADER_AUTH } from "../../../utils/constants";
 import Loader from "../Loader";
 import api from "../../../utils/axios";
-import StatusFilter from "./StatusFilter";
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
 import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
-import Delete from "../../Delete/Delete";
 import Attachment from "../../Attachment/Attachment";
 import CardView from "../../../components/Card/Index";
 import { flhaLabels } from "../../../components/Card/CardConstants";
 import DateFormat from "../../../components/Date/DateFormat";
 import BookmarkList from "../../Bookmark/BookmarkList";
+import AddComments from "../../addComments/AddComments";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -701,13 +674,7 @@ function xflha(props) {
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
   const [flhas, setFlhas] = useState([]);
-  const [showFlha, setShowFlha] = useState([]);
-  const [hidden, setHidden] = useState(false);
   const [searchFlha, setSeacrhFlha] = useState("");
-  const [attachOpen, setAttachOpen] = useState(false);
-  const [hiddenn, setHiddenn] = useState(false);
-  const [openAttachment, setopenAttachment] = React.useState(false);
-  const [commentsOpen, setCommentsOpen] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [status, setStatus] = useState("");
@@ -723,12 +690,7 @@ function xflha(props) {
 
   const dispatch = useDispatch();
 
-  const handleChangeOne = (event, newValue) => {
-    setValue(newValue);
-  };
-
   const handleFlhaSummaryPush = async (id, commentPayload) => {
-    // console.log(id, "iddddddddd");
     localStorage.setItem("flhaId", id);
     history.push({
       pathname: `/app/pages/assesments/flhasummary/${id}`,
@@ -739,6 +701,7 @@ function xflha(props) {
   const handelView = (e) => {
     setListToggle(false);
   };
+
   const handelViewTabel = (e) => {
     setListToggle(true);
   };
@@ -780,6 +743,7 @@ function xflha(props) {
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
+
   const fetchData = async () => {
     // setIsLoading(true);
     setPage(1);
@@ -791,8 +755,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -835,11 +799,11 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function() {
+    function () {
       clearTimeout(timer);
-
       timer = setTimeout(() => setSeacrhFlha(v), d);
     };
+
   const handleSearch = (e) => {
     debounce(fetchData, e.target.value.toLowerCase(), 500)();
   };
@@ -862,34 +826,27 @@ function xflha(props) {
     }
   };
 
-  // const handleCommentsClose = () => {
-  //   setCommentsOpen(false);
+  // const handelSearchFlha = async (e) => {
+  //   const allSeacrh = [];
+  //   if (e.target.value.length === 0) {
+  //     setShowFlha([]);
+  //   } else {
+  //     setSeacrhFlha(e.target.value.toLowerCase());
+  //     Object.entries(flhas).map((item) => {
+  //       if (item[1].flhaNumber.toLowerCase().includes(searchFlha)) {
+  //         allSeacrh.push([
+  //           item[1].flhaNumber,
+  //           item[1].supervisor,
+  //           item[1].fieldContractor,
+  //           item[1].meetingPoint,
+  //         ]);
+  //       }
+  //     });
+  //     setShowFlha(allSeacrh);
+  //   }
   // };
 
-  const handelSearchFlha = async (e) => {
-    const allSeacrh = [];
-    if (e.target.value.length === 0) {
-      setShowFlha([]);
-    } else {
-      setSeacrhFlha(e.target.value.toLowerCase());
-      Object.entries(flhas).map((item) => {
-        if (item[1].flhaNumber.toLowerCase().includes(searchFlha)) {
-          allSeacrh.push([
-            item[1].flhaNumber,
-            item[1].supervisor,
-            item[1].fieldContractor,
-            // moment(item[1]["incidentReportedOn"]).format(
-            //   "Do MMMM YYYY, h:mm:ss a"
-            // ),
-            item[1].meetingPoint,
-          ]);
-        }
-      });
-      setShowFlha(allSeacrh);
-    }
-  };
   const userDetails = async (compId, proId) => {
-    // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
         const config = {
@@ -897,7 +854,6 @@ function xflha(props) {
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
-        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
 
         await api(config)
           .then((response) => {
@@ -908,13 +864,13 @@ function xflha(props) {
                 .subscriptions.filter((subs) => subs.appCode === "safety")[0]
                 .hostings[0].apiDomain;
 
-              console.log(hosting);
+              // console.log(hosting);
               const data1 = {
                 method: "get",
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
-              console.log(data1);
+              // console.log(data1);
               axios(data1).then((res) => {
                 localStorage.setItem(
                   "userDetails",
@@ -931,7 +887,6 @@ function xflha(props) {
                     fkCompanyName: companies[0].companyName,
                   };
                   localStorage.setItem("company", JSON.stringify(companeyData));
-                  console.log("storage company in xlfha");
                   dispatch(company(companeyData));
                 }
                 if (proId) {
@@ -953,9 +908,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleChange = async (event, value) => {
@@ -967,8 +922,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1137,7 +1092,6 @@ function xflha(props) {
   /** *******************all card data************************************** */
 
   const AllCardData = ({ item, index }) => {
-    // console.log(item, "itemmmmmmmmm");
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
 
@@ -1155,10 +1109,6 @@ function xflha(props) {
       status: "Delete",
     };
 
-    const addComments = (event) => {
-      setCommentData(event.target.value);
-    };
-
     const commentPayload = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
@@ -1172,23 +1122,6 @@ function xflha(props) {
       createdBy: item.createdBy,
     };
 
-    const handleSendComments = async () => {
-      if (commentData) {
-        setIsLoading(true);
-        await api
-          .post("/api/v1/comments/", commentPayload)
-          .then((res) => {
-            // handleCommentsClose()
-            setIsLoading(false);
-            fetchData();
-          })
-          .catch((err) => {
-            console.log(err);
-            setIsLoading(false);
-          });
-      }
-    };
-
     const handleChangeOne = (event, newValue) => {
       setValue(newValue);
     };
@@ -1198,44 +1131,44 @@ function xflha(props) {
       setHidden(!hidden);
     };
 
-    const handleAttachClose = () => {
-      setShowGrid(false);
-    };
-
-    const handleAttachClick = () => {
-      setShowGrid(!open);
-    };
-
-    const handleAttachOpen = () => {
-      if (!hidden) {
-        setShowGrid(true);
-      }
-    };
-
     function handleVisibilityComments() {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
       setCommentData("");
     }
 
-    function handleCommentsOpen() {
-      if (!hiddenn) {
-        setCommentsOpen(true);
+    function handleAttachClose() {
+      setShowGrid(false);
+    }
+
+    function handleAttachClick() {
+      setShowGrid(!open);
+    }
+
+    function handleAttachOpen() {
+      if (!hidden) {
+        setShowGrid(true);
       }
     }
 
-    function handleCommentsClose() {
-      setCommentsOpen(false);
-    }
-
-    function handleCommentsClick() {
-      setCommentsOpen(!open);
+    const handleComments = (type) => {
+      if (type === 'handleCommentsClose') {
+        setCommentsOpen(false);
+      }
+      else if ('handleCommentsClick') {
+        setCommentsOpen(!open);
+      }
+      else if (type === 'handleCommentsOpen') {
+        setCommentsOpen(true);
+      }
+      else if ('visibility') {
+        setShowGrid(true);
+        setHidden(!hidden);
+      }
     }
 
     return (
-      // <Box>
-      <Grid className={classes.marginTopBottom}>
-        <div className="gridView">
+      <>
           <CardView
             cardTitle={item.jobTitle}
             avatar={item.avatar}
@@ -1329,68 +1262,19 @@ function xflha(props) {
           ) : (
             ""
           )}
-        </div>
-        <Grid
-          item
-          md={12}
-          sm={12}
-          xs={12}
-          hidden={!hiddenn}
-          onBlur={handleCommentsClose}
-          onClick={handleCommentsClick}
-          onClose={handleCommentsClose}
-          onFocus={handleCommentsOpen}
-          onMouseEnter={handleCommentsOpen}
-          onMouseLeave={handleCommentsClose}
-          open={commentsOpen}
-          className="commentsShowSection"
-        >
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-              <Grid item md={12} xs={12}>
-                {/* <Box padding={3}> */}
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      multiline
-                      variant="outlined"
-                      rows="1"
-                      id="JobTitle"
-                      label="Add your comments here"
-                      className="formControl"
-                      value={commentData}
-                      onChange={(e) => addComments(e)}
-                    />
-                  </Grid>
 
-                  <Grid item xs={12}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      className="spacerRight buttonStyle"
-                      disableElevation
-                      onClick={handleSendComments}
-                    >
-                      Respond
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      size="small"
-                      className="buttonStyle custmCancelBtn"
-                      disableElevation
-                      onClick={handleVisibilityComments}
-                    >
-                      Cancel
-                    </Button>
-                  </Grid>
-                </Grid>
-                {/* </Box> */}
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+        <AddComments
+          commentPayload={commentPayload}
+          commentOpen={commentsOpen}
+          commentData={commentData}
+          hiddenn={hiddenn}
+          isLoading={isLoading}
+          setIsLoading={(val) => setIsLoading(val)}
+          fetchAllData={fetchData}
+          handleComments={(type) => handleComments(type)}
+          handleVisibilityComments={handleVisibilityComments}
+          addComments={(value) => setCommentData(value)}
+        />
 
         <Dialog
           open={myUserPOpen}
@@ -1445,11 +1329,6 @@ function xflha(props) {
                 <h3>Basic information</h3>
                 <List>
                   <ListItem>
-                    {/* <ListItemAvatar>
-                      <Avatar>
-                        <ImageIcon />
-                      </Avatar>
-                    </ListItemAvatar> */}
                     <ListItemText primary="Full Name:" secondary="Prakash" />
                   </ListItem>
                   <ListItem>
@@ -1507,14 +1386,8 @@ function xflha(props) {
               </Button>
             </DialogActions>
           </Grid>
-          {/* <DialogActions>
-            <Button onClick={handleMyUserPClose} className="buttonStyle custmCancelBtn" variant="contained" autoFocus>
-              Close
-            </Button>
-          </DialogActions> */}
         </Dialog>
-      </Grid>
-      // </Box>
+      </>
     );
   };
 
@@ -1586,8 +1459,6 @@ function xflha(props) {
                         classNames={classes.pLTen}
                         onClick={(e) => handelViewTabel(e)}
                       />
-                      {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
-                <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
                     </Tabs>
                   </div>
                 </AppBar>
@@ -1595,23 +1466,6 @@ function xflha(props) {
               <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
                 <Grid className={classes.Lheight}>
                   <div className={classes.floatRR}>
-                    {/* <span className={classes.pLTen}>
-                  <Button size="small" className={classes.buttonsNTwo} variant="contained">
-                    <PermIdentityIcon /> GIS
-                  </Button>
-                </span> */}
-
-                    {/* <span className={classes.pLTen}>
-              <Button size="small" className={classes.buttonsNTwo} variant="contained">
-                <DateRangeOutlinedIcon />iPlanner
-              </Button>
-            </span>
-
-			  <span className={classes.pLTen}>
-				<Button size="small" className={classes.buttonsNTwo} variant="contained">
-				  <GamesOutlinedIcon /> 3D
-				</Button>
-				</span> */}
                   </div>
                 </Grid>
               </Grid>
@@ -1645,15 +1499,6 @@ function xflha(props) {
                           className={classes.hoverB}
                           style={{ minWidth: "unset", padding: "0 0 0" }}
                         />
-                        {/* <Tab
-                          icon={<StarsIcon className={classes.buckmarkIcon} />}
-                          {...a11yProps(5)}
-                          className={classNames(
-                            classes.hoverB,
-                            classes.minWd55
-                          )}
-                          />
-                         <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
                       </Tabs>
                     </div>
                   </AppBar>
@@ -1721,9 +1566,7 @@ function xflha(props) {
                         className={Incidents.card}
                         key={index}
                       >
-                        {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
                         <CardContent>
-                          {/* {console.log(item[index].incidentTitle)} */}
                           <Grid container spacing={3}>
                             <Grid item xs={12}>
                               <Grid
@@ -1744,7 +1587,6 @@ function xflha(props) {
                                 <Grid item md={3} sm={6} xs={12}>
                                   <Typography>
                                     Work fell down in site
-                                    {/* {item[index]["incidentTitle"]} */}
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -1801,7 +1643,6 @@ function xflha(props) {
                                 color="textSecondary"
                                 className={classes.listingLabelValue}
                               >
-                                {/* {item[1]["incidentReportedByName"]} */}
                                 Not found
                               </Typography>
                             </Grid>
@@ -1909,44 +1750,6 @@ function xflha(props) {
                                 </Link>
                               </Typography>
                             </Grid>
-                            {/* <Grid item xs={6} md={3} lg={3}>
-          <Typography
-            variant="body2"
-            display="inline"
-            className={Incidents.actionsLabel}
-          >
-            <InfoIcon /> Status:
-          </Typography>
-          <Typography
-            variant="body2"
-            display="inline"
-            color="textSecondary"
-            className={Type.statusHighlight}
-          >
-           Initial Action
-          </Typography>
-        </Grid> */}
-                            {/* <Grid item md={3} sm={6} xs={12}>
-                          <Button
-                            size="small"
-                            color="secondary"
-                            startIcon={<Print />}
-                            className={Incidents.actionButton}
-                          >
-                            Print
-                          </Button>
-                        </Grid>
-
-                        <Grid item md={3} sm={6} xs={12}>
-                          <Button
-                            size="small"
-                            color="secondary"
-                            startIcon={<Share />}
-                            className={Incidents.actionButton}
-                          >
-                            Share
-                          </Button>
-                        </Grid> */}
                           </Grid>
                         </CardActions>
                       </Card>
@@ -1958,9 +1761,8 @@ function xflha(props) {
                   <TableContainer component={Paper}>
                     <Grid component={Paper}>
                       <MUIDataTable
-                        className={`${
-                          classes.dataTableSectionDesign
-                        } dataTableSectionDesign`}
+                        className={`${classes.dataTableSectionDesign
+                          } dataTableSectionDesign`}
                         title="FLHA's"
                         data={Object.entries(flhas).map((item) => [
                           item[1].flhaNumber,
