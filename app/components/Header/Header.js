@@ -730,7 +730,7 @@ function Header(props) {
           temp[i].selectValue = "";
         }
       }
-      console.log("I am now running");
+
       const removeSelectBreakDown = selectBreakDown.slice(0, index);
       const name = temp[index].breakdownValue.map(async (item) => {
         if (item.id === value) {
@@ -743,12 +743,7 @@ function Header(props) {
               label,
             },
           ]);
-          console.log({
-            depth: item.depth,
-            id: item.id,
-            name: item.structureName,
-            label,
-          });
+
           /* setBreakDownData([
             {
               depth: item.depth,
@@ -759,15 +754,8 @@ function Header(props) {
           ]);  */
 
           setBreakDownData((prev) => {
-            console.log(index);
             let updated = prev.filter((item) => item.label === label)[0].label;
-            console.log(updated);
-            /* updated  = {
-              ...updated,
-              id: item.id,
-              label
-            } */
-            console.log(updated);
+
             let temp = prev.slice(0, index);
             return [
               ...temp,
@@ -1892,10 +1880,10 @@ function Header(props) {
             </Dialog>
           </div>
           <Hidden smDown>
-            {/* start  here */}
             <div>
-              {!history.location.pathname.includes("control-tower") ? (
+              {!window.location.pathname.includes("control-tower") ? (
                 <>
+                  {/* //{console.log(window.location.pathname, "this is location")} */}
                   <IconButton
                     aria-describedby={id}
                     className={classes.filterIcon}
@@ -1999,7 +1987,7 @@ function Header(props) {
             </div>
 
             {/* <NextIcon> */}
-            {!history.location.pathname.includes("control-tower") ? (
+            {!window.location.pathname.includes("control-tower") ? (
               <Breadcrumbs
                 className={classes.projectBreadcrumbs}
                 separator={<NavigateNextIcon fontSize="small" />}

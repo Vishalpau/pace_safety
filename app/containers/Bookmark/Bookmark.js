@@ -72,21 +72,19 @@ const Bookmark = (props) => {
     const entityReferenceId = props.itemId;
     const bookmarkedBy = loginId;
     if (props.bookmarkTrueFalse || orange === true) {
-      //console.log("came in if");
       const res = await api
         .delete(
           `https://dev-safety1-api.paceos.io/api/v1/core/bookmarks/entity/${entity}/${entityReferenceId}/users/${bookmarkedBy}/`
         )
         .then((res) => {
           if (res.status === 204) {
-            // console.log("came in 204");
             setOpen(4);
             setTimeout(() => {
               setLoading(false);
             }, 200);
             setOrange(false);
             if (props.getBookmarkView === "Bookmark List") {
-              props.RefreshBookmarkData();
+              props.RefreshBookmarkData(); //refreshing data and displaying remaining bookmark
             }
           } else if (
             res.data.status_code === 400 ||
@@ -107,7 +105,6 @@ const Bookmark = (props) => {
           bookmarkPayload
         )
         .then((res) => {
-          //console.log(res, "response");
           if (res.data.data) {
             setOpen(3);
             setTimeout(() => {
@@ -133,9 +130,7 @@ const Bookmark = (props) => {
       setOrange(true);
     }
   }, []);
-  useEffect(() => {
-    // console.log(orange, "orange");
-  }, [orange]);
+  useEffect(() => {}, [orange]);
   return (
     <>
       <IconButton onClick={handleBookmark} style={{ width: 45, height: 45 }}>
@@ -150,7 +145,6 @@ const Bookmark = (props) => {
         )}
       </IconButton>
 
-      {/* <div style={{ willChange: "transform" }}> */}
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={open === 1 || open === 2 || open === 3 || open === 4}
@@ -172,7 +166,6 @@ const Bookmark = (props) => {
             : ""}
         </Alert>
       </Snackbar>
-      {/* </> </div> */}
     </>
   );
 };
