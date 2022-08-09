@@ -883,7 +883,7 @@ function Header(props) {
     }
   };
 
-  useEffect(() => console.log(breakDownData), [breakDownData]);
+  // useEffect(() => console.log(breakDownData), [breakDownData]);
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])

@@ -149,6 +149,7 @@ const CardFooter = (props) => {
                   noBtn={noBtn}
                   checkDeletePermission={props.checkDeletePermission}
                   dataLength={dataLength}
+                  deleting={(bool) => props.deleting(bool)}
                 />
               </Typography>
             </div>

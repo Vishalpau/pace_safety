@@ -249,10 +249,12 @@ const ComplianceDetails = () => {
     createdBy: userId,
     source: "Web",
     hseRepNumber: "",
+    complianceStage: "Open",
+    complianceStatus: "Open",
   });
 
   useEffect(() => {
-    console.log(form);
+    console.log(form, 'form');
   }, [form])
 
   // constant value of audit type
@@ -286,7 +288,7 @@ const ComplianceDetails = () => {
     if (team.length > 1) {
       let temp = team;
       let newData = team.filter((item, key) => key !== index);
-      await setTeam(newData);
+      setTeam(newData);
     }
   };
 
@@ -294,7 +296,7 @@ const ComplianceDetails = () => {
   //method to redirect to new page
   const handelNext = async () => {
     const { error, isValid } = ComplianceValidation(form, selectDepthAndId);
-    await setError(error);
+    setError(error);
     if (!isValid) {
       return "data not valid";
     }
@@ -333,6 +335,7 @@ const ComplianceDetails = () => {
     // updating the values[put]
     if (form.id) {
       form["updatedBy"] = userId;
+      console.log('formmmmmmmm', form);
       const res = await api
         .put(`/api/v1/audits/${form.id}/`, form)
         .then((response) => {
@@ -359,9 +362,9 @@ const ComplianceDetails = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(error);
-  },[error])
+  // useEffect(() => {
+  //   console.log(error);
+  // },[error])
 
   const classes = useStyles();
 

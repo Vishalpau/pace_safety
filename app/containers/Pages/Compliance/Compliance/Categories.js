@@ -207,9 +207,9 @@ const Categories = () => {
     setIsLoading(true);
   };
 
-  useEffect(() => {
-    console.log(checkData, 'checkData');
-  }, [checkData])
+  // useEffect(() => {
+  //   console.log(checkData, 'checkData');
+  // }, [checkData])
 
   //method to initially get the data
   const fetchComplianceData = async (data) => {
@@ -235,11 +235,8 @@ const Categories = () => {
             else {
               checkListGroupData[j]['checklistGroups'][i]['disabled'] = false;
             }
-            console.log(groupIds);
-            console.log(checkListGroupData[j]['checklistGroups'][i]['checkListValues'].length)
             for (let k = 0; k < checkListGroupData[j]['checklistGroups'][i]['checkListValues'].length; k++) {
               if (subGroupIds.includes(checkListGroupData[j]['checklistGroups'][i]['checkListValues'][k]['id'])) {
-                console.log('sfkskhfk');
                 checkListGroupData[j]['checklistGroups'][i]['checkListValues'][k]['disabled'] = true;
               }
               else {

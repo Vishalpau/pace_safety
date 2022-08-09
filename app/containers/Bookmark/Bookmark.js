@@ -41,7 +41,7 @@ const Bookmark = (props) => {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setOpen(0);
   };
 
   const handleBookmark = async () => {
