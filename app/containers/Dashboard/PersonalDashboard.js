@@ -615,17 +615,19 @@ function PersonalDashboard(props) {
   };
 
   const redirectionAccount = () => {
-    if (
-      localStorage.getItem("lastState") != null &&
-      localStorage.getItem("projectName") != null
-    ) {
-      const laststate = localStorage.getItem("lastState");
-      localStorage.removeItem("lastState");
-      history.push(laststate);
-      console.log(laststate,"laststate");
-    }
-    if (localStorage.getItem("projectName") != null) {
-      setTimeout(() => history.push("app/icare"), 1000);
+    if (!window.location.pathname.includes("control-tower")) {
+      if (
+        localStorage.getItem("lastState") != null &&
+        localStorage.getItem("projectName") != null
+      ) {
+        const laststate = localStorage.getItem("lastState");
+        localStorage.removeItem("lastState");
+        history.push(laststate);
+        console.log(laststate, "laststate");
+      }
+      if (localStorage.getItem("projectName") != null) {
+        setTimeout(() => history.push("app/icare"), 1000);
+      }
     }
   };
 
@@ -1003,16 +1005,16 @@ function PersonalDashboard(props) {
   };
 
   useEffect(() => {
-    console.log("hello world");
-    console.log(localStorage.getItem("projectName"),"local storage")
-    handelCallBack();
-    redirectionAccount();
-    /* if (localStorage.getItem("projectName") != null) {
+    if (!window.location.pathname.includes("control-tower")) {
+      console.log(localStorage.getItem("projectName"), "local storage");
+      handelCallBack();
+      redirectionAccount();
+      /* if (localStorage.getItem("projectName") != null) {
       console.log("redirect me")
       setTimeout(() => history.push("app/icare"), 1000);
     }   */
+    }
   }, []);
-
 
   const handlePhaseChange = (panel, phases, index, id) => async (
     event,
