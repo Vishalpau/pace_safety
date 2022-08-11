@@ -1217,6 +1217,7 @@ const ProjectDetailsAndHazard = () => {
                               <TextField
                                 label="Other Hazards"
                                 margin="dense"
+                                inputProps={{ maxLength: 255 }}
                                 name="otherhazards"
                                 id="otherhazards"
                                 fullWidth
