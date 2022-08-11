@@ -468,10 +468,13 @@ function Header(props) {
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    if (!window.location.pathname.includes("control-tower")) {
+      // console.log("useeffect1");
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
   }, []);
 
   // const openFullScreen = () => {
@@ -921,14 +924,20 @@ function Header(props) {
     const result = res.data.data.results;
   };
   useEffect(() => {
-    fetchCallBack();
-    if (fkid) {
-      fetchIncidentData();
+    if (!window.location.pathname.includes("control-tower")) {
+      //  console.log("useeffect2");
+      fetchCallBack();
+      if (fkid) {
+        fetchIncidentData();
+      }
     }
   }, [props.initialValues.projectName]);
 
   useEffect(() => {
-    handleProjectList();
+    if (!window.location.pathname.includes("control-tower")) {
+      //console.log("useeffect3");
+      handleProjectList();
+    }
   }, [initialValues.projectName]);
 
   const [changeClass, setChangeClass] = React.useState(false);
@@ -1191,29 +1200,26 @@ function Header(props) {
               <DialogContent>
                 <DialogContentText>
                   <Typography gutterBottom variant="h5" component="h2">
-                    Are you sure to switch another project? yes
+                    Are you sure to switch another project?
                   </Typography>
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Tooltip title="Cancel">
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={(e) => handleCompanyClose()}
-                  >
-                    No
-                  </Button>
-                </Tooltip>
-                <Tooltip title="Ok">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={(e) => handleProjectOpen()}
-                  >
-                    Yes
-                  </Button>
-                </Tooltip>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={(e) => handleProjectOpen()}
+                >
+                  Yes
+                </Button>
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={(e) => handleCompanyClose()}
+                >
+                  No
+                </Button>
               </DialogActions>
             </Dialog>
             {/* Project selections */}
@@ -1304,11 +1310,10 @@ function Header(props) {
                         </ListItem>
                       </List>
                     </Grid>
-                    {/* {projectStr ===
-                      pages / control - tower / controltower - icare &&
-                            {!res.control === "controltowerbi" &&*/}
-                    {/*  {!history.location.pathname.includes("control-tower") && ( */}
+
+                    {/* {!window.location.pathname.includes("control-tower") ||&& ( */}
                     <>
+                      {console.log(location.pathname, "lo")}
                       {projectListData.length > 0
                         ? projectListData.map((value, index) => (
                             <Grid
@@ -1874,6 +1879,7 @@ function Header(props) {
                           ))
                         : null}
                     </>
+                    {/*  )} */}
                   </Grid>
                 </DialogContentText>
               </DialogContent>
@@ -1883,7 +1889,7 @@ function Header(props) {
             <div>
               {!window.location.pathname.includes("control-tower") ? (
                 <>
-                  {/* //{console.log(window.location.pathname, "this is location")} */}
+                  {console.log(window.location.pathname, "this is location")}
                   <IconButton
                     aria-describedby={id}
                     className={classes.filterIcon}
