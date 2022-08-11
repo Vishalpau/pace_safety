@@ -883,6 +883,7 @@ const ProjectDetailsAndHazard = () => {
                         <Grid item md={12} xs={12} className={classes.formBox}>
                           <TextField
                             label="Work Location*"
+                            inputProps={{maxLength: 45}}
                             // margin="dense"
                             name="worklocation"
                             id="worklocation"

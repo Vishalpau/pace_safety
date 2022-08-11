@@ -74,8 +74,8 @@ function InitialNotificationValidator(data, projectStructure) {
     error.acceptAndPledge = "Check the accept & pledge";
     isValid = false;
   }
-  if(data.supervisorByBadgeId !== "" && data.supervisorByBadgeId.length !== 45){
-    error.supervisorByBadgeId = "Foreman's number must be 45 characters long";
+  if(data.supervisorByBadgeId !== "" && data.supervisorByBadgeId.length > 45){
+    error.supervisorByBadgeId = "Foreman's number must be less than 45 characters long";
     isValid = false;
   }
 
