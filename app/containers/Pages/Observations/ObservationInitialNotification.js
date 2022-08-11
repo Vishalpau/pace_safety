@@ -1236,6 +1236,7 @@ const ObservationInitialNotification = (props) => {
                         <TextField
                           label="Foreman's Number"
                           name="supervisorbadgenumber"
+                          inputProps={{ maxLength: "45" }}
                           id="supervisorbadgenumber"
                           error={error.supervisorByBadgeId}
                           helperText={
@@ -1611,6 +1612,7 @@ const ObservationInitialNotification = (props) => {
                           // margin="dense"
                           name="shorttitle"
                           id="shorttitle"
+                          inputProps={{ maxLength: "45" }}
                           multiline
                           defaultValue={form.observationTitle}
                           fullWidth
@@ -1633,6 +1635,7 @@ const ObservationInitialNotification = (props) => {
                           label="Detailed description*"
                           // margin="dense"
                           name="detaileddescription"
+                          inputProps={{ minLength: "45" }}
                           id="detaileddescription"
                           multiline
                           rows={4}
