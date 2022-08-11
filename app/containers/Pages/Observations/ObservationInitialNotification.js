@@ -1612,7 +1612,7 @@ const ObservationInitialNotification = (props) => {
                           // margin="dense"
                           name="shorttitle"
                           id="shorttitle"
-                          inputProps={{ maxLength: "45" }}
+                          inputProps={{ maxLength: "255" }}
                           multiline
                           defaultValue={form.observationTitle}
                           fullWidth
@@ -1635,7 +1635,6 @@ const ObservationInitialNotification = (props) => {
                           label="Detailed description*"
                           // margin="dense"
                           name="detaileddescription"
-                          inputProps={{ minLength: "45" }}
                           id="detaileddescription"
                           multiline
                           rows={4}
