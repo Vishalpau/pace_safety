@@ -130,7 +130,9 @@ const Bookmark = (props) => {
       setOrange(true);
     }
   }, []);
-  useEffect(() => {}, [orange]);
+  useEffect(() => {
+    // console.log(orange, "orange");
+  }, [orange]);
   return (
     <>
       <IconButton onClick={handleBookmark} style={{ width: 45, height: 45 }}>

@@ -1,25 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Card from "@material-ui/core/Card";
-import classNames from "classnames";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
-import Share from "@material-ui/icons/Share";
-import Divider from "@material-ui/core/Divider";
-import Link from "@material-ui/core/Link";
-import AttachmentIcon from "@material-ui/icons/Attachment";
 import Box from "@material-ui/core/Box";
-import Chip from "@material-ui/core/Chip";
-import TableContainer from "@material-ui/core/TableContainer";
 import { makeStyles } from "@material-ui/core/styles";
-import Incidents from "dan-styles/IncidentsList.scss";
-import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-import MUIDataTable from "mui-datatables";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -28,44 +13,27 @@ import Dialog from "@material-ui/core/Dialog";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
-import completed_small from "dan-images/completed-small.png";
-import projectpj from "dan-images/projectpj.png";
-import in_progress_small from "dan-images/in_progress_small.png";
 import "../../../styles/custom/customheader.css";
-import StarsIcon from "@material-ui/icons/Stars";
-import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
-import WifiTetheringIcon from "@material-ui/icons/WifiTethering";
-import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import { useHistory, useParams } from "react-router";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
 
-import TextField from "@material-ui/core/TextField";
-import Menu from "@material-ui/core/Menu";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import InputLabel from "@material-ui/core/InputLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import Pagination from "@material-ui/lab/Pagination";
 import { connect } from "react-redux";
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
 import Loader from "../Loader";
-import moment from "moment";
 import { checkACL } from "../../../utils/helper";
 import Attachment from "../../Attachment/Attachment";
-import Delete from "../../Delete/Delete";
 import CardView from "../../../components/Card/Index";
 import { jhaLabels } from "../../../components/Card/CardConstants";
 import DateFormat from "../../../components/Date/DateFormat";
+import AddCommentsComponent from "../../addComments/AddComments";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -477,31 +445,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JhaPackage(props) {
-  // const [cardView, setCardView] = useState(true);
   const [allJHAData, setAllJHAData] = useState([]);
   const search = props.search;
   const status = props.status;
   const history = useHistory();
-  // const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
-  const [openAttachment, setopenAttachment] = React.useState(false);
-  const [attachOpen, setAttachOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
-
-  const handleClickOpenAttachment = () => {
-    setopenAttachment(true);
-  };
-
-  const handleCloseAttachment = () => {
-    setopenAttachment(false);
-  };
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
     // setIsLoading(false);
@@ -612,43 +565,7 @@ function JhaPackage(props) {
     }
   };
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const [incidents] = useState([]);
-  const [listToggle, setListToggle] = useState(false);
-
-  // const handelView = (e) => {
-  //   setListToggle(false);
-  // };
-  // const handelViewTabel = (e) => {
-  //   setListToggle(true);
-  // };
-
-  const [value, setValue] = React.useState(2);
-
-  const handleChangeOne = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  //dialog
-
-  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-
   const classes = useStyles();
-
-  //view comments
-
-  // const handleSummaryPush = async (index) => {
-  //   const itemid = index;
-
-  //   const filtered = allJHAData.filter((one) => one.id === index);
-  //   const fkProjectStructureIds = filtered[0].fkProjectStructureIds;
 
   const handleSummaryPush = async (selectedJha, commentPayload) => {
     const jha = selectedJha;
@@ -682,11 +599,10 @@ function JhaPackage(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
+
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
-
     const [value, setValue] = React.useState(2);
-
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
@@ -699,10 +615,6 @@ function JhaPackage(props) {
       createdBy: item.createdBy,
       updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
-    };
-
-    const addComments = (event) => {
-      setCommentData(event.target.value);
     };
 
     const commentPayload = {
@@ -718,23 +630,41 @@ function JhaPackage(props) {
       createdBy: item.createdBy,
     };
 
-    const handleSendComments = async () => {
-      if (commentData) {
-        setIsLoading(true);
-        console.log(api, "apiiiiiiii");
-        await api
-          .post("/api/v1/comments/", commentPayload)
-          .then((res) => {
-            // handleCommentsClose();
-            setIsLoading(false);
-            fetchData();
-          })
-          .catch((err) => {
-            setIsLoading(false);
-            console.log(err);
-          });
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
+      setCommentData("");
+    }
+
+    function handleAttachClose() {
+      setShowGrid(false);
+    }
+
+    function handleAttachClick() {
+      setShowGrid(!open);
+    }
+
+    function handleAttachOpen() {
+      if (!hidden) {
+        setShowGrid(true);
       }
-    };
+    }
+
+    const handleComments = (type) => {
+      if (type === 'handleCommentsClose') {
+        setCommentsOpen(false);
+      }
+      else if ('handleCommentsClick') {
+        setCommentsOpen(!open);
+      }
+      else if (type === 'handleCommentsOpen') {
+        setCommentsOpen(true);
+      }
+      else if ('visibility') {
+        setShowGrid(true);
+        setHidden(!hidden);
+      }
+    }
 
     const handleChangeOne = (event, newValue) => {
       setValue(newValue);
@@ -743,44 +673,6 @@ function JhaPackage(props) {
     const handleVisibility = () => {
       setShowGrid(true);
       setHidden(!hidden);
-    };
-
-    const handleAttachClose = () => {
-      setShowGrid(false);
-    };
-
-    const handleAttachClick = () => {
-      setShowGrid(!open);
-    };
-
-    const handleAttachOpen = () => {
-      if (!hidden) {
-        setShowGrid(true);
-      }
-    };
-
-    function handleVisibilityComments() {
-      setCommentsOpen(true);
-      setHiddenn(!hiddenn);
-      setCommentData("");
-    }
-
-    function handleCommentsOpen() {
-      if (!hiddenn) {
-        setCommentsOpen(true);
-      }
-    }
-
-    function handleCommentsClose() {
-      setCommentsOpen(false);
-    }
-
-    function handleCommentsClick() {
-      setCommentsOpen(!open);
-    }
-
-    const handleMyUserPClickOpen = () => {
-      setMyUserPOpen(true);
     };
 
     const handleMyUserPClose = () => {
@@ -890,67 +782,18 @@ function JhaPackage(props) {
           )}
         </div>
 
-        <Grid
-          item
-          md={12}
-          sm={12}
-          xs={12}
-          hidden={!hiddenn}
-          onBlur={handleCommentsClose}
-          onClick={handleCommentsClick}
-          onClose={handleCommentsClose}
-          onFocus={handleCommentsOpen}
-          onMouseEnter={handleCommentsOpen}
-          onMouseLeave={handleCommentsClose}
-          open={commentsOpen}
-          className="commentsShowSection"
-        >
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-              <Grid item md={12} xs={12}>
-                <Box padding={3}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        multiline
-                        variant="outlined"
-                        rows="1"
-                        id="JobTitle"
-                        label="Add your comments here"
-                        className="formControl"
-                        value={commentData}
-                        onChange={(e) => addComments(e)}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        className="spacerRight buttonStyle"
-                        disableElevation
-                        onClick={handleSendComments}
-                      >
-                        Respond
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        className="buttonStyle custmCancelBtn"
-                        disableElevation
-                        onClick={handleVisibilityComments}
-                      >
-                        Cancel
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+        <AddCommentsComponent
+          commentPayload={commentPayload}
+          commentOpen={commentsOpen}
+          commentData={commentData}
+          hiddenn={hiddenn}
+          isLoading={isLoading}
+          setIsLoading={(val) => setIsLoading(val)}
+          fetchAllData={fetchData}
+          handleComments={(type) => handleComments(type)}
+          handleVisibilityComments={handleVisibilityComments}
+          addComments={(value) => setCommentData(value)}
+        />
 
         <Dialog
           open={myUserPOpen}

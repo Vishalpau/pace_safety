@@ -5,11 +5,11 @@ function InitialNotificationValidator(data, projectStructure) {
 
   const error = {};
   let isValid = true;
-  console.log(data)
+  console.log(data,"data")
   const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
   for (let i = 0; i < breakdownValue.length; i++) {
     var element = projectStructure[i]
-    console.log({ element: element })
+    //console.log({ element: element })
     if (projectStructure[i] === undefined) {
       error[`projectStructure${[i]}`] = `Select ${breakdownValue[i].structure[0].name}`;
       isValid = false;
@@ -17,10 +17,11 @@ function InitialNotificationValidator(data, projectStructure) {
   }
 
 
-  if (data.observationDetails == null || data.observationDetails == "") {
-    error.observationDetails = "Enter iCare details";
+  if (data.observationDetails == null || data.observationDetails == "" || data.observationDetails.length < 45) {
+    error.observationDetails = "Enter iCare details and they must be more than 45 characters long";
     isValid = false;
   }
+  
 
   if (data.isSituationAddressed == null || data.isSituationAddressed == "") {
     error.isSituationAddressed = "Select whether you addressed the situation";
@@ -52,8 +53,8 @@ function InitialNotificationValidator(data, projectStructure) {
   //  }
 
   if (data.isSituationAddressed === "Yes") {
-    if (data.actionTaken == null || data.actionTaken == "") {
-      error.actionTaken = "Enter actions taken";
+    if (data.actionTaken == null || data.actionTaken == "" && data.actionTaken.length < 5) {
+      error.actionTaken = "Enter actions taken and they must be more than 45 characters long";
       isValid = false;
 
     }
@@ -73,6 +74,10 @@ function InitialNotificationValidator(data, projectStructure) {
     error.acceptAndPledge = "Check the accept & pledge";
     isValid = false;
   }
+  if(data.supervisorByBadgeId !== "" && data.supervisorByBadgeId.length > 45){
+    error.supervisorByBadgeId = "Foreman's number must be less than 45 characters long";
+    isValid = false;
+  }
 
   if (data.departmentName !== "") {
     if (data.assigneeName === "") {
@@ -81,6 +86,8 @@ function InitialNotificationValidator(data, projectStructure) {
     }
 
   }
+
+
 
 
   return { error, isValid };

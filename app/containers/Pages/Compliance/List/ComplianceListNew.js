@@ -1,40 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Card from "@material-ui/core/Card";
-import classNames from "classnames";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
-import Share from "@material-ui/icons/Share";
-import Divider from "@material-ui/core/Divider";
-import Link from "@material-ui/core/Link";
-import AttachmentIcon from "@material-ui/icons/Attachment";
 import Box from "@material-ui/core/Box";
-import Chip from "@material-ui/core/Chip";
-import Avatar from "@material-ui/core/Avatar";
-import TableContainer from "@material-ui/core/TableContainer";
 import { makeStyles } from "@material-ui/core/styles";
-import Incidents from "dan-styles/IncidentsList.scss";
-import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
-import MUIDataTable from "mui-datatables";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import paceLogoSymbol from "dan-images/paceLogoSymbol.png";
 import { useHistory, useParams } from "react-router";
-//import "../../../styles/custom/customheader.css";
-import StarsIcon from "@material-ui/icons/Stars";
-import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import FormLabel from "@material-ui/core/FormLabel";
 
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
@@ -44,22 +21,16 @@ import Dialog from "@material-ui/core/Dialog";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import projectpj from "dan-images/projectpj.png";
-import TextField from "@material-ui/core/TextField";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import IconButton from "@material-ui/core/IconButton";
 import api from "../../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
 import Loader from "../../Loader";
-import moment from "moment";
 import { checkACL } from "../../../../utils/helper";
 import Attachment from "../../../../containers/Attachment/Attachment";
-import Delete from "../../../Delete/Delete";
 import CardView from "../../../../components/Card/Index";
 import { complianceLabels } from "../../../../components/Card/CardConstants";
 import DateFormat from "../../../../components/Date/DateFormat";
+import AddComments from "../../../addComments/AddComments";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -523,8 +494,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -539,8 +510,7 @@ function ComplianceListNew(props) {
       // setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -564,8 +534,7 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -580,10 +549,8 @@ function ComplianceListNew(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -608,10 +575,8 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -635,8 +600,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -651,8 +616,7 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -666,8 +630,7 @@ function ComplianceListNew(props) {
         setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -676,10 +639,8 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -693,10 +654,8 @@ function ComplianceListNew(props) {
         setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -735,15 +694,6 @@ function ComplianceListNew(props) {
       updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
       status: "Delete",
     };
-    // const [openAttachment, setopenAttachment] = React.useState(false);
-
-    // useEffect(() => {
-    //   console.log(commentsOpen, "commnentspjeo");
-    // }, [commentsOpen]);
-
-    const addComments = (event) => {
-      setCommentData(event.target.value);
-    };
 
     const commentPayload = {
       fkCompanyId: value.fkCompanyId,
@@ -757,27 +707,6 @@ function ComplianceListNew(props) {
       status: "Active",
       createdBy: value.createdBy,
     };
-
-    const handleSendComments = async () => {
-      if (commentData) {
-        setIsLoading(true);
-        await api
-          .post("/api/v1/comments/", commentPayload)
-          .then((res) => {
-            fetchAllComplianceData();
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            console.log(err);
-            setIsLoading(false);
-          });
-      }
-    };
-
-    function handleVisibility() {
-      setShowGrid(true);
-      setHidden(!hidden);
-    }
 
     function handleVisibilityComments() {
       setCommentsOpen(true);
@@ -799,29 +728,21 @@ function ComplianceListNew(props) {
       }
     }
 
-    function handleCommentsOpen() {
-      if (!hiddenn) {
+    const handleComments = (type) => {
+      if (type === 'handleCommentsClose') {
+        setCommentsOpen(false);
+      }
+      else if ('handleCommentsClick') {
+        setCommentsOpen(!open);
+      }
+      else if (type === 'handleCommentsOpen') {
         setCommentsOpen(true);
       }
+      else if ('visibility') {
+        setShowGrid(true);
+        setHidden(!hidden);
+      }
     }
-
-    function handleCommentsClose() {
-      setCommentsOpen(false);
-    }
-
-    function handleCommentsClick() {
-      setCommentsOpen(!open);
-    }
-
-    // function handleClickOpenAttachment() {
-    //   setopenAttachment(true);
-    // }
-
-    // function handleCloseAttachment() {
-    //   setopenAttachment(false);
-    // }
-
-    // console.log(showGrid);
 
     const groupNames = value.groups.map((one) => {
       return (
@@ -928,66 +849,18 @@ function ComplianceListNew(props) {
           ""
         )}
 
-        <Grid
-          item
-          md={12}
-          sm={12}
-          xs={12}
-          hidden={!hiddenn}
-          onBlur={handleCommentsClose}
-          onClick={handleCommentsClick}
-          onClose={handleCommentsClose}
-          onFocus={handleCommentsOpen}
-          onMouseEnter={handleCommentsOpen}
-          onMouseLeave={handleCommentsClose}
-          open={commentsOpen}
-          className="commentsShowSection"
-        >
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-              <Grid item md={12} xs={12}>
-                <Box padding={3}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        multiline
-                        variant="outlined"
-                        rows="1"
-                        id="JobTitle"
-                        label="Add your comments here"
-                        className="formControl"
-                        value={commentData}
-                        onChange={(e) => addComments(e)}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        className="spacerRight buttonStyle"
-                        disableElevation
-                        onClick={handleSendComments}
-                      >
-                        Respond
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        className="custmCancelBtn buttonStyle"
-                        disableElevation
-                        onClick={handleVisibilityComments}
-                      >
-                        Cancel
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+        <AddComments
+          commentPayload={commentPayload}
+          commentOpen={commentsOpen}
+          commentData={commentData}
+          hiddenn={hiddenn}
+          isLoading={isLoading}
+          setIsLoading={(val) => setIsLoading(val)}
+          fetchAllData={fetchAllComplianceData}
+          handleComments={(type) => handleComments(type)}
+          handleVisibilityComments={handleVisibilityComments}
+          addComments={(value) => setCommentData(value)}
+        />
       </>
     );
   };

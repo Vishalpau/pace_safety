@@ -372,6 +372,7 @@ export default function ActionTracker(props) {
               <TextField
                 className={classes.formControl}
                 id="filled-basic"
+                inputProps={{ maxLength: 45 }}
                 label="Action title"
                 variant="outlined"
                 required
