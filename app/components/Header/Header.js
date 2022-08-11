@@ -469,7 +469,7 @@ function Header(props) {
 
   useEffect(() => {
     if (!window.location.pathname.includes("control-tower")) {
-      console.log("useeffect3");
+      // console.log("useeffect1");
       window.addEventListener("scroll", handleScroll);
       return () => {
         window.removeEventListener("scroll", handleScroll);
@@ -925,7 +925,7 @@ function Header(props) {
   };
   useEffect(() => {
     if (!window.location.pathname.includes("control-tower")) {
-      console.log("useeffect2");
+      //  console.log("useeffect2");
       fetchCallBack();
       if (fkid) {
         fetchIncidentData();
@@ -935,7 +935,7 @@ function Header(props) {
 
   useEffect(() => {
     if (!window.location.pathname.includes("control-tower")) {
-      console.log("useeffect3");
+      //console.log("useeffect3");
       handleProjectList();
     }
   }, [initialValues.projectName]);
