@@ -1021,6 +1021,7 @@ const ProjectDetailsAndHazard = () => {
                               <TextField
                                 label="Permit Reference number"
                                 // margin="dense"
+                                inputProps={{maxLength: 102}}
                                 name="reference"
                                 id="reference"
                                 multiline
