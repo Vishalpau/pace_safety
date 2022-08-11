@@ -44,6 +44,7 @@ const Loader = lazy(() => import("../Loader"));
 import Delete from "../../Delete/Delete";
 import Attachment from "../../Attachment/Attachment";
 import DateFormat from "../../../components/Date/DateFormat";
+import AddComments from "../../addComments/AddComments";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -403,12 +404,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Actions(props) {
-  const type = localStorage.getItem("type");
+  // const type = localStorage.getItem("type");
 
-  const userName =
-    JSON.parse(localStorage.getItem("userDetails")) !== null
-      ? JSON.parse(localStorage.getItem("userDetails")).name
-      : null;
+  // const userName =
+  //   JSON.parse(localStorage.getItem("userDetails")) !== null
+  //     ? JSON.parse(localStorage.getItem("userDetails")).name
+  //     : null;
+
   const dispatch = useDispatch();
   const [listToggle, setListToggle] = useState(false);
   const [pageCount, setPageCount] = useState(0);
@@ -530,8 +532,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -710,8 +712,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -832,37 +834,36 @@ function Actions(props) {
   };
 
   const [attachOpen, setAttachOpen] = useState(false);
-  const [attachIndex, setAttachIndex] = useState("");
+  // const [attachIndex, setAttachIndex] = useState("");
   const [hidden, setHidden] = useState(false);
 
-  const handleAttachClick = () => {
-    setAttachOpen(!open);
-  };
-  const handleAttachOpen = () => {
-    if (!hidden) {
-      setAttachOpen(true);
-    }
-  };
-  const handleAttachClose = () => {
-    setAttachOpen(false);
-  };
+  // const handleAttachClick = () => {
+  //   setAttachOpen(!open);
+  // };
+  // const handleAttachOpen = () => {
+  //   if (!hidden) {
+  //     setAttachOpen(true);
+  //   }
+  // };
+  // const handleAttachClose = () => {
+  //   setAttachOpen(false);
+  // };
 
   // view comments
   const [commentsOpen, setCommentsOpen] = useState(false);
-  const [hiddenn, setHiddenn] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
 
-  const handleCommentsClick = () => {
-    setCommentsOpen(!open);
-  };
-  const handleCommentsOpen = () => {
-    if (!hiddenn) {
-      setCommentsOpen(true);
-    }
-  };
-  const handleCommentsClose = () => {
-    setCommentsOpen(false);
-  };
+  // const handleCommentsClick = () => {
+  //   setCommentsOpen(!open);
+  // };
+  // const handleCommentsOpen = () => {
+  //   if (!hiddenn) {
+  //     setCommentsOpen(true);
+  //   }
+  // };
+  // const handleCommentsClose = () => {
+  //   setCommentsOpen(false);
+  // };
 
   const userDetails = async (compId, proId) => {
     try {
@@ -881,13 +882,11 @@ function Actions(props) {
                 .subscriptions.filter((subs) => subs.appCode === "safety")[0]
                 .hostings[0].apiDomain;
 
-              console.log(hosting);
               const data1 = {
                 method: "get",
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
-              console.log(data1);
               axios(data1).then((res) => {
                 localStorage.setItem(
                   "userDetails",
@@ -926,9 +925,9 @@ function Actions(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const classes = useStyles();
 
@@ -979,11 +978,6 @@ function Actions(props) {
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [commentData, setCommentData] = useState("");
 
-    const addComments = (event) => {
-      console.log(event.target.value);
-      setCommentData(event.target.value);
-    };
-
     const commentPayload = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
@@ -995,20 +989,7 @@ function Actions(props) {
       thanksFlag: 0,
       status: "Active",
       createdBy: item.createdBy,
-    };
-
-    const handleSendComments = async () => {
-      if (commentData) {
-        console.log(api, "apiiiiiiii");
-        await api
-          .post("/api/v1/comments/", commentPayload)
-          .then((res) => {
-            // handleCommentsClose();
-            fetchInitialiObservation();
-          })
-          .catch((err) => console.log(err));
-      }
-    };
+    }
 
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
@@ -1019,44 +1000,46 @@ function Actions(props) {
       status: "Delete",
     };
 
-    const handleVisibility = () => {
+    function handleVisibility() {
       setShowGrid(true);
       setHidden(!hidden);
-    };
+    }
 
-    const handleAttachClose = () => {
+    function handleAttachClose() {
       setShowGrid(false);
-    };
+    }
 
-    const handleAttachClick = () => {
+    function handleAttachClick() {
       setShowGrid(!open);
-    };
+    }
 
-    const handleAttachOpen = () => {
+    function handleAttachOpen() {
       if (!hidden) {
         setShowGrid(true);
       }
-    };
+    }
 
-    const handleVisibilityComments = () => {
+    function handleVisibilityComments() {
       setCommentsOpen(true);
       setHiddenn(!hiddenn);
       setCommentData("");
-    };
+    }
 
-    const handleCommentsClick = () => {
-      setCommentsOpen(!open);
-    };
-
-    const handleCommentsOpen = () => {
-      if (!hiddenn) {
+    const handleComments = (type) => {
+      if (type === 'handleCommentsClose') {
+        setCommentsOpen(false);
+      }
+      else if ('handleCommentsClick') {
+        setCommentsOpen(!open);
+      }
+      else if (type === 'handleCommentsOpen') {
         setCommentsOpen(true);
       }
-    };
-
-    const handleCommentsClose = () => {
-      setCommentsOpen(false);
-    };
+      else if ('visibility') {
+        setShowGrid(true);
+        setHidden(!hidden);
+      }
+    }
 
     const oneHour = 3 * 60 * 1000;
 
@@ -1065,7 +1048,7 @@ function Actions(props) {
         <CardView
           ifPaperUpload={
             item.source === "Paper" &&
-            moment() - moment(item.createdAt) < oneHour
+              moment() - moment(item.createdAt) < oneHour
               ? "latest"
               : ""
           }
@@ -1167,68 +1150,18 @@ function Actions(props) {
           ""
         )}
 
-        <div>
-          <Grid
-            item
-            md={12}
-            sm={12}
-            xs={12}
-            hidden={!hiddenn}
-            onBlur={handleCommentsClose}
-            onClick={handleCommentsClick}
-            onClose={handleCommentsClose}
-            onFocus={handleCommentsOpen}
-            onMouseEnter={handleCommentsOpen}
-            onMouseLeave={handleCommentsClose}
-            open={commentsOpen}
-            className="commentsShowSection"
-          >
-            <Paper elevation={1} className="paperSection">
-              <Grid container spacing={3}>
-                <Grid item md={12} xs={12}>
-                  <Box padding={3}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <TextField
-                          multiline
-                          variant="outlined"
-                          rows="1"
-                          id="JobTitle"
-                          label="Add your comments here"
-                          className="formControl"
-                          value={commentData}
-                          onChange={(e) => addComments(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          className="spacerRight buttonStyle"
-                          disableElevation
-                          onClick={handleSendComments}
-                        >
-                          Respond
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          size="small"
-                          className="custmCancelBtn buttonStyle"
-                          disableElevation
-                          onClick={handleVisibilityComments}
-                        >
-                          Cancel
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
-        </div>
+        <AddComments
+          commentPayload={commentPayload}
+          commentOpen={commentsOpen}
+          commentData={commentData}
+          hiddenn={hiddenn}
+          isLoading={isLoading}
+          setIsLoading={(val) => setIsLoading(val)}
+          fetchAllData={fetchInitialiObservation}
+          handleComments={(type) => handleComments(type)}
+          handleVisibilityComments={handleVisibilityComments}
+          addComments={(value) => setCommentData(value)}
+        />
       </>
     );
   };
@@ -1259,104 +1192,7 @@ function Actions(props) {
                       </Typography>
                     )}
                   </div>
-                  <div>
-                    <Grid
-                      item
-                      md={12}
-                      sm={12}
-                      xs={12}
-                      hidden={!hiddenn}
-                      onBlur={handleCommentsClose}
-                      onClick={handleCommentsClick}
-                      onClose={handleCommentsClose}
-                      onFocus={handleCommentsOpen}
-                      onMouseEnter={handleCommentsOpen}
-                      onMouseLeave={handleCommentsClose}
-                      open={commentsOpen}
-                      className="commentsShowSection"
-                    >
-                      <Paper elevation={1} className="paperSection">
-                        <Grid container spacing={3}>
-                          <Grid item md={12} xs={12}>
-                            <Box padding={3}>
-                              <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                  <TextField
-                                    multiline
-                                    variant="outlined"
-                                    rows="1"
-                                    id="JobTitle"
-                                    label="Add your comments here"
-                                    className="formControl"
-                                  />
-                                </Grid>
-                                <Grid item xs={3}>
-                                  <input type="file" />
-                                </Grid>
-                                <Grid item xs={9}>
-                                  <AddCircleOutlineIcon
-                                    className={classes.plusIcon}
-                                  />
-                                  <RemoveCircleOutlineIcon
-                                    className={classes.minusIcon}
-                                  />
-                                </Grid>
-                                <Grid item xs={12}>
-                                  <Button
-                                    variant="contained"
-                                    color="primary"
-                                    size="small"
-                                    className="spacerRight buttonStyle"
-                                    disableElevation
-                                  >
-                                    Respond
-                                  </Button>
-                                  <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    size="small"
-                                    className="custmCancelBtn buttonStyle"
-                                    disableElevation
-                                  >
-                                    Cancel
-                                  </Button>
-                                </Grid>
-                              </Grid>
-                            </Box>
-                          </Grid>
-                        </Grid>
-                      </Paper>
-                    </Grid>
-                  </div>
-                  <div>
-                    {/* {openAtt !== "" && <Attachment value={openAtt} /> } */}
-
-                    {/* <Dialog
-                open={openAttachment}
-                onClose={handleCloseAttachment}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                classNames={classes.viewAttachmentDialog}
-              > */}
-                    {/* <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
-                <DialogContent classNames={classes.imageSectionHeight}>
-                <Grid container spacing={3} classNames={classes.viewImageSection}>
-                  <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
-                    <ul classNames={classes.viewImageSection}>
-                      <li className={classes.viewattch1}>View Attachment</li>
-                      <li className={classes.viewattch2}>Download  444 Attachment</li>
-                    </ul>
-                  </Grid>
-                </Grid>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseAttachment} color="primary" autoFocus>
-                    Close
-                  </Button>
-                </DialogActions> */}
-
-                    {/* </Dialog> */}
-                  </div>
+                  
                   <div>
                     <Dialog
                       open={myUserPOpen}

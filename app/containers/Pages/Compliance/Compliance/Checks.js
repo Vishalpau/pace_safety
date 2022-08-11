@@ -365,8 +365,8 @@ const Checks = (props) => {
     props.projectName.breakDown.length > 0
       ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
   let struct = "";
 
   for (const i in selectBreakdown) {
@@ -386,8 +386,8 @@ const Checks = (props) => {
   const radioDecide = ["Yes", "No", "N/A"];
 
   //method when we change the accordian and change the state
-  const handleTDChange = (panel, valueId,isYesNo = false) => (event, isExpanded) => {
-    
+  const handleTDChange = (panel, valueId, isYesNo = false) => (event, isExpanded) => {
+
     if (isExpanded) {
       setStateToggle(true);
     }
@@ -398,26 +398,28 @@ const Checks = (props) => {
     }
 
     if (expandedTableDetail === `panel6 ${valueId}`) {
-      
+
       setQuestionId(valueId);
       const temp = [...checkData];
 
       const currentTemp = temp.filter(item => item.questionId === valueId)[0]
 
-      if (!isYesNo && currentTemp.criticality !== "" &&  currentTemp.auditStatus !== "") {
-          setErrorBoundary("");
-          currentTemp.check = true;
-        } 
+      // if (!isYesNo && currentTemp.criticality !== "" &&  currentTemp.auditStatus !== "") {
+      if (!isYesNo && currentTemp.criticality !== "") {
+        setErrorBoundary("");
+        currentTemp.check = true;
+      }
 
-        else if(isYesNo && currentTemp.criticality !== "" && currentTemp.auditStatus === ""  ){
-          setErrorBoundary("");
-          currentTemp.check = true;
-        }
+      // else if (isYesNo && currentTemp.criticality !== "" && currentTemp.auditStatus === "") {
+      else if (isYesNo && currentTemp.criticality !== "") {
+        setErrorBoundary("");
+        currentTemp.check = true;
+      }
     }
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
- 
+
 
   //post the project if the id is not present
   const postApi = (formData) => {
@@ -499,10 +501,9 @@ const Checks = (props) => {
       setLoading(false);
       // showing validation msg for accordians
       setErrorBoundary(
-        `${
-          routeNavigation === "Add New"
-            ? "Please answer all the compliance questions and close all accordions"
-            : "Please close all the accordions after updating the details"
+        `${routeNavigation === "Add New"
+          ? "Please answer all the compliance questions and close all accordions"
+          : "Please close all the accordions after updating the details"
         }`
       );
     }
@@ -598,8 +599,8 @@ const Checks = (props) => {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -672,7 +673,7 @@ const Checks = (props) => {
             defaultResponse: fd.filter((f) => f.question == value.question)
               .length
               ? fd.filter((f) => f.question == value.question)[0]
-                  .defaultResponse
+                .defaultResponse
               : "",
             score: fd.filter((f) => f.question == value.question).length
               ? fd.filter((f) => f.question == value.question)[0].score
@@ -686,7 +687,7 @@ const Checks = (props) => {
             mediaAttachment: fd.filter((f) => f.question == value.question)
               .length
               ? fd.filter((f) => f.question == value.question)[0]
-                  .mediaAttachment
+                .mediaAttachment
               : null,
             status: "Active",
             createdBy: parseInt(userId),
@@ -785,7 +786,7 @@ const Checks = (props) => {
               if (value <= 100) {
                 value = value + "%";
               }
-            } 
+            }
             else {
               value = "";
             }
@@ -928,9 +929,8 @@ const Checks = (props) => {
 
   return (
     <CustomPapperBlock
-      title={`Compliance number: ${
-        complianceData.auditNumber ? complianceData.auditNumber : ""
-      }`}
+      title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
+        }`}
       icon="customDropdownPageIcon compliancePageIcon"
       whiteBg
     >
@@ -1080,11 +1080,11 @@ const Checks = (props) => {
                                                 ).check === false
                                                   ? "3px solid red"
                                                   : checkData.find(
-                                                      (a) =>
-                                                        value.id ===
-                                                        a.questionId
-                                                    ).check === true &&
-                                                    "3px solid green",
+                                                    (a) =>
+                                                      value.id ===
+                                                      a.questionId
+                                                  ).check === true &&
+                                                  "3px solid green",
                                             }}
                                           >
                                             <AccordionSummary
@@ -1128,10 +1128,10 @@ const Checks = (props) => {
                                                             value.question
                                                         ).length
                                                           ? showCheckData.filter(
-                                                              (cd) =>
-                                                                cd.question ==
-                                                                value.question
-                                                            )[0].criticality
+                                                            (cd) =>
+                                                              cd.question ==
+                                                              value.question
+                                                          )[0].criticality
                                                           : ""
                                                       }
                                                     >
@@ -1178,10 +1178,10 @@ const Checks = (props) => {
                                                           value.question
                                                       ).length
                                                         ? showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          )[0].findings
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        )[0].findings
                                                         : ""
                                                     }
                                                     fullWidth
@@ -1191,70 +1191,69 @@ const Checks = (props) => {
                                                 </Grid>
                                                 {value.scoreType ===
                                                   "Stars" && (
-                                                  <Grid
-                                                    item
-                                                    md={12}
-                                                    sm={12}
-                                                    xs={12}
-                                                  >
-                                                    <FormLabel
-                                                      className="checkRadioLabel marginB5"
-                                                      component="legend"
-                                                    >
-                                                      Score
-                                                    </FormLabel>
                                                     <Grid
                                                       item
-                                                      md={4}
-                                                      sm={4}
+                                                      md={12}
+                                                      sm={12}
                                                       xs={12}
                                                     >
-                                                      <Rating
-                                                        name={`simple-controlled ${
-                                                          value.id
-                                                        }`}
-                                                        defaultValue={
-                                                          valueStar[index] !=
-                                                          undefined
-                                                            ? valueStar[index]
-                                                            : showCheckData.filter(
+                                                      <FormLabel
+                                                        className="checkRadioLabel marginB5"
+                                                        component="legend"
+                                                      >
+                                                        Score
+                                                      </FormLabel>
+                                                      <Grid
+                                                        item
+                                                        md={4}
+                                                        sm={4}
+                                                        xs={12}
+                                                      >
+                                                        <Rating
+                                                          name={`simple-controlled ${value.id
+                                                            }`}
+                                                          defaultValue={
+                                                            valueStar[index] !=
+                                                              undefined
+                                                              ? valueStar[index]
+                                                              : showCheckData.filter(
                                                                 (cd) =>
                                                                   cd.question ==
                                                                   value.question
                                                               ).length
-                                                            ? showCheckData
-                                                                .filter(
-                                                                  (cd) =>
-                                                                    cd.question ==
-                                                                    value.question
-                                                                )[0]
-                                                                .score.split("")
-                                                                .length
-                                                            : ""
-                                                        }
-                                                        onChange={(
-                                                          event,
-                                                          newValue
-                                                        ) => {
-                                                          if (
-                                                            newValue !== null
-                                                          ) {
-                                                            handleChangeData(
-                                                              newValue,
-                                                              "score",
-                                                              index,
-                                                              value.id,
-                                                              value.scoreType
-                                                            );
-                                                            setValueStar(
-                                                              newValue
-                                                            );
+                                                                ? showCheckData
+                                                                  .filter(
+                                                                    (cd) =>
+                                                                      cd.question ==
+                                                                      value.question
+                                                                  )[0]
+                                                                  .score.split("")
+                                                                  .length
+                                                                : ""
                                                           }
-                                                        }}
-                                                      />
+                                                          onChange={(
+                                                            event,
+                                                            newValue
+                                                          ) => {
+                                                            if (
+                                                              newValue !== null
+                                                            ) {
+                                                              handleChangeData(
+                                                                newValue,
+                                                                "score",
+                                                                index,
+                                                                value.id,
+                                                                value.scoreType
+                                                              );
+                                                              setValueStar(
+                                                                newValue
+                                                              );
+                                                            }
+                                                          }}
+                                                        />
+                                                      </Grid>
                                                     </Grid>
-                                                  </Grid>
-                                                )}
+                                                  )}
                                                 {value.scoreType === "1-10" && (
                                                   <Grid
                                                     item
@@ -1285,10 +1284,10 @@ const Checks = (props) => {
                                                               value.question
                                                           ).length
                                                             ? showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0].score
+                                                              (cd) =>
+                                                                cd.question ==
+                                                                value.question
+                                                            )[0].score
                                                             : ""
                                                         }
                                                         label="Counts"
@@ -1366,14 +1365,14 @@ const Checks = (props) => {
                                                             ""
                                                         )
                                                           ? checkData
-                                                              .filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0]
-                                                              .score.split(
-                                                                "%"
-                                                              )[0]
+                                                            .filter(
+                                                              (cd) =>
+                                                                cd.question ==
+                                                                value.question
+                                                            )[0]
+                                                            .score.split(
+                                                              "%"
+                                                            )[0]
                                                           : ""
                                                       }
                                                       name="performancerating"
@@ -1398,231 +1397,227 @@ const Checks = (props) => {
                                                   "action_tracker-actions",
                                                   "add_actions"
                                                 ) && (
-                                                  <Grid item md={12} xs={12}>
-                                                    <FormLabel
-                                                      className="checkRadioLabel"
-                                                      component="legend"
-                                                    >
-                                                      Create Action{" "}
-                                                    </FormLabel>
-                                                    <Grid
-                                                      item
-                                                      xs={6}
-                                                      className={
-                                                        classes.createHazardbox
-                                                      }
-                                                    >
-                                                      <ActionTracker
-                                                        actionContext="audit:question"
-                                                        enitityReferenceId={`${localStorage.getItem(
-                                                          "fkComplianceId"
-                                                        )}:${value.id}`}
-                                                        setUpdatePage={
-                                                          setUpdatePage
+                                                    <Grid item md={12} xs={12}>
+                                                      <FormLabel
+                                                        className="checkRadioLabel"
+                                                        component="legend"
+                                                      >
+                                                        Create Action{" "}
+                                                      </FormLabel>
+                                                      <Grid
+                                                        item
+                                                        xs={6}
+                                                        className={
+                                                          classes.createHazardbox
                                                         }
-                                                        fkCompanyId={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "company"
-                                                            )
-                                                          ).fkCompanyId
-                                                        }
-                                                        fkProjectId={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "projectName"
-                                                            )
-                                                          ).projectName
-                                                            .projectId
-                                                        }
-                                                        fkProjectStructureIds={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "commonObject"
-                                                            )
-                                                          )["audit"][
+                                                      >
+                                                        <ActionTracker
+                                                          actionContext="audit:question"
+                                                          enitityReferenceId={`${localStorage.getItem(
+                                                            "fkComplianceId"
+                                                          )}:${value.id}`}
+                                                          setUpdatePage={
+                                                            setUpdatePage
+                                                          }
+                                                          fkCompanyId={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "company"
+                                                              )
+                                                            ).fkCompanyId
+                                                          }
+                                                          fkProjectId={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "projectName"
+                                                              )
+                                                            ).projectName
+                                                              .projectId
+                                                          }
+                                                          fkProjectStructureIds={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "commonObject"
+                                                              )
+                                                            )["audit"][
                                                             "projectStruct"
-                                                          ]
-                                                        }
-                                                        createdBy={
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "userDetails"
-                                                            )
-                                                          ).id
-                                                        }
-                                                        updatePage={updatePage}
-                                                        handelShowData={
-                                                          handelActionTracker
-                                                        }
-                                                      />
+                                                            ]
+                                                          }
+                                                          createdBy={
+                                                            JSON.parse(
+                                                              localStorage.getItem(
+                                                                "userDetails"
+                                                              )
+                                                            ).id
+                                                          }
+                                                          updatePage={updatePage}
+                                                          handelShowData={
+                                                            handelActionTracker
+                                                          }
+                                                        />
+                                                      </Grid>
                                                     </Grid>
-                                                  </Grid>
-                                                )}
+                                                  )}
                                                 {checkACL(
                                                   "action_tracker-actions",
                                                   "view_actions"
                                                 ) && (
-                                                  <Grid item md={12} xs={12}>
-                                                    <Table
-                                                      component={Paper}
-                                                      className="simpleTableSection"
-                                                    >
-                                                      {/* {actionData.filter(val => val.id==value.id).length} */}
-                                                      {actionData.filter(
-                                                        (val) =>
-                                                          val.id == value.id
-                                                      )[0] &&
-                                                      actionData.filter(
-                                                        (val) =>
-                                                          val.id == value.id
-                                                      )[0].action.length ? (
-                                                        <TableHead>
-                                                          <TableRow>
-                                                            <TableCell className="tableHeadCellFirst">
-                                                              Action number
-                                                            </TableCell>
-                                                            <TableCell className="tableHeadCellSecond">
-                                                              Action title
-                                                            </TableCell>
-                                                          </TableRow>
-                                                        </TableHead>
-                                                      ) : (
-                                                        ""
-                                                      )}
-                                                      <TableBody>
-                                                        {actionData.map(
-                                                          (val) => (
-                                                            <>
-                                                              {val.id ==
-                                                              value.id ? (
-                                                                <>
-                                                                  {val.action
-                                                                    .length >
-                                                                    0 &&
-                                                                    val.action.map(
-                                                                      (
-                                                                        valueAction
-                                                                      ) => (
-                                                                        <TableRow>
-                                                                          <TableCell align="left">
-                                                                            <Link
-                                                                              className={
-                                                                                classes.actionLinkAudit
-                                                                              }
-                                                                              display="block"
-                                                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                                                                JSON.parse(
+                                                    <Grid item md={12} xs={12}>
+                                                      <Table
+                                                        component={Paper}
+                                                        className="simpleTableSection"
+                                                      >
+                                                        {/* {actionData.filter(val => val.id==value.id).length} */}
+                                                        {actionData.filter(
+                                                          (val) =>
+                                                            val.id == value.id
+                                                        )[0] &&
+                                                          actionData.filter(
+                                                            (val) =>
+                                                              val.id == value.id
+                                                          )[0].action.length ? (
+                                                          <TableHead>
+                                                            <TableRow>
+                                                              <TableCell className="tableHeadCellFirst">
+                                                                Action number
+                                                              </TableCell>
+                                                              <TableCell className="tableHeadCellSecond">
+                                                                Action title
+                                                              </TableCell>
+                                                            </TableRow>
+                                                          </TableHead>
+                                                        ) : (
+                                                          ""
+                                                        )}
+                                                        <TableBody>
+                                                          {actionData.map(
+                                                            (val) => (
+                                                              <>
+                                                                {val.id ==
+                                                                  value.id ? (
+                                                                  <>
+                                                                    {val.action
+                                                                      .length >
+                                                                      0 &&
+                                                                      val.action.map(
+                                                                        (
+                                                                          valueAction
+                                                                        ) => (
+                                                                          <TableRow>
+                                                                            <TableCell align="left">
+                                                                              <Link
+                                                                                className={
+                                                                                  classes.actionLinkAudit
+                                                                                }
+                                                                                display="block"
+                                                                                href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
                                                                                   localStorage.getItem(
                                                                                     "BaseUrl"
                                                                                   )
                                                                                 )[
                                                                                   "actionClientID"
-                                                                                ]
-                                                                              }&response_type=code&companyId=${
-                                                                                JSON.parse(
-                                                                                  localStorage.getItem(
-                                                                                    "company"
+                                                                                  ]
+                                                                                  }&response_type=code&companyId=${JSON.parse(
+                                                                                    localStorage.getItem(
+                                                                                      "company"
+                                                                                    )
                                                                                   )
-                                                                                )
-                                                                                  .fkCompanyId
-                                                                              }&projectId=${
-                                                                                JSON.parse(
-                                                                                  localStorage.getItem(
-                                                                                    "projectName"
+                                                                                    .fkCompanyId
+                                                                                  }&projectId=${JSON.parse(
+                                                                                    localStorage.getItem(
+                                                                                      "projectName"
+                                                                                    )
                                                                                   )
-                                                                                )
-                                                                                  .projectName
-                                                                                  .projectId
-                                                                              }&targetPage=/action/details/&targetId=${
-                                                                                valueAction.id
-                                                                              }&projectStructure=${localStorage.getItem(
-                                                                                "selectBreakDown"
-                                                                              )}
+                                                                                    .projectName
+                                                                                    .projectId
+                                                                                  }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                  }&projectStructure=${localStorage.getItem(
+                                                                                    "selectBreakDown"
+                                                                                  )}
                                                                           `}
-                                                                              target="_blank"
-                                                                            >
+                                                                                target="_blank"
+                                                                              >
+                                                                                {
+                                                                                  valueAction.number
+                                                                                }
+                                                                              </Link>
+                                                                            </TableCell>
+                                                                            <TableCell>
                                                                               {
-                                                                                valueAction.number
+                                                                                valueAction.title
                                                                               }
-                                                                            </Link>
-                                                                          </TableCell>
-                                                                          <TableCell>
-                                                                            {
-                                                                              valueAction.title
-                                                                            }
-                                                                          </TableCell>
-                                                                        </TableRow>
-                                                                      )
-                                                                    )}
-                                                                </>
-                                                              ) : null}
-                                                            </>
-                                                          )
-                                                        )}
-                                                      </TableBody>
-                                                    </Table>
-                                                  </Grid>
-                                                )}
+                                                                            </TableCell>
+                                                                          </TableRow>
+                                                                        )
+                                                                      )}
+                                                                  </>
+                                                                ) : null}
+                                                              </>
+                                                            )
+                                                          )}
+                                                        </TableBody>
+                                                      </Table>
+                                                    </Grid>
+                                                  )}
                                                 {(value.attachment === "Yes" ||
                                                   value.evidenceType ===
-                                                    "Yes") && (
-                                                  <Grid
-                                                    item
-                                                    md={12}
-                                                    sm={12}
-                                                    xs={12}
-                                                    className={classes.formBox}
-                                                  >
-                                                    {/* <FormLabel className="checkRadioLabel" component="legend" > Document{" "} </FormLabel> */}
+                                                  "Yes") && (
                                                     <Grid
-                                                      style={{
-                                                        marginTop: "-20px",
-                                                      }}
+                                                      item
+                                                      md={12}
+                                                      sm={12}
+                                                      xs={12}
+                                                      className={classes.formBox}
                                                     >
-                                                      <MultiAttachment
-                                                        docTypes={{
-                                                          pdf: value.attachment.toLowerCase(),
-                                                          avi: value.evidenceType.toLowerCase(),
+                                                      {/* <FormLabel className="checkRadioLabel" component="legend" > Document{" "} </FormLabel> */}
+                                                      <Grid
+                                                        style={{
+                                                          marginTop: "-20px",
                                                         }}
-                                                        attachmentHandler={(
-                                                          files
-                                                        ) => {
-                                                          handleFileUpload(
-                                                            files,
-                                                            value.id,
-                                                            "attachment"
-                                                          );
-                                                        }}
-                                                      />
-                                                    </Grid>
-                                                    <Typography className="viewLabelValue">
-                                                      {showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      ).length &&
-                                                      showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      )[0].attachment !==
-                                                        null ? (
-                                                        <Attachment
-                                                          value={
-                                                            showCheckData.filter(
-                                                              (cd) =>
-                                                                cd.question ==
-                                                                value.question
-                                                            )[0].attachment
-                                                          }
+                                                      >
+                                                        <MultiAttachment
+                                                          docTypes={{
+                                                            pdf: value.attachment.toLowerCase(),
+                                                            avi: value.evidenceType.toLowerCase(),
+                                                          }}
+                                                          attachmentHandler={(
+                                                            files
+                                                          ) => {
+                                                            handleFileUpload(
+                                                              files,
+                                                              value.id,
+                                                              "attachment"
+                                                            );
+                                                          }}
                                                         />
-                                                      ) : (
-                                                        ""
-                                                      )}
-                                                    </Typography>
-                                                  </Grid>
-                                                )}
+                                                      </Grid>
+                                                      <Typography className="viewLabelValue">
+                                                        {showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        ).length &&
+                                                          showCheckData.filter(
+                                                            (cd) =>
+                                                              cd.question ==
+                                                              value.question
+                                                          )[0].attachment !==
+                                                          null ? (
+                                                          <Attachment
+                                                            value={
+                                                              showCheckData.filter(
+                                                                (cd) =>
+                                                                  cd.question ==
+                                                                  value.question
+                                                              )[0].attachment
+                                                            }
+                                                          />
+                                                        ) : (
+                                                          ""
+                                                        )}
+                                                      </Typography>
+                                                    </Grid>
+                                                  )}
                                                 {/* {value.evidenceType ===
                                                   "Yes" && (
                                                   <Grid
@@ -1719,11 +1714,11 @@ const Checks = (props) => {
                                                 ).check === false
                                                   ? "3px solid red"
                                                   : checkData.find(
-                                                      (a) =>
-                                                        value.id ===
-                                                        a.questionId
-                                                    ).check === true &&
-                                                    "3px solid green",
+                                                    (a) =>
+                                                      value.id ===
+                                                      a.questionId
+                                                  ).check === true &&
+                                                  "3px solid green",
                                             }}
                                             defaultExpanded
                                             className="backPaperAccordian"
@@ -1763,10 +1758,10 @@ const Checks = (props) => {
                                                           value.question
                                                       ).length
                                                         ? showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          )[0].criticality
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        )[0].criticality
                                                         : ""
                                                     }
                                                     className="formControl"
@@ -1798,8 +1793,8 @@ const Checks = (props) => {
                                                                   option,
                                                                   "menuItem",
                                                                   catI +
-                                                                    "-" +
-                                                                    index,
+                                                                  "-" +
+                                                                  index,
                                                                   value.id
                                                                 )
                                                               }
@@ -1826,10 +1821,10 @@ const Checks = (props) => {
                                                           value.question
                                                       ).length
                                                         ? showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          )[0].auditStatus
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        )[0].auditStatus
                                                         : ""
                                                     }
                                                     select
@@ -1864,8 +1859,8 @@ const Checks = (props) => {
                                                                   option,
                                                                   "statusItem",
                                                                   catI +
-                                                                    "-" +
-                                                                    index,
+                                                                  "-" +
+                                                                  index,
                                                                   value.id
                                                                 );
                                                               }}
@@ -1896,32 +1891,32 @@ const Checks = (props) => {
                                                         catI + "-" + index
                                                       ] >= 0
                                                         ? ratingData[
-                                                            catI + "-" + index
-                                                          ]
+                                                        catI + "-" + index
+                                                        ]
                                                         : showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          ).length > 0
-                                                        ? showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        ).length > 0
+                                                          ? showCheckData.filter(
                                                             (cd) =>
                                                               cd.question ==
                                                               value.question
                                                           )[0].performance
-                                                        : ""
+                                                          : ""
                                                     }
                                                     style={{
                                                       backgroundColor: ratingColor[
                                                         catI + "-" + index
                                                       ]
                                                         ? ratingColor[
-                                                            catI + "-" + index
-                                                          ]
+                                                        catI + "-" + index
+                                                        ]
                                                         : showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          ).length > 0 &&
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        ).length > 0 &&
                                                           colordata.filter(
                                                             (c) =>
                                                               c.matrixConstant ==
@@ -1931,9 +1926,9 @@ const Checks = (props) => {
                                                                   value.question
                                                               )[0].performance *
                                                                 5) /
-                                                                100
+                                                              100
                                                           ).length > 0
-                                                        ? colordata.filter(
+                                                          ? colordata.filter(
                                                             (c) =>
                                                               c.matrixConstant ==
                                                               (showCheckData.filter(
@@ -1942,10 +1937,10 @@ const Checks = (props) => {
                                                                   value.question
                                                               )[0].performance *
                                                                 5) /
-                                                                100
+                                                              100
                                                           )[0]
                                                             .matrixConstantColor
-                                                        : "",
+                                                          : "",
                                                     }}
                                                     fullWidth
                                                     variant="outlined"
@@ -1972,10 +1967,10 @@ const Checks = (props) => {
                                                           value.question
                                                       ).length
                                                         ? showCheckData.filter(
-                                                            (cd) =>
-                                                              cd.question ==
-                                                              value.question
-                                                          )[0].findings
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        )[0].findings
                                                         : ""
                                                     }
                                                     fullWidth
@@ -1993,66 +1988,65 @@ const Checks = (props) => {
                                                 </Grid>
                                                 {value.scoreType ===
                                                   "Stars" && (
-                                                  <Grid
-                                                    item
-                                                    md={12}
-                                                    sm={12}
-                                                    xs={12}
-                                                  >
-                                                    <FormLabel
-                                                      className="checkRadioLabel marginB5"
-                                                      component="legend"
-                                                    >
-                                                      Score
-                                                    </FormLabel>
                                                     <Grid
                                                       item
-                                                      md={4}
-                                                      sm={4}
+                                                      md={12}
+                                                      sm={12}
                                                       xs={12}
                                                     >
-                                                      <Rating
-                                                        name={`simple-controlled ${
-                                                          value.id
-                                                        }`}
-                                                        defaultValue={
-                                                          valueStar[index] !=
-                                                          undefined
-                                                            ? valueStar[index]
-                                                            : showCheckData.filter(
+                                                      <FormLabel
+                                                        className="checkRadioLabel marginB5"
+                                                        component="legend"
+                                                      >
+                                                        Score
+                                                      </FormLabel>
+                                                      <Grid
+                                                        item
+                                                        md={4}
+                                                        sm={4}
+                                                        xs={12}
+                                                      >
+                                                        <Rating
+                                                          name={`simple-controlled ${value.id
+                                                            }`}
+                                                          defaultValue={
+                                                            valueStar[index] !=
+                                                              undefined
+                                                              ? valueStar[index]
+                                                              : showCheckData.filter(
                                                                 (cd) =>
                                                                   cd.question ==
                                                                   value.question
                                                               ).length
-                                                            ? showCheckData
-                                                                .filter(
-                                                                  (cd) =>
-                                                                    cd.question ==
-                                                                    value.question
-                                                                )[0]
-                                                                .score.split("")
-                                                                .length
-                                                            : ""
-                                                        }
-                                                        onChange={(
-                                                          event,
-                                                          newValue
-                                                        ) => {
-                                                          if (
-                                                            newValue != null
-                                                          ) {
-                                                            handleChangeData(
-                                                              newValue,
-                                                              "score",
-                                                              index,
-                                                              value.id,
-                                                              value.scoreType
-                                                            );
-                                                            setValueStar(
-                                                              newValue
-                                                            );
+                                                                ? showCheckData
+                                                                  .filter(
+                                                                    (cd) =>
+                                                                      cd.question ==
+                                                                      value.question
+                                                                  )[0]
+                                                                  .score.split("")
+                                                                  .length
+                                                                : ""
                                                           }
-                                                        }}
+                                                          onChange={(
+                                                            event,
+                                                            newValue
+                                                          ) => {
+                                                            if (
+                                                              newValue != null
+                                                            ) {
+                                                              handleChangeData(
+                                                                newValue,
+                                                                "score",
+                                                                index,
+                                                                value.id,
+                                                                value.scoreType
+                                                              );
+                                                              setValueStar(
+                                                                newValue
+                                                              );
+                                                            }
+                                                          }}
                                                         // onChange={(e) =>
                                                         //   handleChangeData(
                                                         //     e.target.value,
@@ -2062,10 +2056,10 @@ const Checks = (props) => {
                                                         //     value.scoreType
                                                         //   )
                                                         // }
-                                                      />
+                                                        />
+                                                      </Grid>
                                                     </Grid>
-                                                  </Grid>
-                                                )}
+                                                  )}
                                                 {value.scoreType === "1-10" && (
                                                   <Grid
                                                     item
@@ -2096,10 +2090,10 @@ const Checks = (props) => {
                                                               value.question
                                                           ).length
                                                             ? showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0].score
+                                                              (cd) =>
+                                                                cd.question ==
+                                                                value.question
+                                                            )[0].score
                                                             : ""
                                                         }
                                                         label="Counts"
@@ -2178,14 +2172,14 @@ const Checks = (props) => {
                                                             ""
                                                         )
                                                           ? checkData
-                                                              .filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              )[0]
-                                                              .score.split(
-                                                                "%"
-                                                              )[0]
+                                                            .filter(
+                                                              (cd) =>
+                                                                cd.question ==
+                                                                value.question
+                                                            )[0]
+                                                            .score.split(
+                                                              "%"
+                                                            )[0]
                                                           : ""
                                                       }
                                                       name="performancerating"
@@ -2270,10 +2264,10 @@ const Checks = (props) => {
                                                       (val) =>
                                                         val.id == value.id
                                                     )[0] &&
-                                                    actionData.filter(
-                                                      (val) =>
-                                                        val.id == value.id
-                                                    )[0].action.length ? (
+                                                      actionData.filter(
+                                                        (val) =>
+                                                          val.id == value.id
+                                                      )[0].action.length ? (
                                                       <TableHead>
                                                         <TableRow>
                                                           <TableCell className="tableHeadCellFirst">
@@ -2291,7 +2285,7 @@ const Checks = (props) => {
                                                       {actionData.map((val) => (
                                                         <>
                                                           {val.id ==
-                                                          value.id ? (
+                                                            value.id ? (
                                                             <>
                                                               {val.action
                                                                 .length > 0 &&
@@ -2306,34 +2300,30 @@ const Checks = (props) => {
                                                                             classes.actionLinkAudit
                                                                           }
                                                                           display="block"
-                                                                          href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${
-                                                                            JSON.parse(
-                                                                              localStorage.getItem(
-                                                                                "BaseUrl"
-                                                                              )
-                                                                            )[
-                                                                              "actionClientID"
+                                                                          href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                            localStorage.getItem(
+                                                                              "BaseUrl"
+                                                                            )
+                                                                          )[
+                                                                            "actionClientID"
                                                                             ]
-                                                                          }&response_type=code&companyId=${
-                                                                            JSON.parse(
+                                                                            }&response_type=code&companyId=${JSON.parse(
                                                                               localStorage.getItem(
                                                                                 "company"
                                                                               )
                                                                             )
                                                                               .fkCompanyId
-                                                                          }&projectId=${
-                                                                            JSON.parse(
+                                                                            }&projectId=${JSON.parse(
                                                                               localStorage.getItem(
                                                                                 "projectName"
                                                                               )
                                                                             )
                                                                               .projectName
                                                                               .projectId
-                                                                          }&targetPage=/action/details/&targetId=${
-                                                                            valueAction.id
-                                                                          }&projectStructure=${localStorage.getItem(
-                                                                            "selectBreakDown"
-                                                                          )}
+                                                                            }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                            }&projectStructure=${localStorage.getItem(
+                                                                              "selectBreakDown"
+                                                                            )}
                                                                           `}
                                                                           target="_blank"
                                                                         >
@@ -2359,62 +2349,62 @@ const Checks = (props) => {
                                                 </Grid>
                                                 {(value.attachment === "Yes" ||
                                                   value.evidenceType ===
-                                                    "Yes") && (
-                                                  <Grid
-                                                    item
-                                                    md={12}
-                                                    sm={12}
-                                                    xs={12}
-                                                    className={classes.formBox}
-                                                  >
+                                                  "Yes") && (
                                                     <Grid
-                                                      style={{
-                                                        marginTop: "-20px",
-                                                      }}
+                                                      item
+                                                      md={12}
+                                                      sm={12}
+                                                      xs={12}
+                                                      className={classes.formBox}
                                                     >
-                                                      <MultiAttachment
-                                                        docTypes={{
-                                                          pdf: value.attachment.toLowerCase(),
-                                                          avi: value.evidenceType.toLowerCase(),
+                                                      <Grid
+                                                        style={{
+                                                          marginTop: "-20px",
                                                         }}
-                                                        attachmentHandler={(
-                                                          files
-                                                        ) => {
-                                                          handleFileUpload(
-                                                            files,
-                                                            value.id,
-                                                            "attachment"
-                                                          );
-                                                        }}
-                                                      />
-                                                    </Grid>
-                                                    <Typography className="viewLabelValue">
-                                                      {showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      ).length &&
-                                                      showCheckData.filter(
-                                                        (cd) =>
-                                                          cd.question ==
-                                                          value.question
-                                                      )[0].attachment !=
-                                                        null ? (
-                                                        <Attachment
-                                                          value={
-                                                            showCheckData.filter(
-                                                              (cd) =>
-                                                                cd.question ==
-                                                                value.question
-                                                            )[0].attachment
-                                                          }
+                                                      >
+                                                        <MultiAttachment
+                                                          docTypes={{
+                                                            pdf: value.attachment.toLowerCase(),
+                                                            avi: value.evidenceType.toLowerCase(),
+                                                          }}
+                                                          attachmentHandler={(
+                                                            files
+                                                          ) => {
+                                                            handleFileUpload(
+                                                              files,
+                                                              value.id,
+                                                              "attachment"
+                                                            );
+                                                          }}
                                                         />
-                                                      ) : (
-                                                        ""
-                                                      )}
-                                                    </Typography>
-                                                  </Grid>
-                                                )}
+                                                      </Grid>
+                                                      <Typography className="viewLabelValue">
+                                                        {showCheckData.filter(
+                                                          (cd) =>
+                                                            cd.question ==
+                                                            value.question
+                                                        ).length &&
+                                                          showCheckData.filter(
+                                                            (cd) =>
+                                                              cd.question ==
+                                                              value.question
+                                                          )[0].attachment !=
+                                                          null ? (
+                                                          <Attachment
+                                                            value={
+                                                              showCheckData.filter(
+                                                                (cd) =>
+                                                                  cd.question ==
+                                                                  value.question
+                                                              )[0].attachment
+                                                            }
+                                                          />
+                                                        ) : (
+                                                          ""
+                                                        )}
+                                                      </Typography>
+                                                    </Grid>
+                                                  )}
                                                 {/* {value.evidenceType === "Yes" && (
                                                   <Grid
                                                     item
