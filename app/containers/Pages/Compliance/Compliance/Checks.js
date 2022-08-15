@@ -4,34 +4,12 @@ import { PapperBlock } from "dan-components";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Grid, Typography, TextField, Button } from "@material-ui/core";
-import PropTypes, { object } from "prop-types";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-// import { KeyboardDatePicker } from '@material-ui/pickers';
-import FormGroup from "@material-ui/core/FormGroup";
-import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import {
-  DateTimePicker,
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
-import DateFnsUtils from "@date-io/date-fns";
-import { useDropzone } from "react-dropzone";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import Avatar from "@material-ui/core/Avatar";
-import PhotoCamera from "@material-ui/icons/PhotoCamera";
 
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -42,11 +20,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Link from "@material-ui/core/Link";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
-import classNames from "classnames";
-
-import Styles from "dan-styles/Summary.scss";
-import Fonts from "dan-styles/Fonts.scss";
 import Paper from "@material-ui/core/Paper";
 
 import Table from "@material-ui/core/Table";
@@ -54,44 +27,17 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import Dialog from "@material-ui/core/Dialog";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import CloseIcon from "@material-ui/icons/Close";
 import { CircularProgress } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
-import DeleteIcon from "@material-ui/icons/Delete";
-import icoExcel from "dan-images/icoExcel.svg";
-import icoAudio from "dan-images/icoAudio.svg";
-import icoPDF from "dan-images/icoPDF.svg";
-import icoPng from "dan-images/icoPng.svg";
-import icoVideo from "dan-images/icoVideo.svg";
 import FormSideBar from "../../../Forms/FormSideBar";
 import { COMPLIANCE } from "../Constants/Constants";
-import { useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import api from "../../../../utils/axios";
 import ActionTracker from "../../../Forms/ActionTracker";
-import {
-  handelIncidentId,
-  checkValue,
-  handelCommonObject,
-  handelActionData,
-} from "../../../../utils/CheckerValue";
-import ActionShow from "../../../Forms/ActionShow";
-import {
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
-} from "../../../../utils/constants";
+import { handelCommonObject, handelActionData, } from "../../../../utils/CheckerValue";
+import { SSO_URL, } from "../../../../utils/constants";
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
 import { connect } from "react-redux";
 import Attachment from "../../../../containers/Attachment/Attachment";
@@ -1212,23 +1158,20 @@ const Checks = (props) => {
                                                         <Rating
                                                           name={`simple-controlled ${value.id
                                                             }`}
+                                                          // defaultValue={
+                                                          //   valueStar[index] != undefined ? valueStar[index]
+                                                          //     : showCheckData.filter(cd => cd.question == value.question).length ?
+                                                          //      showCheckData.filter(cd => cd.question == value.question).length ?
+                                                          //       ? showCheckData.filter(cd => cd.question == value.question)[0].score.split("").length
+                                                          //       : ""
+                                                          //       : ""
+                                                          // }
                                                           defaultValue={
-                                                            valueStar[index] !=
-                                                              undefined
-                                                              ? valueStar[index]
-                                                              : showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              ).length
-                                                                ? showCheckData
-                                                                  .filter(
-                                                                    (cd) =>
-                                                                      cd.question ==
-                                                                      value.question
-                                                                  )[0]
-                                                                  .score.split("")
-                                                                  .length
+                                                            valueStar[index] ? valueStar[index]
+                                                              : showCheckData.filter(cd => cd.question === value.question).length
+                                                                ? showCheckData.filter(cd => cd.question === value.question)[0].score ?
+                                                                showCheckData.filter(cd => cd.question === value.question)[0].score.split("").length
+                                                                : ""
                                                                 : ""
                                                           }
                                                           onChange={(
@@ -1516,7 +1459,7 @@ const Checks = (props) => {
                                                                                   )
                                                                                 )[
                                                                                   "actionClientID"
-                                                                                  ]
+                                                                                ]
                                                                                   }&response_type=code&companyId=${JSON.parse(
                                                                                     localStorage.getItem(
                                                                                       "company"
@@ -2006,45 +1949,19 @@ const Checks = (props) => {
                                                         sm={4}
                                                         xs={12}
                                                       >
-                                                        <Rating
-                                                          name={`simple-controlled ${value.id
-                                                            }`}
+                                                        <Rating name={`simple-controlled ${value.id}`}
                                                           defaultValue={
-                                                            valueStar[index] !=
-                                                              undefined
-                                                              ? valueStar[index]
-                                                              : showCheckData.filter(
-                                                                (cd) =>
-                                                                  cd.question ==
-                                                                  value.question
-                                                              ).length
-                                                                ? showCheckData
-                                                                  .filter(
-                                                                    (cd) =>
-                                                                      cd.question ==
-                                                                      value.question
-                                                                  )[0]
-                                                                  .score.split("")
-                                                                  .length
+                                                            valueStar[index] ? valueStar[index]
+                                                              : showCheckData.filter(cd => cd.question === value.question).length
+                                                                ? showCheckData.filter(cd => cd.question === value.question)[0].score ?
+                                                                  showCheckData.filter(cd => cd.question === value.question)[0].score.split("").length
+                                                                  : ""
                                                                 : ""
                                                           }
-                                                          onChange={(
-                                                            event,
-                                                            newValue
-                                                          ) => {
-                                                            if (
-                                                              newValue != null
-                                                            ) {
-                                                              handleChangeData(
-                                                                newValue,
-                                                                "score",
-                                                                index,
-                                                                value.id,
-                                                                value.scoreType
-                                                              );
-                                                              setValueStar(
-                                                                newValue
-                                                              );
+                                                          onChange={(event, newValue) => {
+                                                            if (newValue != null) {
+                                                              handleChangeData(newValue, "score", index, value.id, value.scoreType);
+                                                              setValueStar(newValue);
                                                             }
                                                           }}
                                                         // onChange={(e) =>
@@ -2306,7 +2223,7 @@ const Checks = (props) => {
                                                                             )
                                                                           )[
                                                                             "actionClientID"
-                                                                            ]
+                                                                          ]
                                                                             }&response_type=code&companyId=${JSON.parse(
                                                                               localStorage.getItem(
                                                                                 "company"
