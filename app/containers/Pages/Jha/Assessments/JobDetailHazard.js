@@ -992,6 +992,7 @@ const JobDetails = (props) => {
                       <Grid item md={12} xs={12} className={classes.formBox}>
                         <TextField
                           label="Job Title *"
+                          inputProps={{maxLength:255}}
                           name="jobtitle"
                           id="jobtitle"
                           value={form.jobTitle ? form.jobTitle : ""}
@@ -1010,6 +1011,7 @@ const JobDetails = (props) => {
                       <Grid item md={6} xs={11}>
                         <TextField
                           label="Order number"
+                          inputProps={{maxLength:100}}
                           name="ordernumber"
                           id="ordernumber"
                           value={form.jobOrderNumber ? form.jobOrderNumber : ""}
@@ -1048,6 +1050,7 @@ const JobDetails = (props) => {
                       <Grid item md={12} xs={12} className={classes.formBox}>
                         <TextField
                           label="Location *"
+                          inputProps={{maxLength:255}}
                           name="worklocation"
                           id="worklocation"
                           defaultValue=""
@@ -1136,6 +1139,7 @@ const JobDetails = (props) => {
                               label="Permit reference number"
                               name="permintreferencenumber"
                               id="permintreferencenumber"
+                              inputProps={{maxLength:100}}
                               value={form.permitNumber ? form.permitNumber : ""}
                               onChange={(e) =>
                                 setForm({
@@ -1233,6 +1237,7 @@ const JobDetails = (props) => {
                             <TextField
                               label={`Name ${index + 1}`}
                               margin="dense"
+                              inputProps={{maxlength:100}}
                               name="arename"
                               id="arename"
                               value={Teamform[index].teamName || ""}
@@ -1339,6 +1344,7 @@ const JobDetails = (props) => {
                       <Grid item md={6} xs={11}>
                         <TextField
                           label="Emergency Phone Number"
+                          inputProps={{maxLength:45}}
                           name="emergencyphonenumber"
                           id="emergencyphonenumber"
                           value={
@@ -1360,6 +1366,7 @@ const JobDetails = (props) => {
                       <Grid item md={12} xs={12}>
                         <TextField
                           label="Evacuation assembly point"
+                          inputProps={{maxLength:255}}
                           name="evacuationassemblypoint"
                           id="evacuationassemblypoint"
                           value={

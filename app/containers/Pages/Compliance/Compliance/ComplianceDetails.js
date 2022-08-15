@@ -1005,7 +1005,8 @@ const ComplianceDetails = () => {
                           </Grid>
                           <Grid item md={6} xs={12}>
                             <TextField
-                              label="Contractor supervisor name "
+                              label="Contractor supervisor name"
+                              inputProps={{ maxLength: "55" }}
                               name="contractorsupername"
                               id="contractorsupername"
                               value={
