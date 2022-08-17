@@ -1189,6 +1189,10 @@ ul.MuiMenu-list a ul li.userName {
   float: left;
 }
 
+.incidentPageIcon {
+  background-position: -52.625rem -25.313rem;
+}
+
 .homePageIcon {
   background-position: -760px -405px;
 }

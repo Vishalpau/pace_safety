@@ -214,7 +214,7 @@ const ObservationInitialNotification = (props) => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({});
-  const [addressSituation, setAddressSituation] = useState(true);
+  const [addressSituation, setAddressSituation] = useState(undefined);
   const [tagData, setTagData] = useState([]);
   const [fileShow, setFileShow] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -250,6 +250,7 @@ const ObservationInitialNotification = (props) => {
   const [prevStrIds, setPrevStrIds] = useState("");
 
   const radioType = ["Risk", "Comments", "Positive behavior"];
+  const addressByTypes = ["Employee", "Supervisor & Employee", "Safety", "N/A"];
   const radioSituation = ["Yes", "No"];
   const radioClassification = ["People", "Property"];
 
@@ -378,6 +379,7 @@ const ObservationInitialNotification = (props) => {
     fkProjectStructureIds:
       fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
     observationType: "",
+    isAddressedBy: "",
     observationClassification: "",
     stopWork: "",
     nearMiss: "",
@@ -483,6 +485,7 @@ const ObservationInitialNotification = (props) => {
       data.append("shift", form.shift),
       data.append("departmentName", form.departmentName),
       data.append("departmentId", form.departmentId),
+      data.append("isAddressedBy", form.isAddressedBy),
       data.append(
         "reportedById",
         form.reportedById && form.reportedById != undefined
@@ -803,6 +806,11 @@ const ObservationInitialNotification = (props) => {
     PickList();
     fetchAttachment();
   }, [props.initialValues.breakDown]);
+
+  useEffect(() => {
+    console.log(form, "Form Values");
+  }, [form]);
+
   return (
     <Acl
       module="safety-observations"
@@ -1694,45 +1702,75 @@ const ObservationInitialNotification = (props) => {
                             {error.isSituationAddressed}
                           </p>
                         </FormControl>
+                        {addressSituation === true ? (
+                          <>
+                            <Grid
+                              item
+                              md={12}
+                              xs={12}
+                              className={classes.formBox}
+                            >
+                              <FormLabel
+                                className="checkRadioLabel"
+                                component="legend"
+                              >
+                                Addressed By?
+                              </FormLabel>
+                              <RadioGroup
+                                aria-label="gender"
+                                name="isAddressedBy"
+                                defaultValue={form.isAddressedBy}
+                                style={{
+                                  marginBottom: 15,
+                                  flexDirection: "unset",
+                                }}
+                              >
+                                {addressByTypes.map((value) => (
+                                  <FormControlLabel
+                                    value={value}
+                                    className="selectLabel"
+                                    control={<Radio />}
+                                    label={value}
+                                    onClick={(e) => {
+                                      setForm({
+                                        ...form,
+                                        isAddressedBy: e.target.value,
+                                      });
+                                    }}
+                                  />
+                                ))}
+                              </RadioGroup>
+                              <TextField
+                                label="Describe the actions taken*"
+                                // margin="dense"
+                                name="actionstaken"
+                                id="actionstaken"
+                                multiline
+                                rows={4}
+                                error={error.actionTaken}
+                                helperText={
+                                  error.actionTaken ? error.actionTaken : ""
+                                }
+                                defaultValue={form.actionTaken}
+                                fullWidth
+                                variant="outlined"
+                                className={classNames(
+                                  classes.formControl,
+                                  classes.boldHelperText
+                                )}
+                                onChange={(e) => {
+                                  setForm({
+                                    ...form,
+                                    actionTaken: e.target.value,
+                                  });
+                                }}
+                              />
+                            </Grid>
+                          </>
+                        ) : (
+                          ""
+                        )}
                       </Grid>
-                      {addressSituation === true ? (
-                        <>
-                          <Grid
-                            item
-                            md={12}
-                            xs={12}
-                            className={classes.formBox}
-                          >
-                            <TextField
-                              label="Describe the actions taken*"
-                              // margin="dense"
-                              name="actionstaken"
-                              id="actionstaken"
-                              multiline
-                              rows={4}
-                              error={error.actionTaken}
-                              helperText={
-                                error.actionTaken ? error.actionTaken : ""
-                              }
-                              defaultValue={form.actionTaken}
-                              fullWidth
-                              variant="outlined"
-                              className={classNames(
-                                classes.formControl,
-                                classes.boldHelperText
-                              )}
-                              onChange={(e) => {
-                                setForm({
-                                  ...form,
-                                  actionTaken: e.target.value,
-                                });
-                              }}
-                            />
-                          </Grid>
-                        </>
-                      ) : (
-                        ""
-                      )}
                     </Grid>
                   </Paper>
                 </Grid>
@@ -1956,7 +1994,8 @@ const ObservationInitialNotification = (props) => {
                             component="legend"
                             className="checkRadioLabel"
                           >
-                            Is this an Employee Recognition?
+                            Confirm if you want to nominate a co-worker for
+                            employee recognition.
                           </FormLabel>
                           <RadioGroup
                             row
@@ -1988,8 +2027,8 @@ const ObservationInitialNotification = (props) => {
                             component="legend"
                             className="checkRadioLabel"
                           >
-                            Do you need to escalate the issue to Safety
-                            Management?
+                            Is this observation a high-risk item that needs to
+                            be sent to Management?
                           </FormLabel>
                           <RadioGroup
                             row
@@ -2096,7 +2135,7 @@ const ObservationInitialNotification = (props) => {
                               }
                               label={`Do you want to Notify the ${
                                 value.roleName
-                              }`}
+                              }?`}
                             />
                           </FormGroup>
                         </Grid>

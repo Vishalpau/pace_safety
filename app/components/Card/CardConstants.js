@@ -6,6 +6,11 @@
  * @since v1.1.0
  **/
 
+export const incidentsLabels = {
+  header: ["Number", "Category", "Created By"],
+  body: ["Incident Type", "Incident location", "Reported On", "Reported By"],
+};
+
 export const icareLabels = {
   header: ["Number", "Assignee", "Stage", "Status"],
   body: ["Type", "Location", "Created On", "Created By"],
