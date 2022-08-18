@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: "1px solid #ccc",
     paddingBottom: "10px",
     "& .MuiTypography-h5": {
-      fontSize: "1.5rem",
+      fontSize: "1.5rem !important",
       fontFamily: "Xolonium",
       fontWeight: "400",
       lineHeight: "1.8",
@@ -307,8 +307,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -373,7 +373,7 @@ function BlankPage(props) {
         };
 
         await api(config)
-          .then(function(response) {
+          .then(function (response) {
             console.log(response);
             if (response.status === 200) {
               let hosting = response.data.data.results.data.companies
@@ -426,9 +426,9 @@ function BlankPage(props) {
               });
             }
           })
-          .catch(function(error) {});
+          .catch(function (error) { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handlePush = async () => {
@@ -498,8 +498,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -514,7 +514,7 @@ function BlankPage(props) {
         setIncidents(res.data.data.results.results);
         setPage(value);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   // const handleDelete = async (item) => {
@@ -573,8 +573,8 @@ function BlankPage(props) {
     props.projectName.breakDown.length > 0
       ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
   let struct1 = "";
 
   for (const i in selectBreakdown1) {
@@ -602,8 +602,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -895,9 +895,8 @@ function BlankPage(props) {
                         label="List"
                         {...a11yProps(1)}
                         icon={<ReorderIcon />}
-                        className={`${classes.pLTen} ${
-                          listToggle ? "Mui-selected" : ""
-                        }`}
+                        className={`${classes.pLTen} ${listToggle ? "Mui-selected" : ""
+                          }`}
                       />
                     </Tabs>
                   </div>
@@ -974,7 +973,7 @@ function BlankPage(props) {
             // listview end
             <>
               {isLoading ? (
-                <div className="listView">
+                <div className="dataTableSectionDesign">
                   <MUIDataTable
                     data={Object.entries(incidents)
                       .filter((searchText) => {
