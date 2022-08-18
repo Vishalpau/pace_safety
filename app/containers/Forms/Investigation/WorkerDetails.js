@@ -491,6 +491,7 @@ const WorkerDetails = () => {
                     variant="outlined"
                     label="Name"
                     required
+                    inputProps={{maxLength:45}}
                     value={form.name}
                     error={error && error.name}
                     helperText={error && error.name ? error.name : null}
@@ -957,6 +958,7 @@ const WorkerDetails = () => {
                     id="title"
                     variant="outlined"
                     label="Number of days away/on restriction"
+                    inputProps={{maxLength:45}}
                     value={form.NoOfDaysAway}
                     className={classes.formControl}
                     onChange={(e) => {
@@ -973,6 +975,7 @@ const WorkerDetails = () => {
                   <TextField
                     id="title"
                     variant="outlined"
+                    inputProps={{maxLength:45}}
                     label="Medical response taken"
                     value={form.medicalResponseTaken}
                     error={error && error.medicalResponseTaken}
@@ -1353,6 +1356,7 @@ const WorkerDetails = () => {
                   <TextField
                     id="title"
                     variant="outlined"
+                    inputProps={{maxLength:45}}
                     label="Supervisor name"
                     error={error && error.supervisorName}
                     helperText={error && error.supervisorName}

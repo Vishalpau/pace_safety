@@ -32,6 +32,10 @@ import Incidents from "dan-styles/IncidentsList.scss";
 import moment from "moment";
 import MUIDataTable from "mui-datatables";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
+import classNames from "classnames";
+import AddIcon from "@material-ui/icons/Add";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import ReorderIcon from "@material-ui/icons/Reorder";
 
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
@@ -53,6 +57,10 @@ import Acl from "../../../components/Error/acl";
 // import { Delete } from "@material-ui/icons";
 import Delete from "../../Delete/Delete";
 import DateFormat from "../../../components/Date/DateFormat";
+import CardView from "../../../components/Card/Index";
+import { incidentsLabels } from "../../../components/Card/CardConstants";
+import Attachment from "../../Attachment/Attachment";
+import { Tab, Tabs, Toolbar } from "@material-ui/core";
 
 const Loader = lazy(() => import("../../Forms/Loader"));
 
@@ -62,12 +70,6 @@ const useStyles = makeStyles((theme) => ({
     padding: "1rem 0",
     display: "flex",
     justifyContent: "flex-end",
-  },
-  root: {
-    flexGrow: 1,
-    marginBottom: theme.spacing(4),
-    border: `1px solid rgba(0, 0, 0, .13)`,
-    borderRadius: "4px",
   },
   search: {
     position: "relative",
@@ -93,13 +95,43 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    color: "orange",
+  },
+  buttonsNew: {
+    borderRadius: "5px",
+    backgroundColor: "#06425c",
+    padding: "7px 10px 7px 10px",
+    marginTop: "10px",
+    float: "right",
+  },
+  floatR: {
+    float: "right",
+    textAlign: "right",
+  },
+  borderTop: {
+    borderBottom: "1px solid #ccc",
+    paddingBottom: "10px",
+    "& .MuiTypography-h5": {
+      fontSize: "1.5rem !important",
+      fontFamily: "Xolonium",
+      fontWeight: "400",
+      lineHeight: "1.8",
+      color: "#23343e",
+    },
+    textCenter: {
+      textAlign: "right",
+      verticalAlign: "middle",
+      margin: "20px 16px 12px 16px!important",
+      float: "right",
+    },
   },
   inputRoot: {
     color: "inherit",
     width: "100%",
   },
   inputInput: {
-    padding: theme.spacing(1.5, 1.5, 1.5, 0),
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -122,6 +154,78 @@ const useStyles = makeStyles((theme) => ({
   },
   calendarIcon: {
     marginRight: "5px",
+  },
+  listViewTab: {
+    "@media (max-width:480px)": {
+      padding: "12px 12px 0px 12px !important",
+    },
+  },
+  search: {
+    position: "relative",
+    border: "1px solid #ccc",
+    borderRadius: theme.shape.borderRadius,
+    marginRight: theme.spacing(1),
+    marginLeft: 0,
+    width: "97% !important",
+    margin: "10px 2px 9px 0px",
+    padding: "0px 0px",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "100%",
+    },
+    "& .MuiInputBase-root": {
+      width: "100%",
+    },
+  },
+  MuiAppBarColor: {
+    color: "#06425c",
+    backgroundColor: "#fafafa",
+  },
+  Lheight: {
+    lineHeight: "65px",
+    textAlign: "right",
+    "& .MuiButton-sizeSmall": {
+      padding: "7px 12px",
+      borderRadius: "5px",
+      backgroundColor: "#517b8d",
+      marginLeft: "1px",
+    },
+  },
+  pL0: {
+    paddingLeft: "0px !important",
+  },
+  AppBarHeader: {
+    color: "inherit",
+    backgroundColor: "#ffffff",
+    border: "1px solid #e4e4e4",
+    padding: "0px 5px 0px 5px",
+    borderRadius: "3px",
+    marginBottom: "30px",
+    boxShadow: "1px 1px 13px #e6e6e6",
+  },
+  navTabBack: {
+    backgroundColor: "transparent",
+    color: "black",
+    "& .MuiTab-root": {
+      minWidth: "80px",
+      minHeight: "40px",
+      paddingLeft: "0px",
+    },
+    "& .MuiTab-wrapper": {
+      display: "inline",
+      textAlign: "left",
+      fontWeight: "600",
+      "&:hover": {
+        color: "#f47607 !important",
+      },
+    },
+    "& .MuiTab-textColorInherit.Mui-selected": {
+      color: "#f47607",
+    },
+    "& .MuiTab-labelIcon .MuiTab-wrapper > *:first-child": {
+      marginBottom: "3px",
+      marginRight: "5px",
+    },
   },
   table: {
     "& > div": {
@@ -198,7 +302,7 @@ function BlankPage(props) {
 
   const fetchData = async () => {
     setPage(1);
-    setIsLoading(true);
+    // setIsLoading(true);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -207,8 +311,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -250,6 +354,7 @@ function BlankPage(props) {
       // .catch((err) => history.push("/app/pages/error"));
       // handleTimeOutError(res)
     }
+    setIsLoading(true);
     const viewMode = {
       initialNotification: true,
       investigation: false,
@@ -272,7 +377,7 @@ function BlankPage(props) {
         };
 
         await api(config)
-          .then(function(response) {
+          .then(function (response) {
             console.log(response);
             if (response.status === 200) {
               let hosting = response.data.data.results.data.companies
@@ -325,9 +430,9 @@ function BlankPage(props) {
               });
             }
           })
-          .catch(function(error) {});
+          .catch(function (error) { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handlePush = async () => {
@@ -397,8 +502,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -413,7 +518,7 @@ function BlankPage(props) {
         setIncidents(res.data.data.results.results);
         setPage(value);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   // const handleDelete = async (item) => {
@@ -472,8 +577,8 @@ function BlankPage(props) {
     props.projectName.breakDown.length > 0
       ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
   let struct1 = "";
 
   for (const i in selectBreakdown1) {
@@ -501,8 +606,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -544,111 +649,305 @@ function BlankPage(props) {
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
+  const handleSummaryPush = (id) => {
+    history.push({
+      pathname: `/incident/details/${id}/`,
+      state: "change_incident",
+    });
+  };
+
+  const AllCardData = ({ item, index }) => {
+    const [showGrid, setShowGrid] = useState(false);
+    const [hidden, setHidden] = useState(false);
+    const [value, setValue] = React.useState(2);
+    const [commentsOpen, setCommentsOpen] = useState(false);
+    const [hiddenn, setHiddenn] = useState(false);
+    const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+    const [commentData, setCommentData] = useState("");
+
+    let deleteItem = {
+      fkCompanyId: item[1].fkCompanyId,
+      fkProjectId: item[1].fkProjectId,
+      fkProjectStructureIds: item[1].fkProjectStructureIds,
+      createdBy: item[1].createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
+      status: "Delete",
+    };
+
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
+      setCommentData("");
+    }
+
+    function handleAttachClose() {
+      setShowGrid(false);
+    }
+
+    function handleAttachClick() {
+      setShowGrid(!open);
+    }
+
+    function handleAttachOpen() {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    }
+
+    const handleVisibility = () => {
+      setShowGrid(true);
+      setHidden(!hidden);
+    };
+
+    return (
+      <Grid className={classes.marginTopBottom}>
+        <div className="gridView">
+          <CardView
+            cardTitle={item[1].incidentTitle} // Card title
+            avatar={
+              item[1].avatar
+                ? item[1].avatar
+                : "https://www.businessnetworks.com/sites/default/files/default_images/default-avatar.png"
+            } // Card avatar
+            username={item[1].username} // Profile username
+            itemId={item[1].id} // Item ID
+            headerFields={[
+              // Card header labels and values for each item
+              {
+                label: incidentsLabels.header[0],
+                value: item[1].incidentNumber,
+              },
+              {
+                label: incidentsLabels.header[1],
+                value: "Initial Notification",
+              },
+              {
+                label: incidentsLabels.header[2],
+                value: DateFormat(item[1].createdAt, true),
+              },
+            ]}
+            bodyFields={[
+              // Card body labels and values for each item
+              {
+                label: incidentsLabels.body[0],
+                value: item[1].incidentType,
+              },
+              {
+                label: incidentsLabels.body[1],
+                value: item[1].incidentLocation,
+              },
+              {
+                label: incidentsLabels.body[2],
+                value: DateFormat(item[1].incidentReportedOn, true),
+              },
+              {
+                label: incidentsLabels.body[3],
+                value: item[1].incidentReportedByName,
+              },
+            ]}
+            // printFields={{
+            //   // Print component props
+            //   typeOfModule: "Observation",
+            //   printUrl: `api/v1/observations/${item.id}/print/`,
+            //   number: item.observationNumber,
+            // }}
+            // bookmarkFields={{
+            //   // Bookmark component props
+            //   typeOfModule: "observations",
+            //   itemId: item.id,
+            // }}
+            // RefreshBookmarkData={fetchInitialiObservation} // Refreshing data after removing as bookmark
+            deleteFields={{
+              // Delete component props
+              deleteUrl: `/api/v1/incidents/${item[1].id}/`,
+              afterDelete: () => {
+                fetchData();
+              },
+              axiosObj: api,
+              item: deleteItem,
+              loader: setIsLoading,
+              loadingFlag: false,
+              deleteMsg: "Are you sure you want to delete this Incident?",
+              yesBtn: "Yes",
+              noBtn: "No",
+              dataLength: incidents.length,
+            }}
+            handleVisibility={() => handleVisibility()} // Show attachment box
+            // handleVisibilityComments={() =>
+            //   handleVisibilityComments()
+            // } // Show "add comment" box
+            files={item[1].attachmentCount.attachmentCount} // Attachment counts
+            commentsCount={item[1].commentsCount} // Comments count
+            handleSummaryPush={() => handleSummaryPush(item[1].id)} // Go to detail page function
+            checkDeletePermission={checkDeletePermission} // Check delete permission
+          />
+          {item[1].attachmentCount.attachmentCount > 0 ? (
+            <Grid
+              item
+              md={12}
+              sm={12}
+              xs={12}
+              hidden={!hidden}
+              onBlur={handleAttachClose}
+              onClick={handleAttachClick}
+              onClose={handleAttachClose}
+              onFocus={handleAttachOpen}
+              onMouseEnter={handleAttachOpen}
+              onMouseLeave={handleAttachClose}
+              open={showGrid}
+              className="paddTBRemove"
+            >
+              <Paper elevation={1} className="cardSectionBottom">
+                <Grid container spacing={3}>
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    style={{ margin: "0 -10px" }}
+                  >
+                    {item[1].attachmentCount.links.map((a) => (
+                      <div
+                        className="attachFileThumb"
+                        style={{ width: "auto", margin: "0 10px" }}
+                      >
+                        <Attachment key={a} value={a} type={a} />
+                      </div>
+                    ))}
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          ) : (
+            ""
+          )}
+        </div>
+      </Grid>
+    );
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
+  const [value, setValue] = useState(0);
+  const handleChangeTabs = (event, newValue) => {
+    if (newValue === 0) {
+      setListToggle(false);
+    } else if (newValue === 1) {
+      setListToggle(true);
+    }
+  };
+
   return (
     <Acl
       module="safety-incident"
       action="view_incidents"
       html={
-        <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
+        <>
           <div className={classes.root}>
-            <AppBar position="static" color="transparent">
-              <div className={classes.toolbar}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={12} md={4}>
-                    <div className={classes.search}>
-                      <Paper variant="outlined" className={classes.searchPaper}>
-                        <div className={classes.searchIcon}>
-                          <SearchIcon />
-                        </div>
-                        <InputBase
-                          placeholder="Search…"
-                          color="primary"
-                          fullWidth
-                          classes={{
-                            root: classes.inputRoot,
-                            input: classes.inputInput,
-                          }}
-                          onChange={(e) => handleSearchIncident(e.target.value)}
-                        />
-                      </Paper>
-                    </div>
-                  </Grid>
-
-                  <Grid item xs={5} md={3}>
-                    <div className="toggleViewButtons">
-                      <Tooltip title="List View">
-                        <IconButton
-                          href="#table"
-                          className={classes.filterIcon}
-                          onClick={(e) => handelViewTabel(e)}
-                        >
-                          <FormatListBulleted />
-                        </IconButton>
-                      </Tooltip>
-
-                      <Tooltip title="Grid View">
-                        <IconButton
-                          href="#grid"
-                          aria-label="grid"
-                          className={classes.filterIcon}
-                          onClick={(e) => handelView(e)}
-                        >
-                          <ViewAgendaIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                  </Grid>
-                  <Grid item xs={7} md={5}>
-                    <Box display="flex" justifyContent="flex-end">
-                      {isDesktop ? (
-                        <Tooltip title="New Incident">
-                          <Button
-                            aria-label="New Incident"
-                            onClick={() => handlePush()}
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                            startIcon={<AddCircleIcon />}
-                            className={classes.newIncidentButton}
-                            disableElevation
-                            style={{
-                              background: checkACL(
-                                "safety-incident",
-                                "add_incidents"
-                              )
-                                ? "#06425c"
-                                : "#c0c0c0",
-                              cursor: checkACL(
-                                "safety-incident",
-                                "add_incidents"
-                              )
-                                ? "pointer"
-                                : "not-allowed",
-                            }}
-                          >
-                            New Incident
-                          </Button>
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title="New Incident">
-                          <IconButton
-                            onClick={() => handlePush()}
-                            className={classes.newIncidentIconButton}
-                          >
-                            <AddCircleIcon />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-                    </Box>
-                  </Grid>
+            <Grid item sm={12} xs={12} className={classes.borderTop}>
+              <Grid container spacing={3}>
+                <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
+                  <span className="customDropdownPageIcon incidentPageIcon" />
+                  <Typography variant="h5"> Incidents </Typography>
                 </Grid>
-              </div>
-            </AppBar>
+                <Grid item sm={5} xs={12}>
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    className={classNames(classes.buttonsNew, classes.floatR)}
+                    color="primary"
+                    onClick={() => handlePush()}
+                    style={{
+                      background: checkACL("safety-incident", "add_incidents")
+                        ? "#06425c"
+                        : "#c0c0c0",
+                      cursor: checkACL("safety-incident", "add_incidents")
+                        ? "pointer"
+                        : "not-allowed",
+                    }}
+                  >
+                    <AddIcon /> Add new
+                  </Button>
+                  {/* )} */}
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item sm={8} xs={12} className={classes.listViewTab}>
+                <AppBar position="static" className={classes.navTabBack}>
+                  <div className={classes.floatL}>
+                    <Tabs
+                      className={classes.minwdTab}
+                      // value={value}
+                      onChange={handleChangeTabs}
+                      aria-label="Tabs"
+                      indicatorColor="none"
+                    >
+                      <Tab
+                        label="Card"
+                        {...a11yProps(0)}
+                        icon={
+                          <DashboardIcon className={classNames(classes.pL0)} />
+                        }
+                        className={`${!listToggle ? "Mui-selected" : ""}`}
+                      />
+                      <Tab
+                        label="List"
+                        {...a11yProps(1)}
+                        icon={<ReorderIcon />}
+                        className={`${classes.pLTen} ${listToggle ? "Mui-selected" : ""
+                          }`}
+                      />
+                    </Tabs>
+                  </div>
+                </AppBar>
+              </Grid>
+              <Grid item sm={4} xs={12}>
+                <Grid className={classes.Lheight}>
+                  <div className={classes.floatR} />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item md={12} className={classes.AppBarHeader}>
+              <Grid container spacing={3}>
+                <Grid item md={3} sm={12} xs={12} className={classes.pR0}>
+                  <Paper elevation={1} className={classes.search}>
+                    <div className={classes.searchIcon}>
+                      <SearchIcon />
+                    </div>
+                    <InputBase
+                      placeholder="Search…"
+                      color="primary"
+                      fullWidth
+                      classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                      }}
+                      onChange={(e) => handleSearchIncident(e.target.value)}
+                    />
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Grid>
           </div>
+          <Toolbar disableGutters className={classes.MuiAppBarColor}>
+            <Typography
+              className={classes.title}
+              variant="h5"
+              color="inherit"
+              noWrap
+            >
+              Incidents
+            </Typography>
+          </Toolbar>
 
-          {listToggle == false ? (
+          {listToggle === false ? (
             <>
-              {isLoading == false ? (
+              {isLoading ? (
                 <>
                   <div className="gridView">
                     {Object.entries(incidents)
@@ -663,265 +962,9 @@ function BlankPage(props) {
                         );
                       })
                       .map((item, index) => (
-                        <Card
-                          variant="outlined"
-                          className={Incidents.card}
-                          key={index}
-                        >
-                          <CardContent>
-                            <Grid container spacing={3}>
-                              <Grid item xs={12}>
-                                <Grid
-                                  container
-                                  spacing={3}
-                                  alignItems="flex-start"
-                                >
-                                  <Grid item xs={12} md={10}>
-                                    <Typography variant="h6">
-                                      {item[1]["incidentTitle"]}
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid
-                                    item
-                                    xs={12}
-                                    md={2}
-                                    className={classes.adminLabel}
-                                  >
-                                    <Box
-                                      display={isDesktop ? "flex" : null}
-                                      justifyContent={
-                                        isDesktop ? "flex-end" : null
-                                      }
-                                    >
-                                      <Chip
-                                        avatar={
-                                          <Avatar
-                                            src={
-                                              item[1]["avatar"]
-                                                ? item[1]["avatar"]
-                                                : "/images/pp_boy.svg"
-                                            }
-                                          />
-                                        }
-                                        label={
-                                          item[1]["username"]
-                                            ? item[1]["username"]
-                                            : "Admin"
-                                        }
-                                      />
-                                    </Box>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-
-                              <Grid item xs={12}>
-                                <Grid container spacing={2}>
-                                  <Grid item xs={12} md={3}>
-                                    <Typography
-                                      display="inline"
-                                      className={Fonts.listingLabelName}
-                                    >
-                                      Number:
-                                      <ILink
-                                        onClick={(e) =>
-                                          history.push({
-                                            pathname: `/incident/details/${
-                                              item[1].id
-                                            }/`,
-                                            state: "change_incident",
-                                          })
-                                        }
-                                        variant="subtitle2"
-                                        className={Fonts.listingLabelValue}
-                                      >
-                                        {item[1]["incidentNumber"]}
-                                      </ILink>
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid item xs={12} md={3}>
-                                    <Chip
-                                      variant="outlined"
-                                      label={item[1].incidentStage}
-                                      color="primary"
-                                      size="small"
-                                    />
-                                  </Grid>
-
-                                  <Grid item xs={12} md={3}>
-                                    <Typography
-                                      display="inline"
-                                      className={Fonts.listingLabelName}
-                                    >
-                                      <Box display="flex" alignItems="center">
-                                        <CalendarTodayIcon fontSize="small" />
-                                        <span className={Incidents.dateValue}>
-                                          {DateFormat(
-                                            item[1]["incidentOccuredOn"],
-                                            true
-                                          )}
-                                        </span>
-                                      </Box>
-                                    </Typography>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                              {isDesktop && (
-                                <>
-                                  <Grid item xs={12} lg={3}>
-                                    <Typography
-                                      className={Fonts.listingLabelName}
-                                      gutterBottom
-                                    >
-                                      Incident type
-                                    </Typography>
-                                    <Typography
-                                      className={Fonts.listingLabelValue}
-                                    >
-                                      {item[1]["incidentType"]}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12} lg={3}>
-                                    <Typography
-                                      className={Fonts.listingLabelName}
-                                      gutterBottom
-                                    >
-                                      Incident location
-                                    </Typography>
-                                    <Typography
-                                      variant="body1"
-                                      className={Fonts.listingLabelValue}
-                                    >
-                                      {item[1]["incidentLocation"]}
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid item xs={12} lg={3}>
-                                    <Typography
-                                      className={Fonts.listingLabelName}
-                                      gutterBottom
-                                    >
-                                      Reported on
-                                    </Typography>
-
-                                    <Typography
-                                      variant="body1"
-                                      className={Fonts.listingLabelValue}
-                                    >
-                                      {DateFormat(
-                                        item[1]["incidentReportedOn"],
-                                        true
-                                      )}
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid item xs={12} lg={3}>
-                                    <Typography
-                                      className={Fonts.listingLabelName}
-                                      gutterBottom
-                                    >
-                                      Reported by
-                                    </Typography>
-
-                                    <Typography
-                                      className={Fonts.listingLabelValue}
-                                    >
-                                      {item[1]["incidentReportedByName"]}
-                                    </Typography>
-                                  </Grid>
-                                </>
-                              )}
-                            </Grid>
-                          </CardContent>
-                          <Divider />
-                          <CardActions className={Incidents.cardActions}>
-                            <Grid
-                              container
-                              spacing={2}
-                              justifyContent="space-between"
-                              alignItems="center"
-                            >
-                              <Grid item xs={6} md={3}>
-                                <Typography
-                                  variant="body2"
-                                  display="inline"
-                                  className={Fonts.listingLabelName}
-                                  // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
-                                >
-                                  <MessageIcon fontSize="small" /> Comments:
-                                  {item[1]["commentsCount"]}
-                                </Typography>
-                              </Grid>
-
-                              <Grid item xs={6} md={3}>
-                                <Typography
-                                  variant="body2"
-                                  display="inline"
-                                  className={Fonts.listingLabelName}
-                                >
-                                  <AttachmentIcon fontSize="small" />{" "}
-                                  Attachments:
-                                </Typography>
-                                <Typography variant="body2" display="inline">
-                                  {/* <ILink href="#"> */}
-                                  {item[1].attachmentCount.attachmentCount}
-                                  {/* </ILink> */}
-                                </Typography>
-                              </Grid>
-
-                              <Grid item xs={6} md={3}>
-                                {/* <Button
-                            // disabled
-                            size="small"
-                            color="primary"
-                            startIcon={<Print />}
-                            className={Incidents.actionButton}
-                          >
-                            Print
-                          </Button> */}
-                                <div className={classes.floatR}>
-                                  <Typography variant="body1" display="inline">
-                                    {!checkDeletePermission ? (
-                                      <DeleteForeverOutlinedIcon
-                                        className={classes.iconteal}
-                                        style={{
-                                          color: "#c0c0c0",
-                                          cursor: "not-allowed",
-                                        }}
-                                      />
-                                    ) : (
-                                      // <Link
-                                      //   // href="#"
-                                      //   className={classes.mLeftR5}
-                                      // >
-                                      //   <DeleteForeverOutlinedIcon
-                                      //     className={classes.iconteal}
-                                      //     onClick={(e) => handleDelete(item)}
-                                      //   />
-                                      // </Link>
-                                      <Delete
-                                        deleteUrl={`/api/v1/incidents/${
-                                          item[1].id
-                                        }/`}
-                                        afterDelete={() => {
-                                          fetchData();
-                                        }}
-                                        axiosObj={api}
-                                        item={deleteItem}
-                                        loader={setIsLoading}
-                                        loadingFlag={false}
-                                        deleteMsg="Are you sure you want to delete this Incident?"
-                                        yesBtn="Yes"
-                                        noBtn="No"
-                                      />
-                                    )}
-                                  </Typography>
-                                </div>
-                              </Grid>
-                            </Grid>
-                          </CardActions>
-                        </Card>
+                        <>
+                          <AllCardData item={item} index={index} />
+                        </>
                       ))}
                   </div>
                   {Object.keys(incidents).length === 0 && (
@@ -943,8 +986,8 @@ function BlankPage(props) {
           ) : (
             // listview end
             <>
-              {isLoading == false ? (
-                <div className="listView">
+              {isLoading ? (
+                <div className="dataTableSectionDesign">
                   <MUIDataTable
                     data={Object.entries(incidents)
                       .filter((searchText) => {
@@ -986,7 +1029,7 @@ function BlankPage(props) {
               : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
-        </PapperBlock>
+        </>
       }
     />
   );

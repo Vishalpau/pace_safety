@@ -891,6 +891,7 @@ const ComplianceDetails = () => {
                               label="Safety representative name"
                               name="clientrepnu"
                               id="clientRep"
+                              inputProps={{ maxLength: "45" }}
                               fullWidth
                               value={
                                 form.hseRepresentative
@@ -912,6 +913,7 @@ const ComplianceDetails = () => {
                               label="Safety representative number"
                               name="clientrepnu"
                               id="clientrepnu"
+                              inputProps={{ maxLength: "20" }}
                               fullWidth
                               value={form.hseRepNumber ? form.hseRepNumber : ""}
                               onChange={(e) =>
@@ -1004,6 +1006,7 @@ const ComplianceDetails = () => {
                           <Grid item md={6} xs={12}>
                             <TextField
                               label="Contractor representative number"
+                              inputProps={{ maxLength: "20" }}
                               name="contractorrapnu"
                               id="contractorrapnu"
                               value={
@@ -1054,7 +1057,8 @@ const ComplianceDetails = () => {
                           </Grid>
                           <Grid item md={6} xs={12}>
                             <TextField
-                              label="Contractor supervisor name "
+                              label="Contractor supervisor name"
+                              inputProps={{ maxLength: "55" }}
                               name="contractorsupername"
                               id="contractorsupername"
                               value={

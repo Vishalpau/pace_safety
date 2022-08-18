@@ -17,8 +17,8 @@ function InitialNotificationValidator(data, projectStructure) {
   }
 
 
-  if (data.observationDetails == null || data.observationDetails == "" || data.observationDetails.length < 45) {
-    error.observationDetails = "Enter iCare details and they must be more than 45 characters long";
+  if (data.observationDetails == null || data.observationDetails == "") {
+    error.observationDetails = "Enter iCare details";
     isValid = false;
   }
   
@@ -53,8 +53,8 @@ function InitialNotificationValidator(data, projectStructure) {
   //  }
 
   if (data.isSituationAddressed === "Yes") {
-    if (data.actionTaken == null || data.actionTaken == "" && data.actionTaken.length < 5) {
-      error.actionTaken = "Enter actions taken and they must be more than 45 characters long";
+    if (data.actionTaken == null || data.actionTaken == "") {
+      error.actionTaken = "Enter actions taken";
       isValid = false;
 
     }
@@ -72,10 +72,6 @@ function InitialNotificationValidator(data, projectStructure) {
 
   if (data.acceptAndPledge == null || data.acceptAndPledge == ""){
     error.acceptAndPledge = "Check the accept & pledge";
-    isValid = false;
-  }
-  if(data.supervisorByBadgeId !== "" && data.supervisorByBadgeId.length > 45){
-    error.supervisorByBadgeId = "Foreman's number must be less than 45 characters long";
     isValid = false;
   }
 

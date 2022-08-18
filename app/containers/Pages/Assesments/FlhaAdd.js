@@ -631,6 +631,7 @@ const FlhaDetails = (props) => {
 
   const handleJobFormSubmit = async () => {
     const { error, isValid } = validate(jobForm, selectDepthAndId);
+    
     if (isValid) {
       await createFlha();
     } else {
@@ -639,6 +640,7 @@ const FlhaDetails = (props) => {
   };
 
   const createFlha = async () => {
+    
     const uniqueProjectStructure = [...new Set(selectDepthAndId)];
     const fkProjectStructureId = uniqueProjectStructure
       .map((depth) => depth)
@@ -682,11 +684,14 @@ const FlhaDetails = (props) => {
     formDataPost.append("accessToJobProcedure", jobForm.accessToJobProcedure);
     setDisableForm(true);
     setLoading(true);
+    console.log("hello")
     const res = await api.post("/api/v1/flhas/", formDataPost, {
       headers: { "content-type": "multipart/form-data" },
     });
     setFlha(res.data.data.results.id);
+    
     await createCriticalTask(res.data.data.results.id);
+   
   };
 
   const createCriticalTask = async (flha) => {
@@ -724,6 +729,7 @@ const FlhaDetails = (props) => {
         formData
       );
     }
+    console.log("hello heloo")
     history.push("/app/pages/assesments/xflha/");
   };
 
@@ -1207,7 +1213,6 @@ const FlhaDetails = (props) => {
                         }}
                         value={jobForm.jobDetails}
                         disabled={disableForm}
-                        inputProps={{ maxLength: 255 }}
                       />
                       <div style={{ color: "red" }}>
                         {jobForm.jobDetails ? "" : error.jobDetails}
@@ -1362,6 +1367,7 @@ const FlhaDetails = (props) => {
                                 rows="1"
                                 id="taskIdentification"
                                 label="Task name"
+                                inputProps={{maxLength:"255"}}
                                 className="formControl"
                                 value={taskForm[taskIndex].taskIdentification}
                                 onChange={(e) =>
@@ -2159,6 +2165,7 @@ const FlhaDetails = (props) => {
                                 multiline
                                 variant="outlined"
                                 rows="1"
+                                inputProps={{maxLength:100}}
                                 id="permitNumber"
                                 label="Enter permit number"
                                 value={jobForm.permitToWorkNumber}
@@ -2178,6 +2185,7 @@ const FlhaDetails = (props) => {
                                 variant="outlined"
                                 rows="1"
                                 id="permitreference"
+                                inputProps={{maxLength:100}}
                                 label="Permit job reference"
                                 className="formControl"
                                 value={jobForm.referenceNumber}
@@ -2355,6 +2363,7 @@ const FlhaDetails = (props) => {
                         multiline
                         variant="outlined"
                         rows="1"
+                        inputProps={{maxLength:"45"}}
                         id="emergencynumber"
                         label="Emergency phone number"
                         className="formControl"
@@ -2414,6 +2423,7 @@ const FlhaDetails = (props) => {
                         variant="outlined"
                         rows="1"
                         id="assemblypoint"
+                        inputProps={{maxLength:"255"}}
                         label="Enter the evacuation/assembly point"
                         className="formControl"
                         value={jobForm.evacuationPoint}
@@ -2475,6 +2485,7 @@ const FlhaDetails = (props) => {
                         rows="1"
                         id="locationdetail"
                         label="Enter the location details"
+                        inputProps={{maxLength:"255"}}
                         className="formControl"
                         value={jobForm.location}
                         onChange={(e) => {

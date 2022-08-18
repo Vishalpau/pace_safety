@@ -956,6 +956,7 @@ const AssessmentAndNotification = (props) => {
                                       multiline
                                       rows="1"
                                       label="Identify controls"
+                                      inputProps={{ maxLength: "255" }}
                                       className={classes.fullWidth}
                                       value={
                                         form[index].control

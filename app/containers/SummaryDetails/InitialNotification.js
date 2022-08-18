@@ -95,6 +95,10 @@ const IncidentDetailsSummary = (props) => {
       });
   };
 
+  useEffect(() => {
+    console.log(evidence, 'evidenceeeeeeee');
+  },[evidence])
+
   const fetchPeopleAffectData = async () => {
     const response = await api
       .get(`api/v1/incidents/${fkid}/people/`)
@@ -138,7 +142,7 @@ const IncidentDetailsSummary = (props) => {
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${fkid}/evidences/`);
     if (allEvidence.status === 200) {
-      await setEvidence(allEvidence.data.data.results);
+      setEvidence(allEvidence.data.data.results);
     }
   };
 
@@ -167,7 +171,7 @@ const IncidentDetailsSummary = (props) => {
         .then((res) => {
           if (res.status === 200) {
             const result = res.data.data.results;
-            console.log(result);
+            // console.log(result);
             data = [];
             const newData = result.map((item) => {
               if (notifyList.includes(item.id.toString())) {
@@ -849,12 +853,8 @@ const IncidentDetailsSummary = (props) => {
                   </Grid>
 
                   <>
-                    {evidence.length !== 0
-                      ? evidence
-                          .filter(
-                            (item) =>
-                              item.evidenceCategory === "Initial Evidence"
-                          )
+                    {evidence.length
+                      ? evidence.filter(item => item.evidenceCategory === "Initial Evidence")
                           .map((value, index) => (
                             <Grid
                               key={index}
@@ -937,7 +937,7 @@ const IncidentDetailsSummary = (props) => {
                                   className={Fonts.labelValue}
                                   style={{ margin: "0 -12px" }}
                                 >
-                                  {value.files.length > 0 ? (
+                                  {value.files ? (
                                     <>
                                       {value.files.map((file) => {
                                         return (
