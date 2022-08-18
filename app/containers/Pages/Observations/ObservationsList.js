@@ -24,6 +24,7 @@ import preplanning from "dan-images/preplanning.png";
 import progress from "dan-images/progress.png";
 import completed from "dan-images/completed.png";
 import DateFormat from "../../../components/Date/DateFormat";
+import Toolbar from "@material-ui/core/Toolbar";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -685,6 +686,30 @@ function ObservationsList(props) {
         {/* <ObservationSearchSection/> */}
         {isLoading ? (
           <>
+            <Toolbar disableGutters className={classes.MuiAppBarColor}>
+              <Grid container spacing={3}>
+                <Grid
+                  item
+                  md={8}
+                  sm={12}
+                  xs={12}
+                  className={classes.packageTitleBox}
+                >
+                  <Typography
+                    className={classes.title}
+                    variant="h5"
+                    color="inherit"
+                    noWrap
+                  >
+                    {props.observation === "My Observations"
+                      ? "My Observations"
+                      : props.observation === "Bookmark List"
+                      ? "Bookmark List"
+                      : "All Observations"}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Toolbar>
             <TableContainer component={Paper}>
               <Grid component={Paper}>
                 <MUIDataTable

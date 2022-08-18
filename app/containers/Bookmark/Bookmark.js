@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { CircularProgress } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles((theme) => ({
   iconteal: {
@@ -138,12 +139,22 @@ const Bookmark = (props) => {
       <IconButton onClick={handleBookmark} style={{ width: 45, height: 45 }}>
         {loading ? (
           <CircularProgress size={12} />
+        ) : orange ? (
+          <Tooltip title="Bookmarked" arrow>
+            <StarsIcon
+              color="secondary"
+              className={classes.buckmarkIcon}
+              style={{ width: 24, height: 24 }}
+            />
+          </Tooltip>
         ) : (
-          <StarsIcon
-            color={orange === true ? "secondary" : "primary"}
-            className={classes.buckmarkIcon}
-            style={{ width: 24, height: 24 }}
-          />
+          <Tooltip title="Add Bookmark" arrow>
+            <StarsIcon
+              color="primary"
+              className={classes.buckmarkIcon}
+              style={{ width: 24, height: 24 }}
+            />
+          </Tooltip>
         )}
       </IconButton>
 

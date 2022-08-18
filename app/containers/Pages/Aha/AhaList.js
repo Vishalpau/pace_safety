@@ -445,6 +445,30 @@ function AhaList(props) {
       <Box>
         {isLoading ? (
           <>
+            <Toolbar disableGutters className={classes.MuiAppBarColor}>
+              <Grid container spacing={3}>
+                <Grid
+                  item
+                  md={8}
+                  sm={12}
+                  xs={12}
+                  className={classes.packageTitleBox}
+                >
+                  <Typography
+                    className={classes.title}
+                    variant="h5"
+                    color="inherit"
+                    noWrap
+                  >
+                    {props.assessments === "My Assessments"
+                      ? "My Assessments"
+                      : props.assessments === "Bookmark List"
+                      ? "Bookmark List"
+                      : "All Assessments"}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Toolbar>
             <TableContainer component={Paper}>
               <Grid component={Paper}>
                 <MUIDataTable

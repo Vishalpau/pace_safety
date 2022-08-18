@@ -4,6 +4,7 @@ import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import api from "../../utils/axios";
 import { CircularProgress } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
 
 /**
  * @file - Print.js
@@ -85,18 +86,20 @@ const Print = (props) => {
 
   return (
     <>
-      <IconButton
-        onClick={() => {
-          printOutTheValue();
-        }}
-        style={{ width: 45, height: 45 }}
-      >
-        {loading ? (
-          <CircularProgress size={12} />
-        ) : (
-          <PrintOutlinedIcon className={classes.iconteal} />
-        )}
-      </IconButton>
+      <Tooltip title="Print" arrow>
+        <IconButton
+          onClick={() => {
+            printOutTheValue();
+          }}
+          style={{ width: 45, height: 45 }}
+        >
+          {loading ? (
+            <CircularProgress size={12} />
+          ) : (
+            <PrintOutlinedIcon className={classes.iconteal} />
+          )}
+        </IconButton>
+      </Tooltip>
     </>
   );
 };

@@ -41,7 +41,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
 import FormControl from "@material-ui/core/FormControl";
-
+import Toolbar from "@material-ui/core/Toolbar";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import Pagination from "@material-ui/lab/Pagination";
@@ -1219,7 +1219,6 @@ function xflha(props) {
           }
           checkDeletePermission={checkDeletePermission}
         />
-
         {item.files && item.files.length ? (
           <Grid
             item
@@ -1264,7 +1263,6 @@ function xflha(props) {
         ) : (
           ""
         )}
-
         <AddComments
           commentPayload={commentPayload}
           commentOpen={commentsOpen}
@@ -1277,7 +1275,6 @@ function xflha(props) {
           handleVisibilityComments={handleVisibilityComments}
           addComments={(value) => setCommentData(value)}
         />
-
         <Dialog
           open={myUserPOpen}
           onClose={handleMyUserPClose}
@@ -1434,7 +1431,6 @@ function xflha(props) {
             </Grid>
           </Grid>
           <Box>
-            {" "}
             <Grid container spacing={3}>
               <Grid item sm={6} xs={12} className={classes.listViewTab}>
                 <AppBar position="static" className={classes.topNavTabBack}>
@@ -1547,6 +1543,30 @@ function xflha(props) {
               listToggle == false ? (
                 <div>
                   <div className="gridView">
+                    <Toolbar disableGutters className={classes.MuiAppBarColor}>
+                      <Grid container spacing={3}>
+                        <Grid
+                          item
+                          md={8}
+                          sm={12}
+                          xs={12}
+                          className={classes.packageTitleBox}
+                        >
+                          <Typography
+                            className={classes.title}
+                            variant="h5"
+                            color="inherit"
+                            noWrap
+                          >
+                            {assessments === "My Assessments"
+                              ? "My Assessments"
+                              : assessments === "Bookmark List"
+                              ? "Bookmark List"
+                              : "All Assessments"}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Toolbar>
                     {Object.entries(flhas).map((item, index) => (
                       <Box>
                         <Grid className={classes.marginTopBottom}>
@@ -1759,13 +1779,36 @@ function xflha(props) {
                 </div>
               ) : (
                 <Box>
+                  <Toolbar disableGutters className={classes.MuiAppBarColor}>
+                    <Grid container spacing={3}>
+                      <Grid
+                        item
+                        md={8}
+                        sm={12}
+                        xs={12}
+                        className={classes.packageTitleBox}
+                      >
+                        <Typography
+                          className={classes.title}
+                          variant="h5"
+                          color="inherit"
+                          noWrap
+                        >
+                          {assessments === "My Assessments"
+                            ? "My Assessments"
+                            : assessments === "Bookmark List"
+                            ? "Bookmark List"
+                            : "All Assessments"}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Toolbar>
                   <TableContainer component={Paper}>
                     <Grid component={Paper}>
                       <MUIDataTable
                         className={`${
                           classes.dataTableSectionDesign
                         } dataTableSectionDesign`}
-                        title="FLHA's"
                         data={Object.entries(flhas).map((item) => [
                           item[1].flhaNumber,
                           item[1].jobTitle,

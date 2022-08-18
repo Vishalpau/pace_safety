@@ -8,7 +8,7 @@ import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import IconButton from "@material-ui/core/IconButton";
-
+import Tooltip from "@material-ui/core/Tooltip";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import { CircularProgress } from "@material-ui/core";
@@ -80,43 +80,45 @@ const Delete = (props) => {
   return (
     <>
       {props.checkDeletePermission ? (
-        <Button
-          // className={classes.mLeftR5}
-          onClick={() => setDeleteQ(true)}
-        >
-          {loading ? (
-            <CircularProgress size={12} />
-          ) : (
-            <>
-              {props.deleteItem ? (
-                <DeleteForeverOutlinedIcon className={classes.iconteal} />
-              ) : (
-                // <Link href="#">
-                <svg
-                  id="baseline-delete-24px"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    id="Path_221"
-                    data-name="Path 221"
-                    d="M6,19a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V7H6ZM19,4H15.5l-1-1h-5l-1,1H5V6H19Z"
-                    fill="#7890a4"
-                  />
-                  <path
-                    id="Path_222"
-                    data-name="Path 222"
-                    d="M0,0H24V24H0Z"
-                    fill="none"
-                  />
-                </svg>
-                // </Link>
-              )}
-            </>
-          )}
-        </Button>
+        <Tooltip title="Delete" arrow>
+          <Button
+            // className={classes.mLeftR5}
+            onClick={() => setDeleteQ(true)}
+          >
+            {loading ? (
+              <CircularProgress size={12} />
+            ) : (
+              <>
+                {props.deleteItem ? (
+                  <DeleteForeverOutlinedIcon className={classes.iconteal} />
+                ) : (
+                  // <Link href="#">
+                  <svg
+                    id="baseline-delete-24px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      id="Path_221"
+                      data-name="Path 221"
+                      d="M6,19a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V7H6ZM19,4H15.5l-1-1h-5l-1,1H5V6H19Z"
+                      fill="#7890a4"
+                    />
+                    <path
+                      id="Path_222"
+                      data-name="Path 222"
+                      d="M0,0H24V24H0Z"
+                      fill="none"
+                    />
+                  </svg>
+                  // </Link>
+                )}
+              </>
+            )}
+          </Button>
+        </Tooltip>
       ) : (
         <Button>
           <DeleteForeverOutlinedIcon

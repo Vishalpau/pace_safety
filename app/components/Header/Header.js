@@ -1313,7 +1313,6 @@ function Header(props) {
 
                     {/* {!window.location.pathname.includes("control-tower") ||&& ( */}
                     <>
-                      {/* {console.log(location.pathname, "lo")} */}
                       {projectListData.length > 0
                         ? projectListData.map((value, index) => (
                             <Grid

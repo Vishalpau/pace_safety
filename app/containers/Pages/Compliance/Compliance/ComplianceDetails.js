@@ -50,7 +50,7 @@ import { FormHelperText } from "@material-ui/core";
 import api from "../../../../utils/axios";
 import { CircularProgress } from "@material-ui/core";
 import Loader from "../../Loader";
-import { handelCommonObject } from "../../../../utils/CheckerValue"
+import { handelCommonObject } from "../../../../utils/CheckerValue";
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
 import Acl from "../../../../components/Error/acl";
 
@@ -192,7 +192,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ComplianceDetails = () => {
   // class ObservationInitialNotification extends Component {
-    // states
+  // states
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [levelLenght, setLevelLenght] = useState(0);
@@ -253,9 +253,7 @@ const ComplianceDetails = () => {
     complianceStatus: "Open",
   });
 
-  useEffect(() => {
-    console.log(form, 'form');
-  }, [form])
+  useEffect(() => {}, [form]);
 
   // constant value of audit type
   const auditType = [
@@ -292,7 +290,6 @@ const ComplianceDetails = () => {
     }
   };
 
-
   //method to redirect to new page
   const handelNext = async () => {
     const { error, isValid } = ComplianceValidation(form, selectDepthAndId);
@@ -302,7 +299,7 @@ const ComplianceDetails = () => {
     }
     setLoading(true);
     setSaveLoading(true);
-    // team name adding 
+    // team name adding
     let teamName = team.map((value) => value.name);
     for (let key in teamName) {
       if (teamName[key]["name"] !== "") {
@@ -310,32 +307,41 @@ const ComplianceDetails = () => {
       }
     }
     const uniqueProjectStructure = [...new Set(selectDepthAndId)];
-    let fkProjectStructureId = uniqueProjectStructure
-      .map((depth) => {
-        return depth;
-      })
+    let fkProjectStructureId = uniqueProjectStructure.map((depth) => {
+      return depth;
+    });
 
-    // posting the projectstr 
+    // posting the projectstr
     form["fkProjectStructureIds"] = fkProjectStructureId.join(":");
-    let projectStr = fkProjectStructureId[fkProjectStructureId.length - 1]
-    let parentStr = fkProjectStructureId[fkProjectStructureId.length - 2]
-    let depth = projectStr.split('L')[0] + 'L'
+    let projectStr = fkProjectStructureId[fkProjectStructureId.length - 1];
+    let parentStr = fkProjectStructureId[fkProjectStructureId.length - 2];
+    let depth = projectStr.split("L")[0] + "L";
     // let strId = parentStr.split('L')[1]
-    let strId = (parentStr != undefined) ? parentStr.split('L')[1] : projectStr.split('L')[1]
-    let strUrl = JSON.parse(localStorage.getItem("projectName")).projectName.breakdown.filter(bd => bd.depth == depth)[0].structure[0].url + strId
+    let strId =
+      parentStr != undefined
+        ? parentStr.split("L")[1]
+        : projectStr.split("L")[1];
+    let strUrl =
+      JSON.parse(
+        localStorage.getItem("projectName")
+      ).projectName.breakdown.filter((bd) => bd.depth == depth)[0].structure[0]
+        .url + strId;
     const api_work_area = axios.create({
       baseURL: SSO_URL,
-      headers: HEADER_AUTH
+      headers: HEADER_AUTH,
     });
-    // posting the area as location 
+    // posting the area as location
     const workArea = await api_work_area.get(strUrl);
-    let areaStr = workArea.data.data.results.filter(st => st.id == projectStr.split('L')[1])
-    let area = (typeof areaStr[0] != 'undefined') ? areaStr[0].structureName : null
+    let areaStr = workArea.data.data.results.filter(
+      (st) => st.id == projectStr.split("L")[1]
+    );
+    let area =
+      typeof areaStr[0] != "undefined" ? areaStr[0].structureName : null;
     form["area"] = area;
     // updating the values[put]
     if (form.id) {
       form["updatedBy"] = userId;
-      console.log('formmmmmmmm', form);
+      console.log("formmmmmmmm", form);
       const res = await api
         .put(`/api/v1/audits/${form.id}/`, form)
         .then((response) => {
@@ -353,7 +359,12 @@ const ComplianceDetails = () => {
           let result = response.data.data.results;
           let complianceId = result.id;
           localStorage.setItem("fkComplianceId", complianceId);
-          handelCommonObject("commonObject", "audit", "projectStruct", response.data.data.results.fkProjectStructureIds)
+          handelCommonObject(
+            "commonObject",
+            "audit",
+            "projectStruct",
+            response.data.data.results.fkProjectStructureIds
+          );
           history.push("/app/pages/compliance/categories"), setLoading(false);
         })
         .catch((error) => {
@@ -368,7 +379,7 @@ const ComplianceDetails = () => {
 
   const classes = useStyles();
 
-  // fecting the data for updating 
+  // fecting the data for updating
   const fetchComplianceData = async () => {
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
@@ -411,8 +422,9 @@ const ComplianceDetails = () => {
       if (breakDown[key].slice(0, 2) === "1L") {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[0].structure[0].url
+          }`,
           headers: HEADER_AUTH,
         };
         await api(config)
@@ -444,12 +456,12 @@ const ComplianceDetails = () => {
           .catch((error) => {
             setIsNext(true);
           });
-      }
-      else {
+      } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].substring(2)}`,
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[key].structure[0].url
+          }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -514,39 +526,45 @@ const ComplianceDetails = () => {
 
   //method to dynamically call an api when we select a value on dropdown
   const handleBreakdown = async (e, index, label, selectvalue) => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    const projectData = JSON.parse(localStorage.getItem("projectName"));
     const value = e.target.value;
-    const temp = [...fetchSelectBreakDownList]
-    temp[index]["selectValue"].id = value
+    const temp = [...fetchSelectBreakDownList];
+    temp[index]["selectValue"].id = value;
     // let removeTemp = temp.slice(0, index)
     for (var i in temp) {
       if (i > index) {
-        temp[i].breakDownData = []
-        temp[i].selectValue.id = ""
+        temp[i].breakDownData = [];
+        temp[i].selectValue.id = "";
       }
     }
     let tempDepthAndId = selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index + 1}L`)
-    let sliceData = dataDepthAndId.slice(0, index)
-    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`]
+    let dataDepthAndId = tempDepthAndId.filter(
+      (filterItem) => filterItem.slice(0, 2) !== `${index + 1}L`
+    );
+    let sliceData = dataDepthAndId.slice(0, index);
+    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`];
 
     //when we select any dropdown so it would select on this state
-    setSelectDepthAndId(newdataDepthAndId)
+    setSelectDepthAndId(newdataDepthAndId);
 
     // await setFetchSelectBreakDownList(removeTemp)
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
-          await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${value}`)
-            .then(function (response) {
+          await api
+            .get(
+              `${SSO_URL}/${
+                projectData.projectName.breakdown[key].structure[0].url
+              }${value}`
+            )
+            .then(function(response) {
               if (response.status === 200) {
-                temp[key].breakDownData = response.data.data.results
-                setBreakdown1ListData(temp)
+                temp[key].breakDownData = response.data.data.results;
+                setBreakdown1ListData(temp);
               }
             })
-            .catch(function (error) {
-              history.push("/app/pages/error")
+            .catch(function(error) {
+              history.push("/app/pages/error");
             });
         }
       }
@@ -556,12 +574,12 @@ const ComplianceDetails = () => {
   // get departments for calling the representative
   const getDepartments = async () => {
     const config = {
-      method: 'get',
+      method: "get",
       url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/departments/`,
       headers: HEADER_AUTH,
     };
     const res = await api(config);
-    let rep = res.data.data.results.map((value, index) => value.departmentName)
+    let rep = res.data.data.results.map((value, index) => value.departmentName);
     setDepartments(rep);
   };
 
@@ -579,9 +597,10 @@ const ComplianceDetails = () => {
   return (
     <Acl
       module="safety-compliance"
-      action={id ? "change_compliance" : 'add_compliance'}
-      html={(
-        <CustomPapperBlock title="Compliance"
+      action={id ? "change_compliance" : "add_compliance"}
+      html={
+        <CustomPapperBlock
+          title="Compliance"
           icon="customDropdownPageIcon compliancePageIcon"
           whiteBg
         >
@@ -623,7 +642,9 @@ const ComplianceDetails = () => {
                             fetchSelectBreakDownList.map((data, key) => (
                               <Grid item xs={3} md={3} key={key}>
                                 <FormControl
-                                  error={error && error[`projectStructure${[key]}`]}
+                                  error={
+                                    error && error[`projectStructure${[key]}`]
+                                  }
                                   variant="outlined"
                                   required
                                   className={classes.formControl}
@@ -636,7 +657,7 @@ const ComplianceDetails = () => {
                                     id="incident-type"
                                     label={data.breakDownLabel}
                                     value={data.selectValue.id || ""}
-                                    disabled={data.selectValue.id != ''}
+                                    disabled={data.selectValue.id != ""}
                                     onChange={(e) => {
                                       handleBreakdown(
                                         e,
@@ -648,22 +669,23 @@ const ComplianceDetails = () => {
                                   >
                                     {data.breakDownData.length !== 0
                                       ? data.breakDownData.map(
-                                        (selectvalues, index) => (
-                                          <MenuItem
-                                            key={index}
-                                            value={selectvalues.id}
-                                          >
-                                            {selectvalues.structureName}
-                                          </MenuItem>
+                                          (selectvalues, index) => (
+                                            <MenuItem
+                                              key={index}
+                                              value={selectvalues.id}
+                                            >
+                                              {selectvalues.structureName}
+                                            </MenuItem>
+                                          )
                                         )
-                                      )
                                       : null}
                                   </Select>
-                                  {error && error[`projectStructure${[key]}`] && (
-                                    <FormHelperText>
-                                      {error[`projectStructure${[key]}`]}
-                                    </FormHelperText>
-                                  )}
+                                  {error &&
+                                    error[`projectStructure${[key]}`] && (
+                                      <FormHelperText>
+                                        {error[`projectStructure${[key]}`]}
+                                      </FormHelperText>
+                                    )}
                                 </FormControl>
                               </Grid>
                             ))
@@ -714,7 +736,10 @@ const ComplianceDetails = () => {
                       <Paper elevation={1} className="paperSection">
                         <Grid container spacing={3}>
                           <Grid item md={12} xs={12}>
-                            <FormControl component="fieldset" error={error.auditType}>
+                            <FormControl
+                              component="fieldset"
+                              error={error.auditType}
+                            >
                               <FormLabel
                                 component="legend"
                                 className="checkRadioLabel"
@@ -726,7 +751,10 @@ const ComplianceDetails = () => {
                                 name="select-typeof-compliance"
                                 // value={form.auditType}
                                 onChange={(e) =>
-                                  setForm({ ...form, auditType: e.target.value })
+                                  setForm({
+                                    ...form,
+                                    auditType: e.target.value,
+                                  })
                                 }
                               >
                                 {auditType.map((option) => (
@@ -742,7 +770,9 @@ const ComplianceDetails = () => {
                               {/* {error && error["auditType"] && (
                                 <FormHelperText>{error["auditType"]}</FormHelperText>
                               )} */}
-                              <div style={{ color: "red" }}>{form.auditType ? '' : error.auditType}</div>
+                              <div style={{ color: "red" }}>
+                                {form.auditType ? "" : error.auditType}
+                              </div>
                             </FormControl>
                           </Grid>
                         </Grid>
@@ -800,7 +830,10 @@ const ComplianceDetails = () => {
                                 fill="#06425c"
                               />
                             </g>
-                            <g id="company-7" transform="translate(1233 747.55)">
+                            <g
+                              id="company-7"
+                              transform="translate(1233 747.55)"
+                            >
                               <path
                                 id="Path_6422"
                                 data-name="Path 6422"
@@ -860,9 +893,16 @@ const ComplianceDetails = () => {
                               id="clientRep"
                               inputProps={{ maxLength: "45" }}
                               fullWidth
-                              value={form.hseRepresentative ? form.hseRepresentative : ""}
+                              value={
+                                form.hseRepresentative
+                                  ? form.hseRepresentative
+                                  : ""
+                              }
                               onChange={(e) =>
-                                setForm({ ...form, hseRepresentative: e.target.value })
+                                setForm({
+                                  ...form,
+                                  hseRepresentative: e.target.value,
+                                })
                               }
                               variant="outlined"
                               className="formControl"
@@ -877,7 +917,10 @@ const ComplianceDetails = () => {
                               fullWidth
                               value={form.hseRepNumber ? form.hseRepNumber : ""}
                               onChange={(e) =>
-                                setForm({ ...form, hseRepNumber: e.target.value })
+                                setForm({
+                                  ...form,
+                                  hseRepNumber: e.target.value,
+                                })
                               }
                               variant="outlined"
                               className="formControl"
@@ -932,18 +975,18 @@ const ComplianceDetails = () => {
                               className="formControl"
                               options={contractor.current}
                               getOptionLabel={(option) => option}
-                              defaultValue={form.contractor || ''}
+                              defaultValue={form.contractor || ""}
                               // onSelect={(e) =>
                               //   setForm({ ...form, contractor: e.target.value })
                               // }
                               onChange={(event, newValue) => {
                                 if (newValue === null) {
-                                  newValue = ""
+                                  newValue = "";
                                 }
                                 setForm({
                                   ...form,
-                                  contractor: newValue
-                                })
+                                  contractor: newValue,
+                                });
                               }}
                               renderInput={(params) => (
                                 <TextField
@@ -953,7 +996,11 @@ const ComplianceDetails = () => {
                                 />
                               )}
                             />
-                            <div style={{ color: "red" }}>{(form.contractor === null || form.contractor === "") && error.contractor}</div>
+                            <div style={{ color: "red" }}>
+                              {(form.contractor === null ||
+                                form.contractor === "") &&
+                                error.contractor}
+                            </div>
                           </Grid>
 
                           <Grid item md={6} xs={12}>
@@ -987,21 +1034,26 @@ const ComplianceDetails = () => {
                               getOptionLabel={(option) => option}
                               // value={form.subContractor ? form.subContractor : ""}
                               onSelect={(e) =>
-                                setForm({ ...form, subContractor: e.target.value })
+                                setForm({
+                                  ...form,
+                                  subContractor: e.target.value,
+                                })
                               }
                               renderInput={(params) => (
                                 <TextField
                                   {...params}
                                   label="Sub-Contractor name "
                                   variant="outlined"
-                                // error={error.subContractor}
-                                // helperText={
-                                //   error.subContractor ? error.subContractor : ""
-                                // }
+                                  // error={error.subContractor}
+                                  // helperText={
+                                  //   error.subContractor ? error.subContractor : ""
+                                  // }
                                 />
                               )}
                             />
-                            <div style={{ color: "red" }}>{form.subContractor ? '' : error.subContractor}</div>
+                            <div style={{ color: "red" }}>
+                              {form.subContractor ? "" : error.subContractor}
+                            </div>
                           </Grid>
                           <Grid item md={6} xs={12}>
                             <TextField
@@ -1136,7 +1188,11 @@ const ComplianceDetails = () => {
                                 />
                               </Grid>
                               {team.length > 1 ? (
-                                <Grid item md={1} className={classes.createHazardbox}>
+                                <Grid
+                                  item
+                                  md={1}
+                                  className={classes.createHazardbox}
+                                >
                                   <IconButton
                                     variant="contained"
                                     color="primary"
@@ -1158,7 +1214,11 @@ const ComplianceDetails = () => {
                         <DeleteForeverIcon />
                       </IconButton>
                     </Grid> */}
-                          <Grid item md={12} className={classes.createHazardboxBTN}>
+                          <Grid
+                            item
+                            md={12}
+                            className={classes.createHazardboxBTN}
+                          >
                             <Button
                               variant="contained"
                               color="primary"
@@ -1182,7 +1242,13 @@ const ComplianceDetails = () => {
                     />
                   </Grid>
 
-                  <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    className="buttonActionArea"
+                  >
                     <div className={classes.loadingWrapper}>
                       <Button
                         size="medium"
@@ -1229,8 +1295,8 @@ const ComplianceDetails = () => {
             )}
           </>
         </CustomPapperBlock>
-      )} />
-
+      }
+    />
   );
 };
 

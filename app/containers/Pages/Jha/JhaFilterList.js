@@ -348,9 +348,11 @@ class JhaFilter extends React.Component {
                     color="inherit"
                     noWrap
                   >
-                    {this.props.assessment === "Bookmark List"
+                    {this.props.assessment === "My Assessments"
+                      ? "My Assessments"
+                      : this.props.assessment === "Bookmark List"
                       ? "Bookmark List"
-                      : "My Assessments"}
+                      : "All Assessments"}
                   </Typography>
                 </Grid>
               </Grid>

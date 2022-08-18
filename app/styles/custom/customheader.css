@@ -698,6 +698,14 @@ ul.MuiMenu-list a ul li.userName {
   border-top-left-radius: 6px;
 }
 
+.dataTableSectionDesign table thead tr th:nth-last-child(1) {
+  border-top-right-radius: 0.375rem;
+}
+
+.dataTableSectionDesign table thead tr th:nth-child(1) {
+  border-top-left-radius: 0.375rem;
+}
+
 .dataTableSectionDesign .MuiButton-text {
   padding: 0px 8px;
 }
