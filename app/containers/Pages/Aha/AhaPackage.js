@@ -532,8 +532,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -588,8 +588,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -602,7 +602,8 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${props.search
+        `api/v1/ahas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -616,7 +617,8 @@ function AhaPackage(props) {
       setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${props.search
+        `api/v1/ahas/?search=${
+          props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -695,20 +697,17 @@ function AhaPackage(props) {
     }
 
     const handleComments = (type) => {
-      if (type === 'handleCommentsClose') {
+      if (type === "handleCommentsClose") {
         setCommentsOpen(false);
-      }
-      else if ('handleCommentsClick') {
+      } else if ("handleCommentsClick") {
         setCommentsOpen(!open);
-      }
-      else if (type === 'handleCommentsOpen') {
+      } else if (type === "handleCommentsOpen") {
         setCommentsOpen(true);
-      }
-      else if ('visibility') {
+      } else if ("visibility") {
         setShowGrid(true);
         setHidden(!hidden);
       }
-    }
+    };
 
     return (
       <>

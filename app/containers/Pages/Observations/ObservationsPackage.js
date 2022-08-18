@@ -532,8 +532,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -712,8 +712,8 @@ function Actions(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -925,9 +925,9 @@ function Actions(props) {
               });
             }
           })
-          .catch((error) => { });
+          .catch((error) => {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   const classes = useStyles();
 
@@ -989,7 +989,7 @@ function Actions(props) {
       thanksFlag: 0,
       status: "Active",
       createdBy: item.createdBy,
-    }
+    };
 
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
@@ -1026,20 +1026,17 @@ function Actions(props) {
     }
 
     const handleComments = (type) => {
-      if (type === 'handleCommentsClose') {
+      if (type === "handleCommentsClose") {
         setCommentsOpen(false);
-      }
-      else if ('handleCommentsClick') {
+      } else if ("handleCommentsClick") {
         setCommentsOpen(!open);
-      }
-      else if (type === 'handleCommentsOpen') {
+      } else if (type === "handleCommentsOpen") {
         setCommentsOpen(true);
-      }
-      else if ('visibility') {
+      } else if ("visibility") {
         setShowGrid(true);
         setHidden(!hidden);
       }
-    }
+    };
 
     const oneHour = 3 * 60 * 1000;
 
@@ -1048,7 +1045,7 @@ function Actions(props) {
         <CardView
           ifPaperUpload={
             item.source === "Paper" &&
-              moment() - moment(item.createdAt) < oneHour
+            moment() - moment(item.createdAt) < oneHour
               ? "latest"
               : ""
           }
@@ -1192,7 +1189,7 @@ function Actions(props) {
                       </Typography>
                     )}
                   </div>
-                  
+
                   <div>
                     <Dialog
                       open={myUserPOpen}

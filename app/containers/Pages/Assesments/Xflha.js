@@ -41,7 +41,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
 import FormControl from "@material-ui/core/FormControl";
-
+import Toolbar from "@material-ui/core/Toolbar";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import Pagination from "@material-ui/lab/Pagination";
@@ -721,11 +721,11 @@ function xflha(props) {
   const options = {
     filterType: "dropdown",
     responsive: "vertical",
-    print: false,
+    print: true,
     filter: false,
     scroll: true,
     search: false,
-    download: false,
+    download: true,
     viewColumns: false,
     selectableRowsHideCheckboxes: false,
     selectableRowsHeader: false,
@@ -755,8 +755,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -799,7 +799,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function () {
+    function() {
       clearTimeout(timer);
       timer = setTimeout(() => setSeacrhFlha(v), d);
     };
@@ -908,9 +908,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => { });
+          .catch((error) => {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handleChange = async (event, value) => {
@@ -922,8 +922,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1152,20 +1152,17 @@ function xflha(props) {
     }
 
     const handleComments = (type) => {
-      if (type === 'handleCommentsClose') {
+      if (type === "handleCommentsClose") {
         setCommentsOpen(false);
-      }
-      else if ('handleCommentsClick') {
+      } else if ("handleCommentsClick") {
         setCommentsOpen(!open);
-      }
-      else if (type === 'handleCommentsOpen') {
+      } else if (type === "handleCommentsOpen") {
         setCommentsOpen(true);
-      }
-      else if ('visibility') {
+      } else if ("visibility") {
         setShowGrid(true);
         setHidden(!hidden);
       }
-    }
+    };
 
     return (
       <>
@@ -1217,7 +1214,6 @@ function xflha(props) {
           }
           checkDeletePermission={checkDeletePermission}
         />
-
         {item.files && item.files.length ? (
           <Grid
             item
@@ -1262,7 +1258,6 @@ function xflha(props) {
         ) : (
           ""
         )}
-
         <AddComments
           commentPayload={commentPayload}
           commentOpen={commentsOpen}
@@ -1275,7 +1270,6 @@ function xflha(props) {
           handleVisibilityComments={handleVisibilityComments}
           addComments={(value) => setCommentData(value)}
         />
-
         <Dialog
           open={myUserPOpen}
           onClose={handleMyUserPClose}
@@ -1432,7 +1426,6 @@ function xflha(props) {
             </Grid>
           </Grid>
           <Box>
-            {" "}
             <Grid container spacing={3}>
               <Grid item sm={6} xs={12} className={classes.listViewTab}>
                 <AppBar position="static" className={classes.topNavTabBack}>
@@ -1465,8 +1458,7 @@ function xflha(props) {
               </Grid>
               <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
                 <Grid className={classes.Lheight}>
-                  <div className={classes.floatRR}>
-                  </div>
+                  <div className={classes.floatRR} />
                 </Grid>
               </Grid>
             </Grid>
@@ -1546,6 +1538,30 @@ function xflha(props) {
               listToggle == false ? (
                 <div>
                   <div className="gridView">
+                    <Toolbar disableGutters className={classes.MuiAppBarColor}>
+                      <Grid container spacing={3}>
+                        <Grid
+                          item
+                          md={8}
+                          sm={12}
+                          xs={12}
+                          className={classes.packageTitleBox}
+                        >
+                          <Typography
+                            className={classes.title}
+                            variant="h5"
+                            color="inherit"
+                            noWrap
+                          >
+                            {assessments === "My Assessments"
+                              ? "My Assessments"
+                              : assessments === "Bookmark List"
+                              ? "Bookmark List"
+                              : "All Assessments"}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Toolbar>
                     {Object.entries(flhas).map((item, index) => (
                       <Box>
                         <Grid className={classes.marginTopBottom}>
@@ -1758,12 +1774,36 @@ function xflha(props) {
                 </div>
               ) : (
                 <Box>
+                  <Toolbar disableGutters className={classes.MuiAppBarColor}>
+                    <Grid container spacing={3}>
+                      <Grid
+                        item
+                        md={8}
+                        sm={12}
+                        xs={12}
+                        className={classes.packageTitleBox}
+                      >
+                        <Typography
+                          className={classes.title}
+                          variant="h5"
+                          color="inherit"
+                          noWrap
+                        >
+                          {assessments === "My Assessments"
+                            ? "My Assessments"
+                            : assessments === "Bookmark List"
+                            ? "Bookmark List"
+                            : "All Assessments"}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Toolbar>
                   <TableContainer component={Paper}>
                     <Grid component={Paper}>
                       <MUIDataTable
-                        className={`${classes.dataTableSectionDesign
-                          } dataTableSectionDesign`}
-                        title="FLHA's"
+                        className={`${
+                          classes.dataTableSectionDesign
+                        } dataTableSectionDesign`}
                         data={Object.entries(flhas).map((item) => [
                           item[1].flhaNumber,
                           item[1].jobTitle,

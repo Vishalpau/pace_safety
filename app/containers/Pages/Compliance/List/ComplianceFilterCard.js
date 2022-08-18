@@ -437,7 +437,9 @@ class ComplianceFilterCard extends React.Component {
                   >
                     {this.props.compliance === "Bookmark List"
                       ? "Bookmark List"
-                      : "Compliance"}
+                      : this.props.compliance === "Big Picture"
+                      ? "All Compliance"
+                      : "My Compliance"}
                   </Typography>
                 </Grid>
                 <Grid item md={4} sm={12} xs={12}>

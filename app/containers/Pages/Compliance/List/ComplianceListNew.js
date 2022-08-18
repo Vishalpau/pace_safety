@@ -494,8 +494,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -510,7 +510,8 @@ function ComplianceListNew(props) {
       // setIsLoading(true);
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -522,19 +523,22 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else if (props.compliance === "Bookmark List") {
         const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-        const res = await api.get(
-          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
-        );
-        const result = res.data.data.results.results;
-        setAllComplianceData(result);
-        setTotalData(res.data.data.results.count);
-        setPageData(res.data.data.results.count / 25);
-        let pageCount = Math.ceil(res.data.data.results.count / 25);
-        setPageCount(pageCount);
-        setIsLoading(false);
+        const res = await api
+          .get(
+            `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+          )
+          .then((res) => {
+            setAllComplianceData(res.data.data.results.results);
+            setTotalData(res.data.data.results.count);
+            setPageData(res.data.data.results.count / 25);
+            let pageCount = Math.ceil(res.data.data.results.count / 25);
+            setPageCount(pageCount);
+            setIsLoading(false);
+          });
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -549,8 +553,10 @@ function ComplianceListNew(props) {
       if (props.compliance === "My Inspections") {
         setIsLoading(true);
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -563,20 +569,25 @@ function ComplianceListNew(props) {
       } else if (props.compliance === "Bookmark List") {
         setIsLoading(true);
         const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-        const res = await api.get(
-          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
-        );
-        const result = res.data.data.results.results;
-        setAllComplianceData(result);
-        setTotalData(res.data.data.results.count);
-        setPageData(res.data.data.results.count / 25);
-        let pageCount = Math.ceil(res.data.data.results.count / 25);
-        setPageCount(pageCount);
-        setIsLoading(false);
+        const res = await api
+          .get(
+            `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+          )
+          .then((res) => {
+            const result = res.data.data.results.results;
+            setAllComplianceData(result);
+            setTotalData(res.data.data.results.count);
+            setPageData(res.data.data.results.count / 25);
+            let pageCount = Math.ceil(res.data.data.results.count / 25);
+            setPageCount(pageCount);
+            setIsLoading(false);
+          });
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
+            props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
         const result = res.data.data.results.results;
@@ -600,8 +611,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -616,21 +627,27 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
         setPage(value);
       } else if (props.compliance === "Bookmark List") {
         const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-        const res = await api.get(
-          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
-        );
-        setAllComplianceData(res.data.data.results.results);
-        setPage(value);
+        const res = await api
+          .get(
+            `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+          )
+          .then((res) => {
+            setAllComplianceData(res.data.data.results.results);
+            setPage(value);
+            console.log(res, "this is data2 ");
+          });
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
+          `api/v1/audits/?search=${
+            props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -639,23 +656,34 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
         setPage(value);
       } else if (props.compliance === "Bookmark List") {
         const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-        const res = await api.get(
-          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
-        );
-        setAllComplianceData(res.data.data.results.results);
-        setPage(value);
+        const res = await api
+          .get(
+            `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+          )
+          .then((res) => {
+            console.log(res.data.data.app.status_code, "this is data2 ");
+            // if (res.data.data=== "Sorry, No matching records found !!") {
+            //   console.log(res.data.data, "hiiii how r u");
+            // }
+            setAllComplianceData(res.data.data.results.results);
+            setPage(value);
+          });
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
           }&page=${value}`
         );
         setAllComplianceData(res.data.data.results.results);
@@ -729,20 +757,17 @@ function ComplianceListNew(props) {
     }
 
     const handleComments = (type) => {
-      if (type === 'handleCommentsClose') {
+      if (type === "handleCommentsClose") {
         setCommentsOpen(false);
-      }
-      else if ('handleCommentsClick') {
+      } else if ("handleCommentsClick") {
         setCommentsOpen(!open);
-      }
-      else if (type === 'handleCommentsOpen') {
+      } else if (type === "handleCommentsOpen") {
         setCommentsOpen(true);
-      }
-      else if ('visibility') {
+      } else if ("visibility") {
         setShowGrid(true);
         setHidden(!hidden);
       }
-    }
+    };
 
     const groupNames = value.groups.map((one) => {
       return (
