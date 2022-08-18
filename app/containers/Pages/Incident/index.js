@@ -981,13 +981,14 @@ function BlankPage(props) {
                   </div>
                   {Object.keys(incidents).length === 0 && (
                     <>
-                      <Card variant="outlined">
-                        <CardContent>
-                          <Grid container spacing={3} justify="center">
-                            Sorry, no matching records found
-                          </Grid>
-                        </CardContent>
-                      </Card>
+                      <Typography
+                        className={classes.sorryTitle}
+                        variant="h6"
+                        color="primary"
+                        noWrap
+                      >
+                        Sorry, no matching records found
+                      </Typography>
                     </>
                   )}
                 </>
