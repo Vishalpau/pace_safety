@@ -661,6 +661,7 @@ const Evidence = () => {
                               <TextField
                                 size="small"
                                 variant="outlined"
+                                inputProps={{maxLength:255}}
                                 value={
                                   form[index].evidenceRemark === null
                                     ? ""

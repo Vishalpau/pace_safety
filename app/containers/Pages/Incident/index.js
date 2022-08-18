@@ -60,7 +60,7 @@ import DateFormat from "../../../components/Date/DateFormat";
 import CardView from "../../../components/Card/Index";
 import { incidentsLabels } from "../../../components/Card/CardConstants";
 import Attachment from "../../Attachment/Attachment";
-import { Tab, Tabs } from "@material-ui/core";
+import { Tab, Tabs, Toolbar } from "@material-ui/core";
 
 const Loader = lazy(() => import("../../Forms/Loader"));
 
@@ -176,6 +176,10 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiInputBase-root": {
       width: "100%",
     },
+  },
+  MuiAppBarColor: {
+    color: "#06425c",
+    backgroundColor: "#fafafa",
   },
   Lheight: {
     lineHeight: "65px",
@@ -930,6 +934,16 @@ function BlankPage(props) {
               </Grid>
             </Grid>
           </div>
+          <Toolbar disableGutters className={classes.MuiAppBarColor}>
+            <Typography
+              className={classes.title}
+              variant="h5"
+              color="inherit"
+              noWrap
+            >
+              Incidents
+            </Typography>
+          </Toolbar>
 
           {listToggle === false ? (
             <>
