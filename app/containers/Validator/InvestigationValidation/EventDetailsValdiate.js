@@ -36,7 +36,7 @@ function EventDetailsValidate(data) {
     if (data.permissableExplosiveLimit.length !== 0 && data.permissableExplosiveLimit.length > 45) {
         error.permissableExplosiveLimit = "please enter less than 45 characters in EPL";
     }
-    if (data.propertyImpactInformation.length !== 0 && data.propertyImpactInformation.length > 75) {
+    if (data.propertyImpactInformation.length !== 0 && data.propertyImpactInformation.length > 255) {
         error.propertyImpactInformation = "please enter less than 75 characters in impact information";
     }
     if (data.propertyCostImpact.length !== 0 && data.propertyCostImpact.length > 75) {

@@ -727,7 +727,7 @@ const EventDetails = () => {
                   id="title"
                   variant="outlined"
                   label="Fluid amount"
-                  value={form.spillsFluidAmount}
+                  inputProps={{maxLength:45}}
                   value={form.spillsFluidAmount}
                   error={error && error.spillsFluidAmount}
                   onChange={(e) => {
@@ -785,6 +785,7 @@ const EventDetails = () => {
                 <TextField
                   id="title"
                   variant="outlined"
+                  inputProps={{maxLength:255}}
                   label="Impact information"
                   value={form.propertyImpactInformation}
                   error={error && error.propertyImpactInformation}
