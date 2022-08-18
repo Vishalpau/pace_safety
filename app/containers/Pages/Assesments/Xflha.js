@@ -721,11 +721,11 @@ function xflha(props) {
   const options = {
     filterType: "dropdown",
     responsive: "vertical",
-    print: true,
+    print: false,
     filter: false,
     scroll: true,
     search: false,
-    download: true,
+    download: false,
     viewColumns: false,
     selectableRowsHideCheckboxes: false,
     selectableRowsHeader: false,

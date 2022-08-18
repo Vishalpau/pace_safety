@@ -642,7 +642,6 @@ function ComplianceListNew(props) {
           .then((res) => {
             setAllComplianceData(res.data.data.results.results);
             setPage(value);
-            console.log(res, "this is data2 ");
           });
       } else {
         const res = await api.get(
@@ -671,10 +670,6 @@ function ComplianceListNew(props) {
             `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
           )
           .then((res) => {
-            console.log(res.data.data.app.status_code, "this is data2 ");
-            // if (res.data.data=== "Sorry, No matching records found !!") {
-            //   console.log(res.data.data, "hiiii how r u");
-            // }
             setAllComplianceData(res.data.data.results.results);
             setPage(value);
           });
