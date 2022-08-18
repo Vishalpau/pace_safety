@@ -755,8 +755,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -799,7 +799,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function () {
+    function() {
       clearTimeout(timer);
       timer = setTimeout(() => setSeacrhFlha(v), d);
     };
@@ -908,9 +908,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => { });
+          .catch((error) => {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handleChange = async (event, value) => {
@@ -922,8 +922,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1152,20 +1152,17 @@ function xflha(props) {
     }
 
     const handleComments = (type) => {
-      if (type === 'handleCommentsClose') {
+      if (type === "handleCommentsClose") {
         setCommentsOpen(false);
-      }
-      else if ('handleCommentsClick') {
+      } else if ("handleCommentsClick") {
         setCommentsOpen(!open);
-      }
-      else if (type === 'handleCommentsOpen') {
+      } else if (type === "handleCommentsOpen") {
         setCommentsOpen(true);
-      }
-      else if ('visibility') {
+      } else if ("visibility") {
         setShowGrid(true);
         setHidden(!hidden);
       }
-    }
+    };
 
     return (
       <>
@@ -1206,6 +1203,11 @@ function xflha(props) {
             itemId: item.id,
             bookmarkTrueFalse: item.bookmark,
             getBookmarkView: assessments,
+          }}
+          printFields={{
+            typeOfModule: "FLHA",
+            printUrl: `api/v1/flhas/${item.id}/print/`,
+            number: item.flhaNumber,
           }}
           RefreshBookmarkData={fetchData}
           handleVisibility={() => handleVisibility()}
@@ -1465,8 +1467,7 @@ function xflha(props) {
               </Grid>
               <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
                 <Grid className={classes.Lheight}>
-                  <div className={classes.floatRR}>
-                  </div>
+                  <div className={classes.floatRR} />
                 </Grid>
               </Grid>
             </Grid>
@@ -1761,8 +1762,9 @@ function xflha(props) {
                   <TableContainer component={Paper}>
                     <Grid component={Paper}>
                       <MUIDataTable
-                        className={`${classes.dataTableSectionDesign
-                          } dataTableSectionDesign`}
+                        className={`${
+                          classes.dataTableSectionDesign
+                        } dataTableSectionDesign`}
                         title="FLHA's"
                         data={Object.entries(flhas).map((item) => [
                           item[1].flhaNumber,

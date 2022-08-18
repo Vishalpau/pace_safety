@@ -772,6 +772,17 @@ function BlankPage(props) {
               noBtn: "No",
               dataLength: incidents.length,
             }}
+            printFields={{
+              typeOfModule: "Incident",
+              printUrl: `api/v1/incidents/${item[1].id}/print/`,
+              number: item[1].incidentNumber,
+            }}
+            bookmarkFields={{
+              typeOfModule: "incidents",
+              itemId: item[1].id,
+              bookmarkTrueFalse: item[1].bookmark,
+              // getBookmarkView: props.compliance,
+            }}
             handleVisibility={() => handleVisibility()} // Show attachment box
             // handleVisibilityComments={() =>
             //   handleVisibilityComments()

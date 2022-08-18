@@ -599,7 +599,6 @@ function JhaPackage(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
-
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [value, setValue] = React.useState(2);
@@ -651,20 +650,17 @@ function JhaPackage(props) {
     }
 
     const handleComments = (type) => {
-      if (type === 'handleCommentsClose') {
+      if (type === "handleCommentsClose") {
         setCommentsOpen(false);
-      }
-      else if ('handleCommentsClick') {
+      } else if ("handleCommentsClick") {
         setCommentsOpen(!open);
-      }
-      else if (type === 'handleCommentsOpen') {
+      } else if (type === "handleCommentsOpen") {
         setCommentsOpen(true);
-      }
-      else if ('visibility') {
+      } else if ("visibility") {
         setShowGrid(true);
         setHidden(!hidden);
       }
-    }
+    };
 
     const handleChangeOne = (event, newValue) => {
       setValue(newValue);
@@ -721,6 +717,11 @@ function JhaPackage(props) {
               yesBtn: "Yes",
               noBtn: "No",
               dataLength: allJHAData.length,
+            }}
+            printFields={{
+              typeOfModule: "JHA",
+              printUrl: `api/v1/jhas/${item.id}/print/`,
+              number: item.jhaNumber,
             }}
             bookmarkFields={{
               typeOfModule: "jhas",
