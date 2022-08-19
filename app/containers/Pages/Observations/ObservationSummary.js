@@ -29,7 +29,8 @@ import ObservationInitialNotificationUpdate from "./ObservationInitialNotificati
 import ObservationInitialNotificationView from "./ObservationInitialNotificationView";
 
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+
 
 import obsIcon from "dan-images/obsIcon.png";
 // import Paper from '@material-ui/core/Paper';
@@ -40,6 +41,12 @@ import Comment from "@material-ui/icons/Comment";
 import Link from "@material-ui/core/Link";
 import Acl from "../../../components/Error/acl";
 import { checkACL } from "../../../utils/helper";
+import { connect, useDispatch } from "react-redux";
+import {
+  APPCODE
+} from "../../../utils/constants";
+
+import axios from "axios";
 
 // import { useHistory } from "react-router";
 
@@ -86,6 +93,7 @@ function ListItemLink(props) {
 }
 
 const ObservationSummary = () => {
+   const dispatch = useDispatch();
   const [
     observationInitialNotification,
     setObservationInitialNotification,
@@ -184,6 +192,7 @@ const ObservationSummary = () => {
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     if (res.data.status_code == 400) {
+
     } else {
       const result = res.data.data.results;
       await setInitialData(result);
@@ -216,11 +225,169 @@ const ObservationSummary = () => {
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
+ const fetchPhaseData = async (projects) => {
+    const data = [];
+    for (let i = 0; i < projects.length; i++) {
+      if (
+        projects[i].breakdown &&
+        projects[i].breakdown.length > 0 &&
+        projects[i].breakdown[0].structure &&
+        projects[i].breakdown[0].structure[0].url
+      ) {
+        const config = {
+          method: "get",
+          url: `${SSO_URL}/${projects[i].breakdown[0].structure[0].url}`,
+          headers: HEADER_AUTH,
+        };
+        const res = await axios(config);
+        if (res && res.status && res.status === 200) {
+          projects[i].firstBreakdown = res.data.data.results;
+          data.push(projects[i]);
+        } else {
+          projects[i].firstBreakdown = [];
+          data.push(projects[i]);
+        }
+      } else {
+        projects[i].firstBreakdown = [];
+        data.push(projects[i]);
+      }
+    }
+    return data;
+  };
+ 
+  const { search } = useLocation();
+  const query = React.useMemo(() => new URLSearchParams(search), [search])
+
+  let paramCompanyId = query.get("company")
+  let paramProjectId = query.get("project")
+
+  const getSubscriptions = async (paramCompanyId) => {
+    const companyId = paramCompanyId 
+
+    if (companyId) {
+      try {
+        const data = await api
+          .get(`${SELF_API}${companyId}/`)
+          .then((res) => {
+            const rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(
+              (sub) => sub.appCode.toLowerCase() == APPCODE
+            )[0].roles[0].aclUrl;
+            api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`).then((d) => {
+              localStorage.setItem(
+                "app_acl",
+                JSON.stringify(d.data.data.results.permissions[0])
+              );
+            });
+            return res.data.data.results.data.companies[0].subscriptions;
+          })
+
+          .catch((error) => {
+            console.log(error);
+          });
+
+        
+
+        dispatch(appAcl(d.data.data.results.permissions[0]));
+
+        // redirectionAccount()
+
+        const modules = data.map((subscription) => subscription.modules);
+        let modulesState = [];
+        let temp = [];
+        modules.map((module) => {
+          modulesState = [...modulesState];
+          temp = [...temp];
+          if (module.length > 0) {
+            module.map((mod) => {
+              modulesState.push(mod);
+              // this.setState({modules: module})
+              if (mod.subscriptionStatus == "active") {
+                temp.push(mod.moduleCode);
+                // this.setState({ codes: temp })
+                return temp;
+              }
+            });
+            // this.setState({ codes: codes })
+          }
+        });
+        // let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
+        //setCode(temp);
+       // await getModules(apps);
+      } catch (error) {}
+    }
+    // getAllPickList()
+  };
+
+  const handleCompanyName = async (company, companyId, name) => {
+    console.log(company.subscriptions)
+    const hosting = company.subscriptions.filter(
+        (subscription) => subscription.appCode.toLowerCase() == APPCODE
+      )[0].hostings[0].apiDomain;
+    const config = {
+      method: "get",
+      url: `${hosting}/api/v1/core/companies/select/${companyId}/`,
+      headers: HEADER_AUTH,
+    };
+    axios(config);
+    const companeyDetails = {};
+    companeyDetails.fkCompanyId = companyId;
+    await getSubscriptions(companyId);
+    companeyDetails.fkCompanyName = name;
+    dispatch(company(companeyDetails));
+    //setCompanyId(companyId);
+    localStorage.setItem("company", JSON.stringify(companeyDetails));
+    
+  }; 
+
+  const handleNotificationClick = async (paramCompanyId,paramProjectId) => {
+    
+    //select company
+    const companies = JSON.parse(localStorage.getItem('userDetails')).companies
+    const selectedCompany = companies.filter(company => company.companyId == paramCompanyId )[0]
+    const companeyData = {
+        fkCompanyId: selectedCompany.companyId,
+        fkCompanyName: selectedCompany.companyName,
+      };
+      localStorage.setItem("company", JSON.stringify(companeyData)); 
+      handleCompanyName(selectedCompany,paramCompanyId,selectedCompany.companyName)
+
+      //select project
+      let projects = await fetchPhaseData(selectedCompany.projects)
+      const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
+      
+      localStorage.setItem("projectName",JSON.stringify({projectName:selectedProject}));
+      
+  
+      const res = await api.get(`/api/v1/observations/${id}/`);
+      
+      if (res.data.status_code == 400) {
+
+      } else {
+        const result = res.data.data.results;
+        await setInitialData(result);
+      }
+      dispatch(company(companeyData));
+      dispatch(projectName(selectedProject));
+      
+  } 
+
+  
+
+  //get query strings
+  
   useEffect(() => {
+    
+    
+
+    if(id && paramCompanyId && paramProjectId ){
+      handleNotificationClick(paramCompanyId,paramProjectId)
+    }
+
     if (id) {
       fetchInitialiObservation();
     }
-  }, []);
+
+  }, [query,id,initialData]);
   return (
     <Acl
       module="safety"
