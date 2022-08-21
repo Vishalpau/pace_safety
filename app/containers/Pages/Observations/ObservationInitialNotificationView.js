@@ -105,7 +105,7 @@ const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-const ObservationInitialNotificationView = () => {
+const ObservationInitialNotificationView = ({initialObservationData}) => {
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,
@@ -289,6 +289,8 @@ const ObservationInitialNotificationView = () => {
     }
     console.log(initialData,"initial initial")
   }, [paramCompanyId]);
+
+  
 
   return (
     <>

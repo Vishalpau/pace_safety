@@ -373,11 +373,15 @@ const ObservationSummary = () => {
       if (res.data.status_code == 400) {
 
       } else {
+        console.log("fetched observation")
         const result = res.data.data.results;
         console.log(result,"results")
-        setInitialData(result);
+        await setInitialData(result);
         //window.location.reload(false);
       }
+      setTimeout(() => {
+        fetchInitialiObservation();
+    }, 2000);
     setRerender(!rerender);   
       dispatch(company(companeyData));
       dispatch(projectName(selectedProject));
@@ -393,10 +397,7 @@ const ObservationSummary = () => {
   useEffect(() => {
     if(id && paramCompanyId && paramProjectId ){
       handleNotificationClick(paramCompanyId,paramProjectId)
-    }
-    if(!initialData.observationNumber){
-      console.log(initialData.observationNumber,"initialData.observationNumber")
-      setRerender(!rerender)
+      
     }
 
     if (id && !paramCompanyId && !paramProjectId) {
@@ -404,8 +405,26 @@ const ObservationSummary = () => {
     }
 
   }, []);
+  const [shouldRender, setShouldRender] = useState(true);
 
-  
+  useEffect(() => {
+    setTimeout(() => {
+      console.log("hell000o")
+      console.log(initialData.observationNumber,"initialData.observationNumber")
+      setShouldRender(false);
+    }, 2000);
+  }, []);
+
+  if(id && paramCompanyId && paramProjectId ){
+      window.onload = function() {
+        setTimeout(() => {
+          if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+      }
+        },2000)
+    }
+  }
 
   
   return (
@@ -553,7 +572,8 @@ const ObservationSummary = () => {
                         ) {
                           return observationInitialNotificationUpdate ===
                             true ? (
-                            <ObservationInitialNotificationView/>
+                            <ObservationInitialNotificationView />
+                            
                           ) : (
                             <ObservationInitialNotificationUpdate />
                           );
