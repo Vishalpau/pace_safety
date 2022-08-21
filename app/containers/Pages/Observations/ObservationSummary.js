@@ -43,7 +43,9 @@ import Acl from "../../../components/Error/acl";
 import { checkACL } from "../../../utils/helper";
 import { connect, useDispatch } from "react-redux";
 import {
-  APPCODE
+  APPCODE,
+  SSO_URL,
+  HEADER_AUTH,
 } from "../../../utils/constants";
 
 import axios from "axios";
@@ -226,6 +228,7 @@ const ObservationSummary = () => {
   const classes = useStyles();
 
  const fetchPhaseData = async (projects) => {
+  
     const data = [];
     for (let i = 0; i < projects.length; i++) {
       if (
@@ -234,12 +237,14 @@ const ObservationSummary = () => {
         projects[i].breakdown[0].structure &&
         projects[i].breakdown[0].structure[0].url
       ) {
+        console.log(projects[i].breakdown[0].structure[0].url,"project")
         const config = {
           method: "get",
           url: `${SSO_URL}/${projects[i].breakdown[0].structure[0].url}`,
           headers: HEADER_AUTH,
         };
         const res = await axios(config);
+        console.log(res,"res")
         if (res && res.status && res.status === 200) {
           projects[i].firstBreakdown = res.data.data.results;
           data.push(projects[i]);
@@ -352,7 +357,9 @@ const ObservationSummary = () => {
       handleCompanyName(selectedCompany,paramCompanyId,selectedCompany.companyName)
 
       //select project
+      
       let projects = await fetchPhaseData(selectedCompany.projects)
+      console.log(projects,"projects")
       const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
       
       localStorage.setItem("projectName",JSON.stringify({projectName:selectedProject}));
@@ -387,7 +394,7 @@ const ObservationSummary = () => {
       fetchInitialiObservation();
     }
 
-  }, [query,id,initialData]);
+  }, []);
   return (
     <Acl
       module="safety"
