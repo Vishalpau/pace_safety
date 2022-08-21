@@ -357,24 +357,23 @@ const ObservationSummary = () => {
       handleCompanyName(selectedCompany,paramCompanyId,selectedCompany.companyName)
 
       //select project
-      
       let projects = await fetchPhaseData(selectedCompany.projects)
-      console.log(projects,"projects")
       const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
-      
       localStorage.setItem("projectName",JSON.stringify({projectName:selectedProject}));
       
   
+      //fetch observations
       const res = await api.get(`/api/v1/observations/${id}/`);
-      
       if (res.data.status_code == 400) {
 
       } else {
         const result = res.data.data.results;
+        console.log(result,"results")
         await setInitialData(result);
       }
       dispatch(company(companeyData));
       dispatch(projectName(selectedProject));
+      
       
   } 
 
@@ -383,14 +382,11 @@ const ObservationSummary = () => {
   //get query strings
   
   useEffect(() => {
-    
-    
-
     if(id && paramCompanyId && paramProjectId ){
       handleNotificationClick(paramCompanyId,paramProjectId)
     }
 
-    if (id) {
+    if (id && !paramCompanyId && !paramProjectId) {
       fetchInitialiObservation();
     }
 
