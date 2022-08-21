@@ -16,7 +16,7 @@ import Add from "@material-ui/icons/Add";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import Edit from "@material-ui/icons/Edit";
 import { PapperBlock } from "dan-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useReducer } from "react";
 // Router
 import { useHistory, useParams } from "react-router";
 import AhaSummary from "../../../containers/Activity/Activity";
@@ -115,6 +115,11 @@ const ObservationSummary = () => {
   const commentPayload = history.location.state;
   // const [observationCloseOut, setObservationCloseOut] = useState(false);
   // const [observationReview, setObservationReview] = useState(false);
+
+  const [rerender, setRerender] = useState(false);
+
+
+
 
   const [
     observationInitialNotificationUpdate,
@@ -363,27 +368,35 @@ const ObservationSummary = () => {
       
   
       //fetch observations
+      console.log("fetching observation")
       const res = await api.get(`/api/v1/observations/${id}/`);
       if (res.data.status_code == 400) {
 
       } else {
         const result = res.data.data.results;
         console.log(result,"results")
-        await setInitialData(result);
+        setInitialData(result);
+        //window.location.reload(false);
       }
+    setRerender(!rerender);   
       dispatch(company(companeyData));
       dispatch(projectName(selectedProject));
-      
-      
   } 
 
   
 
   //get query strings
+
+ 
+
   
   useEffect(() => {
     if(id && paramCompanyId && paramProjectId ){
       handleNotificationClick(paramCompanyId,paramProjectId)
+    }
+    if(!initialData.observationNumber){
+      console.log(initialData.observationNumber,"initialData.observationNumber")
+      setRerender(!rerender)
     }
 
     if (id && !paramCompanyId && !paramProjectId) {
@@ -391,6 +404,10 @@ const ObservationSummary = () => {
     }
 
   }, []);
+
+  
+
+  
   return (
     <Acl
       module="safety"
@@ -491,11 +508,6 @@ const ObservationSummary = () => {
                                 className={classes.statusButton}
                                 onClick={(e) => {
                                   handleActionButtonClick(e);
-                                  // setObservationInitialNotification(false);
-                                  // setObservationCorrectiveAction(true);
-                                  // setObservationCorrectiveActionView(true)
-                                  // setObservationReview(false);
-                                  // setObservationCloseOut(false);
                                 }}
                               >
                                 Action Tracking
@@ -541,7 +553,7 @@ const ObservationSummary = () => {
                         ) {
                           return observationInitialNotificationUpdate ===
                             true ? (
-                            <ObservationInitialNotificationView />
+                            <ObservationInitialNotificationView/>
                           ) : (
                             <ObservationInitialNotificationUpdate />
                           );

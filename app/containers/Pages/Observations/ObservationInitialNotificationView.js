@@ -25,6 +25,7 @@ import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import Attachment from "../../Attachment/Attachment";
 import Loader from "../Loader";
 import DateFormat from "../../../components/Date/DateFormat";
+import { NavLink, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -142,12 +143,13 @@ const ObservationInitialNotificationView = () => {
       : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
+    console.log(res,"res res")
     localStorage.setItem("fkobservationId", id);
     if (res.data.status_code == 400) {
       history.push("/app/error/");
     } else {
       const result = res.data.data.results;
-      console.log(res.data.data.results, "result");
+      console.log(res.data.data.results, "resultiii");
       setInitialData(result);
       if (result.fkProjectStructureIds != "Not Mentioned") {
         await handelWorkArea(result);
@@ -270,12 +272,24 @@ const ObservationInitialNotificationView = () => {
   };
 
   const classes = useStyles();
+
+  const { search } = useLocation();
+  const query = React.useMemo(() => new URLSearchParams(search), [search])
+  let paramCompanyId = query.get("company")
+  let paramProjectId = query.get("project")
+
   useEffect(() => {
-    if (id) {
+    if (id && paramCompanyId && paramProjectId ) {
       fetchInitialiObservation();
       fetchTags();
     }
-  }, []);
+    if (id && !paramCompanyId && !paramProjectId ) {
+      fetchInitialiObservation();
+      fetchTags();
+    }
+    console.log(initialData,"initial initial")
+  }, [paramCompanyId]);
+
   return (
     <>
       {!isLoading ? (
