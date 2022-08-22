@@ -168,7 +168,7 @@ function JhaSummary(props) {
   const [lessonsLearnedView, setLessonsLearnedView] = useState(false);
   const [commentsView, setCommentsView] = useState(false);
   const history = useHistory();
-  const commentPayload = history.location.state;
+  let commentPayload;
   const { id } = useParams();
   const [assessment, setAssessment] = useState({});
   const [expanded, setExpanded] = useState(false);
@@ -298,9 +298,9 @@ function JhaSummary(props) {
     handelLessionLearnedChanges("sideBar");
   };
 
-  const handleClosePush = async () => {
-    history.push("/app/pages/jha/close-out");
-  };
+  // const handleClosePush = async () => {
+  //   history.push("/app/pages/jha/close-out");
+  // };
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -443,8 +443,8 @@ function JhaSummary(props) {
   let errorMessage = "Please fill";
   let errorAssessment = "assessments";
   let errorApproval = "approvals";
-  let errorLession = "lession learned";
-  let errorCloseOut = "close out";
+  // let errorLession = "lession learned";
+  // let errorCloseOut = "close out";
 
   const handleAssessmentViewChanges = () => {
     if (formStatus.assessmentStatus) {
@@ -776,6 +776,18 @@ function JhaSummary(props) {
                 {/* summary and part */}
                 <>
                   {(() => {
+                    commentPayload = {
+                      fkCompanyId: assessment.fkCompanyId,
+                      fkProjectId: assessment.fkProjectId,
+                      commentContext: "jha",
+                      contextReferenceIds: assessment.id,
+                      commentTags: "",
+                      comment: "",
+                      parent: 0,
+                      thanksFlag: 0,
+                      status: "Active",
+                      createdBy: assessment.createdBy,
+                    };
                     if (
                       assessmentsView == true ||
                       (approvalsView === false &&
