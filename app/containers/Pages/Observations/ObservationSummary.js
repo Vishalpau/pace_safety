@@ -368,21 +368,15 @@ const ObservationSummary = () => {
       
   
       //fetch observations
-      console.log("fetching observation")
       const res = await api.get(`/api/v1/observations/${id}/`);
       if (res.data.status_code == 400) {
 
       } else {
-        console.log("fetched observation")
         const result = res.data.data.results;
         console.log(result,"results")
         await setInitialData(result);
-        //window.location.reload(false);
       }
-      setTimeout(() => {
-        fetchInitialiObservation();
-    }, 2000);
-    setRerender(!rerender);   
+      
       dispatch(company(companeyData));
       dispatch(projectName(selectedProject));
   } 
@@ -405,17 +399,9 @@ const ObservationSummary = () => {
     }
 
   }, []);
-  const [shouldRender, setShouldRender] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      console.log("hell000o")
-      console.log(initialData.observationNumber,"initialData.observationNumber")
-      setShouldRender(false);
-    }, 2000);
-  }, []);
-
-  if(id && paramCompanyId && paramProjectId ){
+  //page reloading
+  if(paramCompanyId && paramProjectId ){
       window.onload = function() {
         setTimeout(() => {
           if(!window.location.hash) {
