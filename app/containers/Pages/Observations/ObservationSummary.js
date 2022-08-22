@@ -368,7 +368,12 @@ const ObservationSummary = () => {
       
   
       //fetch observations
+      console.log("stuck in fetching")
       const res = await api.get(`/api/v1/observations/${id}/`);
+      console.log(res,"res res")
+      if(res.status === 200){
+        fetchInitialiObservation();
+      }
       if (res.data.status_code == 400) {
 
       } else {
@@ -381,13 +386,6 @@ const ObservationSummary = () => {
       dispatch(projectName(selectedProject));
   } 
 
-  
-
-  //get query strings
-
- 
-
-  
   useEffect(() => {
     if(id && paramCompanyId && paramProjectId ){
       handleNotificationClick(paramCompanyId,paramProjectId)
@@ -400,17 +398,18 @@ const ObservationSummary = () => {
 
   }, []);
 
-  //page reloading
   if(paramCompanyId && paramProjectId ){
+    setTimeout(() => {
       window.onload = function() {
-        setTimeout(() => {
           if(!window.location.hash) {
         window.location = window.location + '#loaded';
         window.location.reload();
       }
-        },2000)
     }
-  }
+    },2000)
+      
+  } 
+
 
   
   return (
