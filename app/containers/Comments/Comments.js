@@ -85,7 +85,7 @@ function Comments() {
   const { moduleId } = useParams();
 
   const commentPayload = history.location.state;
-  console.log(commentPayload, 'commentPayloadssssssssssssss')
+  // console.log(commentPayload, 'commentPayloadssssssssssssss');
   const userId = JSON.parse(localStorage.getItem("userDetails"));
 
   const [commentData, setCommentData] = useState([]);

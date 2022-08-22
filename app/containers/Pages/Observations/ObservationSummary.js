@@ -81,9 +81,9 @@ const useStyles = makeStyles((theme) => ({
 
 // Sidebar Links Helper Function
 
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
+// function ListItemLink(props) {
+//   return <ListItem button component="a" {...props} />;
+// }
 
 const ObservationSummary = () => {
   const [
@@ -102,7 +102,9 @@ const ObservationSummary = () => {
   const [activity, setActivity] = useState(false);
   const { id } = useParams();
   const history = useHistory();
-  const commentPayload = history.location.state;
+
+  const [commentPayload, setCommentPayload] = useState({})
+  // let commentPayload;
   // const [observationCloseOut, setObservationCloseOut] = useState(false);
   // const [observationReview, setObservationReview] = useState(false);
 
@@ -130,36 +132,36 @@ const ObservationSummary = () => {
     history.push(`/app/icare/details/${id}#action-taking`);
   };
 
-  const handleComments = (e) => {
-    setObservationInitialNotification(false);
-    setObservationInitialNotificationUpdate(false);
-    setObservationCorrectiveAction(false);
-    setComment(true);
-    setActivity(false);
-    // history.push(`/app/icare/comments/${id}`)
-  };
+  // const handleComments = (e) => {
+  //   setObservationInitialNotification(false);
+  //   setObservationInitialNotificationUpdate(false);
+  //   setObservationCorrectiveAction(false);
+  //   setComment(true);
+  //   setActivity(false);
+  //   // history.push(`/app/icare/comments/${id}`)
+  // };
 
-  const handleActivity = (e) => {
-    setObservationInitialNotification(false);
-    setObservationInitialNotificationUpdate(false);
-    setObservationCorrectiveAction(false);
-    setComment(false);
-    setActivity(true);
-    history.push(`/app/icare/details/${id}#activity`);
-  };
+  // const handleActivity = (e) => {
+  //   setObservationInitialNotification(false);
+  //   setObservationInitialNotificationUpdate(false);
+  //   setObservationCorrectiveAction(false);
+  //   setComment(false);
+  //   setActivity(true);
+  //   history.push(`/app/icare/details/${id}#activity`);
+  // };
 
   const [initialData, setInitialData] = useState({});
   if (id) {
     localStorage.setItem("fkobservationId", id);
   }
 
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+  // const [selectedDate, setSelectedDate] = React.useState(
+  //   new Date("2014-08-18T21:11:54")
+  // );
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  // const handleDateChange = (date) => {
+  //   setSelectedDate(date);
+  // };
 
   const handleActionButtonClick = (action) => {
     setObservationInitialNotification(false);
@@ -176,10 +178,25 @@ const ObservationSummary = () => {
     }
   };
 
-  const handlePrintPush = async () => {
-    //console.log("Ashutosh")
-    history.push(`/app/pages/general-icare-prints/${id}`);
-  };
+  const fillPayload = (payload) => {
+    setCommentPayload({
+      fkCompanyId: payload.fkCompanyId,
+      fkProjectId: payload.fkProjectId,
+      commentContext: "observations",
+      contextReferenceIds: payload.id,
+      commentTags: "",
+      comment: "",
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: payload.createdBy,
+    })
+  }
+
+  // const handlePrintPush = async () => {
+  //   //console.log("Ashutosh")
+  //   history.push(`/app/pages/general-icare-prints/${id}`);
+  // };
 
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
@@ -212,8 +229,8 @@ const ObservationSummary = () => {
     localStorage.removeItem("ActionUpdate");
   }
 
-  const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
+  // const selectValues = [1, 2, 3, 4];
+  // const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
   useEffect(() => {
@@ -371,7 +388,7 @@ const ObservationSummary = () => {
                         ) {
                           return observationInitialNotificationUpdate ===
                             true ? (
-                            <ObservationInitialNotificationView />
+                            <ObservationInitialNotificationView fillPayload = {(commentPayload) => fillPayload(commentPayload)} />
                           ) : (
                             <ObservationInitialNotificationUpdate />
                           );
