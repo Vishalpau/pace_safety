@@ -44,8 +44,10 @@ import { checkACL } from "../../../utils/helper";
 import { connect, useDispatch } from "react-redux";
 import {
   APPCODE,
+  SELF_API,
   SSO_URL,
   HEADER_AUTH,
+  ACCOUNT_API_URL 
 } from "../../../utils/constants";
 
 import axios from "axios";
@@ -273,12 +275,12 @@ const ObservationSummary = () => {
 
   const getSubscriptions = async (paramCompanyId) => {
     const companyId = paramCompanyId 
-
     if (companyId) {
       try {
         const data = await api
           .get(`${SELF_API}${companyId}/`)
           .then((res) => {
+            console.log(res,"resiii")
             const rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(
               (sub) => sub.appCode.toLowerCase() == APPCODE
             )[0].roles[0].aclUrl;
@@ -294,12 +296,8 @@ const ObservationSummary = () => {
           .catch((error) => {
             console.log(error);
           });
-
-        
-
-        dispatch(appAcl(d.data.data.results.permissions[0]));
-
         // redirectionAccount()
+        console.log(data,"data")
 
         const modules = data.map((subscription) => subscription.modules);
         let modulesState = [];
@@ -314,12 +312,14 @@ const ObservationSummary = () => {
               if (mod.subscriptionStatus == "active") {
                 temp.push(mod.moduleCode);
                 // this.setState({ codes: temp })
+                console.log(temp,"temp")
                 return temp;
               }
             });
             // this.setState({ codes: codes })
           }
         });
+        dispatch(appAcl(d.data.data.results.permissions[0]));
         // let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
         //setCode(temp);
        // await getModules(apps);
@@ -350,7 +350,6 @@ const ObservationSummary = () => {
   }; 
 
   const handleNotificationClick = async (paramCompanyId,paramProjectId) => {
-    
     //select company
     const companies = JSON.parse(localStorage.getItem('userDetails')).companies
     const selectedCompany = companies.filter(company => company.companyId == paramCompanyId )[0]
@@ -362,15 +361,13 @@ const ObservationSummary = () => {
       handleCompanyName(selectedCompany,paramCompanyId,selectedCompany.companyName)
 
       //select project
-      let projects = await fetchPhaseData(selectedCompany.projects)
-      const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
-      localStorage.setItem("projectName",JSON.stringify({projectName:selectedProject}));
+    let projects = await fetchPhaseData(selectedCompany.projects)
+    const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
+    localStorage.setItem("projectName",JSON.stringify({projectName:selectedProject}));
       
   
       //fetch observations
-      console.log("stuck in fetching")
       const res = await api.get(`/api/v1/observations/${id}/`);
-      console.log(res,"res res")
       if(res.status === 200){
         fetchInitialiObservation();
       }
@@ -382,14 +379,15 @@ const ObservationSummary = () => {
         await setInitialData(result);
       }
       
+      console.log(companeyData,"companeyData")
       dispatch(company(companeyData));
+      console.log(companeyData,"companeyData")
       dispatch(projectName(selectedProject));
   } 
 
   useEffect(() => {
     if(id && paramCompanyId && paramProjectId ){
       handleNotificationClick(paramCompanyId,paramProjectId)
-      
     }
 
     if (id && !paramCompanyId && !paramProjectId) {
@@ -398,17 +396,7 @@ const ObservationSummary = () => {
 
   }, []);
 
-  if(paramCompanyId && paramProjectId ){
-    setTimeout(() => {
-      window.onload = function() {
-          if(!window.location.hash) {
-        window.location = window.location + '#loaded';
-        window.location.reload();
-      }
-    }
-    },2000)
-      
-  } 
+
 
 
   

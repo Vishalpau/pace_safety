@@ -141,7 +141,18 @@ const ObservationInitialNotificationView = ({initialObservationData}) => {
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).badgeNo
       : null;
-  const fetchInitialiObservation = async () => {
+
+  const fkCompanyId =
+  JSON.parse(localStorage.getItem("company")) !== null
+    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+    : null;
+
+const projectId =
+  JSON.parse(localStorage.getItem("projectName")) !== null
+    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+    : null;
+
+  const fetchInitialiObservation = async (fkCompanyId,projectId) => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     console.log(res,"res res")
     localStorage.setItem("fkobservationId", id);
@@ -152,7 +163,7 @@ const ObservationInitialNotificationView = ({initialObservationData}) => {
       console.log(res.data.data.results, "resultiii");
       setInitialData(result);
       if (result.fkProjectStructureIds != "Not Mentioned") {
-        await handelWorkArea(result);
+        await handelWorkArea(result,fkCompanyId,projectId);
       }
     }
     setIsLoading(false);
@@ -200,6 +211,7 @@ const ObservationInitialNotificationView = ({initialObservationData}) => {
       );
       structName.push(workArea.data.data.results[0].structureName);
     }
+    console.log(workArea,"")
 
     setProjectStructName(structName);
   };
@@ -284,7 +296,7 @@ const ObservationInitialNotificationView = ({initialObservationData}) => {
       fetchTags();
     }
     if (id && !paramCompanyId && !paramProjectId ) {
-      fetchInitialiObservation();
+      fetchInitialiObservation(fkCompanyId,projectId);
       fetchTags();
     }
     console.log(initialData,"initial initial")

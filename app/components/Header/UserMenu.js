@@ -336,8 +336,8 @@ function UserMenu(props) {
       props.initialValues.companyDataList.fkCompanyId ||
       (JSON.parse(localStorage.getItem("company")) !== null &&
         JSON.parse(localStorage.getItem("company")).fkCompanyId);
-    getSubscribedApps(companyId);
-    getSubscriptions();
+    //getSubscribedApps(companyId);
+    //getSubscriptions();
   }, [props.initialValues.companyDataList]);
 
   const classnames = useStyles();
