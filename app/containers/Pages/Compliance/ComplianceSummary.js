@@ -6,8 +6,6 @@ import Grid from "@material-ui/core/Grid";
 import AccessTime from "@material-ui/icons/AccessTime";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import projectpj from "dan-images/projectpj.png";
-import IconButton from "@material-ui/core/IconButton";
 
 // List
 import List from "@material-ui/core/List";
@@ -49,27 +47,12 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import api from "../../../utils/axios";
-import {
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
-} from "../../../utils/constants";
-import {
-  handelIncidentId,
-  checkValue,
-  handelCommonObject,
-  handelActionData,
-} from "../../../utils/CheckerValue";
+import { HEADER_AUTH, SSO_URL, } from "../../../utils/constants";
+import { handelActionData, } from "../../../utils/CheckerValue";
 import axios from "axios";
-import moment from "moment";
 import Loader from "../Loader";
-import { handelActionTracker } from "./Compliance/Checks";
 import { connect } from "react-redux";
 import Attachment from "../../../containers/Attachment/Attachment";
-import { checkACL } from "../../../utils/helper";
 import "../../../styles/custom/customheader.css";
 import DateFormat from "../../../components/Date/DateFormat";
 
@@ -226,37 +209,20 @@ function ComplianceSummary(props) {
   const [quesData, setQueData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
-  const commentPayload = history.location.state;
-  // console.log(commentPayload, 'commentPayloadddd');
+  let commentPayload;
   const { id } = useParams();
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [actionData, setActionData] = useState([]);
   const [colordata, setColorData] = useState([]);
-  const [ratingData, setRatingData] = useState({});
   const [result, setResult] = useState({});
-  const [expanded, setExpanded] = React.useState("panel1");
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel3"
   );
-
-  // useEffect(() => {
-  //   console.log(quesData, "quesData");
-  // }, [quesData]);
-
-  // useEffect(() => {
-  //   console.log(groupData, 'groupdata');
-  // },[groupData])
-
-  useEffect(() => {
-    console.log(complianceData, 'complainceData');
-  },[complianceData])
 
   // for handle the accordian expand
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
-
-  const [expandedTabDetails, setExpandedTabDetails] = React.useState("panel6");
 
   // push the update compliance (update button)
   const handleNewComplianceUpdatePush = async (e) => {
@@ -453,7 +419,6 @@ function ComplianceSummary(props) {
   // get audit question on summary page
   const auditQueData = async (id) => {
     const res = await api.get(`/api/v1/audits/${id}/auditresponse/`);
-    // console.log(res, 'resssssssssssss');
     const result = res.data.data.results;
     setQueData(result);
   };
@@ -465,9 +430,6 @@ function ComplianceSummary(props) {
       localStorage.getItem("commonObject") !== undefined
     ) {
       let jhaId = localStorage.getItem("fkComplianceId");
-      // let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
-      //   "qustionsIds"
-      // ];
       let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
         "qustionsIds"
       ];
@@ -554,13 +516,13 @@ function ComplianceSummary(props) {
                             <Button
                               color={
                                 (complianceData.complianceStatus === "Closed") ||
-                                complianceData.complianceStatus === "Compliance"
+                                  complianceData.complianceStatus === "Compliance"
                                   ? "secondary"
                                   : "primary"
                               }
                               variant={
                                 complianceData.complianceStatus === "Compliance" ||
-                                complianceData.complianceStatus === "Closed"
+                                  complianceData.complianceStatus === "Closed"
                                   ? "contained"
                                   : "outlined"
                               }
@@ -630,10 +592,21 @@ function ComplianceSummary(props) {
                 </Grid>
 
                 <Grid item xs={12} md={12} className="paddTBRemove">
-                  {/* summary and part */}
                   <>
                     {(() => {
                       if (compliance == true) {
+                        commentPayload = {
+                          fkCompanyId: complianceData.fkCompanyId,
+                          fkProjectId: complianceData.fkProjectId,
+                          commentContext: "compliance",
+                          contextReferenceIds: complianceData.id,
+                          commentTags: "",
+                          comment: "",
+                          parent: 0,
+                          thanksFlag: 0,
+                          status: "Active",
+                          createdBy: complianceData.createdBy,
+                        };
                         return (
                           <>
                             {/* <Grid item xs={12}> */}
@@ -680,16 +653,10 @@ function ComplianceSummary(props) {
                                       gutterBottom
                                       className="labelValue"
                                     >
-                                      {handleProjectName(
-                                        complianceData["fkProjectId"]
-                                      )}
+                                      {handleProjectName(complianceData["fkProjectId"])}
                                     </Typography>
                                     <Typography className="labelValue">
-                                      {projectStructName
-                                        .map((value) => {
-                                          return value;
-                                        })
-                                        .join(" : ")}
+                                      {projectStructName.map((value) => { return value; }).join(" : ")}
                                     </Typography>
                                   </Grid>
                                 </Grid>
@@ -801,10 +768,7 @@ function ComplianceSummary(props) {
                                       Date of compliance check
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                      {DateFormat(
-                                        complianceData["createdAt"],
-                                        true
-                                      )}
+                                      {DateFormat(complianceData["createdAt"], true)}
                                     </Typography>
                                   </Grid>
                                   <Grid
@@ -1035,36 +999,21 @@ function ComplianceSummary(props) {
                                                 </FormLabel>
                                                 <FormGroup>
                                                   {result.subGroups.map(
-                                                    (subGrp) => {
-                                                      if (
-                                                        subGrp.fkGroupId ===
-                                                        value.id
-                                                      ) {
-                                                        return (
+                                                    (subGrp) => { if ( subGrp.fkGroupId === value.id ) { return (
                                                           <FormControlLabel
                                                             //className={classes.labelValue}
                                                             className="checkedUnclick"
                                                             control={
                                                               <Checkbox
-                                                                icon={
-                                                                  <CheckBoxOutlineBlankIcon fontSize="small" />
-                                                                }
-                                                                checkedIcon={
-                                                                  <CheckBoxIcon fontSize="small" />
-                                                                }
+                                                                icon={ <CheckBoxOutlineBlankIcon fontSize="small" /> }
+                                                                checkedIcon={ <CheckBoxIcon fontSize="small" /> }
                                                                 name="checkedI"
-                                                                onChange={
-                                                                  handleChange
-                                                                }
-                                                                checked={
-                                                                  checkedC
-                                                                }
+                                                                onChange={ handleChange }
+                                                                checked={ checkedC }
                                                                 value="checkedC"
                                                               />
                                                             }
-                                                            label={
-                                                              subGrp.inputLabel
-                                                            }
+                                                            label={ subGrp.inputLabel }
                                                           />
                                                         );
                                                       }
@@ -1219,19 +1168,13 @@ function ComplianceSummary(props) {
                                                                 className="accordionHeaderSection"
                                                               >
                                                                 <List
-                                                                  className={
-                                                                    classes.heading
-                                                                  }
+                                                                  className={ classes.heading }
                                                                 >
                                                                   <ListItem
-                                                                    className={
-                                                                      classes.accordingHeaderContentLeft
-                                                                    }
+                                                                    className={ classes.accordingHeaderContentLeft }
                                                                   >
                                                                     <ListItemText
-                                                                      primary={
-                                                                        value.question
-                                                                      }
+                                                                      primary={ value.question }
                                                                     />
                                                                   </ListItem>
                                                                 </List>
@@ -1266,10 +1209,7 @@ function ComplianceSummary(props) {
                                                                             component="legend"
                                                                             className="viewLabel"
                                                                           >
-                                                                            Is
-                                                                            this
-                                                                            control
-                                                                            applicable?
+                                                                            Is this control applicable?
                                                                           </FormLabel>
                                                                         )}
                                                                         <Typography className="viewLabelValue">
@@ -1299,9 +1239,7 @@ function ComplianceSummary(props) {
                                                                                 Status
                                                                               </FormLabel>
                                                                               <Typography className="viewLabelValue">
-                                                                                {value.auditStatus
-                                                                                  ? value.auditStatus
-                                                                                  : "-"}
+                                                                                {value.auditStatus ? value.auditStatus : "-"}
                                                                               </Typography>
                                                                             </Grid>
 
@@ -1325,37 +1263,13 @@ function ComplianceSummary(props) {
                                                                                 style={{
                                                                                   backgroundColor:
                                                                                     value.performance &&
-                                                                                      colordata.filter(
-                                                                                        (
-                                                                                          i
-                                                                                        ) =>
-                                                                                          i.id ===
-                                                                                          value.matrixId
-                                                                                      )
-                                                                                        .length
-                                                                                      ? colordata.filter(
-                                                                                        (
-                                                                                          i
-                                                                                        ) =>
-                                                                                          i.id ===
-                                                                                          value.matrixId
-                                                                                      )[0]
-                                                                                        .status ===
-                                                                                        "Active"
-                                                                                        ? colordata.filter(
-                                                                                          (
-                                                                                            i
-                                                                                          ) =>
-                                                                                            i.id ===
-                                                                                            value.matrixId
-                                                                                        )[0]
-                                                                                          .matrixConstantColor
+                                                                                      colordata.filter((i) => i.id === value.matrixId).length
+                                                                                      ? colordata.filter((i) => i.id === value.matrixId)[0].status === "Active"
+                                                                                        ? colordata.filter((i) => i.id === value.matrixId )[0].matrixConstantColor
                                                                                         : "#fff"
                                                                                       : "#fff",
-                                                                                  border:
-                                                                                    "1px",
-                                                                                  width:
-                                                                                    "50%",
+                                                                                  border: "1px",
+                                                                                  width: "50%",
                                                                                   height:
                                                                                     "80%",
                                                                                   textAlign:
@@ -1382,10 +1296,7 @@ function ComplianceSummary(props) {
                                                                         component="legend"
                                                                         className="viewLabel"
                                                                       >
-                                                                        Is this
-                                                                        control
-                                                                        applicable
-                                                                        ?
+                                                                        Is this control applicable ?
                                                                       </FormLabel>
                                                                       <Typography className="viewLabelValue">
                                                                         {value.defaultResponse
@@ -1444,17 +1355,8 @@ function ComplianceSummary(props) {
                                                                     </Grid>
                                                                   )}
 
-                                                                  {actionData.filter(
-                                                                    (val) =>
-                                                                      val.id ==
-                                                                      value.questionId
-                                                                  )[0] &&
-                                                                    actionData.filter(
-                                                                      (val) =>
-                                                                        val.id ==
-                                                                        value.questionId
-                                                                    )[0].action
-                                                                      .length ? (
+                                                                  {actionData.filter((val) => val.id == value.questionId )[0] &&
+                                                                    actionData.filter((val) => val.id == value.questionId )[0].action .length ? (
                                                                     <Grid
                                                                       item
                                                                       md={12}
@@ -1468,125 +1370,94 @@ function ComplianceSummary(props) {
                                                                         Corrective
                                                                         Actions
                                                                       </FormLabel>
-                                                                      {actionData.map(
-                                                                        (
-                                                                          val
-                                                                        ) => (
-                                                                          <>
-                                                                            {val.id ==
-                                                                              value.questionId ? (
-                                                                              <>
-                                                                                {val
-                                                                                  .action
-                                                                                  .length >
-                                                                                  0 && (
-                                                                                    <Grid
-                                                                                      item
-                                                                                      md={
-                                                                                        12
-                                                                                      }
-                                                                                      xs={
-                                                                                        12
-                                                                                      }
+                                                                      {actionData.map((val) => (
+                                                                        <>
+                                                                          {val.id == value.questionId ? (
+                                                                            <>
+                                                                              {val.action.length >
+                                                                                0 && (
+                                                                                  <Grid
+                                                                                    item
+                                                                                    md={12}
+                                                                                    xs={12}
+                                                                                  >
+                                                                                    <Table
+                                                                                      component={Paper}
+                                                                                      className="simpleTableSection"
                                                                                     >
-                                                                                      <Table
-                                                                                        component={
-                                                                                          Paper
-                                                                                        }
-                                                                                        className="simpleTableSection"
-                                                                                      >
-                                                                                        <TableHead>
-                                                                                          <TableRow>
-                                                                                            <TableCell className="tableHeadCellFirst">
-                                                                                              Action
-                                                                                              number
-                                                                                            </TableCell>
-                                                                                            <TableCell className="tableHeadCellSecond">
-                                                                                              Action
-                                                                                              title
-                                                                                            </TableCell>
-                                                                                          </TableRow>
-                                                                                        </TableHead>
-                                                                                        <TableBody>
-                                                                                          {actionData.map(
-                                                                                            (
-                                                                                              val
-                                                                                            ) => (
+                                                                                      <TableHead>
+                                                                                        <TableRow>
+                                                                                          <TableCell className="tableHeadCellFirst">
+                                                                                            Action
+                                                                                            number
+                                                                                          </TableCell>
+                                                                                          <TableCell className="tableHeadCellSecond">
+                                                                                            Action
+                                                                                            title
+                                                                                          </TableCell>
+                                                                                        </TableRow>
+                                                                                      </TableHead>
+                                                                                      <TableBody>
+                                                                                        {actionData.map((val) => (
+                                                                                          <>
+                                                                                            {val.id == value.questionId ? (
                                                                                               <>
-                                                                                                {val.id ==
-                                                                                                  value.questionId ? (
-                                                                                                  <>
-                                                                                                    {val
-                                                                                                      .action
-                                                                                                      .length >
-                                                                                                      0 &&
-                                                                                                      val.action.map(
-                                                                                                        (
-                                                                                                          valueAction
-                                                                                                        ) => (
-                                                                                                          <TableRow>
-                                                                                                            <TableCell align="left">
-                                                                                                              <Link
-                                                                                                                className={
-                                                                                                                  classes.actionLinkAudit
-                                                                                                                }
-                                                                                                                display="block"
-                                                                                                                href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                                                                  localStorage.getItem(
-                                                                                                                    "BaseUrl"
-                                                                                                                  )
-                                                                                                                )[
-                                                                                                                  "actionClientID"
-                                                                                                                ]
-                                                                                                                  }&response_type=code&companyId=${JSON.parse(
-                                                                                                                    localStorage.getItem(
-                                                                                                                      "company"
-                                                                                                                    )
-                                                                                                                  )
-                                                                                                                    .fkCompanyId
-                                                                                                                  }&projectId=${JSON.parse(
-                                                                                                                    localStorage.getItem(
-                                                                                                                      "projectName"
-                                                                                                                    )
-                                                                                                                  )
-                                                                                                                    .projectName
-                                                                                                                    .projectId
-                                                                                                                  }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                                                                  }&projectStructure=${localStorage.getItem(
-                                                                                                                    "selectBreakDown"
-                                                                                                                  )}`}
-                                                                                                                target="_blank"
-                                                                                                              >
-                                                                                                                {
-                                                                                                                  valueAction.number
-                                                                                                                }
-                                                                                                              </Link>
-                                                                                                            </TableCell>
-                                                                                                            <TableCell>
-                                                                                                              {
-                                                                                                                valueAction.title
-                                                                                                              }
-                                                                                                            </TableCell>
-                                                                                                          </TableRow>
-                                                                                                        )
-                                                                                                      )}
-                                                                                                  </>
-                                                                                                ) : (
-                                                                                                  ""
-                                                                                                )}
+                                                                                                {val.action.length > 0 &&
+                                                                                                  val.action.map((valueAction) => (
+                                                                                                    <TableRow>
+                                                                                                      <TableCell align="left">
+                                                                                                        <Link
+                                                                                                          className={
+                                                                                                            classes.actionLinkAudit
+                                                                                                          }
+                                                                                                          display="block"
+                                                                                                          href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                                                            localStorage.getItem(
+                                                                                                              "BaseUrl"
+                                                                                                            )
+                                                                                                          )[ "actionClientID" ]
+                                                                                                            }&response_type=code&companyId=${JSON.parse(
+                                                                                                              localStorage.getItem("company")
+                                                                                                            )
+                                                                                                              .fkCompanyId
+                                                                                                            }&projectId=${JSON.parse(
+                                                                                                              localStorage.getItem(
+                                                                                                                "projectName"
+                                                                                                              )
+                                                                                                            )
+                                                                                                              .projectName
+                                                                                                              .projectId
+                                                                                                            }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                                            }&projectStructure=${localStorage.getItem(
+                                                                                                              "selectBreakDown"
+                                                                                                            )}`}
+                                                                                                          target="_blank"
+                                                                                                        >
+                                                                                                          {valueAction.number}
+                                                                                                        </Link>
+                                                                                                      </TableCell>
+                                                                                                      <TableCell>
+                                                                                                        {
+                                                                                                          valueAction.title
+                                                                                                        }
+                                                                                                      </TableCell>
+                                                                                                    </TableRow>
+                                                                                                  ))}
                                                                                               </>
-                                                                                            )
-                                                                                          )}
-                                                                                        </TableBody>
-                                                                                      </Table>
-                                                                                    </Grid>
-                                                                                  )}
-                                                                              </>
-                                                                            ) : (
-                                                                              ""
-                                                                            )}
-                                                                          </>
-                                                                        )
+                                                                                            ) : ("")}
+                                                                                          </>
+                                                                                        )
+                                                                                        )}
+                                                                                      </TableBody>
+                                                                                    </Table>
+                                                                                  </Grid>
+                                                                                )}
+                                                                            </>
+                                                                          ) : (
+                                                                            ""
+                                                                          )}
+                                                                        </>
+                                                                      )
                                                                       )}
                                                                     </Grid>
                                                                   ) : (
@@ -1604,38 +1475,24 @@ function ComplianceSummary(props) {
                                                                         component="legend"
                                                                         className="checkRadioLabel"
                                                                       >
-                                                                        Document
-                                                                        &
-                                                                        Evidence
+                                                                        Document & Evidence
                                                                       </FormLabel>
                                                                       <div
                                                                         style={{
-                                                                          display:
-                                                                            "flex",
-                                                                          alignItems:
-                                                                            "center",
-                                                                          margin:
-                                                                            "0 -10px",
+                                                                          display: "flex",
+                                                                          alignItems: "center",
+                                                                          margin: "0 -10px",
                                                                         }}
                                                                       >
-                                                                        {value.files.map(
-                                                                          (
-                                                                            file
-                                                                          ) => {
-                                                                            return (
-                                                                              <Attachment
-                                                                                key={
-                                                                                  file.id
-                                                                                }
-                                                                                value={
-                                                                                  file.fileName
-                                                                                }
-                                                                                type={
-                                                                                  file.fileType
-                                                                                }
-                                                                              />
-                                                                            );
-                                                                          }
+                                                                        {value.files.map((file) => {
+                                                                          return (
+                                                                            <Attachment
+                                                                              key={file.id}
+                                                                              value={file.fileName}
+                                                                              type={file.fileType}
+                                                                            />
+                                                                          );
+                                                                        }
                                                                         )}
                                                                       </div>
                                                                     </Grid>

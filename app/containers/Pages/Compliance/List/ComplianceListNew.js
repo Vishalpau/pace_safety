@@ -454,13 +454,13 @@ function ComplianceListNew(props) {
   };
 
   // method to push to new component
-  const handleSummaryPush = async (item, commentPayload) => {
+  const handleSummaryPush = async (item, /*commentPayload*/) => {
     let id = item;
     localStorage.setItem("fkComplianceId", id);
     history.push({
       pathname: `/app/pages/compliance/compliance-summary/${id}`,
       state: {
-        commentPayload,
+        // commentPayload,
         redirectUrl: "/app/pages/compliance/compliance-details",
       },
     });
@@ -827,7 +827,7 @@ function ComplianceListNew(props) {
             value.attachmentLinks ? value.attachmentLinks.attachmentCount : 0
           }
           commentsCount={value.commentsCount}
-          handleSummaryPush={() => handleSummaryPush(value.id, commentPayload)}
+          handleSummaryPush={() => handleSummaryPush(value.id)}
           checkDeletePermission={checkDeletePermission}
         />
 
