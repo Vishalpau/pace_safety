@@ -9,11 +9,11 @@ import Paper from "@material-ui/core/Paper";
 import "../../styles/custom/customheader.css";
 
 // List
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
+// import List from "@material-ui/core/List";
+// import ListItem from "@material-ui/core/ListItem";
+// import ListItemIcon from "@material-ui/core/ListItemIcon";
+// import ListItemText from "@material-ui/core/ListItemText";
+// import ListSubheader from "@material-ui/core/ListSubheader";
 import { useHistory, useParams } from "react-router";
 import moment from "moment";
 
@@ -28,23 +28,23 @@ import Add from "@material-ui/icons/Add";
 import Avatar from "@material-ui/core/Avatar";
 
 //Timeline
-import Timeline from "@material-ui/lab/Timeline";
-import TimelineItem from "@material-ui/lab/TimelineItem";
-import TimelineSeparator from "@material-ui/lab/TimelineSeparator";
-import TimelineConnector from "@material-ui/lab/TimelineConnector";
-import TimelineContent from "@material-ui/lab/TimelineContent";
-import TimelineDot from "@material-ui/lab/TimelineDot";
-import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
-import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
-import Pagination from "@material-ui/lab/Pagination";
+// import Timeline from "@material-ui/lab/Timeline";
+// import TimelineItem from "@material-ui/lab/TimelineItem";
+// import TimelineSeparator from "@material-ui/lab/TimelineSeparator";
+// import TimelineConnector from "@material-ui/lab/TimelineConnector";
+// import TimelineContent from "@material-ui/lab/TimelineContent";
+// import TimelineDot from "@material-ui/lab/TimelineDot";
+// import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
+// import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
+// import Pagination from "@material-ui/lab/Pagination";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
+// import Accordion from "@material-ui/core/Accordion";
+// import AccordionSummary from "@material-ui/core/AccordionSummary";
+// import AccordionDetails from "@material-ui/core/AccordionDetails";
+// import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+// import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
 
 import Link from "@material-ui/core/Link";
 
@@ -53,7 +53,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
-import paceComment from "dan-images/paceComment.png";
+// import paceComment from "dan-images/paceComment.png";
 
 import api from "../../utils/axios";
 import Delete from "../Delete/Delete";
@@ -84,8 +84,8 @@ function Comments() {
   }
   const { moduleId } = useParams();
 
-  console.log(history.location, 'history and location');
-  const commentPayload = history.location.state && history.location.state.commentPayload;
+  const commentPayload = history.location.state;
+  // console.log(commentPayload, 'commentPayloadssssssssssssss');
   const userId = JSON.parse(localStorage.getItem("userDetails"));
 
   const [commentData, setCommentData] = useState([]);

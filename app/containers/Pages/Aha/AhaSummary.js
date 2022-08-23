@@ -176,7 +176,8 @@ function AhaSummary(props) {
   const [lessonsLearned, setLessonsLearned] = useState(false);
   //const [summary, setSummary] = useState(false);
   const history = useHistory();
-  const commentPayload = history.location.state;
+  // const commentPayload = history.location.state;
+  let commentPayload;
   const [form, setForm] = useState([]);
   const { id } = useParams();
   const [expanded, setExpanded] = React.useState("panel1");
@@ -664,7 +665,8 @@ function AhaSummary(props) {
         icon="customDropdownPageIcon ahaPageIcon"
         whiteBg
       >
-        {isLoading ? (
+        {isLoading ? 
+        (
           <Grid container spacing={3}>
             <Grid item md={9} xs={12}>
               <Grid container spacing={3}>
@@ -699,9 +701,7 @@ function AhaSummary(props) {
                         <ul className="SummaryTabList">
                           <li>
                             <Button
-                              color={
-                                assessments === true ? "secondary" : "primary"
-                              }
+                              color={ assessments === true ? "secondary" : "primary" }
                               // variant="contained"
                               variant={
                                 ahaData.ahaStatus === "Assessment" ||
@@ -770,9 +770,7 @@ function AhaSummary(props) {
                           </li>
                           <li>
                             <Button
-                              color={
-                                lessonsLearned == true ? "secondary" : "primary"
-                              }
+                              color={ lessonsLearned == true ? "secondary" : "primary" }
                               variant={
                                 ahaData.anyLessonsLearnt !== null
                                   ? "contained"
@@ -810,12 +808,19 @@ function AhaSummary(props) {
                   {/* summary and part */}
                   <>
                     {(() => {
-                      if (
-                        assessments == true ||
-                        (approvals === false &&
-                          lessonsLearned === false &&
-                          closeOut === false)
-                      ) {
+                      commentPayload = {
+                        fkCompanyId: ahaData.fkCompanyId,
+                        fkProjectId: ahaData.fkProjectId,
+                        commentContext: "aha",
+                        contextReferenceIds: ahaData.id,
+                        commentTags: "",
+                        comment: '',
+                        parent: 0,
+                        thanksFlag: 0,
+                        status: "Active",
+                        createdBy: ahaData.createdBy,
+                      };
+                      if (assessments == true || (approvals === false && lessonsLearned === false && closeOut === false) ) {
                         return (
                           <>
                             <Grid container spacing={3}>

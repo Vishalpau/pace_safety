@@ -482,13 +482,9 @@ function AhaPackage(props) {
   const search = props.search;
   const status = props.status;
 
-  useEffect(() => {
-    console.log(myUserPOpen, "myUserPOpen");
-  }, [myUserPOpen]);
-
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-  const handleSummaryPush = async (selectedJha, commentPayload) => {
+  const handleSummaryPush = async (selectedJha) => {
     const aha = selectedJha;
     localStorage.setItem("fkAHAId", aha.id);
     handelCommonObject(
@@ -503,7 +499,6 @@ function AhaPackage(props) {
     history.push({
       pathname: `/app/pages/aha/aha-summary/${aha.id}`,
       state: {
-        commentPayload,
         redirectUrl: "/app/pages/aha/assessments/project-details",
       },
     });
@@ -649,15 +644,6 @@ function AhaPackage(props) {
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [commentData, setCommentData] = useState("");
 
-    const deleteItem = {
-      fkCompanyId: item.fkCompanyId,
-      fkProjectId: item.fkProjectId,
-      fkProjectStructureIds: item.fkProjectStructureIds,
-      createdBy: item.createdBy,
-      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
-      status: "Delete",
-    };
-
     const commentPayload = {
       fkCompanyId: item.fkCompanyId,
       fkProjectId: item.fkProjectId,
@@ -669,6 +655,15 @@ function AhaPackage(props) {
       thanksFlag: 0,
       status: "Active",
       createdBy: item.createdBy,
+    };
+
+    const deleteItem = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      fkProjectStructureIds: item.fkProjectStructureIds,
+      createdBy: item.createdBy,
+      updatedBy: JSON.parse(localStorage.getItem("userDetails")).id,
+      status: "Delete",
     };
 
     function handleVisibility() {
@@ -762,7 +757,7 @@ function AhaPackage(props) {
           handleVisibilityComments={() => handleVisibilityComments()} // Show "add comment" box
           files={item.files !== null ? item.files.length : 0} // Attachment counts
           commentsCount={item.commentsCount} // Comments count
-          handleSummaryPush={() => handleSummaryPush(item, commentPayload)} // Go to detail page function
+          handleSummaryPush={() => handleSummaryPush(item)} // Go to detail page function
           checkDeletePermission={checkDeletePermission} // Check delete permission
         />
 
