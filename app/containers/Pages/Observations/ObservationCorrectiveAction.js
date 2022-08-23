@@ -387,7 +387,7 @@ function ObservationCorrectiveAction() {
       await setActionOpen(true);
     }
     result["reviewedOn"] = new Date();
-    await setForm({...form,result});
+    await setForm({...form,...result});
     await handelActionTracker();
   };
 
