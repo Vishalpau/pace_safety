@@ -413,10 +413,6 @@ const ObservationSummary = () => {
 
   }, []);
 
-
-
-
-  
   return (
     <Acl
       module="safety"

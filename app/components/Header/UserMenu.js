@@ -172,9 +172,6 @@ function UserMenu(props) {
   const [companyList, setCompanyList] = useState([]);
   const [openCompanyList, setOpenCompanyList] = useState(false);
 
-  const [projectName,setProjectName] = useState("")
-  const [userName,setUserName] = useState("")
-
   const [project, setProject] = [];
   const dispatch = useDispatch();
   const handleAppsClick = (event) => {
@@ -360,21 +357,24 @@ function UserMenu(props) {
   let paramCompanyId = query.get("company")
   let paramProjectId = query.get("project")
 
-  useEffect(() => {
-    let projectName= JSON.parse(localStorage.getItem("projectName")) !== null
+  let projectName= JSON.parse(localStorage.getItem("projectName")) !== null
                   ? JSON.parse(localStorage.getItem("projectName")).projectName
                       .projectName
                   : null
+    console.log(projectName,"projectName")
     let userName = JSON.parse(localStorage.getItem("userDetails")) !== null
                   ? JSON.parse(localStorage.getItem("userDetails")).name
                   : null
-    setUserName(userName)
-    setProjectName(projectName)
+
+  useEffect(() => {
+    
+    //setUserName(userName)
+    //setProjectName(projectName)
     if(paramCompanyId && paramProjectId ){
       getSubscribedApps(paramCompanyId)
       getSubscriptions();
     } 
-  }, [paramCompanyId,paramProjectId]);
+  }, []);
 
   return (
     <>
