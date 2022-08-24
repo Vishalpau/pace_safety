@@ -1009,10 +1009,6 @@ function PersonalDashboard(props) {
       console.log(localStorage.getItem("projectName"), "local storage");
       handelCallBack();
       redirectionAccount();
-      /* if (localStorage.getItem("projectName") != null) {
-      console.log("redirect me")
-      setTimeout(() => history.push("app/icare"), 1000);
-    }   */
     }
   }, []);
 
