@@ -23,22 +23,16 @@ console.log(action.length);
     }
 
   }
-  
-  if(checkACL('action_tracker', 'view_actions')) {
-    if (data.isCorrectiveActionTaken === null) {
-      error.isCorrectiveActionTaken = "Select any one";
-      isValid = false;
-    }
-    
-    if (data.isCorrectiveActionTaken === "Yes") {
 
+if(checkACL("action_tracker-actions", "add_actions")) {
+    if (data.isCorrectiveActionTaken === "Yes") {
     if(action.length == 0){
       error.action = "create atleast one action";
       isValid = false;
     }
   }
 }
-  console.log(error)
+console.log(error)
 return { error, isValid };
 }
 

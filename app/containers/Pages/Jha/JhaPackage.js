@@ -567,7 +567,7 @@ function JhaPackage(props) {
 
   const classes = useStyles();
 
-  const handleSummaryPush = async (selectedJha, commentPayload) => {
+  const handleSummaryPush = async (selectedJha) => {
     const jha = selectedJha;
     localStorage.setItem("fkJHAId", jha.id);
     handelCommonObject(
@@ -582,7 +582,6 @@ function JhaPackage(props) {
     history.push({
       pathname: `/app/pages/jha/jha-summary/${jha.id}`,
       state: {
-        commentPayload,
         redirectUrl: "/app/pages/jha/assessments/Job-hazards",
       },
     });
@@ -731,7 +730,7 @@ function JhaPackage(props) {
             RefreshBookmarkData={fetchData}
             handleVisibility={() => handleVisibility()}
             handleVisibilityComments={() => handleVisibilityComments()}
-            handleSummaryPush={() => handleSummaryPush(item, commentPayload)}
+            handleSummaryPush={() => handleSummaryPush(item)}
             files={item.files !== null ? item.files.length : 0}
             commentsCount={item.commentsCount}
             checkDeletePermission={checkDeletePermission}
