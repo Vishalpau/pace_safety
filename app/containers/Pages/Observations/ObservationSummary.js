@@ -403,13 +403,18 @@ const ObservationSummary = () => {
   } 
 
   useEffect(() => {
-    if(id && paramCompanyId && paramProjectId ){
-      handleNotificationClick(paramCompanyId,paramProjectId)
-    }
-
     if (id && !paramCompanyId && !paramProjectId) {
       fetchInitialiObservation();
     }
+    if(id && paramCompanyId && paramProjectId ){
+      handleNotificationClick(paramCompanyId,paramProjectId)
+    }
+    let fetch = () => {
+      if (id && paramCompanyId && paramProjectId ) {
+      fetchInitialiObservation();
+    }}
+    window.addEventListener('load',fetch)
+    return () => document.removeEventListener('load', fetch);
 
   }, []);
 

@@ -280,16 +280,27 @@ const ObservationInitialNotificationView = () => {
   let paramProjectId = query.get("project")
 
   useEffect(() => {
-    if (id && paramCompanyId && paramProjectId ) {
-      fetchInitialiObservation();
-      fetchTags();
-    }
     if (id && !paramCompanyId && !paramProjectId ) {
       fetchInitialiObservation(fkCompanyId,projectId);
       fetchTags();
     }
     console.log(initialData,"initial initial")
-  }, [paramCompanyId]);
+  }, []);
+
+  useEffect(() => {
+    if (id && paramCompanyId && paramProjectId ) {
+      fetchInitialiObservation();
+      fetchTags();
+    }
+    let fetch = () => {
+      if (id && paramCompanyId && paramProjectId ) {
+      fetchInitialiObservation();
+      fetchTags();
+    }}
+    window.addEventListener('load',fetch)
+    return () => document.removeEventListener('load', fetch);
+    
+  }, []);
 
   
 
