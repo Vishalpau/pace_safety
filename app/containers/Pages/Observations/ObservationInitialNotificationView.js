@@ -287,6 +287,15 @@ const ObservationInitialNotificationView = () => {
     console.log(initialData,"initial initial")
   }, []);
 
+    const fkCompanyId =
+          JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
   useEffect(() => {
     if (id && paramCompanyId && paramProjectId ) {
       fetchInitialiObservation();
