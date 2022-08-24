@@ -311,8 +311,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -377,7 +377,7 @@ function BlankPage(props) {
         };
 
         await api(config)
-          .then(function (response) {
+          .then(function(response) {
             console.log(response);
             if (response.status === 200) {
               let hosting = response.data.data.results.data.companies
@@ -430,9 +430,9 @@ function BlankPage(props) {
               });
             }
           })
-          .catch(function (error) { });
+          .catch(function(error) {});
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handlePush = async () => {
@@ -502,8 +502,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -518,7 +518,7 @@ function BlankPage(props) {
         setIncidents(res.data.data.results.results);
         setPage(value);
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
 
   // const handleDelete = async (item) => {
@@ -577,8 +577,8 @@ function BlankPage(props) {
     props.projectName.breakDown.length > 0
       ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
   let struct1 = "";
 
   for (const i in selectBreakdown1) {
@@ -606,8 +606,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -910,8 +910,9 @@ function BlankPage(props) {
                         label="List"
                         {...a11yProps(1)}
                         icon={<ReorderIcon />}
-                        className={`${classes.pLTen} ${listToggle ? "Mui-selected" : ""
-                          }`}
+                        className={`${classes.pLTen} ${
+                          listToggle ? "Mui-selected" : ""
+                        }`}
                       />
                     </Tabs>
                   </div>
@@ -1016,9 +1017,7 @@ function BlankPage(props) {
                         item[1]["incidentNumber"],
                         item[1]["incidentReportedByName"],
                         item[1]["incidentLocation"],
-                        moment(item[1]["incidentReportedOn"]).format(
-                          "Do MMMM YYYY, h:mm:ss a"
-                        ),
+                        DateFormat(item[1]["incidentReportedOn"], true),
                         item[1]["incidentReportedByName"],
                         item[1]["id"],
                       ])}

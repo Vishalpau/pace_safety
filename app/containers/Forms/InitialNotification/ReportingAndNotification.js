@@ -1168,7 +1168,7 @@ const ReportingAndNotification = (props) => {
                     disableFuture
                     disabled
                     InputProps={{ readOnly: true }}
-                    onClick={(e) => setIsDateShow(true)}
+                    // onClick={(e) => setIsDateShow(true)}
                     open={isDateShow}
                     onClose={(e) => setIsDateShow(false)}
                   />
