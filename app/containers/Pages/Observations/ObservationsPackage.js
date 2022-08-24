@@ -505,7 +505,7 @@ function Actions(props) {
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
 
-  const handleSummaryPush = async (index, commentPayload) => {
+  const handleSummaryPush = async (index) => {
     console.log(allInitialData, "allInitialData");
     const { id } = allInitialData[index];
     localStorage.setItem("fkobservationId", id);
@@ -516,14 +516,12 @@ function Actions(props) {
     }
     history.push({
       pathname: `/app/icare/details/${id}`,
-      // state: commentPayload
-      state: { commentPayload, redirectUrl: "/app/icare-initial-notification" },
+      state: { redirectUrl: "/app/icare-initial-notification" },
     });
   };
 
   const fetchInitialiObservation = async () => {
     setPage(1);
-
     const { fkCompanyId } = JSON.parse(localStorage.getItem("company"));
     const fkProjectId =
       JSON.parse(localStorage.getItem("projectName")).projectName.projectId ||
@@ -828,14 +826,14 @@ function Actions(props) {
   const [openAttachment, setopenAttachment] = React.useState(false);
   const [openAtt, setopenAtt] = React.useState("");
 
-  const handleClickOpenAttachment = (value) => {
-    setopenAtt(value);
-    setopenAttachment(true);
-  };
+  // const handleClickOpenAttachment = (value) => {
+  //   setopenAtt(value);
+  //   setopenAttachment(true);
+  // };
 
-  const [attachOpen, setAttachOpen] = useState(false);
+  // const [attachOpen, setAttachOpen] = useState(false);
   // const [attachIndex, setAttachIndex] = useState("");
-  const [hidden, setHidden] = useState(false);
+  // const [hidden, setHidden] = useState(false);
 
   // const handleAttachClick = () => {
   //   setAttachOpen(!open);
@@ -850,7 +848,7 @@ function Actions(props) {
   // };
 
   // view comments
-  const [commentsOpen, setCommentsOpen] = useState(false);
+  // const [commentsOpen, setCommentsOpen] = useState(false);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
 
   // const handleCommentsClick = () => {
@@ -1099,7 +1097,7 @@ function Actions(props) {
           files={item.files !== null ? item.files.length : 0}
           // files={item.attachmentCount}
           commentsCount={item.commentsCount}
-          handleSummaryPush={() => handleSummaryPush(index, commentPayload)}
+          handleSummaryPush={() => handleSummaryPush(index)}
           checkDeletePermission={checkDeletePermission}
         />
         {item.files && item.files.length ? (

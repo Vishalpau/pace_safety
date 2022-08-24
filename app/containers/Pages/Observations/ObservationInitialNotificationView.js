@@ -104,42 +104,42 @@ const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-const ObservationInitialNotificationView = () => {
-  const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
-    checkedG: true,
-  });
+const ObservationInitialNotificationView = (props) => {
+  // const [state, setState] = React.useState({
+  //   checkedA: true,
+  //   checkedB: true,
+  //   checkedF: true,
+  //   checkedG: true,
+  // });
 
   const { id } = useParams();
   const [initialData, setInitialData] = useState({});
   const [tagsData, setTagsData] = useState([]);
-  const [actionTakenData, setActionTakenData] = useState([]);
-  const [projectSturcturedData, setProjectSturcturedData] = useState([]);
+  // const [actionTakenData, setActionTakenData] = useState([]);
+  // const [projectSturcturedData, setProjectSturcturedData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectDepthAndId, setSelectDepthAndId] = useState([]);
+  // const [selectDepthAndId, setSelectDepthAndId] = useState([]);
 
   const history = useHistory();
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const project =
-    JSON.parse(localStorage.getItem("projectName")) !== null
-      ? JSON.parse(localStorage.getItem("projectName")).projectName
-      : null;
-  const selectBreakdown =
-    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  const userName =
-    JSON.parse(localStorage.getItem("userDetails")) !== null
-      ? JSON.parse(localStorage.getItem("userDetails")).name
-      : null;
-  const userBadgeNo =
-    JSON.parse(localStorage.getItem("userDetails")) !== null
-      ? JSON.parse(localStorage.getItem("userDetails")).badgeNo
-      : null;
+  // const project =
+  //   JSON.parse(localStorage.getItem("projectName")) !== null
+  //     ? JSON.parse(localStorage.getItem("projectName")).projectName
+  //     : null;
+  // const selectBreakdown =
+  //   JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+  //     ? JSON.parse(localStorage.getItem("selectBreakDown"))
+  //     : null;
+  // const userName =
+  //   JSON.parse(localStorage.getItem("userDetails")) !== null
+  //     ? JSON.parse(localStorage.getItem("userDetails")).name
+  //     : null;
+  // const userBadgeNo =
+  //   JSON.parse(localStorage.getItem("userDetails")) !== null
+  //     ? JSON.parse(localStorage.getItem("userDetails")).badgeNo
+  //     : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     localStorage.setItem("fkobservationId", id);
@@ -147,8 +147,8 @@ const ObservationInitialNotificationView = () => {
       history.push("/app/error/");
     } else {
       const result = res.data.data.results;
-      console.log(res.data.data.results, "result");
       setInitialData(result);
+      props.fillPayload(result);
       if (result.fkProjectStructureIds != "Not Mentioned") {
         await handelWorkArea(result);
       }
@@ -161,11 +161,11 @@ const ObservationInitialNotificationView = () => {
       `/api/v1/observations/${id}/observationtags/`
     );
     const tags = response.data.data.results.results;
-    await setTagsData(tags);
+    setTagsData(tags);
   };
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
+  // const handleChange = (event) => {
+  //   setState({ ...state, [event.target.name]: event.target.checked });
+  // };
 
   const [projectStructName, setProjectStructName] = useState([]);
 
@@ -202,13 +202,13 @@ const ObservationInitialNotificationView = () => {
     setProjectStructName(structName);
   };
 
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+  // const [selectedDate, setSelectedDate] = React.useState(
+  //   new Date("2014-08-18T21:11:54")
+  // );
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  // const handleDateChange = (date) => {
+  //   setSelectedDate(date);
+  // };
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
@@ -221,10 +221,10 @@ const ObservationInitialNotificationView = () => {
   const [documentUrl, setDocumentUrl] = useState("");
   const [open, setOpen] = React.useState(false);
 
-  const handleOpen = (document) => {
-    setDocumentUrl(document);
-    setOpen(true);
-  };
+  // const handleOpen = (document) => {
+  //   setDocumentUrl(document);
+  //   setOpen(true);
+  // };
 
   const handleClose = () => {
     setOpen(false);
@@ -239,13 +239,13 @@ const ObservationInitialNotificationView = () => {
     handleClose();
   };
 
-  const handelFileName = (value) => {
-    const fileNameArray = value.split("/");
-    const fileName = fileNameArray[fileNameArray.length - 1].split("-");
-    const lastNameArray = fileName[fileName.length - 1];
-    // const lastName = fileName.split("-");
-    return lastNameArray;
-  };
+  // const handelFileName = (value) => {
+  //   const fileNameArray = value.split("/");
+  //   const fileName = fileNameArray[fileNameArray.length - 1].split("-");
+  //   const lastNameArray = fileName[fileName.length - 1];
+  //   // const lastName = fileName.split("-");
+  //   return lastNameArray;
+  // };
 
   const handleProjectName = (projectId) => {
     const userName =
@@ -261,13 +261,13 @@ const ObservationInitialNotificationView = () => {
 
   const [positiveObservation, setPositiveObservation] = useState(false);
 
-  const handelPositivObservation = (e) => {
-    setPositiveObservation(false);
-  };
+  // const handelPositivObservation = (e) => {
+  //   setPositiveObservation(false);
+  // };
 
-  const handelAtRiskConcern = (e) => {
-    setPositiveObservation(true);
-  };
+  // const handelAtRiskConcern = (e) => {
+  //   setPositiveObservation(true);
+  // };
 
   const classes = useStyles();
   useEffect(() => {
