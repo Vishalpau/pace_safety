@@ -776,6 +776,8 @@ function ComplianceListNew(props) {
     return (
       <>
         <CardView
+          redirectUrl={`/app/comments/compliance/${value.id}`}
+          commentPayload={commentPayload}
           cardTitle={value.auditType}
           avatar={value.avatar}
           username={value.username}

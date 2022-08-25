@@ -482,7 +482,7 @@ function AhaPackage(props) {
   const search = props.search;
   const status = props.status;
 
-  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+  // const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
   const handleSummaryPush = async (selectedJha) => {
     const aha = selectedJha;
@@ -527,8 +527,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -583,8 +583,8 @@ function AhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -597,8 +597,7 @@ function AhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (props.assessments === "My Assessments") {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -612,8 +611,7 @@ function AhaPackage(props) {
       setPage(value);
     } else {
       const res = await api.get(
-        `api/v1/ahas/?search=${
-          props.search
+        `api/v1/ahas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`
       );
       setAllAHAData(res.data.data.results.results);
@@ -707,6 +705,8 @@ function AhaPackage(props) {
     return (
       <>
         <CardView
+          redirectUrl={`/app/comments/aha/${item.id}`}
+          commentPayload={commentPayload}
           cardTitle={item.description} // Card title
           avatar={item.avatar} // Card avatar
           username={item.username} // Profile username

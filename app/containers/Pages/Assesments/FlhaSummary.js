@@ -267,18 +267,21 @@ class SimpleTabs extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const commentPayload = this.props.location.state;
-    const {
-      value,
-      flha,
-      criticalTasks,
-      visualConfirmations,
-      versions,
-      projectStructName,
-      id,
-    } = this.state;
+    // const commentPayload = this.props.location.state;
+    const { flha, id, } = this.state;
 
-    console.log(flha, 'flhaaaaaa');
+    const commentPayload = {
+      fkCompanyId: flha.fkCompanyId,
+      fkProjectId: flha.fkProjectId,
+      commentContext: "flha",
+      contextReferenceIds: flha.id,
+      commentTags: "",
+      comment: '',
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: flha.createdBy,
+    };
 
     return (
       <CustomPapperBlock

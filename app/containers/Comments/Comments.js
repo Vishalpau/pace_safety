@@ -112,9 +112,9 @@ function Comments() {
       })
   }
 
-  useEffect(() => {
-    console.log(commentData, 'commentData');
-  }, [commentData])
+  // useEffect(() => {
+  //   console.log(commentData, 'commentData');
+  // }, [commentData])
 
   useEffect(() => {
     if (sortData === "Newest-one") {

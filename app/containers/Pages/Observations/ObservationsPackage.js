@@ -1047,6 +1047,8 @@ function Actions(props) {
               ? "latest"
               : ""
           }
+          redirectUrl={`/app/comments/observations/${item.id}`}
+          commentPayload={commentPayload}
           cardTitle={item.observationDetails}
           avatar={item.avatar}
           username={item.username}

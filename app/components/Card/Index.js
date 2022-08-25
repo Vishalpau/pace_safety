@@ -31,6 +31,8 @@ import Styles from "./UI/Styles";
  * @Abhimanyu <abhimanyus@teknobuilt.com>
  * @example
       <CardView
+        commentPayload={item.commentPayload} // payload to send
+        redirectUrl = {item.url} // redirect url
         cardTitle={item.description} // Card title
         avatar={item.avatar} // Card avatar
         username={item.username} // Profile username
@@ -154,6 +156,8 @@ const CardView = (props) => {
         </CardContent>
         <Divider />
         <CardFooter
+          commentPayload={props.commentPayload} // Payload for sending the data
+          redirectUrl = {props.redirectUrl} // Url to redirect the data
           files={props.files} // Attachment counts
           commentsCount={props.commentsCount} // Comments counts
           checkDeletePermission={props.checkDeletePermission} // Check delete permission
