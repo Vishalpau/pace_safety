@@ -18,14 +18,14 @@ import { useHistory, useParams } from "react-router";
 import moment from "moment";
 
 // Icons
-import Print from "@material-ui/icons/Print";
-import Edit from "@material-ui/icons/Edit";
-import Share from "@material-ui/icons/Share";
-import Close from "@material-ui/icons/Close";
-import Comment from "@material-ui/icons/Comment";
-import History from "@material-ui/icons/History";
-import Add from "@material-ui/icons/Add";
-import Avatar from "@material-ui/core/Avatar";
+// import Print from "@material-ui/icons/Print";
+// import Edit from "@material-ui/icons/Edit";
+// import Share from "@material-ui/icons/Share";
+// import Close from "@material-ui/icons/Close";
+// import Comment from "@material-ui/icons/Comment";
+// import History from "@material-ui/icons/History";
+// import Add from "@material-ui/icons/Add";
+// import Avatar from "@material-ui/core/Avatar";
 
 //Timeline
 // import Timeline from "@material-ui/lab/Timeline";
@@ -102,6 +102,20 @@ function Comments() {
     }
   };
 
+  const thanksCounter = (id, thanksFlag) => {
+    api.put(`api/v1/comments/${module}/${moduleId}/${payload.id}/`, payload)
+      .then(res => {
+        getComments();
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  useEffect(() => {
+    console.log(commentData, 'commentData');
+  }, [commentData])
+
   useEffect(() => {
     if (sortData === "Newest-one") {
       commentData.slice(0, 1);
@@ -113,10 +127,8 @@ function Comments() {
   const updateComments = (payload) => {
     delete payload.avatar;
     delete payload.username;
-    console.log(payload, "payload");
     setIsLoading(true);
-    api
-      .put(`api/v1/comments/${module}/${moduleId}/${payload.id}/`, payload)
+    api.put(`api/v1/comments/${module}/${moduleId}/${payload.id}/`, payload)
       .then((res) => {
         setIsLoading(false);
         getComments();
@@ -129,8 +141,7 @@ function Comments() {
   const postComments = (commentPayload) => {
     setIsLoading(true);
     console.log(commentPayload, "commnetaylaod");
-    api
-      .post(`api/v1/comments/`, commentPayload)
+    api.post(`api/v1/comments/`, commentPayload)
       .then((res) => {
         setIsLoading(false);
         getComments();
@@ -142,8 +153,7 @@ function Comments() {
   };
 
   const getComments = async () => {
-    api
-      .get(`api/v1/comments/${module}/${moduleId}/`)
+    api.get(`api/v1/comments/${module}/${moduleId}/`)
       .then((res) => {
         setCommentData(res.data.data.results);
       })
@@ -165,10 +175,15 @@ function Comments() {
     const [isEdit, setIsEdit] = useState(false);
     const [replyState, setReplyState] = useState("");
     const [isReply, setIsReply] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     const handelCommentReply = (e) => {
       setIsReply(true);
     };
+
+    const handleCommentReplyClose = (e) => {
+      setIsReply(false);
+    }
 
     const closeCommentEdit = (comment) => {
       setIsEdit(false);
@@ -181,7 +196,15 @@ function Comments() {
 
     return (
       <>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} style={
+          deleting
+            ? {
+              opacity: 0.4,
+              transition: "0.3s all ease",
+              borderColor: "#f4760798",
+            }
+            : { opacity: 1, transition: "0.3s all ease" }
+        }>
           <Grid item md={3} sm={4} xs={12} className="commentUserDetail">
             <Typography variant="h6" className="commentUserTitle" align="right">
               <img className="comment-image" src={item.avatar} />{" "}
@@ -291,7 +314,7 @@ function Comments() {
                   </svg>
                 </Link>
                 <span className="commentThanksRightSection">
-                  <span>
+                  <span onClick={() => thanksCounter(item.id, item.thanksFlag)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20.848"
@@ -327,7 +350,7 @@ function Comments() {
                     Total response : {item.replies ? item.replies.length : 0}
                   </span>
                   <span item xs={1} className="verticalSepareterLine" />
-                  <span>
+                  <span >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="15.88"
@@ -380,6 +403,7 @@ function Comments() {
                   </span>
                   <span item xs={1} className="verticalSepareterLine" />
                   <Delete
+                    checkDeletePermission={true}
                     deleteUrl={`/api/v1/comments/${module}/${moduleId}/${item.id
                       }/`}
                     afterDelete={getComments}
@@ -389,6 +413,7 @@ function Comments() {
                     deleteMsg="Are you sure you want to delete this Comments?"
                     yesBtn="Yes"
                     noBtn="No"
+                    deleting={(bool) => setDeleting(bool)}
                   />
                 </span>
               </Typography>
@@ -426,6 +451,7 @@ function Comments() {
                       variant="contained"
                       color="secondary"
                       className="buttonStyle custmCancelBtn"
+                      onClick={() => handleCommentReplyClose()}
                     >
                       Cancel
                     </Button>
@@ -560,7 +586,7 @@ function Comments() {
                     </svg>
                   </Link>
                   <span className="commentThanksRightSection">
-                    <span>
+                    <span onClick={() => thanksCounter(ad.id, ad.thanksFlag)}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="15.88"
@@ -613,9 +639,8 @@ function Comments() {
                     </span>
                     <span item xs={1} className="verticalSepareterLine" />
                     <Delete
-                      deleteUrl={`/api/v1/comments/${module}/${moduleId}/${
-                        ad.id
-                      }/`}
+                      deleteUrl={`/api/v1/comments/${module}/${moduleId}/${ad.id}/`}
+                      checkDeletePermission={true}
                       afterDelete={getComments}
                       axiosObj={api}
                       loader={setIsLoading}
@@ -719,39 +744,39 @@ function Comments() {
               {commentData.length
                 ? sortData === "Newest-one"
                   ? commentData
-                      .slice(0, 1)
-                      .map((cd, index) => (
-                        <SingleCardData key={cd.id} item={cd} index={index} />
-                      ))
+                    .slice(0, 1)
+                    .map((cd, index) => (
+                      <SingleCardData key={cd.id} item={cd} index={index} />
+                    ))
                   : sortData === "Newest-two"
-                  ? commentData
+                    ? commentData
                       .slice(0, 2)
                       .map((cd, index) => (
                         <SingleCardData key={cd.id} item={cd} index={index} />
                       ))
-                  : commentData.map((cd, index) => (
+                    : commentData.map((cd, index) => (
                       <SingleCardData key={cd.id} item={cd} index={index} />
                     ))
                 : "No Comments "}
               {/* </Grid> */}
               {(sortData === "Newest-one" || sortData === "Newest-two") && (
-                  <Grid
-                    item
-                    md={3}
-                    sm={4}
-                    xs={12}
-                    className={classes.commentMore}
+                <Grid
+                  item
+                  md={3}
+                  sm={4}
+                  xs={12}
+                  className={classes.commentMore}
+                >
+                  <Typography
+                    variant="h6"
+                    className="commentMoreLinkTitle"
+                    align="right"
+                    onClick={() => setSortData("")}
                   >
-                    <Typography
-                      variant="h6"
-                      className="commentMoreLinkTitle"
-                      align="right"
-                      onClick={() => setSortData("")}
-                    >
-                      <Link>View All Comments</Link>
-                    </Typography>
-                  </Grid>
-                )}
+                    <Link>View All Comments</Link>
+                  </Typography>
+                </Grid>
+              )}
               {/* </Grid> */}
             </Grid>
             {/* </Grid> */}
