@@ -563,7 +563,9 @@ const ObservationSummary = () => {
                         ) {
                           return observationInitialNotificationUpdate ===
                             true ? (
-                            <ObservationInitialNotificationView fillPayload = {(commentPayload) => fillPayload(commentPayload)} />
+                              <>
+                            {initialData.observationNumber && <ObservationInitialNotificationView fillPayload = {(commentPayload) => fillPayload(commentPayload)} />}
+                            </>
                           ) : (
                             <ObservationInitialNotificationUpdate />
                           );
