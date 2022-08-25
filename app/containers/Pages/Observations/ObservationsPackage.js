@@ -975,6 +975,7 @@ function Actions(props) {
     const [hiddenn, setHiddenn] = useState(false);
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     const commentPayload = {
       fkCompanyId: item.fkCompanyId,
@@ -1152,8 +1153,8 @@ function Actions(props) {
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
-          isLoading={isLoading}
-          setIsLoading={(val) => setIsLoading(val)}
+          isLoading={isCardLoading}
+          setIsLoading={(val) => setIsCardLoading(val)}
           fetchAllData={fetchInitialiObservation}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}

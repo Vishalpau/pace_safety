@@ -424,6 +424,8 @@ const useStyles = makeStyles((theme) => ({
 function ComplianceListNew(props) {
   // states
   const history = useHistory();
+  const classes = useStyles();
+
   const [allComplianceData, setAllComplianceData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [pageCount, setPageCount] = useState(0);
@@ -436,22 +438,22 @@ function ComplianceListNew(props) {
     setValue(newValue);
   };
 
-  const options = {
-    filterType: "dropdown",
-    responsive: "vertical",
-    print: false,
-    filter: false,
-    search: false,
-    download: false,
-    viewColumns: false,
-    selectableRowsHideCheckboxes: false,
-    selectableRowsHeader: false,
-    selectableRowsOnClick: false,
-    viewColumns: false,
-    selectableRows: false,
-    rowsPerPage: 10,
-    page: 0,
-  };
+  // const options = {
+  //   filterType: "dropdown",
+  //   responsive: "vertical",
+  //   print: false,
+  //   filter: false,
+  //   search: false,
+  //   download: false,
+  //   viewColumns: false,
+  //   selectableRowsHideCheckboxes: false,
+  //   selectableRowsHeader: false,
+  //   selectableRowsOnClick: false,
+  //   viewColumns: false,
+  //   selectableRows: false,
+  //   rowsPerPage: 10,
+  //   page: 0,
+  // };
 
   // method to push to new component
   const handleSummaryPush = async (item, /*commentPayload*/) => {
@@ -469,15 +471,13 @@ function ComplianceListNew(props) {
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
   //Method to open ownership modal when we click on avatar
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
+  // const handleMyUserPClickOpen = () => {
+  //   setMyUserPOpen(true);
+  // };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
   };
-
-  const classes = useStyles();
 
   //method to fetch all compliance data filetrs
   const fetchAllComplianceData = async () => {
@@ -708,6 +708,7 @@ function ComplianceListNew(props) {
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     const deleteItem = {
       fkCompanyId: value.fkCompanyId,
@@ -881,8 +882,8 @@ function ComplianceListNew(props) {
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
-          isLoading={isLoading}
-          setIsLoading={(val) => setIsLoading(val)}
+          isLoading={isCardLoading}
+          setIsLoading={(val) => setIsCardLoading(val)}
           fetchAllData={fetchAllComplianceData}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}
@@ -898,9 +899,7 @@ function ComplianceListNew(props) {
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
-              {isLoading ? (
-                <Loader />
-              ) : allComplianceData.length > 0 ? (
+              {allComplianceData.length > 0 ? (
                 allComplianceData.map((value, index) => (
                   <AllCardData value={value} />
                 ))

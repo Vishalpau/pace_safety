@@ -603,6 +603,7 @@ function JhaPackage(props) {
     const [hiddenn, setHiddenn] = useState(false);
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     let deleteItem = {
       fkCompanyId: item.fkCompanyId,
@@ -787,8 +788,8 @@ function JhaPackage(props) {
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
-          isLoading={isLoading}
-          setIsLoading={(val) => setIsLoading(val)}
+          isLoading={isCardLoading}
+          setIsLoading={(val) => setIsCardLoading(val)}
           fetchAllData={fetchData}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}
