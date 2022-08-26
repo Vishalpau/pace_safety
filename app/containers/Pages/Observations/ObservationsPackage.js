@@ -1170,7 +1170,8 @@ function Actions(props) {
               {listToggle == false ? (
                 <div>
                   <div className="gridView">
-                    {Object.keys(allInitialData).length > 0 ? (
+                    {allInitialData !== undefined &&
+                    allInitialData.length > 0 ? (
                       Object.entries(allInitialData).map((item, index) => (
                         <>
                           <AllCardData item={item[1]} index={index} />

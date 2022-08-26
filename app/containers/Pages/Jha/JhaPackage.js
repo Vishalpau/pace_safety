@@ -497,12 +497,26 @@ function JhaPackage(props) {
       const res = await api.get(
         `api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
-      const result = res.data.data.results.results;
-      setAllJHAData(result);
-      setTotalData(res.data.data.results.count);
-      setPageData(res.data.data.results.count / 25);
-      let pageCount = Math.ceil(res.data.data.results.count / 25);
-      setPageCount(pageCount);
+      if (loginId === 6 && res.data.data) {
+        const result = res.data.data.results.results;
+        setAllJHAData(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        setPageCount(pageCount);
+      } else {
+        if (res.data.data) {
+          const result = res.data.data.results.results;
+          setAllJHAData(result);
+          setTotalData(res.data.data.results.count);
+          setPageData(res.data.data.results.count / 25);
+          let pageCount = Math.ceil(res.data.data.results.count / 25);
+          setPageCount(pageCount);
+        } else {
+          const result = res;
+          setAllJHAData(result);
+        }
+      }
     } else {
       const res = await api.get(
         `api/v1/jhas/?search=${
@@ -598,7 +612,6 @@ function JhaPackage(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
-
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [value, setValue] = React.useState(2);
@@ -650,20 +663,17 @@ function JhaPackage(props) {
     }
 
     const handleComments = (type) => {
-      if (type === 'handleCommentsClose') {
+      if (type === "handleCommentsClose") {
         setCommentsOpen(false);
-      }
-      else if ('handleCommentsClick') {
+      } else if ("handleCommentsClick") {
         setCommentsOpen(!open);
-      }
-      else if (type === 'handleCommentsOpen') {
+      } else if (type === "handleCommentsOpen") {
         setCommentsOpen(true);
-      }
-      else if ('visibility') {
+      } else if ("visibility") {
         setShowGrid(true);
         setHidden(!hidden);
       }
-    }
+    };
 
     const handleChangeOne = (event, newValue) => {
       setValue(newValue);
@@ -924,7 +934,7 @@ function JhaPackage(props) {
     <>
       {isLoading ? (
         <Box>
-          {allJHAData.length > 0 ? (
+          {allJHAData !== undefined && allJHAData.length > 0 ? (
             Object.entries(allJHAData).map((singleitem, index) => (
               <Grid className={classes.marginTopBottom}>
                 <div className="gridView">

@@ -777,12 +777,27 @@ function xflha(props) {
       const res = await api.get(
         `api/v1/flhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
-      const result = res.data.data.results.results;
-      setFlhas(result);
-      setTotalData(res.data.data.results.count);
-      setPageData(res.data.data.results.count / 25);
-      const pageCount = Math.ceil(res.data.data.results.count / 25);
-      setPageCount(pageCount);
+
+      if (loginId === 6 && res.data.data) {
+        const result = res.data.data.results.results;
+        setFlhas(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
+        const pageCount = Math.ceil(res.data.data.results.count / 25);
+        setPageCount(pageCount);
+      } else {
+        if (res.data.data) {
+          const result = res.data.data.results.results;
+          setFlhas(result);
+          setTotalData(res.data.data.results.count);
+          setPageData(res.data.data.results.count / 25);
+          const pageCount = Math.ceil(res.data.data.results.count / 25);
+          setPageCount(pageCount);
+        } else {
+          const result = res;
+          setFlhas(result);
+        }
+      }
     } else {
       const res = await api.get(
         `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}`
@@ -1562,17 +1577,20 @@ function xflha(props) {
                         </Grid>
                       </Grid>
                     </Toolbar>
-                    {Object.entries(flhas).map((item, index) => (
-                      <Box>
-                        <Grid className={classes.marginTopBottom}>
-                          <div className="gridView">
-                            <AllCardData item={item[1]} index={index} />
-                          </div>
-                        </Grid>
-                      </Box>
-                    ))}
-                    {Object.keys(flhas).length === 0 &&
-                      "Sorry, no matching records found"}
+                    {flhas.length > 0 ? (
+                      Object.entries(flhas).map((item, index) => (
+                        <AllCardData item={item[1]} index={index} />
+                      ))
+                    ) : (
+                      <Typography
+                        className={classes.sorryTitle}
+                        variant="h6"
+                        color="primary"
+                        noWrap
+                      >
+                        Sorry, no matching records found
+                      </Typography>
+                    )}
                   </div>
 
                   <div className="gridView">
