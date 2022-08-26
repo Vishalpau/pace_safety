@@ -1,29 +1,29 @@
 import React, { useEffect, useState, Component, useRef } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { PapperBlock } from "dan-components";
+// import { PapperBlock } from "dan-components";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Grid, Typography, TextField, Button } from "@material-ui/core";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-// import { KeyboardDatePicker } from '@material-ui/pickers';
-import FormGroup from "@material-ui/core/FormGroup";
-import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import {
-  DateTimePicker,
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
-import DateFnsUtils from "@date-io/date-fns";
-import { useDropzone } from "react-dropzone";
+// // import { KeyboardDatePicker } from '@material-ui/pickers';
+// import FormGroup from "@material-ui/core/FormGroup";
+// import Checkbox from "@material-ui/core/Checkbox";
+// import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+// import CheckBoxIcon from "@material-ui/icons/CheckBox";
+// import {
+//   DateTimePicker,
+//   KeyboardDateTimePicker,
+//   MuiPickersUtilsProvider,
+//   KeyboardTimePicker,
+//   KeyboardDatePicker,
+// } from "@material-ui/pickers";
+// import MomentUtils from "@date-io/moment";
+// import DateFnsUtils from "@date-io/date-fns";
+// import { useDropzone } from "react-dropzone";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -37,14 +37,7 @@ import { COMPLIANCE } from "../Constants/Constants";
 import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
-import {
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
-} from "../../../../utils/constants";
+import { HEADER_AUTH, SSO_URL, } from "../../../../utils/constants";
 import ComplianceValidation from "../Validations/ComplianceDetailsValidation";
 import { FormHelperText } from "@material-ui/core";
 import api from "../../../../utils/axios";

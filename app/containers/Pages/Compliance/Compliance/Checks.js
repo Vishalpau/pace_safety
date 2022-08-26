@@ -349,15 +349,15 @@ const Checks = (props) => {
       const temp = [...checkData];
 
       const currentTemp = temp.filter(item => item.questionId === valueId)[0]
+      console.log(currentTemp)
 
-      // if (!isYesNo && currentTemp.criticality !== "" &&  currentTemp.auditStatus !== "") {
-      if (!isYesNo && currentTemp.criticality !== "") {
+      if (!isYesNo && currentTemp.criticality !== "" &&  currentTemp.auditStatus !== "") {
         setErrorBoundary("");
         currentTemp.check = true;
       }
 
-      // else if (isYesNo && currentTemp.criticality !== "" && currentTemp.auditStatus === "") {
-      else if (isYesNo && currentTemp.criticality !== "") {
+      else if (isYesNo && currentTemp.criticality !== "" && currentTemp.auditStatus === "") {
+      
         setErrorBoundary("");
         currentTemp.check = true;
       }

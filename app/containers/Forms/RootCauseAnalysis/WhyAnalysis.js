@@ -65,7 +65,7 @@ const WhyAnalysis = () => {
   const [fkid, setFkid] = useState("")
   const [loading, setLoading] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
-  const [updatePage, setUpdatePage] = useState(false)
+  // const [updatePage, setUpdatePage] = useState(false);
   const [actionData, setActionData] = useState([])
 
   // get data and set to states
@@ -100,10 +100,18 @@ const WhyAnalysis = () => {
     updateIds.current = tempApiDataId;
   };
 
+  useEffect(() => {
+    console.log(error, 'error');
+  }, [error])
+
+  // useEffect(() => {
+  //   console.log(form, 'form');
+  // },[form])
+
   const handelActionTracker = async () => {
     let incidentID = localStorage.getItem("fkincidentId")
     let allAction = await handelActionData(incidentID, [], "one")
-    await setActionData(allAction);
+    setActionData(allAction);
   };
 
   const handelInvestigationData = async () => {
@@ -152,67 +160,68 @@ const WhyAnalysis = () => {
 
   const handelApiCall = async (e) => {
     const { error, isValid } = WhyAnalysisValidate(form);
+    console.log(error, 'errrrrrrrrrrrr');
+    console.log(Object.keys(error).length, 'lenthhhhhhh');
     setError(error);
-    setButtonLoading(true)
-    let nextPageLink = 0;
+    setButtonLoading(true);
     let callObjects = form;
     for (let key in callObjects) {
-      if (Object.keys(error).length == 0) {
-        if (callObjects[key]["whyId"] == undefined) {
-          let postObject = { ...whyData, ...callObjects[key] };
-          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/fivewhy/`, postObject);
-          
-        } else if (callObjects[key]["whyId"] !== undefined) {
+      if (Object.keys(error).length === 0) {
+        console.log('yahan aaya 170');
+        if (callObjects[key]["whyId"]) {
           let dataID = callObjects[key].whyId;
           let postObject = { ...whyData, ...callObjects[key] };
-          if (typeof postObject != "undefined") {
+          if (typeof postObject !== "undefined") {
             const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
-            
           }
+        } else {
+          let postObject = { ...whyData, ...callObjects[key] };
+          const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/fivewhy/`, postObject);
         }
       }
     }
-      if (Object.keys(error).length == 0) {
-        if (incidents.incidentStage === "Root cause & analysis") {
-          try {
-            const temp = incidents
-            temp.updatedAt = new Date().toISOString();
-            temp.incidentStatus = "Done"
-            const res = await api.put(
-              `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-              temp
-            );
-          } catch (error) {
-            history.push("/app/pages/error")
-          }
+    if (Object.keys(error).length === 0) {
+      console.log('yahan aaya 184');
+      if (incidents.incidentStage === "Root cause & analysis") {
+        try {
+          const temp = incidents
+          temp.updatedAt = new Date().toISOString();
+          temp.incidentStatus = "Done"
+          const res = await api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`, temp);
+        } catch (error) {
+          history.push("/app/pages/error")
         }
-        let viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-        }
-        dispatch(tabViewMode(viewMode))
-        
-      } else if (Object.keys(error).length == 0) {
-        if (incidents.incidentStage === "Root cause & analysis") {
-          try {
-            const temp = incidents
-            temp.updatedAt = new Date().toISOString();
-            temp.incidentStatus = "Done"
-            const res = await api.put(
-              `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-              temp
-            );
-          } catch (error) {
-            history.push("/app/pages/error")
-          }
-        }
-        let viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-        }
-        dispatch(tabViewMode(viewMode))
-        
       }
-   
-    await history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
+      let viewMode = {
+        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+      }
+      dispatch(tabViewMode(viewMode))
+
+    } else if (Object.keys(error).length === 0) {
+      console.log('yahan aaya 201');
+      if (incidents.incidentStage === "Root cause & analysis") {
+        try {
+          const temp = incidents
+          temp.updatedAt = new Date().toISOString();
+          temp.incidentStatus = "Done"
+          const res = await api.put(
+            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
+        } catch (error) {
+          history.push("/app/pages/error")
+        }
+      }
+      let viewMode = {
+        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+      }
+      dispatch(tabViewMode(viewMode))
+    }
+
+    if (Object.keys(error).length === 0) {
+      history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
+    }
+
     localStorage.setItem("RootCause", "Done");
     setButtonLoading(false)
   };

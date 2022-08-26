@@ -766,6 +766,11 @@ function AhaPackage(props) {
             bookmarkTrueFalse: item.bookmark,
             getBookmarkView: props.assessments,
           }}
+          printFields={{
+            typeOfModule: "AHA",
+            printUrl: `api/v1/ahas/${item.id}/print/`,
+            number: item.ahaNumber,
+          }}
           RefreshBookmarkData={fetchAllAHAData}
           handleVisibility={() => handleVisibility()} // Show attachment box
           handleVisibilityComments={() => handleVisibilityComments()} // Show "add comment" box

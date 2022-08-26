@@ -731,6 +731,11 @@ function JhaPackage(props) {
               noBtn: "No",
               dataLength: allJHAData.length,
             }}
+            printFields={{
+              typeOfModule: "JHA",
+              printUrl: `api/v1/jhas/${item.id}/print/`,
+              number: item.jhaNumber,
+            }}
             bookmarkFields={{
               typeOfModule: "jhas",
               itemId: item.id,

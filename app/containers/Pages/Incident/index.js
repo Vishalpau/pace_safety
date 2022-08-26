@@ -772,6 +772,17 @@ function BlankPage(props) {
               noBtn: "No",
               dataLength: incidents.length,
             }}
+            printFields={{
+              typeOfModule: "Incident",
+              printUrl: `api/v1/incidents/${item[1].id}/print/`,
+              number: item[1].incidentNumber,
+            }}
+            bookmarkFields={{
+              typeOfModule: "incidents",
+              itemId: item[1].id,
+              bookmarkTrueFalse: item[1].bookmark,
+              // getBookmarkView: props.compliance,
+            }}
             handleVisibility={() => handleVisibility()} // Show attachment box
             // handleVisibilityComments={() =>
             //   handleVisibilityComments()
@@ -970,13 +981,14 @@ function BlankPage(props) {
                   </div>
                   {Object.keys(incidents).length === 0 && (
                     <>
-                      <Card variant="outlined">
-                        <CardContent>
-                          <Grid container spacing={3} justify="center">
-                            Sorry, no matching records found
-                          </Grid>
-                        </CardContent>
-                      </Card>
+                      <Typography
+                        className={classes.sorryTitle}
+                        variant="h6"
+                        color="primary"
+                        noWrap
+                      >
+                        Sorry, no matching records found
+                      </Typography>
                     </>
                   )}
                 </>
@@ -1005,9 +1017,7 @@ function BlankPage(props) {
                         item[1]["incidentNumber"],
                         item[1]["incidentReportedByName"],
                         item[1]["incidentLocation"],
-                        moment(item[1]["incidentReportedOn"]).format(
-                          "Do MMMM YYYY, h:mm:ss a"
-                        ),
+                        DateFormat(item[1]["incidentReportedOn"], true),
                         item[1]["incidentReportedByName"],
                         item[1]["id"],
                       ])}

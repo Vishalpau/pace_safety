@@ -140,19 +140,19 @@ const RootCauseAnalysis = () => {
     2;
   };
 
-  const handelActionShow = (value) => (
-    <Grid>
-      <ActionShow
-        action={{ id: value.id, number: value.actionNumber }}
-        title={value.actionTitle}
-        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-        projectId={
-          JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        }
-        updatePage={updatePage}
-      />
-    </Grid>
-  );
+  // const handelActionShow = (value) => (
+  //   <Grid>
+  //     <ActionShow
+  //       action={{ id: value.id, number: value.actionNumber }}
+  //       title={value.actionTitle}
+  //       companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+  //       projectId={
+  //         JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+  //       }
+  //       updatePage={updatePage}
+  //     />
+  //   </Grid>
+  // );
 
   const handelActionTracker = async () => {
     let incidentID = localStorage.getItem("fkincidentId");

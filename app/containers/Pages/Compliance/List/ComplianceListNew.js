@@ -818,6 +818,11 @@ function ComplianceListNew(props) {
             noBtn: "No",
             dataLength: allComplianceData.length,
           }}
+          printFields={{
+            typeOfModule: "Compliance",
+            printUrl: `api/v1/audits/${value.id}/print/`,
+            number: value.auditNumber,
+          }}
           bookmarkFields={{
             typeOfModule: "audits",
             itemId: value.id,

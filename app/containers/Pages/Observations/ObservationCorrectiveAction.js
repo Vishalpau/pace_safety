@@ -387,7 +387,7 @@ function ObservationCorrectiveAction() {
       await setActionOpen(true);
     }
     result["reviewedOn"] = new Date();
-    await setForm(result);
+    await setForm({...result, isCorrectiveActionTaken:"No"});
     await handelActionTracker();
   };
 
@@ -432,7 +432,7 @@ function ObservationCorrectiveAction() {
     let temp = { ...form };
     temp.reviewedByName = value.name;
     temp.reviewedById = value.id;
-    setForm(temp);
+    setForm({...form,...temp});
   };
 
   const fetchReportedBy = () => {
