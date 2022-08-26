@@ -57,6 +57,7 @@ import Divider from "@material-ui/core/Divider";
 import EditIcon from "@material-ui/icons/Edit";
 import PACE_white from "dan-images/PACE_white.png";
 import "../../styles/custom/customheader.css";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { useParams } from "react-router";
 import { connect, useDispatch } from "react-redux";
@@ -933,6 +934,11 @@ function Header(props) {
     }
   }, [props.initialValues.projectName]);
 
+
+
+  
+ 
+
   useEffect(() => {
     if (!window.location.pathname.includes("control-tower")) {
       //console.log("useeffect3");
@@ -948,35 +954,7 @@ function Header(props) {
   const [fourthBreakdown, setFourthBreakdown] = React.useState(null);
   const [openSubUnit, setOpenSubUnit] = React.useState();
 
-  const handlePhaseChange = (panel, phases, index, id) => async (
-    event,
-    isExpanded
-  ) => {
-    if (
-      openPhase !== panel &&
-      projectListData[index].breakdown &&
-      projectListData[index].breakdown.length > 1 &&
-      projectListData[index].breakdown[1].structure &&
-      projectListData[index].breakdown[1].structure[0].url
-    ) {
-      const config = {
-        method: "get",
-        url: `${SSO_URL}/${
-          projectListData[index].breakdown[1].structure[0].url
-        }${id}`,
-        headers: HEADER_AUTH,
-      };
-      const res = await Axios(config);
-      if (res && res.status === 200) {
-        setSecondBreakdown([...res.data.data.results]);
-      }
-    } else {
-      setSecondBreakdown(null);
-    }
-    setChangeClass(!!isExpanded);
-    setPhaseSelect([phases]);
-    setOpenPhase(isExpanded ? panel : false);
-  };
+  
 
   const [openUnit, setOpenUnit] = React.useState();
   const handleUnitChange = (panel, index, id) => async (event, isExpanded) => {
@@ -1136,6 +1114,200 @@ function Header(props) {
     dispatch(breakDownDetails(data));
     handleProjectClose();
   };
+
+const handlePhaseChange = (panel, phases, index, id) => async (
+    event,
+    isExpanded
+  ) => {
+    console.log(panel,"projectPanel")
+    if (
+      openPhase !== panel &&
+      projectListData[index].breakdown &&
+      projectListData[index].breakdown.length > 1 &&
+      projectListData[index].breakdown[1].structure &&
+      projectListData[index].breakdown[1].structure[0].url
+    ) {
+      const config = {
+        method: "get",
+        url: `${SSO_URL}/${
+          projectListData[index].breakdown[1].structure[0].url
+        }${id}`,
+        headers: HEADER_AUTH,
+      };
+      const res = await Axios(config);
+      if (res && res.status === 200) {
+        setSecondBreakdown([...res.data.data.results]);
+      }
+    } else {
+      setSecondBreakdown(null);
+    }
+    setChangeClass(!!isExpanded);
+    setPhaseSelect([phases]);
+    setOpenPhase(isExpanded ? panel : false);
+  };
+  const handleNotificationPhaseChange = async (project,id) => {
+    
+    if (
+      project.breakdown &&
+      project.breakdown.length > 1 &&
+      project.breakdown[1].structure &&
+      project.breakdown[1].structure[0].url
+    ) {
+      const config = {
+        method: "get",
+        url: `${SSO_URL}/${
+          project.breakdown[1].structure[0].url
+        }${id}`,
+        headers: HEADER_AUTH,
+      };
+      console.log("projectNamePhases")
+      const res = await Axios(config);
+      if (res && res.status === 200) {
+        setSecondBreakdown([...res.data.data.results]);
+        console.log(res.data.data.results,"res")
+      }
+    } else {
+      setSecondBreakdown(null);
+    }
+    //setChangeClass(!!isExpanded);
+    //setPhaseSelect([phases]);
+    //setOpenPhase(isExpanded ? panel : false);
+  };
+const handleProjectBreakdownNotification = (
+    projectName,
+    phaseIndex,
+    unitIndex,
+    subUnitIndex,
+    subSubUnitIndex,
+    depth
+  ) => {
+    //console.log(secondBreakdown[unitIndex],"unitIndex")
+    console.log(depth,"depth")
+    const data = [];
+    const temp = [];
+    data.push({
+      depth: "1L",
+      id: projectName.firstBreakdown[phaseIndex].id,
+      label: projectName.breakdown[0].structure[0].name,
+      name: projectName.firstBreakdown[phaseIndex].structureName,
+    });
+    temp.push({
+      breakdownLabel: projectName.breakdown[0].structure[0].name,
+      breakdownValue: projectName.firstBreakdowprojectName
+    }); 
+    console.log(data,"data")
+
+   /*  if (depth === "4L") {
+      data.push({
+        depth: "2L",
+        id: secondBreakdown[unitIndex].id,
+        label: projectName.breakdown[1].structure[0].name,
+        name: secondBreakdown[unitIndex].structureName,
+      });
+      data.push({
+        depth: "3L",
+        id: thirdBreakdown[subUnitIndex].id,
+        label: projectName.breakdown[2].structure[0].name,
+        name: thirdBreakdown[subUnitIndex].structureName,
+      });
+      data.push({
+        depth: "4L",
+        id: fourthBreakdown[subSubUnitIndex].id,
+        label: projectName.breakdown[2].structure[0].name,
+        name: fourthBreakdown[subSubUnitIndex].structureName,
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[1].structure[0].name,
+        breakdownValue: secondBreakdown,
+        selectValue: "",
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[2].structure[0].name,
+        breakdownValue: thirdBreakdown,
+        selectValue: "",
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[3].structure[0].name,
+        breakdownValue: fourthBreakdown,
+  jectName
+      });
+    }
+    if (depth === "3L") {
+      data.push({
+        depth: "2L",
+        id: secondBreakdown[unitIndex].id,
+        label: projectName.breakdown[1].structure[0].name,
+        name: secondBreakdown[unitIndex].structureName,
+      });
+      data.push({
+        depth: "3L",
+        id: thirdBreakdown[subUnitIndex].id,
+        label: projectName.breakdown[2].structure[0].name,
+        name: thirdBreakdown[subUnitIndex].structureName,
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[1].structure[0].name,
+        breakdownValue: secondBreakdown,
+        selectValue: "",
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[2].structure[0].name,
+        breakdownValue: thirdBreakdown,
+        selectValue: "",
+      });
+    } */
+    /* if (depth === "2L") {
+      console.log(secondBreakdown[0].structureName,"data")
+      data.push({
+        depth: "2L",
+        id:secondBreakdown[0].id,
+        label: projectName.breakdown[1].structure[0].name,
+        name: secondBreakdown[0].structureName,
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[1].structure[0].name,
+        breakdownValue: secondBreakdown,
+        selectValue: "",
+      });
+    }
+     */
+
+    localStorage.setItem("selectBreakDown", JSON.stringify(data));
+    dispatch(breakDownDetails(data));
+    setProjectOpen(false);
+  };
+
+  const { search } = useLocation();
+  const query = React.useMemo(() => new URLSearchParams(search), [search])
+  let paramCompanyId = query.get("company")
+  let paramProjectId = query.get("project")
+ 
+  useEffect(() => {
+    let handlePhaseChange = () => {
+      if(paramCompanyId && paramProjectId ){
+        let projectName = JSON.parse(localStorage.getItem("projectName")).projectName
+        handleNotificationPhaseChange(projectName,projectName.firstBreakdown[0].id)
+      }
+    }
+    window.addEventListener("load" , handlePhaseChange)
+    return () => document.removeEventListener('load', handlePhaseChange);
+  },[])
+
+  useEffect(() => {
+    const fetch = async () => {
+      if(paramCompanyId && paramProjectId){
+        let projectName = JSON.parse(localStorage.getItem("projectName")).projectName
+        await handleNotificationPhaseChange(projectName,projectName.firstBreakdown[0].id)
+        let breakDownData  = JSON.parse(localStorage.getItem("selectBreakDown"))
+        console.log(projectName.firstBreakdown[0].id,breakDownData,"projectName nee")
+        projectName.breakdown.map((project,index) => {
+        handleProjectBreakdownNotification(projectName,index,0,null,null,`${index + 1}L`)
+      }) 
+      }
+    }
+    window.addEventListener("load",fetch)
+    return () => document.removeEventListener('load', fetch);
+  },[secondBreakdown])
 
   const isTablet = useMediaQuery("(min-width:768px)");
 

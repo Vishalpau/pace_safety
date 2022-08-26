@@ -1016,6 +1016,7 @@ function PersonalDashboard(props) {
     event,
     isExpanded
   ) => {
+    console.log(panel,"projectPanel")
     if (
       openPhase !== panel &&
       projectListData[index].breakdown &&
@@ -1104,6 +1105,8 @@ function PersonalDashboard(props) {
     subSubUnitIndex,
     depth
   ) => {
+    
+    console.log(depth,"depth")
     const data = [];
     const temp = [];
 

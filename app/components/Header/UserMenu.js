@@ -224,7 +224,6 @@ function UserMenu(props) {
     setIsLoading(true);
   };
   const getSubscribedApps = async (companyId) => {
-    console.log(companyId)
     if (companyId) {
       let subscriptionData = {};
       let data = await api
@@ -361,7 +360,6 @@ function UserMenu(props) {
                   ? JSON.parse(localStorage.getItem("projectName")).projectName
                       .projectName
                   : null
-    console.log(projectName,"projectName")
     let userName = JSON.parse(localStorage.getItem("userDetails")) !== null
                   ? JSON.parse(localStorage.getItem("userDetails")).name
                   : null

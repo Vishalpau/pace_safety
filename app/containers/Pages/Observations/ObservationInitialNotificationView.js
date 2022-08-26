@@ -148,7 +148,6 @@ const ObservationInitialNotificationView = () => {
       history.push("/app/error/");
     } else {
       const result = res.data.data.results;
-      console.log(res.data.data.results, "result");
       setInitialData(result);
       props.fillPayload(result);
       if (result.fkProjectStructureIds != "Not Mentioned") {
@@ -200,7 +199,6 @@ const ObservationInitialNotificationView = () => {
       );
       structName.push(workArea.data.data.results[0].structureName);
     }
-    console.log(workArea,"")
 
     setProjectStructName(structName);
   };
@@ -284,7 +282,6 @@ const ObservationInitialNotificationView = () => {
       fetchInitialiObservation(fkCompanyId,projectId);
       fetchTags();
     }
-    console.log(initialData,"initial initial")
   }, []);
 
     const fkCompanyId =

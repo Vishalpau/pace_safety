@@ -261,14 +261,13 @@ const ObservationSummary = () => {
         projects[i].breakdown[0].structure &&
         projects[i].breakdown[0].structure[0].url
       ) {
-        console.log(projects[i].breakdown[0].structure[0].url,"project")
+        
         const config = {
           method: "get",
           url: `${SSO_URL}/${projects[i].breakdown[0].structure[0].url}`,
           headers: HEADER_AUTH,
         };
         const res = await axios(config);
-        console.log(res,"res")
         if (res && res.status && res.status === 200) {
           projects[i].firstBreakdown = res.data.data.results;
           data.push(projects[i]);
@@ -297,7 +296,6 @@ const ObservationSummary = () => {
         const data = await api
           .get(`${SELF_API}${companyId}/`)
           .then((res) => {
-            console.log(res,"resiii")
             const rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(
               (sub) => sub.appCode.toLowerCase() == APPCODE
             )[0].roles[0].aclUrl;
@@ -314,7 +312,6 @@ const ObservationSummary = () => {
             console.log(error);
           });
         // redirectionAccount()
-        console.log(data,"data")
 
         const modules = data.map((subscription) => subscription.modules);
         let modulesState = [];
@@ -329,7 +326,6 @@ const ObservationSummary = () => {
               if (mod.subscriptionStatus == "active") {
                 temp.push(mod.moduleCode);
                 // this.setState({ codes: temp })
-                console.log(temp,"temp")
                 return temp;
               }
             });
@@ -346,7 +342,6 @@ const ObservationSummary = () => {
   };
 
   const handleCompanyName = async (company, companyId, name) => {
-    console.log(company.subscriptions)
     const hosting = company.subscriptions.filter(
         (subscription) => subscription.appCode.toLowerCase() == APPCODE
       )[0].hostings[0].apiDomain;
@@ -392,13 +387,10 @@ const ObservationSummary = () => {
 
       } else {
         const result = res.data.data.results;
-        console.log(result,"results")
         await setInitialData(result);
       }
       
-      console.log(companeyData,"companeyData")
       dispatch(company(companeyData));
-      console.log(companeyData,"companeyData")
       dispatch(projectName(selectedProject));
   } 
 
