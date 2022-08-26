@@ -1204,6 +1204,11 @@ function xflha(props) {
             bookmarkTrueFalse: item.bookmark,
             getBookmarkView: assessments,
           }}
+          printFields={{
+            typeOfModule: "FLHA",
+            printUrl: `api/v1/flhas/${item.id}/print/`,
+            number: item.flhaNumber,
+          }}
           RefreshBookmarkData={fetchData}
           handleVisibility={() => handleVisibility()}
           handleVisibilityComments={() => handleVisibilityComments()}

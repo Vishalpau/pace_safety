@@ -20,8 +20,6 @@ import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidatio
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
 
-
-
 const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
@@ -36,9 +34,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AdditionalDetails = () => {
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+  // const [selectedDate, setSelectedDate] = React.useState(
+  //   new Date("2014-08-18T21:11:54")
+  // );
   const [error, setError] = React.useState({});
 
   const { id } = useParams();
