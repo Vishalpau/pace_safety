@@ -5,10 +5,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDateTimePicker,
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker, } from "@material-ui/pickers";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -133,9 +130,13 @@ const ReportingAndNotification = (props) => {
     },
   ]);
 
+  // useEffect(() => {
+  //   console.log(evidanceForm, 'evidenceform');
+  // }, [evidanceForm])
+
   const { id } = useParams();
   const history = useHistory();
-  const ref = useRef();
+  // const ref = useRef();
   const dispatch = useDispatch();
   let reportedToFilterData = [];
   const filterReportedByName = [];
@@ -187,8 +188,7 @@ const ReportingAndNotification = (props) => {
 
     // put call for update incident Details
     // try {
-    api
-      .put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`, temp)
+    api.put(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`, temp)
       .catch((err) => {
         setIsnext(true);
         history.push("/app/pages/error");
@@ -208,8 +208,7 @@ const ReportingAndNotification = (props) => {
         const reportId = reportedToObj[key].id;
         setIsnext(false);
         // try {
-        api
-          .delete(`/api/v1/incidents/${id}/reports/${reportId}/`)
+        api.delete(`/api/v1/incidents/${id}/reports/${reportId}/`)
           .catch((err) => {
             setIsnext(true);
             history.push("/app/pages/error");
@@ -278,22 +277,18 @@ const ReportingAndNotification = (props) => {
                 }
               }
               // try {
-              api
-                .put(
-                  `api/v1/incidents/${localStorage.getItem(
-                    "fkincidentId"
-                  )}/evidences/${evidanceForm[key].id}/`,
-                  {
-                    evidenceCategory: "Initial Evidence",
-                    evidenceCheck: "Yes",
-                    evidenceNumber: "string",
-                    evidenceRemark: evidanceForm[key].evidenceRemark,
-                    status: "Active",
-                    createdBy: parseInt(userId),
-                    fkIncidentId: localStorage.getItem("fkincidentId"),
-                    id: evidanceForm[key].id,
-                  }
-                )
+              api.put(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/evidences/${evidanceForm[key].id}/`,
+                {
+                  evidenceCategory: "Initial Evidence",
+                  evidenceCheck: "Yes",
+                  evidenceNumber: "string",
+                  evidenceRemark: evidanceForm[key].evidenceRemark,
+                  status: "Active",
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId"),
+                  id: evidanceForm[key].id,
+                }
+              )
                 .catch((err) => {
                   setIsnext(true);
                   history.push("/app/pages/error");
@@ -353,7 +348,6 @@ const ReportingAndNotification = (props) => {
           }
         }
       } else {
-        console.log("trueeee");
         setIsnext(true);
       }
       // check initial evidance
@@ -395,18 +389,14 @@ const ReportingAndNotification = (props) => {
             const name = unique[key];
 
             // try {
-            api
-              .post(
-                `/api/v1/incidents/${localStorage.getItem(
-                  "fkincidentId"
-                )}/reports/`,
-                {
-                  reportTo: name,
-                  createdBy: parseInt(userId),
-                  notifyTo: stringNotifyList,
-                  fkIncidentId: localStorage.getItem("fkincidentId") || id,
-                }
-              )
+            api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/reports/`,
+              {
+                reportTo: name,
+                createdBy: parseInt(userId),
+                notifyTo: stringNotifyList,
+                fkIncidentId: localStorage.getItem("fkincidentId") || id,
+              }
+            )
               .then((res) => {
                 const viewMode = {
                   initialNotification: true,
@@ -431,7 +421,7 @@ const ReportingAndNotification = (props) => {
           }
 
           // set in reportTo otherData
-          await console.log(status, "status");
+          // await console.log(status, "status");
 
           // if (status === 201) {
           //   const viewMode = {
@@ -566,11 +556,9 @@ const ReportingAndNotification = (props) => {
       .get("/api/v1/lists/20/value")
       .then((res) => {
         const result = res.data.data.results;
-
         for (const key in result) {
           reportedToFilterData.push(result[key].inputValue);
         }
-
         setReportableTo(result);
       })
       .catch((error) => {
@@ -581,17 +569,14 @@ const ReportingAndNotification = (props) => {
   // fetch reportList
   const fetchReportsDataList = async () => {
     await fetchReportableTo();
-    await api
-      .get(`/api/v1/incidents/${id}/reports/`)
+    await api.get(`/api/v1/incidents/${id}/reports/`)
       .then((res) => {
         const result = res.data.data.results;
-
         if (result.length > 0) {
           if (result[0].notifyTo) {
             const getNotifyTo = result[0].notifyTo.split(",");
             setNotifyToList(getNotifyTo);
           }
-
           const reportToData = [];
           for (const key in result) {
             reportToData.push(result[key].reportTo);
@@ -603,12 +588,9 @@ const ReportingAndNotification = (props) => {
               }
             }
           }
-
           setReportedToObj(result);
-
           setForm({ ...form, reportedto: reportToData });
         }
-
         setIsLoading(true);
       })
       .catch((error) => {
@@ -711,8 +693,7 @@ const ReportingAndNotification = (props) => {
 
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
-    await api
-      .get(`/api/v1/incidents/${id}/evidences/`)
+    await api.get(`/api/v1/incidents/${id}/evidences/`)
       .then((allEvidence) => {
         if (allEvidence.status === 200) {
           const data = allEvidence.data.data.results.filter(
@@ -742,8 +723,8 @@ const ReportingAndNotification = (props) => {
         props.projectName.breakDown.length > 0
           ? props.projectName.breakDown
           : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-          ? JSON.parse(localStorage.getItem("selectBreakDown"))
-          : null;
+            ? JSON.parse(localStorage.getItem("selectBreakDown"))
+            : null;
       let struct = "";
       for (const i in selectBreakdown) {
         struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -864,33 +845,29 @@ const ReportingAndNotification = (props) => {
                       Notification to be sent?
                     </FormLabel>
                     <FormGroup>
-                      {console.log(
-                        notificationSentValue,
-                        "notificationSentValue"
-                      )}
                       {notificationSentValue.length != 0
                         ? notificationSentValue.map((value) => (
-                            <FormControlLabel
-                              // id={index}
-                              // key={index}
-                              value={value.id}
-                              control={<Checkbox name={value.roleName} />}
-                              checked={notifyToList.includes(
-                                value.id.toString()
-                              )}
-                              label={value.roleName}
-                              onChange={(e) => {
-                                handelNotifyTo(e, value.id.toString());
-                              }}
-                            />
-                            //     <FormControlLabel
-                            //     className="selectLabel"
-                            //     control={<Checkbox name={value.roleName} />}
-                            //     label={value.roleName}
-                            //     checked={notifyToList.notifyTo && notifyToList.notifyTo !== null && notifyToList.notifyTo.includes(value.id.toString())}
-                            //     onChange={async (e) => handelNotifyTo(e, value.id.toString())}
-                            // />
-                          ))
+                          <FormControlLabel
+                            // id={index}
+                            // key={index}
+                            value={value.id}
+                            control={<Checkbox name={value.roleName} />}
+                            checked={notifyToList.includes(
+                              value.id.toString()
+                            )}
+                            label={value.roleName}
+                            onChange={(e) => {
+                              handelNotifyTo(e, value.id.toString());
+                            }}
+                          />
+                          //     <FormControlLabel
+                          //     className="selectLabel"
+                          //     control={<Checkbox name={value.roleName} />}
+                          //     label={value.roleName}
+                          //     checked={notifyToList.notifyTo && notifyToList.notifyTo !== null && notifyToList.notifyTo.includes(value.id.toString())}
+                          //     onChange={async (e) => handelNotifyTo(e, value.id.toString())}
+                          // />
+                        ))
                         : null}
                     </FormGroup>
                     {error && error.notifyTo && (
@@ -916,7 +893,7 @@ const ReportingAndNotification = (props) => {
                         item
                         md={
                           typeof item.files === "array" ||
-                          typeof item.files === "object"
+                            typeof item.files === "object"
                             ? 4
                             : 6
                         }
@@ -946,21 +923,24 @@ const ReportingAndNotification = (props) => {
                           }}
                         />
                       </Grid>
-                      {typeof item.files === "array" ||
-                      typeof item.files === "object" ? (
-                        <>
-                          <Grid item md={2}>
-                            {item.files.map((file) => {
-                              return (
-                                <Attachment
-                                  type={file.fileName}
-                                  value={file.fileName}
-                                />
-                              );
-                            })}
-                          </Grid>
-                        </>
-                      ) : null}
+                      {item.files ?
+                        typeof item.files === "array" ||
+                          typeof item.files === "object" ? (
+                          <>
+                            <Grid item md={2}>
+                              {item.files.map((file) => {
+                                return (
+                                  <Attachment
+                                    type={file.fileName}
+                                    value={file.fileName}
+                                  />
+                                );
+                              })}
+                            </Grid>
+                          </>
+                        )
+                          : null
+                        : null}
                       <Grid item xs={8} md={4}>
                         <TextField
                           id="evidanceRemark"
@@ -1041,11 +1021,11 @@ const ReportingAndNotification = (props) => {
                       incidentsListData.supervisorByName === ""
                         ? ""
                         : superVisorNameList.filter(
-                            (item) =>
-                              item.name === incidentsListData.supervisorByName
-                          ).length > 0
-                        ? incidentsListData.supervisorByName
-                        : "other"
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
+                          ? incidentsListData.supervisorByName
+                          : "other"
                     }
                     onChange={async (e) => {
                       await setSupervisorName(e.target.value);
@@ -1067,11 +1047,11 @@ const ReportingAndNotification = (props) => {
                   defaultValue={
                     superVisorNameList.length > 0
                       ? superVisorNameList
-                          .slice(0, -1)
-                          .filter(
-                            (item) =>
-                              item.name === incidentsListData.supervisorByName
-                          ).length > 0
+                        .slice(0, -1)
+                        .filter(
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
                         ? ""
                         : incidentsListData.supervisorByName
                       : ""
@@ -1080,9 +1060,9 @@ const ReportingAndNotification = (props) => {
                     supervisorName === ""
                       ? true
                       : superVisorNameList
-                          .slice(0, -1)
-                          .filter((item) => item.name === supervisorName)
-                          .length > 0
+                        .slice(0, -1)
+                        .filter((item) => item.name === supervisorName)
+                        .length > 0
                   }
                   className={classes.formControl}
                   onChange={(e) => {
@@ -1140,9 +1120,9 @@ const ReportingAndNotification = (props) => {
                   disabled={
                     reportedByNameList.length > 0
                       ? reportedByNameList
-                          .slice(0, -1)
-                          .filter((item) => item.name === reportedByName)
-                          .length > 0
+                        .slice(0, -1)
+                        .filter((item) => item.name === reportedByName)
+                        .length > 0
                       : true
                   }
                   onChange={(e) => {
@@ -1168,7 +1148,7 @@ const ReportingAndNotification = (props) => {
                     disableFuture
                     disabled
                     InputProps={{ readOnly: true }}
-                    onClick={(e) => setIsDateShow(true)}
+                    // onClick={(e) => setIsDateShow(true)}
                     open={isDateShow}
                     onClose={(e) => setIsDateShow(false)}
                   />

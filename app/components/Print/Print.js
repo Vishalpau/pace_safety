@@ -62,7 +62,9 @@ const Print = (props) => {
     a.document.write(divContents);
     a.document.write("</body></html>");
     a.document.close();
-    a.print();
+    setTimeout(() => {
+      a.print();
+    }, 500);
   };
 
   const printOutTheValue = async () => {
