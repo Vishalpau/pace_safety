@@ -7,6 +7,9 @@ import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import "../../styles/custom/customheader.css";
+import DateFormat from "../../components/Date/DateFormat";
+import { useHistory, useParams } from "react-router";
+import moment from "moment";
 
 // List
 // import List from "@material-ui/core/List";
@@ -14,8 +17,6 @@ import "../../styles/custom/customheader.css";
 // import ListItemIcon from "@material-ui/core/ListItemIcon";
 // import ListItemText from "@material-ui/core/ListItemText";
 // import ListSubheader from "@material-ui/core/ListSubheader";
-import { useHistory, useParams } from "react-router";
-import moment from "moment";
 
 // Icons
 // import Print from "@material-ui/icons/Print";
@@ -215,7 +216,8 @@ function Comments() {
               className="commentTimeDateTitle"
               align="right"
             >
-              {moment(item.updatedAt).format("MMMM Do YYYY, h:mm a")}
+              {/* {moment(item.updatedAt).format("MMMM Do YYYY, h:mm a")} */}
+              {DateFormat(item.updatedAt, true)}
             </Typography>
           </Grid>
           <Grid item md={9} sm={8} xs={12} className="commentContentSetion">

@@ -17,6 +17,9 @@ import { handleSummaryPush } from "../CardFunctions"; // Imported functions from
 const useStyles = makeStyles((theme) => Styles());
 
 const CardBody = (props) => {
+
+  console.log(props)
+
   const classes = useStyles();
 
   // Mapping the labels and its values of Card Body
