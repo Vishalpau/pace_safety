@@ -57,6 +57,7 @@ import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBloc
 
 import api from "../../utils/axios";
 import Delete from "../Delete/Delete";
+import DateFormat from "../../components/Date/DateFormat";
 const Loader = lazy(() => import("../Pages/Loader.js"));
 
 const useStyles = makeStyles((theme) => ({
@@ -192,7 +193,7 @@ function Comments() {
               className="commentTimeDateTitle"
               align="right"
             >
-              {moment(item.updatedAt).format("MMMM Do YYYY, h:mm a")}
+              {DateFormat(item.updatedAt)}
             </Typography>
           </Grid>
           <Grid item md={9} sm={8} xs={12} className="commentContentSetion">
@@ -380,8 +381,9 @@ function Comments() {
                   </span>
                   <span item xs={1} className="verticalSepareterLine" />
                   <Delete
-                    deleteUrl={`/api/v1/comments/${module}/${moduleId}/${item.id
-                      }/`}
+                    deleteUrl={`/api/v1/comments/${module}/${moduleId}/${
+                      item.id
+                    }/`}
                     afterDelete={getComments}
                     axiosObj={api}
                     loader={setIsLoading}
@@ -483,7 +485,7 @@ function Comments() {
                 className="commentTimeDateTitle"
                 align="right"
               >
-                {moment(ad.updatedAt).format("MMMM Do YYYY, h:mm a")}
+                {DateFormat(ad.updatedAt)}
               </Typography>
             </Grid>
             <Grid item md={9} sm={8} xs={12} className="commentContentSetion">
@@ -735,23 +737,23 @@ function Comments() {
                 : "No Comments "}
               {/* </Grid> */}
               {(sortData === "Newest-one" || sortData === "Newest-two") && (
-                  <Grid
-                    item
-                    md={3}
-                    sm={4}
-                    xs={12}
-                    className={classes.commentMore}
+                <Grid
+                  item
+                  md={3}
+                  sm={4}
+                  xs={12}
+                  className={classes.commentMore}
+                >
+                  <Typography
+                    variant="h6"
+                    className="commentMoreLinkTitle"
+                    align="right"
+                    onClick={() => setSortData("")}
                   >
-                    <Typography
-                      variant="h6"
-                      className="commentMoreLinkTitle"
-                      align="right"
-                      onClick={() => setSortData("")}
-                    >
-                      <Link>View All Comments</Link>
-                    </Typography>
-                  </Grid>
-                )}
+                    <Link>View All Comments</Link>
+                  </Typography>
+                </Grid>
+              )}
               {/* </Grid> */}
             </Grid>
             {/* </Grid> */}
