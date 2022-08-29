@@ -596,6 +596,16 @@ const ObservationInitialNotificationView = (props) => {
                 </Grid>
                 <Grid item md={12}>
                   <FormLabel component="legend" className="viewLabel">
+                    Addressed By?
+                  </FormLabel>
+                  <Typography className="viewLabelValue">
+                    {initialData.isSituationAddressed === "Yes"
+                      ? initialData.isAddressedBy
+                      : "-"}
+                  </Typography>
+                </Grid>
+                <Grid item md={12}>
+                  <FormLabel component="legend" className="viewLabel">
                     Details of immediate actions taken
                   </FormLabel>
                   <Typography className="viewLabelValue">
@@ -902,7 +912,8 @@ const ObservationInitialNotificationView = (props) => {
               <Grid container spacing={3}>
                 <Grid item md={12} sm={12} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                    Recognition
+                    Confirm if you want to nominate a co-worker for employee
+                    recognition.
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.personRecognition
@@ -912,7 +923,8 @@ const ObservationInitialNotificationView = (props) => {
                 </Grid>
                 <Grid item md={12} sm={12} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                    Notification sent to Safety Management
+                    Is this observation a high-risk item that needs to be sent
+                    to Management?
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.isNotifiedToSupervisor
