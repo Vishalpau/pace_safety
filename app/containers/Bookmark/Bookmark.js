@@ -161,7 +161,7 @@ const Bookmark = (props) => {
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={open === 1 || open === 2 || open === 3 || open === 4}
-        autoHideDuration={800}
+        autoHideDuration={1000}
         onClose={handleClose}
       >
         <Alert
