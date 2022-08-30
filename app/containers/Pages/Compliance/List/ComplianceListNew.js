@@ -424,8 +424,6 @@ const useStyles = makeStyles((theme) => ({
 function ComplianceListNew(props) {
   // states
   const history = useHistory();
-  const classes = useStyles();
-
   const [allComplianceData, setAllComplianceData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [pageCount, setPageCount] = useState(0);
@@ -438,25 +436,25 @@ function ComplianceListNew(props) {
     setValue(newValue);
   };
 
-  // const options = {
-  //   filterType: "dropdown",
-  //   responsive: "vertical",
-  //   print: false,
-  //   filter: false,
-  //   search: false,
-  //   download: false,
-  //   viewColumns: false,
-  //   selectableRowsHideCheckboxes: false,
-  //   selectableRowsHeader: false,
-  //   selectableRowsOnClick: false,
-  //   viewColumns: false,
-  //   selectableRows: false,
-  //   rowsPerPage: 10,
-  //   page: 0,
-  // };
+  const options = {
+    filterType: "dropdown",
+    responsive: "vertical",
+    print: false,
+    filter: false,
+    search: false,
+    download: false,
+    viewColumns: false,
+    selectableRowsHideCheckboxes: false,
+    selectableRowsHeader: false,
+    selectableRowsOnClick: false,
+    viewColumns: false,
+    selectableRows: false,
+    rowsPerPage: 10,
+    page: 0,
+  };
 
   // method to push to new component
-  const handleSummaryPush = async (item, /*commentPayload*/) => {
+  const handleSummaryPush = async (item /*commentPayload*/) => {
     let id = item;
     localStorage.setItem("fkComplianceId", id);
     history.push({
@@ -471,13 +469,15 @@ function ComplianceListNew(props) {
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
   //Method to open ownership modal when we click on avatar
-  // const handleMyUserPClickOpen = () => {
-  //   setMyUserPOpen(true);
-  // };
+  const handleMyUserPClickOpen = () => {
+    setMyUserPOpen(true);
+  };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
   };
+
+  const classes = useStyles();
 
   //method to fetch all compliance data filetrs
   const fetchAllComplianceData = async () => {
@@ -523,18 +523,27 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else if (props.compliance === "Bookmark List") {
         const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-        const res = await api
-          .get(
-            `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
-          )
-          .then((res) => {
-            setAllComplianceData(res.data.data.results.results);
-            setTotalData(res.data.data.results.count);
-            setPageData(res.data.data.results.count / 25);
-            let pageCount = Math.ceil(res.data.data.results.count / 25);
-            setPageCount(pageCount);
-            setIsLoading(false);
-          });
+        const res = await api.get(
+          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+        );
+        if (res.data.data) {
+          console.log(res, "this is res");
+          const result = res.data.data.results.results;
+          setAllComplianceData(result);
+          setTotalData(res.data.data.results.count);
+          setPageData(res.data.data.results.count / 25);
+          let pageCount = Math.ceil(res.data.data.results.count / 25);
+          setPageCount(pageCount);
+          setIsLoading(false);
+        } else if (res.data.data === undefined) {
+          console.log(res, "this is res");
+          setAllComplianceData(res.data.data);
+          setTotalData(res.data.data.data.results.count);
+          setPageData(res.data.data.data.results.count / 25);
+          let pageCount = Math.ceil(res.data.data.data.results.count / 25);
+          setPageCount(pageCount);
+          setIsLoading(false);
+        }
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${
@@ -777,8 +786,6 @@ function ComplianceListNew(props) {
     return (
       <>
         <CardView
-          redirectUrl={`/app/comments/compliance/${value.id}`}
-          commentPayload={commentPayload}
           cardTitle={value.auditType}
           avatar={value.avatar}
           username={value.username}
@@ -882,8 +889,8 @@ function ComplianceListNew(props) {
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
-          isLoading={isCardLoading}
-          setIsLoading={(val) => setIsCardLoading(val)}
+          isLoading={isLoading}
+          setIsLoading={(val) => setIsLoading(val)}
           fetchAllData={fetchAllComplianceData}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}
@@ -899,7 +906,9 @@ function ComplianceListNew(props) {
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
-              {allComplianceData.length > 0 ? (
+              {isLoading ? (
+                <Loader />
+              ) : allComplianceData.length > 0 ? (
                 allComplianceData.map((value, index) => (
                   <AllCardData value={value} />
                 ))

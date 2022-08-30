@@ -97,6 +97,7 @@ function Pickvalues(props) {
     await setPickValuesData(allPickvalues.data.data.results);
     await setForm({
       ...form,
+      groupInputBy:"none",
       fkCompanyId: allPickvalues.data.data.results[0].fkCompanyId,
       parentListValue: allPickvalues.data.data.results[0].parentListValue,
     });
@@ -140,7 +141,7 @@ function Pickvalues(props) {
   const [form, setForm] = useState({
     fkCompanyId: localStorage.getItem('company_id'),
     fkPickListId: listname,
-    groupInputBy: '',
+    groupInputBy: 'none',
     inputLabel: '',
     inputValue: '',
     isSelected: 0,
@@ -177,7 +178,7 @@ function Pickvalues(props) {
   const add_new = () => {
     if (!validate()) { return; }
     // Post form data in API
-    api.post('api/v1/lists/' + listname + '/value', form).then(response => {
+    api.post('api/v1/lists/' + listname + '/value', {...form,groupInputBy:"none"}).then(response => {
       const update = [...pickValues];
       update.push(response.data.data.results);
       setPickValues(update);
@@ -242,22 +243,6 @@ function Pickvalues(props) {
       </td>
       <td>
         {listItem.parentListValue}
-        {/* <Editor
-          type="text"
-          id={listItem.id}
-          value={listItem.parentListValue}
-          column="parent"
-          save={save}
-        /> */}
-      </td>
-      <td>
-        <Editor
-          type="text"
-          id={listItem.id}
-          value={listItem.groupInputBy ? listItem.groupInputBy : 'None'}
-          column="group_by"
-          save={save}
-        />
       </td>
       <td>
         <Button onClick={() => handleDelete(listItem.id)}>
@@ -365,7 +350,6 @@ function Pickvalues(props) {
                 <th>Database Value</th>
                 <th>Is Selected</th>
                 <th>Parent</th>
-                <th>Group</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -426,7 +410,7 @@ function Pickvalues(props) {
                   </Select>
                 </td>
                 <td>{form.parentListValue}</td>
-                <td>
+                {/* <td>
                   <TextField
                     variant="outlined"
                     rows="1"
@@ -440,7 +424,7 @@ function Pickvalues(props) {
                       });
                     }}
                   />
-                </td>
+                </td> */}
                 <td>
                   <Button
                     variant="contained"

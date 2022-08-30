@@ -317,7 +317,26 @@ const ObservationCorrectiveActionView = () => {
                     </Grid>
                   </Grid>
                 ) : (
-                  "You do not have permissions to view actions."
+                  
+                  <Grid container direction="column" spacing={2}>
+                    <Grid item  >
+                      <Typography
+                        variant="h6"
+                        gutterBottom
+                        className={classes.labelName}
+                      >
+                        Are there any corrective actions to be taken?
+                      </Typography>
+                      <Typography className={classes.labelValue}>
+                        {initialData.isCorrectiveActionTaken
+                          ? initialData.isCorrectiveActionTaken
+                          : "-"}
+                      </Typography>
+                    </Grid>
+                    <Grid item  >
+                      "You do not have permissions to view actions."
+                    </Grid>
+                  </Grid>
                 )}
               </Paper>
             </Grid>
