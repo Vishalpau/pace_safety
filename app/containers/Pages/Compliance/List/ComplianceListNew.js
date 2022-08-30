@@ -717,6 +717,7 @@ function ComplianceListNew(props) {
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     const deleteItem = {
       fkCompanyId: value.fkCompanyId,
@@ -901,15 +902,13 @@ function ComplianceListNew(props) {
 
   return (
     <>
-      {console.log(allComplianceData, "this is allComplianceData")}
       <Box>
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
               {isLoading ? (
                 <Loader />
-              ) : allComplianceData !== undefined &&
-                allComplianceData.length > 0 ? (
+              ) : allComplianceData.length > 0 ? (
                 allComplianceData.map((value, index) => (
                   <AllCardData value={value} />
                 ))

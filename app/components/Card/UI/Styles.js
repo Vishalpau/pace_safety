@@ -120,6 +120,16 @@ const Styles = (theme) => ({
   commentLink: {
     marginLeft: "2px",
     cursor: "pointer",
+    "&:hover": {
+      textDecoration: 'none',
+    }
+  },
+  commentTextLink: {
+    color: '#06425c',
+    "&:hover": {
+      textDecoration: 'underline',
+      cursor: 'pointer'
+    }
   },
   cardContentSection: {
     position: "relative",

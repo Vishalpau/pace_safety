@@ -14,6 +14,7 @@ import Bookmark from "../../../containers/Bookmark/Bookmark";
 import Styles from "./Styles";
 import { staticLabels } from "../CardConstants";
 import Print from "../../Print/Print";
+import { useHistory } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme) => Styles({
 }));
 
 const CardFooter = (props) => {
+
+  const history = useHistory();
+
   const classes = useStyles();
 
   // Delete component props
@@ -72,6 +76,13 @@ const CardFooter = (props) => {
     props.RefreshBookmarkData();
   };
 
+  const handlePushData = (commentPayload, redirectUrl) => {
+    history.push({
+      state: commentPayload,
+      pathname: redirectUrl
+    })
+  }
+
   return (
     <>
       <CardActions className={classes.width100}>
@@ -96,16 +107,17 @@ const CardFooter = (props) => {
               variant="body1"
               display="inline"
               color="textPrimary"
-              className={classes.mLeft}
+              className={classes.commentTextLink}
+              onClick={() => props.handleVisibilityComments()}
             >
               <InsertCommentOutlinedIcon className={classes.mright5} />
               {staticLabels.comment}:{" "}
             </Typography>
             <Link
-              onClick={() => props.handleVisibilityComments()}
               color="secondary"
               aria-haspopup="true"
               className={classes.commentLink}
+              onClick={() => handlePushData(props.commentPayload, props.redirectUrl)}
             >
               {props.commentsCount}
             </Link>

@@ -467,8 +467,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -481,8 +481,7 @@ function JhaPackage(props) {
 
     if (props.assessment === "My Assessments") {
       const res = await api.get(
-        `api/v1/jhas/?search=${
-          props.search
+        `api/v1/jhas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`
       );
 
@@ -519,8 +518,7 @@ function JhaPackage(props) {
       }
     } else {
       const res = await api.get(
-        `api/v1/jhas/?search=${
-          props.search
+        `api/v1/jhas/?search=${props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`
       );
 
@@ -545,8 +543,8 @@ function JhaPackage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -619,6 +617,7 @@ function JhaPackage(props) {
     const [hiddenn, setHiddenn] = useState(false);
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     let deleteItem = {
       fkCompanyId: item.fkCompanyId,
@@ -692,6 +691,8 @@ function JhaPackage(props) {
       <Grid className={classes.marginTopBottom}>
         <div className="gridView">
           <CardView
+            redirectUrl={`/app/comments/jha/${item.id}`}
+            commentPayload={commentPayload}
             cardTitle={item.description}
             avatar={item.avatar}
             username={item.username}
@@ -801,8 +802,8 @@ function JhaPackage(props) {
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
-          isLoading={isLoading}
-          setIsLoading={(val) => setIsLoading(val)}
+          isLoading={isCardLoading}
+          setIsLoading={(val) => setIsCardLoading(val)}
           fetchAllData={fetchData}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}
