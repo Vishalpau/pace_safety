@@ -970,6 +970,7 @@ function Actions(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
+    console.log(item.flag,"item")
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
@@ -1080,6 +1081,7 @@ function Actions(props) {
             noBtn: "No",
             dataLength: allInitialData.length,
           }}
+          isFlagPresent={item.flag > 0 ? true : false}
           printFields={{
             typeOfModule: "Observation",
             printUrl: `api/v1/observations/${item.id}/print/`,

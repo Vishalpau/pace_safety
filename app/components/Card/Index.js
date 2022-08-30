@@ -158,6 +158,7 @@ const CardView = (props) => {
           commentsCount={props.commentsCount} // Comments counts
           checkDeletePermission={props.checkDeletePermission} // Check delete permission
           deleteFields={props.deleteFields} // Delete component fields
+          isFlagPresent={props.isFlagPresent}
           printFields={props.printFields ? props.printFields : ""}
           bookmarkFields={props.bookmarkFields ? props.bookmarkFields : ""}
           handleVisibilityComments={() => {
