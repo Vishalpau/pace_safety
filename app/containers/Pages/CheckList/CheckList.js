@@ -214,7 +214,7 @@ const save = (text, column, id) => {
                   <TableCell className={classes.tabelBorder} style={{ width: '80px' }}>{value.checklistId}</TableCell>
                   {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
                   <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
-                  <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
+                  {/* <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell> */}
                   <TableCell className={classes.tabelBorder}>
                     <Editor
                           type="text"
