@@ -799,7 +799,6 @@ function Header(props) {
         }
       });
     } else {
-      console.log(breakDownData);
       const name = temp[index].breakdownValue.map(async (item) => {
         if (item.id === value) {
           await setSelectBreakDown([
@@ -893,7 +892,6 @@ function Header(props) {
     }
   };
 
-  // useEffect(() => console.log(breakDownData), [breakDownData]);
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])
@@ -1158,7 +1156,7 @@ const handlePhaseChange = (panel, phases, index, id) => async (
     setOpenPhase(isExpanded ? panel : false);
   };
   const handleNotificationPhaseChange = async (project,id) => {
-    
+    console.log(id,"project id")
     if (
       project.breakdown &&
       project.breakdown.length > 1 &&
@@ -1176,8 +1174,9 @@ const handlePhaseChange = (panel, phases, index, id) => async (
       const res = await Axios(config);
       if (res && res.status === 200) {
         setSecondBreakdown([...res.data.data.results]);
+        console.log(res.data.data.results,"project res")
         return [...res.data.data.results]
-        console.log(res.data.data.results,"res")
+        
       }
     } else {
       setSecondBreakdown(null);
@@ -1192,10 +1191,10 @@ const handleProjectBreakdownNotification = async (
     unitIndex,
     subUnitIndex,
     subSubUnitIndex,
-    depth
+    depth,
+    levelId
   ) => {
-    //console.log(secondBreakdown[unitIndex],"unitIndex")
-    console.log(depth,"depth")
+    console.log("project hello")
     const data = [];
     const temp = [];
     data.push({
@@ -1269,8 +1268,7 @@ const handleProjectBreakdownNotification = async (
       });
     } 
 
-    let secondBreakdown  = await handleNotificationPhaseChange(projectName,projectName.firstBreakdown[0].id)
-    console.log(secondBreakdown,"secondBreakdown")
+    let secondBreakdown  = await handleNotificationPhaseChange(projectName,levelId)
     if (depth === "2L") {
       console.log(secondBreakdown,"data second")
       data.push({
@@ -1285,8 +1283,8 @@ const handleProjectBreakdownNotification = async (
         selectValue: "",
       });
     }
-    
     console.log(data,"data")
+    setBreakDownData(data)
     localStorage.setItem("selectBreakDown", JSON.stringify(data));
     dispatch(breakDownDetails(data));
     setProjectOpen(false);
@@ -1296,33 +1294,109 @@ const handleProjectBreakdownNotification = async (
   const query = React.useMemo(() => new URLSearchParams(search), [search])
   let paramCompanyId = query.get("company")
   let paramProjectId = query.get("project")
- 
-  /* useEffect(() => {
-    let handlePhaseChange = () => {
-      if(paramCompanyId && paramProjectId ){
-        let projectName = JSON.parse(localStorage.getItem("projectName")).projectName
-        handleNotificationPhaseChange(projectName,projectName.firstBreakdown[0].id)
+  let projectStructureId = query.get("projectStructure")
+
+  
+
+  const fetchPhaseDataNoti = async (projects) => {
+  
+    const data = [];
+    for (let i = 0; i < projects.length; i++) {
+      if (
+        projects[i].breakdown &&
+        projects[i].breakdown.length > 0 &&
+        projects[i].breakdown[0].structure &&
+        projects[i].breakdown[0].structure[0].url
+      ) {
+        
+        const config = {
+          method: "get",
+          url: `${SSO_URL}/${projects[i].breakdown[0].structure[0].url}`,
+          headers: HEADER_AUTH,
+        };
+        const res = await Axios(config);
+        if (res && res.status && res.status === 200) {
+          projects[i].firstBreakdown = res.data.data.results;
+          data.push(projects[i]);
+        } else {
+          projects[i].firstBreakdown = [];
+          data.push(projects[i]);
+        }
+      } else {
+        projects[i].firstBreakdown = [];
+        data.push(projects[i]);
       }
     }
-    window.addEventListener("storage" , handlePhaseChange)
-    return () => document.removeEventListener('storage', handlePhaseChange);
-  },[]) */
+    return data;
+  };
 
-   useEffect(() => {
-    const fetch = () => {
+  useEffect(() => {
+    const fetch = async () => {
       if(paramCompanyId && paramProjectId){
-        let projectName = JSON.parse(localStorage.getItem("projectName")).projectName
-        //handleNotificationPhaseChange(projectName,projectName.firstBreakdown[0].id)
-        let breakDownData  = JSON.parse(localStorage.getItem("selectBreakDown"))
-        console.log(projectName.firstBreakdown[0].id,breakDownData,"projectName nee")
-        projectName.breakdown.map((project,index) => {
-        handleProjectBreakdownNotification(projectName,index,0,null,null,`${index + 1}L`)
-      }) 
+        const projectLevels = projectStructureId.split(":")
+        console.log(projectLevels,"projectStructureId")
+
+        //let projectName = JSON.parse(localStorage.getItem("projectName")).projectName
+
+        //select company
+        const companies = JSON.parse(localStorage.getItem('userDetails')).companies
+        const selectedCompany = companies.filter(company => company.companyId == paramCompanyId )[0]
+
+          //select project
+        let projects = await fetchPhaseDataNoti(selectedCompany.projects)
+        const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
+        let projectName = selectedProject
+        console.log(selectedProject,"selectedProject")
+
+        let depth = projectLevels[projectLevels.length - 1].substring(0,2)
+
+        //get phase index
+        let firstLevelId = projectLevels[0].substring(2)
+        let phase = projectName.firstBreakdown.filter(breakdown => breakdown.id == firstLevelId)[0]
+        let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
+        
+        handleProjectBreakdownNotification(projectName,phaseIndex,0,null,null,depth,phase.id)
+      }
+    }
+  fetch()
+  },[]) 
+
+  /* useEffect(() => {
+    const fetch = async () => {
+      if(paramCompanyId && paramProjectId){
+        const projectLevels = projectStructureId.split(":")
+        console.log(projectLevels,"projectStructureId")
+
+        //let projectName = JSON.parse(localStorage.getItem("projectName")).projectName
+
+        //select company
+        const companies = JSON.parse(localStorage.getItem('userDetails')).companies
+        const selectedCompany = companies.filter(company => company.companyId == paramCompanyId )[0]
+        const companeyData = {
+            fkCompanyId: selectedCompany.companyId,
+            fkCompanyName: selectedCompany.companyName,
+          };
+          localStorage.setItem("company", JSON.stringify(companeyData)); 
+          handleCompanyName(selectedCompany,paramCompanyId,selectedCompany.companyName)
+
+          //select project
+        let projects = await fetchPhaseDataNoti(selectedCompany.projects)
+        const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
+        let projectName = selectedProjectt
+
+        let depth = projectLevels[projectLevels.length - 1].substring(0,2)
+
+        //get phase index
+        let firstLevelId = projectLevels[0].substring(2)
+        let phase = projectName.firstBreakdown.filter(breakdown => breakdown.id == firstLevelId)[0]
+        let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
+        
+        handleProjectBreakdownNotification(projectName,phaseIndex,0,null,null,depth,phase.id)
       }
     }
     window.addEventListener("load",fetch)
     return () => document.removeEventListener('load', fetch);
-  },[secondBreakdown,localStorage.getItem("selectBreakDown")]) 
+  },[])  */
 
   const isTablet = useMediaQuery("(min-width:768px)");
 
