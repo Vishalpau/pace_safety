@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import EmojiFlagsIcon from '@material-ui/icons/EmojiFlags';
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import Paper from "@material-ui/core/Paper";
@@ -51,7 +52,7 @@ import {
 } from "../../../utils/constants";
 
 import axios from "axios";
-
+import Tooltip from "@material-ui/core/Tooltip";
 // import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
@@ -409,7 +410,9 @@ const ObservationSummary = () => {
     return () => document.removeEventListener('load', fetch);
 
   }, []);
-
+  useEffect(() => {
+    console.log(initialData.flag,initialData.flagReason,"initial")
+  }, [initialData]);
   return (
     <Acl
       module="safety"
@@ -691,6 +694,17 @@ const ObservationSummary = () => {
                         Comments
                       </NavLink>
                     </ListItem>
+
+                    {initialData.flag > 0 ? <Tooltip title={initialData.flagReason}>
+                      <ListItem>
+                        <ListItemIcon>
+                          <EmojiFlagsIcon />
+                        </ListItemIcon>
+                          <Typography  className="quickActionSectionLink" style={{fontSize:"14px"}}>
+                            Flag
+                          </Typography>
+                      </ListItem>
+                    </Tooltip> : ""}
 
                     {/* <ListItem button>
                   <ListItemIcon>

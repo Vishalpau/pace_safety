@@ -19,6 +19,7 @@ import SelectAllIcon from '@material-ui/icons/SelectAll';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useHistory, useParams } from 'react-router';
 import FormControl from '@material-ui/core/FormControl';
+import Editor from '../../../components/Editor';
 
 import api from '../../../utils/axios';
 
@@ -114,6 +115,37 @@ function CheckList() {
     }))
   }
 
+  const isvalidate = (text, column, id) => {
+    const val = picklists.filter(value => value == text);
+    if (val.length && column == 'name') {
+      return false;
+    }
+    return true;
+  };
+
+const save = (text, column, id) => {
+    console.log(text,column,id)
+    console.log(checkLists)
+    const value = {};
+    checkLists.forEach(checkList => {
+      console.log("hello")
+      if (checkList.checklistId === id) {
+        
+          value.checkListName = checkList.checkListName,
+          value.checkListLabel = checkList.checkListLabel,
+          value.fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId,
+          value.checkListSelectType = checkList.checkListSelectType,
+          //value.status = checkList.status,
+          value.checkListType = checkList.checkListType,
+          value.createdBy = checkList.createdBy
+        if (column == 'label') {
+          value.listLabel = text;
+        }
+      }
+    });
+    console.log(value)
+    api.put('api/v1/core/checklists/' + id + "/", value);
+  };
   useEffect(() => {
     const temp = [];
     checkListData.forEach(value => {
@@ -186,7 +218,17 @@ function CheckList() {
                   <TableCell className={classes.tabelBorder} style={{ width: '80px' }}>{value.checklistId}</TableCell>
                   {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
                   <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
-                  <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
+                  {/* <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell> */}
+                  <TableCell className={classes.tabelBorder}>
+                    <Editor
+                          type="text"
+                          id={value.checklistId}
+                          value={value.checkListLabel}
+                          column="label"
+                          save={save}
+                          isvalidate={isvalidate}
+                        />
+                  </TableCell>
                   <TableCell className={classes.tabelBorder}>{value.checkListSelectType}</TableCell>
                   <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
                   <TableCell className={classes.tabelBorder}>{value.status}</TableCell>

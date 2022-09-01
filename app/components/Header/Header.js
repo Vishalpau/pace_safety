@@ -83,6 +83,9 @@ import api from "../../utils/axios";
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
 const elem = document.documentElement;
+const reloadUsingLocationHash = () => {
+  window.location.hash = "reload";
+};
 
 const useStyles = makeStyles((theme) => ({
   // Project selections
@@ -475,6 +478,9 @@ function Header(props) {
       return () => {
         window.removeEventListener("scroll", handleScroll);
       };
+    } else {
+      console.log("test03");
+      window.onload = reloadUsingLocationHash();
     }
   }, []);
 
@@ -931,6 +937,9 @@ function Header(props) {
       if (fkid) {
         fetchIncidentData();
       }
+    } else {
+      console.log("test04");
+      window.onload = reloadUsingLocationHash();
     }
   }, [props.initialValues.projectName]);
 
@@ -943,6 +952,9 @@ function Header(props) {
     if (!window.location.pathname.includes("control-tower")) {
       //console.log("useeffect3");
       handleProjectList();
+    } else {
+      console.log("test05");
+      window.onload = reloadUsingLocationHash();
     }
   }, [initialValues.projectName]);
 
@@ -2161,7 +2173,7 @@ const handleProjectBreakdownNotification = async (
                   </Popover>
                 </>
               ) : (
-                "  "
+                (window.onload = reloadUsingLocationHash()) && null
               )}
             </div>
 
@@ -2188,7 +2200,7 @@ const handleProjectBreakdownNotification = async (
                   : null}
               </Breadcrumbs>
             ) : (
-              ""
+              (window.onload = reloadUsingLocationHash()) && null
             )}
           </Hidden>
         </div>

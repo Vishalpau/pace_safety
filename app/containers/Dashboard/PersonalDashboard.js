@@ -535,6 +535,9 @@ function PersonalDashboard(props) {
   const [thirdBreakdown, setThirdBreakdown] = React.useState(null);
   const [fourthBreakdown, setFourthBreakdown] = React.useState(null);
   const [openSubUnit, setOpenSubUnit] = React.useState();
+  const reloadUsingLocationHash = () => {
+    window.location.hash = "reload";
+  };
 
   const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
@@ -628,6 +631,10 @@ function PersonalDashboard(props) {
       if (localStorage.getItem("projectName") != null) {
         setTimeout(() => history.push("app/icare"), 1000);
       }
+    } else {
+      console.log("test01");
+
+      (window.onload = reloadUsingLocationHash()) && null;
     }
   };
 
@@ -1009,6 +1016,13 @@ function PersonalDashboard(props) {
       console.log(localStorage.getItem("projectName"), "local storage");
       handelCallBack();
       redirectionAccount();
+      /* if (localStorage.getItem("projectName") != null) {
+      console.log("redirect me")
+      setTimeout(() => history.push("app/icare"), 1000);
+    }   */
+    } else {
+      console.log("test02");
+      (window.onload = reloadUsingLocationHash()) && null;
     }
   }, []);
 
