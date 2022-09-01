@@ -928,7 +928,7 @@ function Header(props) {
     const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
     const result = res.data.data.results;
   };
-  useEffect(() => {
+  /* useEffect(() => {
     if (!window.location.pathname.includes("control-tower")) {
       //  console.log("useeffect2");
       fetchCallBack();
@@ -939,7 +939,7 @@ function Header(props) {
       console.log("test04");
       window.onload = reloadUsingLocationHash();
     }
-  }, [props.initialValues.projectName]);
+  }, [props.initialValues.projectName]); */
 
 
 
@@ -1329,7 +1329,39 @@ const handleProjectBreakdownNotification = async (
     }
     return data;
   };
+  const fetchCallBackNoti = async (project) => {
+    // setSelectBreakDown([])
+    try {
+      const labellist = project.breakdown.map((item) => ({
+        breakdownLabel: item.structure[0].name,
+        breakdownValue: [],
+        selectValue: "",
+      }));
+      if (localStorage.getItem("selectBreakDown")) {
+        setBreakDownData(JSON.parse(localStorage.getItem("selectBreakDown")));
+      }
 
+      for (const key in project.breakdown) {
+        if (key == 0) {
+          const config = {
+            method: "get",
+            url: `${SSO_URL}/${
+              project.breakdown[0].structure[0].url
+            }`,
+            headers: HEADER_AUTH,
+          };
+          const res = await Axios(config);
+          if (res.status === 200) {
+            labellist[0].breakdownValue = res.data.data.results;
+            setLabelList(labellist);
+            setIsLoading(true);
+          }
+        }
+      }
+    } catch {}
+  };
+
+  const [projectTitle,setProjectTitle] = useState(null)
   useEffect(() => {
     const fetch = async () => {
       if(paramCompanyId && paramProjectId){
@@ -1346,6 +1378,7 @@ const handleProjectBreakdownNotification = async (
         let projects = await fetchPhaseDataNoti(selectedCompany.projects)
         const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
         let projectName = selectedProject
+        setProjectTitle(projectName.projectName)
         console.log(selectedProject,"selectedProject")
 
         let depth = projectLevels[projectLevels.length - 1].substring(0,2)
@@ -1356,6 +1389,7 @@ const handleProjectBreakdownNotification = async (
         let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
         
         handleProjectBreakdownNotification(projectName,phaseIndex,0,null,null,depth,phase.id)
+        fetchCallBackNoti(projectName)
       }
     }
   fetch()
@@ -1437,7 +1471,7 @@ const handleProjectBreakdownNotification = async (
             >
               {projectData !== null
                 ? projectData.projectName.projectName
-                : null}
+                : projectTitle}
               <SwapHorizIcon onClick={handleCompanyOpen} />
             </IconButton>
 
