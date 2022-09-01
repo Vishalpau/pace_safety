@@ -128,19 +128,23 @@ const save = (text, column, id) => {
     console.log(checkLists)
     const value = {};
     checkLists.forEach(checkList => {
-      if (checkList.id === id) {
-          value.checkListName = checkList.listName,
-          value.checkListLabel = checkList.listLabel,
+      console.log("hello")
+      if (checkList.checklistId === id) {
+        
+          value.checkListName = checkList.checkListName,
+          value.checkListLabel = checkList.checkListLabel,
           value.fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId,
-          value.checkListSelectType = checkList.listSelectType,
-          value.status = checkList.status,
-          value.checkListType = checkList.listType
+          value.checkListSelectType = checkList.checkListSelectType,
+          //value.status = checkList.status,
+          value.checkListType = checkList.checkListType,
+          value.createdBy = checkList.createdBy
         if (column == 'label') {
           value.listLabel = text;
         }
       }
     });
-    api.put('api/v1/core/checklists/' + id, value);
+    console.log(value)
+    api.put('api/v1/core/checklists/' + id + "/", value);
   };
   useEffect(() => {
     const temp = [];
