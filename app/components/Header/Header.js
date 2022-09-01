@@ -928,7 +928,7 @@ function Header(props) {
     const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
     const result = res.data.data.results;
   };
-  /* useEffect(() => {
+  useEffect(() => {
     if (!window.location.pathname.includes("control-tower")) {
       //  console.log("useeffect2");
       fetchCallBack();
@@ -939,7 +939,7 @@ function Header(props) {
       console.log("test04");
       window.onload = reloadUsingLocationHash();
     }
-  }, [props.initialValues.projectName]); */
+  }, [props.initialValues.projectName]); 
 
 
 
@@ -1185,6 +1185,33 @@ const handlePhaseChange = (panel, phases, index, id) => async (
     //setPhaseSelect([phases]);
     //setOpenPhase(isExpanded ? panel : false);
   };
+
+  const handleNotificationUnitChange = async( project,id) => {
+    if (
+      project.breakdown &&
+      project.breakdown.length > 2 &&
+      project.breakdown[2].structure &&
+      project.breakdown[2].structure[0].url
+    ) {
+      
+      const config = {
+        method: "get",
+        url: `${SSO_URL}/${
+          project.breakdown[2].structure[0].url
+        }${id}`,
+        headers: HEADER_AUTH,
+      };
+      const res = await Axios(config);
+      if (res && res.status === 200) {
+        setThirdBreakdown([...res.data.data.results]);
+        return [...res.data.data.results]
+        
+      }
+    } else {
+      setThirdBreakdown(null);
+    }
+    setOpenUnit(isExpanded ? panel : false);
+  };
 const handleProjectBreakdownNotification = async (
     projectName,
     phaseIndex,
@@ -1192,7 +1219,8 @@ const handleProjectBreakdownNotification = async (
     subUnitIndex,
     subSubUnitIndex,
     depth,
-    levelId
+    levelId,
+    unitId
   ) => {
     console.log("project hello")
     const data = [];
@@ -1244,12 +1272,17 @@ const handleProjectBreakdownNotification = async (
       });
     }
     if (depth === "3L") {
+      let secondBreakdown  = await handleNotificationPhaseChange(projectName,levelId)
+      let thirdBreakdown  = await handleNotificationUnitChange(projectName,unitId)
+      console.log(secondBreakdown,"project second breakdown")
+      console.log(thirdBreakdown,"project third breakdown")
       data.push({
         depth: "2L",
-        id: secondBreakdown[unitIndex].id,
+        id: secondBreakdown[phaseIndex].id,
         label: projectName.breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].structureName,
+        name: secondBreakdown[phaseIndex].structureName,
       });
+      console.log(data,"project data")
       data.push({
         depth: "3L",
         id: thirdBreakdown[subUnitIndex].id,
@@ -1270,7 +1303,6 @@ const handleProjectBreakdownNotification = async (
 
     let secondBreakdown  = await handleNotificationPhaseChange(projectName,levelId)
     if (depth === "2L") {
-      console.log(secondBreakdown,"data second")
       data.push({
         depth: "2L",
         id:secondBreakdown[0].id,
@@ -1387,9 +1419,14 @@ const handleProjectBreakdownNotification = async (
         let firstLevelId = projectLevels[0].substring(2)
         let phase = projectName.firstBreakdown.filter(breakdown => breakdown.id == firstLevelId)[0]
         let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
-        
-        handleProjectBreakdownNotification(projectName,phaseIndex,0,null,null,depth,phase.id)
+
+        //get unit index
+        let secondLevelId = projectLevels[1].substring(2)
+        //let unit = projectName.firstBreakdown.filter(breakdown => breakdown.id == firstLevelId)[0]
+        //let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
+        console.log(secondLevelId,"project secondLevelId")
         fetchCallBackNoti(projectName)
+        handleProjectBreakdownNotification(projectName,phaseIndex,secondLevelId,0,0,depth,phase.id,secondLevelId)
       }
     }
   fetch()
