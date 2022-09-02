@@ -130,7 +130,6 @@ const save = (text, column, id) => {
     checkLists.forEach(checkList => {
       console.log("hello")
       if (checkList.checklistId === id) {
-        
           value.checkListName = checkList.checkListName,
           value.checkListLabel = checkList.checkListLabel,
           value.fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId,
@@ -139,7 +138,10 @@ const save = (text, column, id) => {
           value.checkListType = checkList.checkListType,
           value.createdBy = checkList.createdBy
         if (column == 'label') {
-          value.listLabel = text;
+          value.checkListLabel = text;
+        }
+        if (column == 'name') {
+          value.checkListName = text;
         }
       }
     });
