@@ -469,9 +469,9 @@ function ComplianceListNew(props) {
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
   //Method to open ownership modal when we click on avatar
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
+  // const handleMyUserPClickOpen = () => {
+  //   setMyUserPOpen(true);
+  // };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
@@ -536,7 +536,6 @@ function ComplianceListNew(props) {
           setPageCount(pageCount);
           setIsLoading(false);
         } else if (res.data.data === undefined) {
-          console.log(res, "this is res");
           setAllComplianceData(res.data.data);
           setTotalData(res.data.data.data.results.count);
           setPageData(res.data.data.data.results.count / 25);

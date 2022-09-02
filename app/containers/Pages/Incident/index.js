@@ -1,41 +1,44 @@
 import React, { useEffect, useState, lazy } from "react";
 import AppBar from "@material-ui/core/AppBar";
-import Avatar from "@material-ui/core/Avatar";
-import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Chip from "@material-ui/core/Chip";
-import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import AttachmentIcon from "@material-ui/icons/Attachment";
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
-import MessageIcon from "@material-ui/icons/Message";
+// import Avatar from "@material-ui/core/Avatar";
+// import Box from "@material-ui/core/Box";
+// import Card from "@material-ui/core/Card";
+// import CardActions from "@material-ui/core/CardActions";
+// import CardContent from "@material-ui/core/CardContent";
+// import Chip from "@material-ui/core/Chip";
+// import Divider from "@material-ui/core/Divider";
+// import IconButton from "@material-ui/core/IconButton";
+// import Tooltip from "@material-ui/core/Tooltip";
+// import AddCircleIcon from "@material-ui/icons/AddCircle";
+// import AttachmentIcon from "@material-ui/icons/Attachment";
+// import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+// import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
+// import MessageIcon from "@material-ui/icons/Message";
+// import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
+// import { PapperBlock } from "dan-components";
+// import { Delete } from "@material-ui/icons";
+// import Delete from "../../Delete/Delete";
+// import Fonts from "dan-styles/Fonts.scss";
+// import Incidents from "dan-styles/IncidentsList.scss";
+// import moment from "moment";
+// import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 import SearchIcon from "@material-ui/icons/Search";
-import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
 import Pagination from "@material-ui/lab/Pagination";
 import axios from "axios";
-import { PapperBlock } from "dan-components";
-import Fonts from "dan-styles/Fonts.scss";
-import Incidents from "dan-styles/IncidentsList.scss";
-import moment from "moment";
 import MUIDataTable from "mui-datatables";
-import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
 import classNames from "classnames";
 import AddIcon from "@material-ui/icons/Add";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ReorderIcon from "@material-ui/icons/Reorder";
+import AddComments from "../../addComments/AddComments";
 
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
@@ -54,8 +57,6 @@ import {
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
 import { checkACL } from "../../../utils/helper";
 import Acl from "../../../components/Error/acl";
-// import { Delete } from "@material-ui/icons";
-import Delete from "../../Delete/Delete";
 import DateFormat from "../../../components/Date/DateFormat";
 import CardView from "../../../components/Card/Index";
 import { incidentsLabels } from "../../../components/Card/CardConstants";
@@ -264,9 +265,9 @@ function BlankPage(props) {
   const [incidents, setIncidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
-  const [showIncident, setShowIncident] = useState([]);
+  // const [showIncident, setShowIncident] = useState([]);
   const [pageCount, setPageCount] = useState(0);
-  const [permissionListData, setPermissionListData] = useState([]);
+  // const [permissionListData, setPermissionListData] = useState([]);
   const [page, setPage] = useState(1);
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
@@ -275,21 +276,21 @@ function BlankPage(props) {
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const handelView = (e) => {
-    setListToggle(false);
-  };
-
-  // useEffect(() => {
-  //   console.log(isLoading, "isLoading");
-  // }, [isLoading]);
+  // const handelView = (e) => {
+  //   setListToggle(false);
+  // };
 
   useEffect(() => {
-    console.log(incidents, "incidents");
-  }, [incidents]);
+    console.log(isLoading, "isLoading");
+  }, [isLoading]);
 
-  const handelViewTabel = (e) => {
-    setListToggle(true);
-  };
+  // useEffect(() => {
+  //   console.log(incidents, "incidents");
+  // }, [incidents]);
+
+  // const handelViewTabel = (e) => {
+  //   setListToggle(true);
+  // };
   const selectBreakdown =
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -311,8 +312,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -354,7 +355,7 @@ function BlankPage(props) {
       // .catch((err) => history.push("/app/pages/error"));
       // handleTimeOutError(res)
     }
-    setIsLoading(true);
+    // setIsLoading(true);
     const viewMode = {
       initialNotification: true,
       investigation: false,
@@ -367,7 +368,6 @@ function BlankPage(props) {
   };
 
   const userDetails = async (compId, proId) => {
-    console.log("welcome user details");
     try {
       if (compId) {
         let config = {
@@ -377,22 +377,18 @@ function BlankPage(props) {
         };
 
         await api(config)
-          .then(function(response) {
-            console.log(response);
+          .then(function (response) {
             if (response.status === 200) {
               let hosting = response.data.data.results.data.companies
                 .filter((company) => company.companyId == compId)[0]
                 .subscriptions.filter((subs) => subs.appCode === "safety")[0]
                 .hostings[0].apiDomain;
-
-              console.log(hosting);
               let data1 = {
                 method: "get",
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
               axios(data1).then((res) => {
-                console.log(response);
                 localStorage.setItem(
                   "userDetails",
                   JSON.stringify(response.data.data.results.data)
@@ -430,9 +426,9 @@ function BlankPage(props) {
               });
             }
           })
-          .catch(function(error) {});
+          .catch(function (error) { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handlePush = async () => {
@@ -502,8 +498,8 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -518,7 +514,7 @@ function BlankPage(props) {
         setIncidents(res.data.data.results.results);
         setPage(value);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   // const handleDelete = async (item) => {
@@ -568,8 +564,8 @@ function BlankPage(props) {
   //   }
   // };
 
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  const createdId = JSON.parse(localStorage.getItem("userDetails")).id;
+  // const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+  // const createdId = JSON.parse(localStorage.getItem("userDetails")).id;
   const fkProjectId =
     props.projectName.projectId ||
     JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
@@ -577,8 +573,8 @@ function BlankPage(props) {
     props.projectName.breakDown.length > 0
       ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
   let struct1 = "";
 
   for (const i in selectBreakdown1) {
@@ -586,16 +582,16 @@ function BlankPage(props) {
   }
   const fkProjectStructureIds1 = struct1.slice(0, -1);
 
-  const deleteItem = {
-    fkCompanyId: fkCompanyId,
-    fkProjectId: fkProjectId,
-    fkProjectStructureIds: fkProjectStructureIds1,
-    // incidentStatus: 'Done',
-    // incidentStage: '',
-    updatedBy: createdId,
-    createdBy: createdId,
-    status: "Delete",
-  };
+  // const deleteItem = {
+  //   fkCompanyId: fkCompanyId,
+  //   fkProjectId: fkProjectId,
+  //   fkProjectStructureIds: fkProjectStructureIds1,
+  //   // incidentStatus: 'Done',
+  //   // incidentStage: '',
+  //   updatedBy: createdId,
+  //   createdBy: createdId,
+  //   status: "Delete",
+  // };
 
   const handleSearchIncident = (serchValue) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -606,18 +602,15 @@ function BlankPage(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    api
-      .get(
-        `api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`
-      )
+    api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`)
       .then((res) => {
         setIncidents(res.data.data.results.results);
         setTotalData(res.data.data.results.count);
@@ -647,7 +640,7 @@ function BlankPage(props) {
 
   const classes = useStyles();
 
-  const isDesktop = useMediaQuery("(min-width:992px)");
+  // const isDesktop = useMediaQuery("(min-width:992px)");
 
   const handleSummaryPush = (id) => {
     history.push({
@@ -659,11 +652,24 @@ function BlankPage(props) {
   const AllCardData = ({ item, index }) => {
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
-    const [value, setValue] = React.useState(2);
+    // const [value, setValue] = React.useState(2);
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
-    const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+    // const [myUserPOpen, setMyUserPOpen] = React.useState(false);
     const [commentData, setCommentData] = useState("");
+
+    const commentPayload = {
+      fkCompanyId: item.fkCompanyId,
+      fkProjectId: item.fkProjectId,
+      commentContext: "icare",
+      contextReferenceIds: item.id,
+      commentTags: "",
+      comment: commentData,
+      parent: 0,
+      thanksFlag: 0,
+      status: "Active",
+      createdBy: item.createdBy,
+    };
 
     let deleteItem = {
       fkCompanyId: item[1].fkCompanyId,
@@ -697,6 +703,19 @@ function BlankPage(props) {
     const handleVisibility = () => {
       setShowGrid(true);
       setHidden(!hidden);
+    };
+
+    const handleComments = (type) => {
+      if (type === "handleCommentsClose") {
+        setCommentsOpen(false);
+      } else if ("handleCommentsClick") {
+        setCommentsOpen(!open);
+      } else if (type === "handleCommentsOpen") {
+        setCommentsOpen(true);
+      } else if ("visibility") {
+        setShowGrid(true);
+        setHidden(!hidden);
+      }
     };
 
     return (
@@ -784,9 +803,7 @@ function BlankPage(props) {
               // getBookmarkView: props.compliance,
             }}
             handleVisibility={() => handleVisibility()} // Show attachment box
-            // handleVisibilityComments={() =>
-            //   handleVisibilityComments()
-            // } // Show "add comment" box
+            handleVisibilityComments={() => handleVisibilityComments() }
             files={item[1].attachmentCount.attachmentCount} // Attachment counts
             commentsCount={item[1].commentsCount} // Comments count
             handleSummaryPush={() => handleSummaryPush(item[1].id)} // Go to detail page function
@@ -832,6 +849,18 @@ function BlankPage(props) {
           ) : (
             ""
           )}
+          <AddComments
+            commentPayload={commentPayload}
+            commentOpen={commentsOpen}
+            commentData={commentData}
+            hiddenn={hiddenn}
+            isLoading={isLoading}
+            setIsLoading={(val) => setIsLoading(val)}
+            fetchAllData={fetchData}
+            handleComments={(type) => handleComments(type)}
+            handleVisibilityComments={() => handleVisibilityComments()}
+            addComments={(value) => setCommentData(value)}
+          />
         </div>
       </Grid>
     );
@@ -843,7 +872,7 @@ function BlankPage(props) {
       "aria-controls": `simple-tabpanel-${index}`,
     };
   }
-  const [value, setValue] = useState(0);
+  // const [value, setValue] = useState(0);
   const handleChangeTabs = (event, newValue) => {
     if (newValue === 0) {
       setListToggle(false);
@@ -910,9 +939,8 @@ function BlankPage(props) {
                         label="List"
                         {...a11yProps(1)}
                         icon={<ReorderIcon />}
-                        className={`${classes.pLTen} ${
-                          listToggle ? "Mui-selected" : ""
-                        }`}
+                        className={`${classes.pLTen} ${listToggle ? "Mui-selected" : ""
+                          }`}
                       />
                     </Tabs>
                   </div>
