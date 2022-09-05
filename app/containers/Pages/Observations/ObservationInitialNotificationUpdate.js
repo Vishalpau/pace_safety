@@ -267,7 +267,7 @@ const ObservationInitialNotificationUpdate = ({updateFlag}) => {
       let formData = initialData
       let tags = await fetchTagsData()
       console.log(tags.length,"formData tags length")
-      if(tags.length < 2){
+      if(tags.length <= 2){
         formData = {...formData, flag:0,flagReason:null}
       }
       else{
