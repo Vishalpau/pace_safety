@@ -1084,7 +1084,7 @@ function Actions(props) {
             noBtn: "No",
             dataLength: allInitialData.length,
           }}
-          isFlagPresent={item.flag > 0 ? true : false}
+          isFlagPresent={{flag:item.flag,flagReason:item.flagReason}}
           printFields={{
             typeOfModule: "Observation",
             printUrl: `api/v1/observations/${item.id}/print/`,

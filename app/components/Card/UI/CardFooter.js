@@ -128,10 +128,10 @@ const CardFooter = (props) => {
               className={classes.floatR}
               style={{ display: "flex", alignItems: "center" }}
             >
-              {props.isFlagPresent ? (
+              {props.isFlagPresent.flag > 0 ? (
                 <>
                   <Typography variant="body1" display="inline">
-                    <Tooltip title="Flag" arrow>
+                    <Tooltip title={props.isFlagPresent.flagReason} arrow>
                       <IconButton
                         style={{ width: 45, height: 45 }}
                       >
