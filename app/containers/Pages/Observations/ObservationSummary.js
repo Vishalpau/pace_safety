@@ -404,7 +404,20 @@ const ObservationSummary = () => {
     if (id && !paramCompanyId && !paramProjectId) {
       fetchInitialiObservation();
     }
-  }, [updateFlag]);
+    if(id && paramCompanyId && paramProjectId ){
+      handleNotificationClick(paramCompanyId,paramProjectId)
+    }
+    let fetch = () => {
+      if (id && paramCompanyId && paramProjectId ) {
+      fetchInitialiObservation();
+    }}
+    window.addEventListener('load',fetch)
+    return () => document.removeEventListener('load', fetch);
+
+  }, []);
+  useEffect(() => {
+    console.log(initialData.flag,initialData.flagReason,"initial")
+  }, [initialData]);
   return (
     <Acl
       module="safety"
