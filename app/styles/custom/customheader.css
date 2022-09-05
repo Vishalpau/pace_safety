@@ -1167,6 +1167,7 @@ ul.MuiMenu-list a ul li.userName {
   font-size: 14px;
   font-family: 'Montserrat-Regular';
   color: #666666;
+  cursor: pointer;
 }
 
 .assessmentPageIcon {
@@ -1375,6 +1376,10 @@ ul.MuiMenu-list a ul li.userName {
   font-size: 14px;
   font-family: 'Montserrat-Medium';
   line-height: 18px;
+  cursor: pointer;
+}
+
+.thanksFlag {
   cursor: pointer;
 }
 

@@ -490,9 +490,10 @@ const GeneralObservationPrint = React.forwardRef((props, ref) => {
                                     Submitted on:{" "}
                                     <span style={{ color: "#707070" }}>
                                       {initialData["createdAt"]
-                                        ? moment(
-                                            initialData["createdAt"]
-                                          ).format("Do MMMM YYYY, h:mm:ss a")
+                                        ? DateFormat(
+                                            initialData["createdAt"],
+                                            true
+                                          )
                                         : "-"}
                                     </span>
                                   </td>

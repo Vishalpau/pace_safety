@@ -756,7 +756,7 @@ function BlankPage(props) {
             //   typeOfModule: "observations",
             //   itemId: item.id,
             // }}
-            // RefreshBookmarkData={fetchInitialiObservation} // Refreshing data after removing as bookmark
+            // RefreshBookmarkData={iObservation} // Refreshing data after removing as bookmark
             deleteFields={{
               // Delete component props
               deleteUrl: `/api/v1/incidents/${item[1].id}/`,
