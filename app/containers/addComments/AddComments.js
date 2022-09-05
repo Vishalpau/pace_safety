@@ -45,7 +45,7 @@ import { makeStyles } from "@material-ui/core/styles";
  * @file - AddComments.js
  * @location /app/containers/addComments
  * @description FIle to post a comment
- * @author Abhimanyu<abhimanyus@teknobuilt.com>
+ * @author mohit<mohitdubey037@gmail.com>
  * @since v1.1.0
  **/
 

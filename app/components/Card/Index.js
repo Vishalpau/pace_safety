@@ -103,6 +103,7 @@ import Styles from "./UI/Styles";
 const useStyles = makeStyles((theme) => Styles());
 
 const CardView = (props) => {
+  console.log(props.redirectUrl, 'proooooooooooooo');
   const classes = useStyles();
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [deleting, setDeleting] = React.useState(false);
