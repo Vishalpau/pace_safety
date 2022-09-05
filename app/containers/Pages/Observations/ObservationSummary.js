@@ -17,7 +17,7 @@ import Add from "@material-ui/icons/Add";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import Edit from "@material-ui/icons/Edit";
 import { PapperBlock } from "dan-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useReducer } from "react";
 // Router
 import { useHistory, useParams } from "react-router";
 import AhaSummary from "../../../containers/Activity/Activity";
@@ -30,7 +30,8 @@ import ObservationInitialNotificationUpdate from "./ObservationInitialNotificati
 import ObservationInitialNotificationView from "./ObservationInitialNotificationView";
 
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+
 
 import obsIcon from "dan-images/obsIcon.png";
 // import Paper from '@material-ui/core/Paper';
@@ -41,6 +42,16 @@ import Comment from "@material-ui/icons/Comment";
 import Link from "@material-ui/core/Link";
 import Acl from "../../../components/Error/acl";
 import { checkACL } from "../../../utils/helper";
+import { connect, useDispatch } from "react-redux";
+import {
+  APPCODE,
+  SELF_API,
+  SSO_URL,
+  HEADER_AUTH,
+  ACCOUNT_API_URL 
+} from "../../../utils/constants";
+
+import axios from "axios";
 import Tooltip from "@material-ui/core/Tooltip";
 // import { useHistory } from "react-router";
 
@@ -87,6 +98,7 @@ const useStyles = makeStyles((theme) => ({
 // }
 
 const ObservationSummary = () => {
+   const dispatch = useDispatch();
   const [
     observationInitialNotification,
     setObservationInitialNotification,
@@ -108,6 +120,11 @@ const ObservationSummary = () => {
   // let commentPayload;
   // const [observationCloseOut, setObservationCloseOut] = useState(false);
   // const [observationReview, setObservationReview] = useState(false);
+
+  const [rerender, setRerender] = useState(false);
+
+
+
 
   const [
     observationInitialNotificationUpdate,
@@ -202,8 +219,10 @@ const ObservationSummary = () => {
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     if (res.data.status_code == 400) {
+
     } else {
       const result = res.data.data.results;
+      console.log(result)
       await setInitialData(result);
     }
   };
@@ -233,15 +252,159 @@ const ObservationSummary = () => {
   // const selectValues = [1, 2, 3, 4];
   // const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+  const [isFlaggedUpdate,setIsFlaggedUpdate] = useState(false)
+  const updateFlag = () =>{
+    setIsFlaggedUpdate(!isFlaggedUpdate)
+  }
+
+ const fetchPhaseData = async (projects) => {
+  
+    const data = [];
+    for (let i = 0; i < projects.length; i++) {
+      if (
+        projects[i].breakdown &&
+        projects[i].breakdown.length > 0 &&
+        projects[i].breakdown[0].structure &&
+        projects[i].breakdown[0].structure[0].url
+      ) {
+        
+        const config = {
+          method: "get",
+          url: `${SSO_URL}/${projects[i].breakdown[0].structure[0].url}`,
+          headers: HEADER_AUTH,
+        };
+        const res = await axios(config);
+        if (res && res.status && res.status === 200) {
+          projects[i].firstBreakdown = res.data.data.results;
+          data.push(projects[i]);
+        } else {
+          projects[i].firstBreakdown = [];
+          data.push(projects[i]);
+        }
+      } else {
+        projects[i].firstBreakdown = [];
+        data.push(projects[i]);
+      }
+    }
+    return data;
+  };
+ 
+  const { search } = useLocation();
+  const query = React.useMemo(() => new URLSearchParams(search), [search])
+
+  let paramCompanyId = query.get("company")
+  let paramProjectId = query.get("project")
+
+  const getSubscriptions = async (paramCompanyId) => {
+    const companyId = paramCompanyId 
+    if (companyId) {
+      try {
+        const data = await api
+          .get(`${SELF_API}${companyId}/`)
+          .then((res) => {
+            const rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(
+              (sub) => sub.appCode.toLowerCase() == APPCODE
+            )[0].roles[0].aclUrl;
+            api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`).then((d) => {
+              localStorage.setItem(
+                "app_acl",
+                JSON.stringify(d.data.data.results.permissions[0])
+              );
+            });
+            return res.data.data.results.data.companies[0].subscriptions;
+          })
+
+          .catch((error) => {
+            console.log(error);
+          });
+        // redirectionAccount()
+
+        const modules = data.map((subscription) => subscription.modules);
+        let modulesState = [];
+        let temp = [];
+        modules.map((module) => {
+          modulesState = [...modulesState];
+          temp = [...temp];
+          if (module.length > 0) {
+            module.map((mod) => {
+              modulesState.push(mod);
+              // this.setState({modules: module})
+              if (mod.subscriptionStatus == "active") {
+                temp.push(mod.moduleCode);
+                // this.setState({ codes: temp })
+                return temp;
+              }
+            });
+            // this.setState({ codes: codes })
+          }
+        });
+        dispatch(appAcl(d.data.data.results.permissions[0]));
+        // let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
+        //setCode(temp);
+       // await getModules(apps);
+      } catch (error) {}
+    }
+    // getAllPickList()
+  };
+
+  const handleCompanyName = async (company, companyId, name) => {
+    const hosting = company.subscriptions.filter(
+        (subscription) => subscription.appCode.toLowerCase() == APPCODE
+      )[0].hostings[0].apiDomain;
+    const config = {
+      method: "get",
+      url: `${hosting}/api/v1/core/companies/select/${companyId}/`,
+      headers: HEADER_AUTH,
+    };
+    axios(config);
+    const companeyDetails = {};
+    companeyDetails.fkCompanyId = companyId;
+    await getSubscriptions(companyId);
+    companeyDetails.fkCompanyName = name;
+    dispatch(company(companeyDetails));
+    //setCompanyId(companyId);
+    localStorage.setItem("company", JSON.stringify(companeyDetails));
+    
+  }; 
+
+  const handleNotificationClick = async (paramCompanyId,paramProjectId) => {
+    //select company
+    const companies = JSON.parse(localStorage.getItem('userDetails')).companies
+    const selectedCompany = companies.filter(company => company.companyId == paramCompanyId )[0]
+    const companeyData = {
+        fkCompanyId: selectedCompany.companyId,
+        fkCompanyName: selectedCompany.companyName,
+      };
+      localStorage.setItem("company", JSON.stringify(companeyData)); 
+      handleCompanyName(selectedCompany,paramCompanyId,selectedCompany.companyName)
+
+      //select project
+    let projects = await fetchPhaseData(selectedCompany.projects)
+    const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
+    localStorage.setItem("projectName",JSON.stringify({projectName:selectedProject}));
+      
+  
+      //fetch observations
+      const res = await api.get(`/api/v1/observations/${id}/`);
+      if(res.status === 200){
+        fetchInitialiObservation();
+      }
+      if (res.data.status_code == 400) {
+
+      } else {
+        const result = res.data.data.results;
+        await setInitialData(result);
+      }
+      
+      dispatch(company(companeyData));
+      dispatch(projectName(selectedProject));
+  } 
 
   useEffect(() => {
-    if (id) {
+    if (id && !paramCompanyId && !paramProjectId) {
       fetchInitialiObservation();
     }
-  }, []);
-  useEffect(() => {
-    console.log(initialData.flag,initialData.flagReason,"initial")
-  }, [initialData]);
+  }, [updateFlag]);
   return (
     <Acl
       module="safety"
@@ -342,11 +505,6 @@ const ObservationSummary = () => {
                                 className={classes.statusButton}
                                 onClick={(e) => {
                                   handleActionButtonClick(e);
-                                  // setObservationInitialNotification(false);
-                                  // setObservationCorrectiveAction(true);
-                                  // setObservationCorrectiveActionView(true)
-                                  // setObservationReview(false);
-                                  // setObservationCloseOut(false);
                                 }}
                               >
                                 Action Tracking
@@ -392,9 +550,11 @@ const ObservationSummary = () => {
                         ) {
                           return observationInitialNotificationUpdate ===
                             true ? (
-                            <ObservationInitialNotificationView fillPayload = {(commentPayload) => fillPayload(commentPayload)} />
+                              <>
+                            {initialData.observationNumber && <ObservationInitialNotificationView fillPayload = {(commentPayload) => fillPayload(commentPayload)} />}
+                            </>
                           ) : (
-                            <ObservationInitialNotificationUpdate />
+                            <ObservationInitialNotificationUpdate updateFlag={updateFlag} />
                           );
                         } else if (
                           observationCorrectiveAction === true ||
