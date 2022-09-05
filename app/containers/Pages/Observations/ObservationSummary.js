@@ -204,6 +204,7 @@ const ObservationSummary = () => {
     if (res.data.status_code == 400) {
     } else {
       const result = res.data.data.results;
+      console.log(result)
       await setInitialData(result);
     }
   };
@@ -233,15 +234,16 @@ const ObservationSummary = () => {
   // const selectValues = [1, 2, 3, 4];
   // const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+  const [isFlaggedUpdate,setIsFlaggedUpdate] = useState(false)
+  const updateFlag = () =>{
+    setIsFlaggedUpdate(!isFlaggedUpdate)
+  }
 
   useEffect(() => {
     if (id) {
       fetchInitialiObservation();
     }
-  }, []);
-  useEffect(() => {
-    console.log(initialData.flag,initialData.flagReason,"initial")
-  }, [initialData]);
+  }, [updateFlag]);
   return (
     <Acl
       module="safety"
@@ -394,7 +396,7 @@ const ObservationSummary = () => {
                             true ? (
                             <ObservationInitialNotificationView fillPayload = {(commentPayload) => fillPayload(commentPayload)} />
                           ) : (
-                            <ObservationInitialNotificationUpdate />
+                            <ObservationInitialNotificationUpdate updateFlag={updateFlag} />
                           );
                         } else if (
                           observationCorrectiveAction === true ||
