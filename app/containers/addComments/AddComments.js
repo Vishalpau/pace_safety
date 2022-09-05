@@ -66,8 +66,6 @@ const useStyles = makeStyles((theme) => ({
 
 function AddComments(props) {
 
-    console.log(props,'propsssssssssssss');
-
     const classes = useStyles();
 
     const handleSendComments = async () => {

@@ -659,16 +659,16 @@ function BlankPage(props) {
     const [commentData, setCommentData] = useState("");
 
     const commentPayload = {
-      fkCompanyId: item.fkCompanyId,
-      fkProjectId: item.fkProjectId,
-      commentContext: "icare",
-      contextReferenceIds: item.id,
+      fkCompanyId: item[1].fkCompanyId,
+      fkProjectId: item[1].fkProjectId,
+      commentContext: "incident",
+      contextReferenceIds: item[1].id,
       commentTags: "",
       comment: commentData,
       parent: 0,
       thanksFlag: 0,
       status: "Active",
-      createdBy: item.createdBy,
+      createdBy: item[1].createdBy,
     };
 
     let deleteItem = {
@@ -728,6 +728,8 @@ function BlankPage(props) {
                 ? item[1].avatar
                 : "https://www.businessnetworks.com/sites/default/files/default_images/default-avatar.png"
             } // Card avatar
+            redirectUrl={`/app/comments/incident/${item[1].id}`} // Redirect Url
+            commentPayload={commentPayload}
             username={item[1].username} // Profile username
             itemId={item[1].id} // Item ID
             headerFields={[
@@ -987,7 +989,7 @@ function BlankPage(props) {
 
           {listToggle === false ? (
             <>
-              {isLoading ? (
+              {!isLoading ? (
                 <>
                   <div className="gridView">
                     {Object.entries(incidents)
@@ -1027,7 +1029,7 @@ function BlankPage(props) {
           ) : (
             // listview end
             <>
-              {isLoading ? (
+              {!isLoading ? (
                 <div className="dataTableSectionDesign">
                   <MUIDataTable
                     data={Object.entries(incidents)

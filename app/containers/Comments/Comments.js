@@ -109,7 +109,6 @@ function Comments() {
     else if (commentPayload.thanksFlag === '1') {
       commentPayload.thanksFlag = '0';
     }
-    console.log(commentPayload, 'adddddddddddd');
 
     api.put(`api/v1/comments/${module}/${moduleId}/${commentPayload.id}/`, commentPayload)
       .then(res => {
@@ -124,7 +123,6 @@ function Comments() {
     if (payload.comment) {
       delete payload.avatar;
       delete payload.username;
-      console.log(payload, 'payload');
       setIsLoading(true);
       api.put(`api/v1/comments/${module}/${moduleId}/${payload.id}/`, payload)
         .then((res) => {
@@ -159,10 +157,6 @@ function Comments() {
     }
   };
 
-  useEffect(() => {
-    console.log(errors, 'errrorrrrrrrrr');
-  }, [errors])
-
   const getComments = async () => {
     api.get(`api/v1/comments/${module}/${moduleId}/`)
       .then((res) => {
@@ -178,6 +172,11 @@ function Comments() {
   useEffect(() => {
     getComments();
   }, []);
+
+  useEffect(() => {
+    console.log(commentData, 'commentData');
+  },[commentData])
+
 
   ////////////************************* single card data ************************//////////////////////
   const SingleCardData = ({ item, index }) => {

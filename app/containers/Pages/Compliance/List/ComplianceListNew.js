@@ -788,6 +788,8 @@ function ComplianceListNew(props) {
           cardTitle={value.auditType}
           avatar={value.avatar}
           username={value.username}
+          redirectUrl={`/app/comments/compliance/${value.id}`}
+          commentPayload={commentPayload}
           itemId={value.id}
           headerFields={[
             { label: complianceLabels.header[0], value: value.auditNumber },
