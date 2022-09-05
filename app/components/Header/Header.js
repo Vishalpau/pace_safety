@@ -1397,11 +1397,7 @@ const handleProjectBreakdownNotification = async (
   useEffect(() => {
     const fetch = async () => {
       if(paramCompanyId && paramProjectId){
-        const projectLevels = projectStructureId.split(":")
-        console.log(projectLevels,"projectStructureId")
-
-        //let projectName = JSON.parse(localStorage.getItem("projectName")).projectName
-
+        
         //select company
         const companies = JSON.parse(localStorage.getItem('userDetails')).companies
         const selectedCompany = companies.filter(company => company.companyId == paramCompanyId )[0]
@@ -1411,22 +1407,21 @@ const handleProjectBreakdownNotification = async (
         const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
         let projectName = selectedProject
         setProjectTitle(projectName.projectName)
-        console.log(selectedProject,"selectedProject")
 
-        let depth = projectLevels[projectLevels.length - 1].substring(0,2)
+        
 
         //get phase index
-        let firstLevelId = projectLevels[0].substring(2)
-        let phase = projectName.firstBreakdown.filter(breakdown => breakdown.id == firstLevelId)[0]
-        let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
-
-        //get unit index
-        let secondLevelId = projectLevels[1].substring(2)
-        //let unit = projectName.firstBreakdown.filter(breakdown => breakdown.id == firstLevelId)[0]
-        //let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
-        console.log(secondLevelId,"project secondLevelId")
-        fetchCallBackNoti(projectName)
-        handleProjectBreakdownNotification(projectName,phaseIndex,secondLevelId,0,0,depth,phase.id,secondLevelId)
+        if(projectStructureId != null){
+            const projectLevels = projectStructureId.split(":")
+            let depth = projectLevels[projectLevels.length - 1].substring(0,2)
+            let firstLevelId = projectLevels[0].substring(2)
+            let phase = projectName.firstBreakdown.filter(breakdown => breakdown.id == firstLevelId)[0]
+            let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
+            let secondLevelId = projectLevels[1].substring(2)
+            fetchCallBackNoti(projectName)
+            handleProjectBreakdownNotification(projectName,phaseIndex,secondLevelId,0,0,depth,phase.id,secondLevelId)
+        }
+        
       }
     }
   fetch()
