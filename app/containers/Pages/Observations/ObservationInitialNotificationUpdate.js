@@ -139,7 +139,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const filter = createFilterOptions();
 
-const ObservationInitialNotificationUpdate = () => {
+const ObservationInitialNotificationUpdate = ({updateFlag}) => {
   const { id } = useParams();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
@@ -263,8 +263,19 @@ const ObservationInitialNotificationUpdate = () => {
           .then((res) => {})
           .catch((err) => setLoading(false));
       }
+      
+      let formData = initialData
+      let tags = await fetchTagsData()
+      console.log(tags.length,"formData tags length")
+      if(tags.length < 2){
+        formData = {...formData, flag:0,flagReason:null}
+      }
+      else{
+        formData = {...formData, flag:1,flagReason:"More than two categories selected"}
+      }
+      console.log(formData,"formData")
       const res1 = await api
-        .put(`/api/v1/observations/${id}/`, initialData)
+        .put(`/api/v1/observations/${id}/`, formData)
         .then((res) => {
           if (res.status === 200) {
             localStorage.setItem("update", "Done");
@@ -272,6 +283,7 @@ const ObservationInitialNotificationUpdate = () => {
           }
         })
         .catch((err) => setLoading(false));
+        updateFlag()
     }
   };
 
@@ -357,7 +369,9 @@ const ObservationInitialNotificationUpdate = () => {
       `/api/v1/observations/${id}/observationtags/`
     );
     const tags = response.data.data.results.results;
+    console.log(tags,"initial tags")
     await setTagsData(tags);
+    return tags
   };
 
   const fetchAssignee = (departments) => {

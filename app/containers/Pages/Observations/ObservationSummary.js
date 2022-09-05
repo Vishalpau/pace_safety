@@ -222,6 +222,7 @@ const ObservationSummary = () => {
 
     } else {
       const result = res.data.data.results;
+      console.log(result)
       await setInitialData(result);
     }
   };
@@ -251,6 +252,10 @@ const ObservationSummary = () => {
   // const selectValues = [1, 2, 3, 4];
   // const radioDecide = ["Yes", "No"];
   const classes = useStyles();
+  const [isFlaggedUpdate,setIsFlaggedUpdate] = useState(false)
+  const updateFlag = () =>{
+    setIsFlaggedUpdate(!isFlaggedUpdate)
+  }
 
  const fetchPhaseData = async (projects) => {
   
@@ -399,20 +404,7 @@ const ObservationSummary = () => {
     if (id && !paramCompanyId && !paramProjectId) {
       fetchInitialiObservation();
     }
-    if(id && paramCompanyId && paramProjectId ){
-      handleNotificationClick(paramCompanyId,paramProjectId)
-    }
-    let fetch = () => {
-      if (id && paramCompanyId && paramProjectId ) {
-      fetchInitialiObservation();
-    }}
-    window.addEventListener('load',fetch)
-    return () => document.removeEventListener('load', fetch);
-
-  }, []);
-  useEffect(() => {
-    console.log(initialData.flag,initialData.flagReason,"initial")
-  }, [initialData]);
+  }, [updateFlag]);
   return (
     <Acl
       module="safety"
@@ -562,7 +554,7 @@ const ObservationSummary = () => {
                             {initialData.observationNumber && <ObservationInitialNotificationView fillPayload = {(commentPayload) => fillPayload(commentPayload)} />}
                             </>
                           ) : (
-                            <ObservationInitialNotificationUpdate />
+                            <ObservationInitialNotificationUpdate updateFlag={updateFlag} />
                           );
                         } else if (
                           observationCorrectiveAction === true ||
