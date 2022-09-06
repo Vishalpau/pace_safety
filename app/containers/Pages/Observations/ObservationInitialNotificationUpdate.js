@@ -139,7 +139,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const filter = createFilterOptions();
 
-const ObservationInitialNotificationUpdate = ({updateFlag}) => {
+const ObservationInitialNotificationUpdate = ({reloadSummary}) => {
   const { id } = useParams();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
@@ -283,7 +283,7 @@ const ObservationInitialNotificationUpdate = ({updateFlag}) => {
           }
         })
         .catch((err) => setLoading(false));
-        updateFlag()
+        reloadSummary()
     }
   };
 
