@@ -252,12 +252,8 @@ const ObservationSummary = () => {
   // const selectValues = [1, 2, 3, 4];
   // const radioDecide = ["Yes", "No"];
   const classes = useStyles();
-  const [isFlaggedUpdate,setIsFlaggedUpdate] = useState(false)
-  const updateFlag = () =>{
-    setIsFlaggedUpdate(!isFlaggedUpdate)
-  }
 
- const fetchPhaseData = async (projects) => {
+    const fetchPhaseData = async (projects) => {
   
     const data = [];
     for (let i = 0; i < projects.length; i++) {
