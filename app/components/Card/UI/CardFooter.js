@@ -4,8 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import Typography from "@material-ui/core/Typography";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
-import FlagIcon from '@material-ui/icons/Flag';
-import EmojiFlagsIcon from '@material-ui/icons/EmojiFlags';
+import FlagIcon from "@material-ui/icons/Flag";
+import EmojiFlagsIcon from "@material-ui/icons/EmojiFlags";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
@@ -27,15 +27,16 @@ import IconButton from "@material-ui/core/IconButton";
  * @since v1.1.0
  **/
 
-const useStyles = makeStyles((theme) => Styles({
-  iconteal: {
-    color: "#517b8d",
-    fontSize: "24px",
-  },
-}));
+const useStyles = makeStyles((theme) =>
+  Styles({
+    iconteal: {
+      color: "#517b8d",
+      fontSize: "24px",
+    },
+  })
+);
 
 const CardFooter = (props) => {
-
   const history = useHistory();
 
   const classes = useStyles();
@@ -79,9 +80,9 @@ const CardFooter = (props) => {
   const handlePushData = (commentPayload, redirectUrl) => {
     history.push({
       state: commentPayload,
-      pathname: redirectUrl
-    })
-  }
+      pathname: redirectUrl,
+    });
+  };
 
   return (
     <>
@@ -117,7 +118,9 @@ const CardFooter = (props) => {
               color="secondary"
               aria-haspopup="true"
               className={classes.commentLink}
-              onClick={() => handlePushData(props.commentPayload, props.redirectUrl)}
+              onClick={() =>
+                handlePushData(props.commentPayload, props.redirectUrl)
+              }
             >
               {props.commentsCount}
             </Link>
@@ -128,15 +131,12 @@ const CardFooter = (props) => {
               className={classes.floatR}
               style={{ display: "flex", alignItems: "center" }}
             >
-              {props.isFlagPresent.flag > 0 ? (
+              {props.isFlagPresent && props.isFlagPresent.flag > 0 ? (
                 <>
                   <Typography variant="body1" display="inline">
                     <Tooltip title={props.isFlagPresent.flagReason} arrow>
-                      <IconButton
-                        style={{ width: 45, height: 45 }}
-                      >
-                          <EmojiFlagsIcon className={classes.iconteal}/>
-                      
+                      <IconButton style={{ width: 45, height: 45 }}>
+                        <EmojiFlagsIcon className={classes.iconteal} />
                       </IconButton>
                     </Tooltip>
                   </Typography>
