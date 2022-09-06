@@ -62,6 +62,7 @@ import { flhaLabels } from "../../../components/Card/CardConstants";
 import DateFormat from "../../../components/Date/DateFormat";
 import BookmarkList from "../../Bookmark/BookmarkList";
 import AddComments from "../../addComments/AddComments";
+import Download from "../../Download/Download";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1821,8 +1822,10 @@ function xflha(props) {
                       </Grid>
                     </Grid>
                   </Toolbar>
+
                   <TableContainer component={Paper}>
                     <Grid component={Paper}>
+                      <Download />
                       <MUIDataTable
                         className={`${
                           classes.dataTableSectionDesign

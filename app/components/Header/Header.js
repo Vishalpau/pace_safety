@@ -471,16 +471,11 @@ function Header(props) {
   };
 
   useEffect(() => {
-    if (!window.location.pathname.includes("control-tower")) {
-      // console.log("useeffect1");
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    } else {
-      console.log("test03");
-      window.onload = reloadUsingLocationHash();
-    }
+    // console.log("useeffect1");
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   // const openFullScreen = () => {
@@ -930,26 +925,16 @@ function Header(props) {
     const result = res.data.data.results;
   };
   useEffect(() => {
-    if (!window.location.pathname.includes("control-tower")) {
-      //  console.log("useeffect2");
-      fetchCallBack();
-      if (fkid) {
-        fetchIncidentData();
-      }
-    } else {
-      console.log("test04");
-      window.onload = reloadUsingLocationHash();
+    //  console.log("useeffect2");
+    fetchCallBack();
+    if (fkid) {
+      fetchIncidentData();
     }
   }, [props.initialValues.projectName]);
 
   useEffect(() => {
-    if (!window.location.pathname.includes("control-tower")) {
-      //console.log("useeffect3");
-      handleProjectList();
-    } else {
-      console.log("test05");
-      window.onload = reloadUsingLocationHash();
-    }
+    //console.log("useeffect3");
+    handleProjectList();
   }, [initialValues.projectName]);
 
   const [changeClass, setChangeClass] = React.useState(false);
@@ -1454,7 +1439,7 @@ function Header(props) {
                                                   <path id="Path_5215" data-name="Path 5215" d="M145.961,184.475a.8.8,0,0,1-.717-.469l-3.731-7.743a.9.9,0,0,1,.345-1.172.78.78,0,0,1,1.089.371l3.731,7.743a.9.9,0,0,1-.345,1.172A.759.759,0,0,1,145.961,184.475Z" transform="translate(-136.56 -165.038)" fill="#f28705" />
                                                   <path id="Path_5216" data-name="Path 5216" d="M276.564,184.473a.757.757,0,0,1-.371-.1.9.9,0,0,1-.345-1.172l3.731-7.743a.78.78,0,0,1,1.089-.371.9.9,0,0,1,.345,1.172L277.282,184A.8.8,0,0,1,276.564,184.473Z" transform="translate(-263.586 -165.036)" fill="#f28705" />
                                                   <path id="Path_5217" data-name="Path 5217" d="M308.292,371.65a.84.84,0,0,1-.807-.869v-7.332a.81.81,0,1,1,1.615,0v7.332A.84.84,0,0,1,308.292,371.65Z" transform="translate(-293.5 -341.927)" fill="#f28705" />
-                                                  <path id="Path_5218" data-name="Path 5218" d="M176.678,371.65a.84.84,0,0,1-.807-.869v-7.332a.81.81,0,1,1,1.615,0v7.332A.84.84,0,0,1,176.678,371.65Z" transform="translate(-169.092 -341.927)" fill="#f28705" />
+                                                          <path id="Path_5218" data-name="Path 5218" d="M176.678,371.65a.84.84,0,0,1-.807-.869v-7.332a.81.81,0,1,1,1.615,0v7.332A.84.84,0,0,1,176.678,371.65Z" transform="translate(-169.092 -341.927)" fill="#f28705" />
                                                   <path id="Path_5219" data-name="Path 5219" d="M242.486,4.692a.84.84,0,0,1-.807-.869V.869a.81.81,0,1,1,1.615,0V3.822A.84.84,0,0,1,242.486,4.692Z" transform="translate(-231.296)" fill="#f28705" />
                                                 </g>
                                               </g>
