@@ -400,6 +400,11 @@ const ObservationSummary = () => {
       dispatch(projectName(selectedProject));
   } 
 
+const [reloadSummary,setReloadSummary] = useState(false)
+
+const shouldReloadSummary = () => {
+  setReloadSummary(!reloadSummary)
+}
   useEffect(() => {
     if (id && !paramCompanyId && !paramProjectId) {
       fetchInitialiObservation();
@@ -414,7 +419,7 @@ const ObservationSummary = () => {
     window.addEventListener('load',fetch)
     return () => document.removeEventListener('load', fetch);
 
-  }, []);
+  }, [reloadSummary]);
   useEffect(() => {
     console.log(initialData.flag,initialData.flagReason,"initial")
   }, [initialData]);
@@ -567,7 +572,7 @@ const ObservationSummary = () => {
                             {initialData.observationNumber && <ObservationInitialNotificationView fillPayload = {(commentPayload) => fillPayload(commentPayload)} />}
                             </>
                           ) : (
-                            <ObservationInitialNotificationUpdate updateFlag={updateFlag} />
+                            <ObservationInitialNotificationUpdate reloadSummary={shouldReloadSummary} />
                           );
                         } else if (
                           observationCorrectiveAction === true ||
