@@ -17,7 +17,7 @@ import Add from "@material-ui/icons/Add";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import Edit from "@material-ui/icons/Edit";
 import { PapperBlock } from "dan-components";
-import React, { useEffect, useState,useReducer } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 // Router
 import { useHistory, useParams } from "react-router";
 import AhaSummary from "../../../containers/Activity/Activity";
@@ -48,7 +48,7 @@ import {
   SELF_API,
   SSO_URL,
   HEADER_AUTH,
-  ACCOUNT_API_URL 
+  ACCOUNT_API_URL
 } from "../../../utils/constants";
 
 import axios from "axios";
@@ -98,38 +98,35 @@ const useStyles = makeStyles((theme) => ({
 // }
 
 const ObservationSummary = () => {
-   const dispatch = useDispatch();
-  const [
-    observationInitialNotification,
-    setObservationInitialNotification,
-  ] = useState(true);
-  const [
-    observationCorrectiveAction,
-    setObservationCorrectiveAction,
-  ] = useState(false);
-  const [
-    observationCorrectiveActionView,
-    setObservationCorrectiveActionView,
-  ] = useState(false);
+  const dispatch = useDispatch();
+  const [observationInitialNotification, setObservationInitialNotification,] = useState(true);
+  const [observationCorrectiveAction, setObservationCorrectiveAction,] = useState(false);
+  const [observationCorrectiveActionView, setObservationCorrectiveActionView,] = useState(false);
   const [comment, setComment] = useState(false);
   const [activity, setActivity] = useState(false);
   const { id } = useParams();
   const history = useHistory();
+  const [observationInitialNotificationUpdate, setObservationInitialNotificationUpdate,] = useState(true);
+  const [initialData, setInitialData] = useState({});
 
-  const [commentPayload, setCommentPayload] = useState({})
+  const [commentPayload, setCommentPayload] = useState({
+    fkCompanyId: "",
+    fkProjectId: "",
+    commentContext: "",
+    contextReferenceIds: "",
+    commentTags: "",
+    comment: "",
+    parent: "",
+    thanksFlag: "",
+    status: "",
+    createdBy: "",
+  });
   // let commentPayload;
   // const [observationCloseOut, setObservationCloseOut] = useState(false);
   // const [observationReview, setObservationReview] = useState(false);
 
-  const [rerender, setRerender] = useState(false);
+  // const [rerender, setRerender] = useState(false);
 
-
-
-
-  const [
-    observationInitialNotificationUpdate,
-    setObservationInitialNotificationUpdate,
-  ] = useState(true);
 
   const handelObservationInitialNotificationUpdate = (e) => {
     setObservationInitialNotification(true);
@@ -168,7 +165,6 @@ const ObservationSummary = () => {
   //   history.push(`/app/icare/details/${id}#activity`);
   // };
 
-  const [initialData, setInitialData] = useState({});
   if (id) {
     localStorage.setItem("fkobservationId", id);
   }
@@ -196,20 +192,20 @@ const ObservationSummary = () => {
     }
   };
 
-  const fillPayload = (payload) => {
-    setCommentPayload({
-      fkCompanyId: payload.fkCompanyId,
-      fkProjectId: payload.fkProjectId,
-      commentContext: "observations",
-      contextReferenceIds: payload.id,
-      commentTags: "",
-      comment: "",
-      parent: 0,
-      thanksFlag: 0,
-      status: "Active",
-      createdBy: payload.createdBy,
-    })
-  }
+  // const fillPayload = (payload) => {
+  //   setCommentPayload({
+  //     fkCompanyId: payload.fkCompanyId,
+  //     fkProjectId: payload.fkProjectId,
+  //     commentContext: "observations",
+  //     contextReferenceIds: payload.id,
+  //     commentTags: "",
+  //     comment: "",
+  //     parent: 0,
+  //     thanksFlag: 0,
+  //     status: "Active",
+  //     createdBy: payload.createdBy,
+  //   })
+  // }
 
   // const handlePrintPush = async () => {
   //   //console.log("Ashutosh")
@@ -222,10 +218,29 @@ const ObservationSummary = () => {
 
     } else {
       const result = res.data.data.results;
-      console.log(result)
       await setInitialData(result);
     }
   };
+
+  useEffect(() => {
+      setCommentPayload({
+        fkCompanyId: initialData.fkCompanyId,
+        fkProjectId: initialData.fkProjectId,
+        commentContext: "observations",
+        contextReferenceIds: initialData.id,
+        commentTags: "",
+        comment: "",
+        parent: 0,
+        thanksFlag: 0,
+        status: "Active",
+        createdBy: initialData.createdBy,
+      })
+  }, [initialData])
+
+  // useEffect(() => {
+  //   console.log(commentPayload, 'commentPayload');
+  // },[commentPayload])
+
   if (localStorage.getItem("update") === "Pending") {
     setObservationInitialNotification(true);
     setObservationInitialNotificationUpdate(true);
@@ -253,8 +268,8 @@ const ObservationSummary = () => {
   // const radioDecide = ["Yes", "No"];
   const classes = useStyles();
 
-    const fetchPhaseData = async (projects) => {
-  
+  const fetchPhaseData = async (projects) => {
+
     const data = [];
     for (let i = 0; i < projects.length; i++) {
       if (
@@ -263,7 +278,7 @@ const ObservationSummary = () => {
         projects[i].breakdown[0].structure &&
         projects[i].breakdown[0].structure[0].url
       ) {
-        
+
         const config = {
           method: "get",
           url: `${SSO_URL}/${projects[i].breakdown[0].structure[0].url}`,
@@ -284,7 +299,7 @@ const ObservationSummary = () => {
     }
     return data;
   };
- 
+
   const { search } = useLocation();
   const query = React.useMemo(() => new URLSearchParams(search), [search])
 
@@ -292,7 +307,7 @@ const ObservationSummary = () => {
   let paramProjectId = query.get("project")
 
   const getSubscriptions = async (paramCompanyId) => {
-    const companyId = paramCompanyId 
+    const companyId = paramCompanyId
     if (companyId) {
       try {
         const data = await api
@@ -337,16 +352,16 @@ const ObservationSummary = () => {
         dispatch(appAcl(d.data.data.results.permissions[0]));
         // let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
         //setCode(temp);
-       // await getModules(apps);
-      } catch (error) {}
+        // await getModules(apps);
+      } catch (error) { }
     }
     // getAllPickList()
   };
 
   const handleCompanyName = async (company, companyId, name) => {
     const hosting = company.subscriptions.filter(
-        (subscription) => subscription.appCode.toLowerCase() == APPCODE
-      )[0].hostings[0].apiDomain;
+      (subscription) => subscription.appCode.toLowerCase() == APPCODE
+    )[0].hostings[0].apiDomain;
     const config = {
       method: "get",
       url: `${hosting}/api/v1/core/companies/select/${companyId}/`,
@@ -360,65 +375,66 @@ const ObservationSummary = () => {
     dispatch(company(companeyDetails));
     //setCompanyId(companyId);
     localStorage.setItem("company", JSON.stringify(companeyDetails));
-    
-  }; 
 
-  const handleNotificationClick = async (paramCompanyId,paramProjectId) => {
+  };
+
+  const handleNotificationClick = async (paramCompanyId, paramProjectId) => {
     //select company
     const companies = JSON.parse(localStorage.getItem('userDetails')).companies
-    const selectedCompany = companies.filter(company => company.companyId == paramCompanyId )[0]
+    const selectedCompany = companies.filter(company => company.companyId == paramCompanyId)[0]
     const companeyData = {
-        fkCompanyId: selectedCompany.companyId,
-        fkCompanyName: selectedCompany.companyName,
-      };
-      localStorage.setItem("company", JSON.stringify(companeyData)); 
-      handleCompanyName(selectedCompany,paramCompanyId,selectedCompany.companyName)
+      fkCompanyId: selectedCompany.companyId,
+      fkCompanyName: selectedCompany.companyName,
+    };
+    localStorage.setItem("company", JSON.stringify(companeyData));
+    handleCompanyName(selectedCompany, paramCompanyId, selectedCompany.companyName)
 
-      //select project
+    //select project
     let projects = await fetchPhaseData(selectedCompany.projects)
-    const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
-    localStorage.setItem("projectName",JSON.stringify({projectName:selectedProject}));
-      
-  
-      //fetch observations
-      const res = await api.get(`/api/v1/observations/${id}/`);
-      if(res.status === 200){
-        fetchInitialiObservation();
-      }
-      if (res.data.status_code == 400) {
+    const selectedProject = projects.filter(project => project.projectId == paramProjectId)[0]
+    localStorage.setItem("projectName", JSON.stringify({ projectName: selectedProject }));
 
-      } else {
-        const result = res.data.data.results;
-        await setInitialData(result);
-      }
-      
-      dispatch(company(companeyData));
-      dispatch(projectName(selectedProject));
-  } 
 
-const [reloadSummary,setReloadSummary] = useState(false)
+    //fetch observations
+    const res = await api.get(`/api/v1/observations/${id}/`);
+    if (res.status === 200) {
+      fetchInitialiObservation();
+    }
+    if (res.data.status_code == 400) {
 
-const shouldReloadSummary = () => {
-  setReloadSummary(!reloadSummary)
-}
+    } else {
+      const result = res.data.data.results;
+      await setInitialData(result);
+    }
+
+    dispatch(company(companeyData));
+    dispatch(projectName(selectedProject));
+  }
+
+  const [reloadSummary, setReloadSummary] = useState(false)
+
+  const shouldReloadSummary = () => {
+    setReloadSummary(!reloadSummary)
+  }
   useEffect(() => {
     if (id && !paramCompanyId && !paramProjectId) {
       fetchInitialiObservation();
     }
-    if(id && paramCompanyId && paramProjectId ){
-      handleNotificationClick(paramCompanyId,paramProjectId)
+    if (id && paramCompanyId && paramProjectId) {
+      handleNotificationClick(paramCompanyId, paramProjectId)
     }
     let fetch = () => {
-      if (id && paramCompanyId && paramProjectId ) {
-      fetchInitialiObservation();
-    }}
-    window.addEventListener('load',fetch)
+      if (id && paramCompanyId && paramProjectId) {
+        fetchInitialiObservation();
+      }
+    }
+    window.addEventListener('load', fetch)
     return () => document.removeEventListener('load', fetch);
 
   }, [reloadSummary]);
-  useEffect(() => {
-    console.log(initialData.flag,initialData.flagReason,"initial")
-  }, [initialData]);
+  // useEffect(() => {
+  //   console.log(initialData.flag,initialData.flagReason,"initial")
+  // }, [initialData]);
   return (
     <Acl
       module="safety"
@@ -564,8 +580,10 @@ const shouldReloadSummary = () => {
                         ) {
                           return observationInitialNotificationUpdate ===
                             true ? (
-                              <>
-                            {initialData.observationNumber && <ObservationInitialNotificationView fillPayload = {(commentPayload) => fillPayload(commentPayload)} />}
+                            <>
+                              {initialData.observationNumber && <ObservationInitialNotificationView
+                              // fillPayload = {(commentPayload) => fillPayload(commentPayload)} 
+                              />}
                             </>
                           ) : (
                             <ObservationInitialNotificationUpdate reloadSummary={shouldReloadSummary} />
@@ -706,9 +724,9 @@ const shouldReloadSummary = () => {
                         <ListItemIcon>
                           <EmojiFlagsIcon />
                         </ListItemIcon>
-                          <Typography  className="quickActionSectionLink" style={{fontSize:"14px"}}>
-                            Flag
-                          </Typography>
+                        <Typography className="quickActionSectionLink" style={{ fontSize: "14px" }}>
+                          Flag
+                        </Typography>
                       </ListItem>
                     </Tooltip> : ""}
 

@@ -506,7 +506,6 @@ function Actions(props) {
       : null;
 
   const handleSummaryPush = async (index) => {
-    console.log(allInitialData, "allInitialData");
     const { id } = allInitialData[index];
     localStorage.setItem("fkobservationId", id);
     if (allInitialData[index].isCorrectiveActionTaken !== null) {
@@ -970,7 +969,6 @@ function Actions(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
-    console.log(item.flag,"item")
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
