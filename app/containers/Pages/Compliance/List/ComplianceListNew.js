@@ -469,9 +469,9 @@ function ComplianceListNew(props) {
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
   //Method to open ownership modal when we click on avatar
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
+  // const handleMyUserPClickOpen = () => {
+  //   setMyUserPOpen(true);
+  // };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
@@ -536,7 +536,6 @@ function ComplianceListNew(props) {
           setPageCount(pageCount);
           setIsLoading(false);
         } else if (res.data.data === undefined) {
-          console.log(res, "this is res");
           setAllComplianceData(res.data.data);
           setTotalData(res.data.data.data.results.count);
           setPageData(res.data.data.data.results.count / 25);
@@ -717,6 +716,7 @@ function ComplianceListNew(props) {
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     const deleteItem = {
       fkCompanyId: value.fkCompanyId,
@@ -788,6 +788,8 @@ function ComplianceListNew(props) {
           cardTitle={value.auditType}
           avatar={value.avatar}
           username={value.username}
+          redirectUrl={`/app/comments/compliance/${value.id}`}
+          commentPayload={commentPayload}
           itemId={value.id}
           headerFields={[
             { label: complianceLabels.header[0], value: value.auditNumber },
@@ -901,15 +903,13 @@ function ComplianceListNew(props) {
 
   return (
     <>
-      {console.log(allComplianceData, "this is allComplianceData")}
       <Box>
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
               {isLoading ? (
                 <Loader />
-              ) : allComplianceData !== undefined &&
-                allComplianceData.length > 0 ? (
+              ) : allComplianceData.length > 0 ? (
                 allComplianceData.map((value, index) => (
                   <AllCardData value={value} />
                 ))

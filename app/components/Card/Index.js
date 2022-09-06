@@ -31,6 +31,8 @@ import Styles from "./UI/Styles";
  * @Abhimanyu <abhimanyus@teknobuilt.com>
  * @example
       <CardView
+        commentPayload={item.commentPayload} // payload to send
+        redirectUrl = {item.url} // redirect url
         cardTitle={item.description} // Card title
         avatar={item.avatar} // Card avatar
         username={item.username} // Profile username
@@ -101,6 +103,7 @@ import Styles from "./UI/Styles";
 const useStyles = makeStyles((theme) => Styles());
 
 const CardView = (props) => {
+  console.log(props.redirectUrl, 'proooooooooooooo');
   const classes = useStyles();
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [deleting, setDeleting] = React.useState(false);
@@ -154,10 +157,13 @@ const CardView = (props) => {
         </CardContent>
         <Divider />
         <CardFooter
+          commentPayload={props.commentPayload} // Payload for sending the data
+          redirectUrl = {props.redirectUrl} // Url to redirect the data
           files={props.files} // Attachment counts
           commentsCount={props.commentsCount} // Comments counts
           checkDeletePermission={props.checkDeletePermission} // Check delete permission
           deleteFields={props.deleteFields} // Delete component fields
+          isFlagPresent={props.isFlagPresent}
           printFields={props.printFields ? props.printFields : ""}
           bookmarkFields={props.bookmarkFields ? props.bookmarkFields : ""}
           handleVisibilityComments={() => {

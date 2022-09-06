@@ -95,10 +95,6 @@ const IncidentDetailsSummary = (props) => {
       });
   };
 
-  useEffect(() => {
-    console.log(evidence, 'evidenceeeeeeee');
-  },[evidence])
-
   const fetchPeopleAffectData = async () => {
     const response = await api
       .get(`api/v1/incidents/${fkid}/people/`)

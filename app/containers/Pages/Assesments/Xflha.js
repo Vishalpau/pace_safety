@@ -691,11 +691,11 @@ function xflha(props) {
 
   const dispatch = useDispatch();
 
-  const handleFlhaSummaryPush = async (id, commentPayload) => {
+  const handleFlhaSummaryPush = async (id) => {
     localStorage.setItem("flhaId", id);
     history.push({
       pathname: `/app/pages/assesments/flhasummary/${id}`,
-      state: { commentPayload, redirectUrl: "/app/pages/assesments/flhaadd" },
+      state: {redirectUrl: "/app/pages/assesments/flhaadd" },
     });
   };
 
@@ -756,8 +756,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -815,7 +815,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function() {
+    function () {
       clearTimeout(timer);
       timer = setTimeout(() => setSeacrhFlha(v), d);
     };
@@ -924,9 +924,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleChange = async (event, value) => {
@@ -938,8 +938,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1115,6 +1115,7 @@ function xflha(props) {
     const [hiddenn, setHiddenn] = useState(false);
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
@@ -1183,6 +1184,8 @@ function xflha(props) {
     return (
       <>
         <CardView
+          redirectUrl={`/app/comments/flha/${item.id}`}
+          commentPayload={commentPayload}
           cardTitle={item.jobTitle}
           avatar={item.avatar}
           username={item.username}
@@ -1230,9 +1233,7 @@ function xflha(props) {
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
           commentsCount={item.commentsCount}
-          handleSummaryPush={() =>
-            handleFlhaSummaryPush(item.id, commentPayload)
-          }
+          handleSummaryPush={() => handleFlhaSummaryPush(item.id) }
           checkDeletePermission={checkDeletePermission}
         />
         {item.files && item.files.length ? (
@@ -1284,8 +1285,8 @@ function xflha(props) {
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
-          isLoading={isLoading}
-          setIsLoading={(val) => setIsLoading(val)}
+          isLoading={isCardLoading}
+          setIsLoading={(val) => setIsCardLoading(val)}
           fetchAllData={fetchData}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}
@@ -1577,8 +1578,8 @@ function xflha(props) {
                             {assessments === "My Assessments"
                               ? "My Assessments"
                               : assessments === "Bookmark List"
-                              ? "Bookmark List"
-                              : "All Assessments"}
+                                ? "Bookmark List"
+                                : "All Assessments"}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -1816,8 +1817,8 @@ function xflha(props) {
                           {assessments === "My Assessments"
                             ? "My Assessments"
                             : assessments === "Bookmark List"
-                            ? "Bookmark List"
-                            : "All Assessments"}
+                              ? "Bookmark List"
+                              : "All Assessments"}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -1827,9 +1828,8 @@ function xflha(props) {
                     <Grid component={Paper}>
                       <Download />
                       <MUIDataTable
-                        className={`${
-                          classes.dataTableSectionDesign
-                        } dataTableSectionDesign`}
+                        className={`${classes.dataTableSectionDesign
+                          } dataTableSectionDesign`}
                         data={Object.entries(flhas).map((item) => [
                           item[1].flhaNumber,
                           item[1].jobTitle,

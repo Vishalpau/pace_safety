@@ -970,11 +970,13 @@ function Actions(props) {
   ]);
 
   const AllCardData = ({ item, index }) => {
+    console.log(item.flag,"item")
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     const commentPayload = {
       fkCompanyId: item.fkCompanyId,
@@ -1047,6 +1049,8 @@ function Actions(props) {
               ? "latest"
               : ""
           }
+          redirectUrl={`/app/comments/observations/${item.id}`}
+          commentPayload={commentPayload}
           cardTitle={item.observationDetails}
           avatar={item.avatar}
           username={item.username}
@@ -1080,6 +1084,7 @@ function Actions(props) {
             noBtn: "No",
             dataLength: allInitialData.length,
           }}
+          isFlagPresent={{flag:item.flag,flagReason:item.flagReason}}
           printFields={{
             typeOfModule: "Observation",
             printUrl: `api/v1/observations/${item.id}/print/`,
@@ -1150,8 +1155,8 @@ function Actions(props) {
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
-          isLoading={isLoading}
-          setIsLoading={(val) => setIsLoading(val)}
+          isLoading={isCardLoading}
+          setIsLoading={(val) => setIsCardLoading(val)}
           fetchAllData={fetchInitialiObservation}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}

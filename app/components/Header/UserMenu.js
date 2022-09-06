@@ -34,7 +34,8 @@ import avatarApi from "dan-api/images/avatars";
 import companyLogo from "dan-api/images/logos";
 import link from "dan-api/ui/link";
 import styles from "./header-jss";
-import { useHistory } from "react-router";
+import { useHistory  } from "react-router";
+import { NavLink, useLocation } from "react-router-dom";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -222,12 +223,7 @@ function UserMenu(props) {
     setSubscriptions(data);
     setIsLoading(true);
   };
-  const getSubscribedApps = async () => {
-    const companyId =
-      props.initialValues.companyDataList.fkCompanyId ||
-      (JSON.parse(localStorage.getItem("company")) !== null &&
-        JSON.parse(localStorage.getItem("company")).fkCompanyId);
-
+  const getSubscribedApps = async (companyId) => {
     if (companyId) {
       let subscriptionData = {};
       let data = await api
@@ -332,8 +328,12 @@ function UserMenu(props) {
     // );
   };
   useEffect(() => {
-    getSubscribedApps();
-    getSubscriptions();
+    const companyId =
+      props.initialValues.companyDataList.fkCompanyId ||
+      (JSON.parse(localStorage.getItem("company")) !== null &&
+        JSON.parse(localStorage.getItem("company")).fkCompanyId);
+      getSubscribedApps(companyId);
+      getSubscriptions();
   }, [props.initialValues.companyDataList]);
 
   const classnames = useStyles();
@@ -349,6 +349,30 @@ function UserMenu(props) {
   //   localStorage.setItem('company', JSON.stringify(companyList[index]));
   //   window.location.href = "/";
   // }
+
+  const { search } = useLocation();
+  const query = React.useMemo(() => new URLSearchParams(search), [search])
+
+  let paramCompanyId = query.get("company")
+  let paramProjectId = query.get("project")
+
+  let projectName= JSON.parse(localStorage.getItem("projectName")) !== null
+                  ? JSON.parse(localStorage.getItem("projectName")).projectName
+                      .projectName
+                  : null
+    let userName = JSON.parse(localStorage.getItem("userDetails")) !== null
+                  ? JSON.parse(localStorage.getItem("userDetails")).name
+                  : null
+
+  useEffect(() => {
+    
+    //setUserName(userName)
+    //setProjectName(projectName)
+    if(paramCompanyId && paramProjectId ){
+      getSubscribedApps(paramCompanyId)
+      getSubscriptions();
+    } 
+  }, []);
 
   return (
     <>
@@ -571,19 +595,14 @@ function UserMenu(props) {
             <Grid item md={12} sm={12} xs={12} className="pTopFour">
               <Typography className="userDropDownHeading">
                 {/* {JSON.parse(localStorage.getItem('userDetails')).name} */}
-                {JSON.parse(localStorage.getItem("userDetails")) !== null
-                  ? JSON.parse(localStorage.getItem("userDetails")).name
-                  : null}
+                {userName}
               </Typography>
               {/* <Typography className="userDropDown">
               Safety Department
             </Typography> */}
               <Typography className="userDropDownLast">
                 {/* {JSON.parse(localStorage.getItem('projectName')).projectName.projectName} */}
-                {JSON.parse(localStorage.getItem("projectName")) !== null
-                  ? JSON.parse(localStorage.getItem("projectName")).projectName
-                      .projectName
-                  : null}
+                {projectName}
               </Typography>
             </Grid>
           </Grid>

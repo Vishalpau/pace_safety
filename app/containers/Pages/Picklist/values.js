@@ -16,7 +16,7 @@ import Editor from '../../../components/Editor';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import api from "../../../utils/axios";
-
+import Delete from '../../../containers/Delete/Delete';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,15 +81,18 @@ function Pickvalues(props) {
   const [pickValuesData, setPickValuesData] = useState([]);
   const [listname, setlistname] = useState(props.location.pathname.split('/').pop());
   const [listToggle, setListToggle] = useState(false);
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
   const [searchFilter, setSearchFilter] = useState({
     search: "",
     filter: ""
   })
+  // const [isDelete, setIsDelete] = useState(false);
+  const [deleting, setDeleting] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handelView = (e) => {
-    setListToggle(!listToggle);
-  };
+  // const handelView = (e) => {
+  //   setListToggle(!listToggle);
+  // };
 
   const load = async () => {
     const allPickvalues = await api.get(`api/v1/lists/` + props.location.pathname.split('/').pop() + '/value');
@@ -97,6 +100,7 @@ function Pickvalues(props) {
     await setPickValuesData(allPickvalues.data.data.results);
     await setForm({
       ...form,
+      groupInputBy: "none",
       fkCompanyId: allPickvalues.data.data.results[0].fkCompanyId,
       parentListValue: allPickvalues.data.data.results[0].parentListValue,
     });
@@ -124,23 +128,23 @@ function Pickvalues(props) {
     },
   ];
 
-  const options = {
-    filter: false,
-    filterType: 'dropdown',
-    responsive: 'vertical',
-    print: false,
-    rowsPerPage: 10,
-    page: 0,
-    search: false,
-    download: false,
-  };
+  // const options = {
+  //   filter: false,
+  //   filterType: 'dropdown',
+  //   responsive: 'vertical',
+  //   print: false,
+  //   rowsPerPage: 10,
+  //   page: 0,
+  //   search: false,
+  //   download: false,
+  // };
 
   const classes = useStyles();
 
   const [form, setForm] = useState({
     fkCompanyId: localStorage.getItem('company_id'),
     fkPickListId: listname,
-    groupInputBy: '',
+    groupInputBy: 'none',
     inputLabel: '',
     inputValue: '',
     isSelected: 0,
@@ -177,7 +181,7 @@ function Pickvalues(props) {
   const add_new = () => {
     if (!validate()) { return; }
     // Post form data in API
-    api.post('api/v1/lists/' + listname + '/value', form).then(response => {
+    api.post('api/v1/lists/' + listname + '/value', { ...form, groupInputBy: "none" }).then(response => {
       const update = [...pickValues];
       update.push(response.data.data.results);
       setPickValues(update);
@@ -185,7 +189,6 @@ function Pickvalues(props) {
       document.getElementById('add_inputValue').value = '';
       document.getElementById('add_groupInputBy').value = '';
       document.getElementById('add_isSelected').value = '';
-
     });
   };
 
@@ -202,70 +205,86 @@ function Pickvalues(props) {
     return true;
   };
 
-  const handleDelete = async (id) => {
-    await api.put('api/v1/lists/' + listname + '/value/' + id, { status: 'Delete' });
-    await load();
-  }
 
-  const _pickvalues = list => list.map(listItem => (
-    <tr>
-      <td>
-        <Editor
-          type="text"
-          id={listItem.id}
-          value={listItem.inputLabel}
-          column="label"
-          save={save}
-          isvalidate={isvalidate}
-        />
-      </td>
-      <td>
-        <Editor
-          type="text"
-          id={listItem.id}
-          value={listItem.inputValue}
-          column="value"
-          save={save}
-          isvalidate={isvalidate}
-        />
-      </td>
-      <td>
-        <Editor
-          type="select"
-          options={select_type_options}
-          id={listItem.id}
-          value={listItem.isSelected ? "Yes" : "No"}
-          column="is_selected"
-          save={save}
-          isvalidate={isvalidate}
-        />
-      </td>
-      <td>
-        {listItem.parentListValue}
-        {/* <Editor
-          type="text"
-          id={listItem.id}
-          value={listItem.parentListValue}
-          column="parent"
-          save={save}
-        /> */}
-      </td>
-      <td>
-        <Editor
-          type="text"
-          id={listItem.id}
-          value={listItem.groupInputBy ? listItem.groupInputBy : 'None'}
-          column="group_by"
-          save={save}
-        />
-      </td>
-      <td>
-        <Button onClick={() => handleDelete(listItem.id)}>
+
+  // const handleDelete = async (id) => {
+  //   deleteUrl = `api/v1/lists/` + listname + '/value' + id, { status: 'Delete' }
+  //   setIsDelete(true);
+  //   // await api.put('api/v1/lists/' + listname + '/value/' + id, { status: 'Delete' });
+  //   // await load();
+  // }
+
+  const _pickvalues = list => list.map(listItem => {
+    let deleteUrl = 'api/v1/lists/' + listname + '/value/' + listItem.id;
+    const deleteObj = {
+      status: 'Delete'
+    }
+    return (
+      <tr style={
+        deleting
+          ? {
+            opacity: 0.4,
+            transition: "0.3s all ease",
+            borderColor: "#f4760798",
+          }
+          : { opacity: 1, transition: "0.3s all ease" }}>
+        <td>
+          <Editor
+            type="text"
+            id={listItem.id}
+            value={listItem.inputLabel}
+            column="label"
+            save={save}
+            isvalidate={isvalidate}
+          />
+        </td>
+        <td>
+          <Editor
+            type="text"
+            id={listItem.id}
+            value={listItem.inputValue}
+            column="value"
+            save={save}
+            isvalidate={isvalidate}
+          />
+        </td>
+        <td>
+          <Editor
+            type="select"
+            options={select_type_options}
+            id={listItem.id}
+            value={listItem.isSelected ? "Yes" : "No"}
+            column="is_selected"
+            save={save}
+            isvalidate={isvalidate}
+          />
+        </td>
+        <td>
+          {listItem.parentListValue}
+        </td>
+        <td>
+          {/* <Button onClick={() => handleDelete(listItem.id)}>
           <DeleteIcon />
-        </Button>
-      </td>
-    </tr>
-  ));
+        </Button> */}
+          <Delete
+            deleteUrl={deleteUrl}
+            afterDelete={() => load()}
+            axiosObj={api}
+            item={deleteObj}
+            loader={setIsLoading}
+            loadingFlag={false}
+            deleteMsg="Are you sure you want to delete this item"
+            yesBtn="Yes"
+            noBtn="No"
+            checkDeletePermission={true}
+            dataLength={pickValues.length}
+            deleting={(bool) => setDeleting(bool)}
+          />
+        </td>
+      </tr>
+    )
+  }
+  );
 
   useEffect(() => {
     const temp = [];
@@ -365,7 +384,6 @@ function Pickvalues(props) {
                 <th>Database Value</th>
                 <th>Is Selected</th>
                 <th>Parent</th>
-                <th>Group</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -426,7 +444,7 @@ function Pickvalues(props) {
                   </Select>
                 </td>
                 <td>{form.parentListValue}</td>
-                <td>
+                {/* <td>
                   <TextField
                     variant="outlined"
                     rows="1"
@@ -440,7 +458,7 @@ function Pickvalues(props) {
                       });
                     }}
                   />
-                </td>
+                </td> */}
                 <td>
                   <Button
                     variant="contained"

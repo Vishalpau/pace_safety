@@ -25,6 +25,7 @@ import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import Attachment from "../../Attachment/Attachment";
 import Loader from "../Loader";
 import DateFormat from "../../../components/Date/DateFormat";
+import { NavLink, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -104,13 +105,13 @@ const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-const ObservationInitialNotificationView = (props) => {
-  // const [state, setState] = React.useState({
-  //   checkedA: true,
-  //   checkedB: true,
-  //   checkedF: true,
-  //   checkedG: true,
-  // });
+const ObservationInitialNotificationView = () => {
+  const [state, setState] = React.useState({
+    checkedA: true,
+    checkedB: true,
+    checkedF: true,
+    checkedG: true,
+  });
 
   const { id } = useParams();
   const [initialData, setInitialData] = useState({});
@@ -124,22 +125,22 @@ const ObservationInitialNotificationView = (props) => {
 
   // const dispatch = useDispatch();
 
-  // const project =
-  //   JSON.parse(localStorage.getItem("projectName")) !== null
-  //     ? JSON.parse(localStorage.getItem("projectName")).projectName
-  //     : null;
-  // const selectBreakdown =
-  //   JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-  //     ? JSON.parse(localStorage.getItem("selectBreakDown"))
-  //     : null;
-  // const userName =
-  //   JSON.parse(localStorage.getItem("userDetails")) !== null
-  //     ? JSON.parse(localStorage.getItem("userDetails")).name
-  //     : null;
-  // const userBadgeNo =
-  //   JSON.parse(localStorage.getItem("userDetails")) !== null
-  //     ? JSON.parse(localStorage.getItem("userDetails")).badgeNo
-  //     : null;
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
+  const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  const userName =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).name
+      : null;
+  const userBadgeNo =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).badgeNo
+      : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     localStorage.setItem("fkobservationId", id);
@@ -270,12 +271,45 @@ const ObservationInitialNotificationView = (props) => {
   // };
 
   const classes = useStyles();
+
+  const { search } = useLocation();
+  const query = React.useMemo(() => new URLSearchParams(search), [search])
+  let paramCompanyId = query.get("company")
+  let paramProjectId = query.get("project")
+
   useEffect(() => {
-    if (id) {
-      fetchInitialiObservation();
+    if (id && !paramCompanyId && !paramProjectId ) {
+      fetchInitialiObservation(fkCompanyId,projectId);
       fetchTags();
     }
   }, []);
+
+    const fkCompanyId =
+          JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+  useEffect(() => {
+    if (id && paramCompanyId && paramProjectId ) {
+      fetchInitialiObservation();
+      fetchTags();
+    }
+    let fetch = () => {
+      if (id && paramCompanyId && paramProjectId ) {
+      fetchInitialiObservation();
+      fetchTags();
+    }}
+    window.addEventListener('load',fetch)
+    return () => document.removeEventListener('load', fetch);
+    
+  }, []);
+
+  
+
   return (
     <>
       {!isLoading ? (
@@ -596,6 +630,16 @@ const ObservationInitialNotificationView = (props) => {
                 </Grid>
                 <Grid item md={12}>
                   <FormLabel component="legend" className="viewLabel">
+                    Addressed By?
+                  </FormLabel>
+                  <Typography className="viewLabelValue">
+                    {initialData.isSituationAddressed === "Yes"
+                      ? initialData.isAddressedBy
+                      : "-"}
+                  </Typography>
+                </Grid>
+                <Grid item md={12}>
+                  <FormLabel component="legend" className="viewLabel">
                     Details of immediate actions taken
                   </FormLabel>
                   <Typography className="viewLabelValue">
@@ -902,7 +946,8 @@ const ObservationInitialNotificationView = (props) => {
               <Grid container spacing={3}>
                 <Grid item md={12} sm={12} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                    Recognition
+                    Confirm if you want to nominate a co-worker for employee
+                    recognition.
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.personRecognition
@@ -912,7 +957,8 @@ const ObservationInitialNotificationView = (props) => {
                 </Grid>
                 <Grid item md={12} sm={12} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                    Notification sent to Safety Management
+                    Is this observation a high-risk item that needs to be sent
+                    to Management?
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.isNotifiedToSupervisor

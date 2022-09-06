@@ -4,6 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import Typography from "@material-ui/core/Typography";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
+import FlagIcon from '@material-ui/icons/Flag';
+import EmojiFlagsIcon from '@material-ui/icons/EmojiFlags';
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import InsertCommentOutlinedIcon from "@material-ui/icons/InsertCommentOutlined";
@@ -12,6 +14,10 @@ import Bookmark from "../../../containers/Bookmark/Bookmark";
 import Styles from "./Styles";
 import { staticLabels } from "../CardConstants";
 import Print from "../../Print/Print";
+import { useHistory } from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
+
+import IconButton from "@material-ui/core/IconButton";
 
 /**
  * @file - CardFooter.js
@@ -21,9 +27,17 @@ import Print from "../../Print/Print";
  * @since v1.1.0
  **/
 
-const useStyles = makeStyles((theme) => Styles());
+const useStyles = makeStyles((theme) => Styles({
+  iconteal: {
+    color: "#517b8d",
+    fontSize: "24px",
+  },
+}));
 
 const CardFooter = (props) => {
+
+  const history = useHistory();
+
   const classes = useStyles();
 
   // Delete component props
@@ -62,6 +76,13 @@ const CardFooter = (props) => {
     props.RefreshBookmarkData();
   };
 
+  const handlePushData = (commentPayload, redirectUrl) => {
+    history.push({
+      state: commentPayload,
+      pathname: redirectUrl
+    })
+  }
+
   return (
     <>
       <CardActions className={classes.width100}>
@@ -86,16 +107,17 @@ const CardFooter = (props) => {
               variant="body1"
               display="inline"
               color="textPrimary"
-              className={classes.mLeft}
+              className={classes.commentTextLink}
+              onClick={() => props.handleVisibilityComments()}
             >
               <InsertCommentOutlinedIcon className={classes.mright5} />
               {staticLabels.comment}:{" "}
             </Typography>
             <Link
-              onClick={() => props.handleVisibilityComments()}
               color="secondary"
               aria-haspopup="true"
               className={classes.commentLink}
+              onClick={() => handlePushData(props.commentPayload, props.redirectUrl)}
             >
               {props.commentsCount}
             </Link>
@@ -106,6 +128,24 @@ const CardFooter = (props) => {
               className={classes.floatR}
               style={{ display: "flex", alignItems: "center" }}
             >
+              {props.isFlagPresent.flag > 0 ? (
+                <>
+                  <Typography variant="body1" display="inline">
+                    <Tooltip title={props.isFlagPresent.flagReason} arrow>
+                      <IconButton
+                        style={{ width: 45, height: 45 }}
+                      >
+                          <EmojiFlagsIcon className={classes.iconteal}/>
+                      
+                      </IconButton>
+                    </Tooltip>
+                  </Typography>
+                  <span item xs={1} className={classes.sepHeightTen} />
+                </>
+              ) : (
+                ""
+              )}
+
               {Object.keys(props.printFields).length > 0 ? (
                 <>
                   <Typography variant="body1" display="inline">
