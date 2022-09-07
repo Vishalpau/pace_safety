@@ -62,6 +62,7 @@ import { flhaLabels } from "../../../components/Card/CardConstants";
 import DateFormat from "../../../components/Date/DateFormat";
 import BookmarkList from "../../Bookmark/BookmarkList";
 import AddComments from "../../addComments/AddComments";
+import Download from "../../Download/Download";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -690,11 +691,11 @@ function xflha(props) {
 
   const dispatch = useDispatch();
 
-  const handleFlhaSummaryPush = async (id, commentPayload) => {
+  const handleFlhaSummaryPush = async (id) => {
     localStorage.setItem("flhaId", id);
     history.push({
       pathname: `/app/pages/assesments/flhasummary/${id}`,
-      state: { commentPayload, redirectUrl: "/app/pages/assesments/flhaadd" },
+      state: {redirectUrl: "/app/pages/assesments/flhaadd" },
     });
   };
 
@@ -755,8 +756,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -777,12 +778,27 @@ function xflha(props) {
       const res = await api.get(
         `api/v1/flhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
-      const result = res.data.data.results.results;
-      setFlhas(result);
-      setTotalData(res.data.data.results.count);
-      setPageData(res.data.data.results.count / 25);
-      const pageCount = Math.ceil(res.data.data.results.count / 25);
-      setPageCount(pageCount);
+
+      if (loginId === 6 && res.data.data) {
+        const result = res.data.data.results.results;
+        setFlhas(result);
+        setTotalData(res.data.data.results.count);
+        setPageData(res.data.data.results.count / 25);
+        const pageCount = Math.ceil(res.data.data.results.count / 25);
+        setPageCount(pageCount);
+      } else {
+        if (res.data.data) {
+          const result = res.data.data.results.results;
+          setFlhas(result);
+          setTotalData(res.data.data.results.count);
+          setPageData(res.data.data.results.count / 25);
+          const pageCount = Math.ceil(res.data.data.results.count / 25);
+          setPageCount(pageCount);
+        } else {
+          const result = res;
+          setFlhas(result);
+        }
+      }
     } else {
       const res = await api.get(
         `api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhaStatus=${status}`
@@ -799,7 +815,7 @@ function xflha(props) {
 
   let timer;
   const debounce = (fn, v, d) =>
-    function() {
+    function () {
       clearTimeout(timer);
       timer = setTimeout(() => setSeacrhFlha(v), d);
     };
@@ -908,9 +924,9 @@ function xflha(props) {
               });
             }
           })
-          .catch((error) => {});
+          .catch((error) => { });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleChange = async (event, value) => {
@@ -922,8 +938,8 @@ function xflha(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
 
     for (const i in selectBreakdown) {
@@ -1099,6 +1115,7 @@ function xflha(props) {
     const [hiddenn, setHiddenn] = useState(false);
     const [myUserPOpen, setMyUserPOpen] = React.useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     const deleteItem = {
       fkCompanyId: item.fkCompanyId,
@@ -1167,6 +1184,8 @@ function xflha(props) {
     return (
       <>
         <CardView
+          redirectUrl={`/app/comments/flha/${item.id}`}
+          commentPayload={commentPayload}
           cardTitle={item.jobTitle}
           avatar={item.avatar}
           username={item.username}
@@ -1214,9 +1233,7 @@ function xflha(props) {
           handleVisibilityComments={() => handleVisibilityComments()}
           files={item.files !== null ? item.files.length : 0}
           commentsCount={item.commentsCount}
-          handleSummaryPush={() =>
-            handleFlhaSummaryPush(item.id, commentPayload)
-          }
+          handleSummaryPush={() => handleFlhaSummaryPush(item.id) }
           checkDeletePermission={checkDeletePermission}
         />
         {item.files && item.files.length ? (
@@ -1268,8 +1285,8 @@ function xflha(props) {
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
-          isLoading={isLoading}
-          setIsLoading={(val) => setIsLoading(val)}
+          isLoading={isCardLoading}
+          setIsLoading={(val) => setIsCardLoading(val)}
           fetchAllData={fetchData}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}
@@ -1561,23 +1578,26 @@ function xflha(props) {
                             {assessments === "My Assessments"
                               ? "My Assessments"
                               : assessments === "Bookmark List"
-                              ? "Bookmark List"
-                              : "All Assessments"}
+                                ? "Bookmark List"
+                                : "All Assessments"}
                           </Typography>
                         </Grid>
                       </Grid>
                     </Toolbar>
-                    {Object.entries(flhas).map((item, index) => (
-                      <Box>
-                        <Grid className={classes.marginTopBottom}>
-                          <div className="gridView">
-                            <AllCardData item={item[1]} index={index} />
-                          </div>
-                        </Grid>
-                      </Box>
-                    ))}
-                    {Object.keys(flhas).length === 0 &&
-                      "Sorry, no matching records found"}
+                    {flhas.length > 0 ? (
+                      Object.entries(flhas).map((item, index) => (
+                        <AllCardData item={item[1]} index={index} />
+                      ))
+                    ) : (
+                      <Typography
+                        className={classes.sorryTitle}
+                        variant="h6"
+                        color="primary"
+                        noWrap
+                      >
+                        Sorry, no matching records found
+                      </Typography>
+                    )}
                   </div>
 
                   <div className="gridView">
@@ -1797,18 +1817,19 @@ function xflha(props) {
                           {assessments === "My Assessments"
                             ? "My Assessments"
                             : assessments === "Bookmark List"
-                            ? "Bookmark List"
-                            : "All Assessments"}
+                              ? "Bookmark List"
+                              : "All Assessments"}
                         </Typography>
                       </Grid>
                     </Grid>
                   </Toolbar>
+
                   <TableContainer component={Paper}>
                     <Grid component={Paper}>
+                      <Download />
                       <MUIDataTable
-                        className={`${
-                          classes.dataTableSectionDesign
-                        } dataTableSectionDesign`}
+                        className={`${classes.dataTableSectionDesign
+                          } dataTableSectionDesign`}
                         data={Object.entries(flhas).map((item) => [
                           item[1].flhaNumber,
                           item[1].jobTitle,

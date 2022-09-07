@@ -40,6 +40,7 @@ import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
 import Loader from "../Loader";
 import DateFormat from "../../../components/Date/DateFormat";
+import Download from "../../Download/Download";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -498,6 +499,7 @@ function JhaList(props) {
         {isLoading ? (
           <>
             <TableContainer component={Paper}>
+              <Download />
               <Grid component={Paper}>
                 <MUIDataTable
                   //title="Observations List"

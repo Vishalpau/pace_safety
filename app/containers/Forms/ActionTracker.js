@@ -66,13 +66,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ActionTracker(props) {
   // console.log(props, 'fkprojectstructureid');
-
+  const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : [];
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
   const userName = JSON.parse(localStorage.getItem("userDetails")).name;
   const userId = JSON.parse(localStorage.getItem("userDetails")).id;
   const [form, setForm] = useState({
     fkCompanyId: props.fkCompanyId,
     fkProjectId: props.fkProjectId,
-    fkProjectStructureIds: props.fkProjectStructureIds,
+    fkProjectStructureIds: fkProjectStructureIds,
     parentId: 0,
     actionContext: props.actionContext,
     enitityReferenceId: props.enitityReferenceId,
@@ -515,7 +523,7 @@ export default function ActionTracker(props) {
                   className={classes.button}
                   disabled={isLoading}
                 >
-                  Create action
+                  Create action5
                 </Button>
                 {isLoading && (
                   <CircularProgress

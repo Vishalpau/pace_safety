@@ -506,7 +506,6 @@ function Actions(props) {
       : null;
 
   const handleSummaryPush = async (index) => {
-    console.log(allInitialData, "allInitialData");
     const { id } = allInitialData[index];
     localStorage.setItem("fkobservationId", id);
     if (allInitialData[index].isCorrectiveActionTaken !== null) {
@@ -975,6 +974,7 @@ function Actions(props) {
     const [hiddenn, setHiddenn] = useState(false);
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     const commentPayload = {
       fkCompanyId: item.fkCompanyId,
@@ -1047,6 +1047,8 @@ function Actions(props) {
               ? "latest"
               : ""
           }
+          redirectUrl={`/app/comments/observations/${item.id}`}
+          commentPayload={commentPayload}
           cardTitle={item.observationDetails}
           avatar={item.avatar}
           username={item.username}
@@ -1080,6 +1082,7 @@ function Actions(props) {
             noBtn: "No",
             dataLength: allInitialData.length,
           }}
+          isFlagPresent={{flag:item.flag,flagReason:item.flagReason}}
           printFields={{
             typeOfModule: "Observation",
             printUrl: `api/v1/observations/${item.id}/print/`,
@@ -1150,8 +1153,8 @@ function Actions(props) {
           commentOpen={commentsOpen}
           commentData={commentData}
           hiddenn={hiddenn}
-          isLoading={isLoading}
-          setIsLoading={(val) => setIsLoading(val)}
+          isLoading={isCardLoading}
+          setIsLoading={(val) => setIsCardLoading(val)}
           fetchAllData={fetchInitialiObservation}
           handleComments={(type) => handleComments(type)}
           handleVisibilityComments={handleVisibilityComments}
@@ -1170,7 +1173,8 @@ function Actions(props) {
               {listToggle == false ? (
                 <div>
                   <div className="gridView">
-                    {Object.keys(allInitialData).length > 0 ? (
+                    {allInitialData !== undefined &&
+                    allInitialData.length > 0 ? (
                       Object.entries(allInitialData).map((item, index) => (
                         <>
                           <AllCardData item={item[1]} index={index} />

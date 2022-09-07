@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Delete = (props) => {
+
   const classes = useStyles();
   const [deleteQ, setDeleteQ] = useState(false);
   const [loading, setLoading] = useState(false);

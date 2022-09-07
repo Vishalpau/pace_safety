@@ -684,7 +684,6 @@ const FlhaDetails = (props) => {
     formDataPost.append("accessToJobProcedure", jobForm.accessToJobProcedure);
     setDisableForm(true);
     setLoading(true);
-    console.log("hello")
     const res = await api.post("/api/v1/flhas/", formDataPost, {
       headers: { "content-type": "multipart/form-data" },
     });
@@ -729,8 +728,7 @@ const FlhaDetails = (props) => {
         formData
       );
     }
-    console.log("hello heloo")
-    history.push("/app/pages/assesments/xflha/");
+    history.push(`/app/pages/assesments/flhasummary/${localStorage.getItem("flhaId")}`)
   };
 
   const handleClickOpen = (scrollType) => () => {

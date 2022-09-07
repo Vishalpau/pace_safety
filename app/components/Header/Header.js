@@ -57,6 +57,7 @@ import Divider from "@material-ui/core/Divider";
 import EditIcon from "@material-ui/icons/Edit";
 import PACE_white from "dan-images/PACE_white.png";
 import "../../styles/custom/customheader.css";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { useParams } from "react-router";
 import { connect, useDispatch } from "react-redux";
@@ -82,6 +83,9 @@ import api from "../../utils/axios";
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
 const elem = document.documentElement;
+const reloadUsingLocationHash = () => {
+  window.location.hash = "reload";
+};
 
 const useStyles = makeStyles((theme) => ({
   // Project selections
@@ -468,13 +472,11 @@ function Header(props) {
   };
 
   useEffect(() => {
-    if (!window.location.pathname.includes("control-tower")) {
-      // console.log("useeffect1");
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }
+    // console.log("useeffect1");
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   // const openFullScreen = () => {
@@ -792,7 +794,6 @@ function Header(props) {
         }
       });
     } else {
-      console.log(breakDownData);
       const name = temp[index].breakdownValue.map(async (item) => {
         if (item.id === value) {
           await setSelectBreakDown([
@@ -886,7 +887,6 @@ function Header(props) {
     }
   };
 
-  // useEffect(() => console.log(breakDownData), [breakDownData]);
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])
@@ -924,20 +924,21 @@ function Header(props) {
     const result = res.data.data.results;
   };
   useEffect(() => {
-    if (!window.location.pathname.includes("control-tower")) {
-      //  console.log("useeffect2");
-      fetchCallBack();
-      if (fkid) {
-        fetchIncidentData();
-      }
+    //  console.log("useeffect2");
+    fetchCallBack();
+    if (fkid) {
+      fetchIncidentData();
     }
-  }, [props.initialValues.projectName]);
+  }, [props.initialValues.projectName]); 
+
+
+
+  
+ 
 
   useEffect(() => {
-    if (!window.location.pathname.includes("control-tower")) {
-      //console.log("useeffect3");
-      handleProjectList();
-    }
+    //console.log("useeffect3");
+    handleProjectList();
   }, [initialValues.projectName]);
 
   const [changeClass, setChangeClass] = React.useState(false);
@@ -948,35 +949,7 @@ function Header(props) {
   const [fourthBreakdown, setFourthBreakdown] = React.useState(null);
   const [openSubUnit, setOpenSubUnit] = React.useState();
 
-  const handlePhaseChange = (panel, phases, index, id) => async (
-    event,
-    isExpanded
-  ) => {
-    if (
-      openPhase !== panel &&
-      projectListData[index].breakdown &&
-      projectListData[index].breakdown.length > 1 &&
-      projectListData[index].breakdown[1].structure &&
-      projectListData[index].breakdown[1].structure[0].url
-    ) {
-      const config = {
-        method: "get",
-        url: `${SSO_URL}/${
-          projectListData[index].breakdown[1].structure[0].url
-        }${id}`,
-        headers: HEADER_AUTH,
-      };
-      const res = await Axios(config);
-      if (res && res.status === 200) {
-        setSecondBreakdown([...res.data.data.results]);
-      }
-    } else {
-      setSecondBreakdown(null);
-    }
-    setChangeClass(!!isExpanded);
-    setPhaseSelect([phases]);
-    setOpenPhase(isExpanded ? panel : false);
-  };
+  
 
   const [openUnit, setOpenUnit] = React.useState();
   const handleUnitChange = (panel, index, id) => async (event, isExpanded) => {
@@ -1137,6 +1110,345 @@ function Header(props) {
     handleProjectClose();
   };
 
+const handlePhaseChange = (panel, phases, index, id) => async (
+    event,
+    isExpanded
+  ) => {
+    console.log(panel,"projectPanel")
+    if (
+      openPhase !== panel &&
+      projectListData[index].breakdown &&
+      projectListData[index].breakdown.length > 1 &&
+      projectListData[index].breakdown[1].structure &&
+      projectListData[index].breakdown[1].structure[0].url
+    ) {
+      const config = {
+        method: "get",
+        url: `${SSO_URL}/${
+          projectListData[index].breakdown[1].structure[0].url
+        }${id}`,
+        headers: HEADER_AUTH,
+      };
+      const res = await Axios(config);
+      if (res && res.status === 200) {
+        setSecondBreakdown([...res.data.data.results]);
+      }
+    } else {
+      setSecondBreakdown(null);
+    }
+    setChangeClass(!!isExpanded);
+    setPhaseSelect([phases]);
+    setOpenPhase(isExpanded ? panel : false);
+  };
+  const handleNotificationPhaseChange = async (project,id) => {
+    console.log(id,"project id")
+    if (
+      project.breakdown &&
+      project.breakdown.length > 1 &&
+      project.breakdown[1].structure &&
+      project.breakdown[1].structure[0].url
+    ) {
+      const config = {
+        method: "get",
+        url: `${SSO_URL}/${
+          project.breakdown[1].structure[0].url
+        }${id}`,
+        headers: HEADER_AUTH,
+      };
+      console.log("projectNamePhases")
+      const res = await Axios(config);
+      if (res && res.status === 200) {
+        setSecondBreakdown([...res.data.data.results]);
+        console.log(res.data.data.results,"project res")
+        return [...res.data.data.results]
+        
+      }
+    } else {
+      setSecondBreakdown(null);
+    }
+    //setChangeClass(!!isExpanded);
+    //setPhaseSelect([phases]);
+    //setOpenPhase(isExpanded ? panel : false);
+  };
+
+  const handleNotificationUnitChange = async( project,id) => {
+    if (
+      project.breakdown &&
+      project.breakdown.length > 2 &&
+      project.breakdown[2].structure &&
+      project.breakdown[2].structure[0].url
+    ) {
+      
+      const config = {
+        method: "get",
+        url: `${SSO_URL}/${
+          project.breakdown[2].structure[0].url
+        }${id}`,
+        headers: HEADER_AUTH,
+      };
+      const res = await Axios(config);
+      if (res && res.status === 200) {
+        setThirdBreakdown([...res.data.data.results]);
+        return [...res.data.data.results]
+        
+      }
+    } else {
+      setThirdBreakdown(null);
+    }
+    setOpenUnit(isExpanded ? panel : false);
+  };
+const handleProjectBreakdownNotification = async (
+    projectName,
+    phaseIndex,
+    unitIndex,
+    subUnitIndex,
+    subSubUnitIndex,
+    depth,
+    levelId,
+    unitId
+  ) => {
+    console.log("project hello")
+    const data = [];
+    const temp = [];
+    data.push({
+      depth: "1L",
+      id: projectName.firstBreakdown[phaseIndex].id,
+      label: projectName.breakdown[0].structure[0].name,
+      name: projectName.firstBreakdown[phaseIndex].structureName,
+    });
+    temp.push({
+      breakdownLabel: projectName.breakdown[0].structure[0].name,
+      breakdownValue: projectName.firstBreakdowprojectName
+    }); 
+
+    if (depth === "4L") {
+      data.push({
+        depth: "2L",
+        id: secondBreakdown[unitIndex].id,
+        label: projectName.breakdown[1].structure[0].name,
+        name: secondBreakdown[unitIndex].structureName,
+      });
+      data.push({
+        depth: "3L",
+        id: thirdBreakdown[subUnitIndex].id,
+        label: projectName.breakdown[2].structure[0].name,
+        name: thirdBreakdown[subUnitIndex].structureName,
+      });
+      data.push({
+        depth: "4L",
+        id: fourthBreakdown[subSubUnitIndex].id,
+        label: projectName.breakdown[2].structure[0].name,
+        name: fourthBreakdown[subSubUnitIndex].structureName,
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[1].structure[0].name,
+        breakdownValue: secondBreakdown,
+        selectValue: "",
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[2].structure[0].name,
+        breakdownValue: thirdBreakdown,
+        selectValue: "",
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[3].structure[0].name,
+        breakdownValue: fourthBreakdown,
+  jectName
+      });
+    }
+    if (depth === "3L") {
+      let secondBreakdown  = await handleNotificationPhaseChange(projectName,levelId)
+      let thirdBreakdown  = await handleNotificationUnitChange(projectName,unitId)
+      console.log(secondBreakdown,"project second breakdown")
+      console.log(thirdBreakdown,"project third breakdown")
+      data.push({
+        depth: "2L",
+        id: secondBreakdown[phaseIndex].id,
+        label: projectName.breakdown[1].structure[0].name,
+        name: secondBreakdown[phaseIndex].structureName,
+      });
+      console.log(data,"project data")
+      data.push({
+        depth: "3L",
+        id: thirdBreakdown[subUnitIndex].id,
+        label: projectName.breakdown[2].structure[0].name,
+        name: thirdBreakdown[subUnitIndex].structureName,
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[1].structure[0].name,
+        breakdownValue: secondBreakdown,
+        selectValue: "",
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[2].structure[0].name,
+        breakdownValue: thirdBreakdown,
+        selectValue: "",
+      });
+    } 
+
+    let secondBreakdown  = await handleNotificationPhaseChange(projectName,levelId)
+    if (depth === "2L") {
+      data.push({
+        depth: "2L",
+        id:secondBreakdown[0].id,
+        label: projectName.breakdown[1].structure[0].name,
+        name: secondBreakdown[0].structureName,
+      });
+      temp.push({
+        breakdownLabel: projectName.breakdown[1].structure[0].name,
+        breakdownValue: secondBreakdown,
+        selectValue: "",
+      });
+    }
+    console.log(data,"data")
+    setBreakDownData(data)
+    localStorage.setItem("selectBreakDown", JSON.stringify(data));
+    dispatch(breakDownDetails(data));
+    setProjectOpen(false);
+  };
+
+  const { search } = useLocation();
+  const query = React.useMemo(() => new URLSearchParams(search), [search])
+  let paramCompanyId = query.get("company")
+  let paramProjectId = query.get("project")
+  let projectStructureId = query.get("projectStructure")
+
+  
+
+  const fetchPhaseDataNoti = async (projects) => {
+  
+    const data = [];
+    for (let i = 0; i < projects.length; i++) {
+      if (
+        projects[i].breakdown &&
+        projects[i].breakdown.length > 0 &&
+        projects[i].breakdown[0].structure &&
+        projects[i].breakdown[0].structure[0].url
+      ) {
+        
+        const config = {
+          method: "get",
+          url: `${SSO_URL}/${projects[i].breakdown[0].structure[0].url}`,
+          headers: HEADER_AUTH,
+        };
+        const res = await Axios(config);
+        if (res && res.status && res.status === 200) {
+          projects[i].firstBreakdown = res.data.data.results;
+          data.push(projects[i]);
+        } else {
+          projects[i].firstBreakdown = [];
+          data.push(projects[i]);
+        }
+      } else {
+        projects[i].firstBreakdown = [];
+        data.push(projects[i]);
+      }
+    }
+    return data;
+  };
+  const fetchCallBackNoti = async (project) => {
+    // setSelectBreakDown([])
+    try {
+      const labellist = project.breakdown.map((item) => ({
+        breakdownLabel: item.structure[0].name,
+        breakdownValue: [],
+        selectValue: "",
+      }));
+      if (localStorage.getItem("selectBreakDown")) {
+        setBreakDownData(JSON.parse(localStorage.getItem("selectBreakDown")));
+      }
+
+      for (const key in project.breakdown) {
+        if (key == 0) {
+          const config = {
+            method: "get",
+            url: `${SSO_URL}/${
+              project.breakdown[0].structure[0].url
+            }`,
+            headers: HEADER_AUTH,
+          };
+          const res = await Axios(config);
+          if (res.status === 200) {
+            labellist[0].breakdownValue = res.data.data.results;
+            setLabelList(labellist);
+            setIsLoading(true);
+          }
+        }
+      }
+    } catch {}
+  };
+
+  const [projectTitle,setProjectTitle] = useState(null)
+  useEffect(() => {
+    const fetch = async () => {
+      if(paramCompanyId && paramProjectId){
+        
+        //select company
+        const companies = JSON.parse(localStorage.getItem('userDetails')).companies
+        const selectedCompany = companies.filter(company => company.companyId == paramCompanyId )[0]
+
+          //select project
+        let projects = await fetchPhaseDataNoti(selectedCompany.projects)
+        const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
+        let projectName = selectedProject
+        setProjectTitle(projectName.projectName)
+
+        
+
+        //get phase index
+        if(projectStructureId != null){
+            const projectLevels = projectStructureId.split(":")
+            let depth = projectLevels[projectLevels.length - 1].substring(0,2)
+            let firstLevelId = projectLevels[0].substring(2)
+            let phase = projectName.firstBreakdown.filter(breakdown => breakdown.id == firstLevelId)[0]
+            let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
+            let secondLevelId = projectLevels[1].substring(2)
+            fetchCallBackNoti(projectName)
+            handleProjectBreakdownNotification(projectName,phaseIndex,secondLevelId,0,0,depth,phase.id,secondLevelId)
+        }
+        
+      }
+    }
+  fetch()
+  },[]) 
+
+  /* useEffect(() => {
+    const fetch = async () => {
+      if(paramCompanyId && paramProjectId){
+        const projectLevels = projectStructureId.split(":")
+        console.log(projectLevels,"projectStructureId")
+
+        //let projectName = JSON.parse(localStorage.getItem("projectName")).projectName
+
+        //select company
+        const companies = JSON.parse(localStorage.getItem('userDetails')).companies
+        const selectedCompany = companies.filter(company => company.companyId == paramCompanyId )[0]
+        const companeyData = {
+            fkCompanyId: selectedCompany.companyId,
+            fkCompanyName: selectedCompany.companyName,
+          };
+          localStorage.setItem("company", JSON.stringify(companeyData)); 
+          handleCompanyName(selectedCompany,paramCompanyId,selectedCompany.companyName)
+
+          //select project
+        let projects = await fetchPhaseDataNoti(selectedCompany.projects)
+        const selectedProject = projects.filter(project => project.projectId == paramProjectId )[0]
+        let projectName = selectedProjectt
+
+        let depth = projectLevels[projectLevels.length - 1].substring(0,2)
+
+        //get phase index
+        let firstLevelId = projectLevels[0].substring(2)
+        let phase = projectName.firstBreakdown.filter(breakdown => breakdown.id == firstLevelId)[0]
+        let phaseIndex = projectName.firstBreakdown.findIndex(phaseBreak => phaseBreak.id == phase.id)
+        
+        handleProjectBreakdownNotification(projectName,phaseIndex,0,null,null,depth,phase.id)
+      }
+    }
+    window.addEventListener("load",fetch)
+    return () => document.removeEventListener('load', fetch);
+  },[])  */
+
   const isTablet = useMediaQuery("(min-width:768px)");
 
   return (
@@ -1176,7 +1488,7 @@ function Header(props) {
             >
               {projectData !== null
                 ? projectData.projectName.projectName
-                : null}
+                : projectTitle}
               <SwapHorizIcon onClick={handleCompanyOpen} />
             </IconButton>
 
@@ -1442,7 +1754,7 @@ function Header(props) {
                                                   <path id="Path_5215" data-name="Path 5215" d="M145.961,184.475a.8.8,0,0,1-.717-.469l-3.731-7.743a.9.9,0,0,1,.345-1.172.78.78,0,0,1,1.089.371l3.731,7.743a.9.9,0,0,1-.345,1.172A.759.759,0,0,1,145.961,184.475Z" transform="translate(-136.56 -165.038)" fill="#f28705" />
                                                   <path id="Path_5216" data-name="Path 5216" d="M276.564,184.473a.757.757,0,0,1-.371-.1.9.9,0,0,1-.345-1.172l3.731-7.743a.78.78,0,0,1,1.089-.371.9.9,0,0,1,.345,1.172L277.282,184A.8.8,0,0,1,276.564,184.473Z" transform="translate(-263.586 -165.036)" fill="#f28705" />
                                                   <path id="Path_5217" data-name="Path 5217" d="M308.292,371.65a.84.84,0,0,1-.807-.869v-7.332a.81.81,0,1,1,1.615,0v7.332A.84.84,0,0,1,308.292,371.65Z" transform="translate(-293.5 -341.927)" fill="#f28705" />
-                                                  <path id="Path_5218" data-name="Path 5218" d="M176.678,371.65a.84.84,0,0,1-.807-.869v-7.332a.81.81,0,1,1,1.615,0v7.332A.84.84,0,0,1,176.678,371.65Z" transform="translate(-169.092 -341.927)" fill="#f28705" />
+                                                          <path id="Path_5218" data-name="Path 5218" d="M176.678,371.65a.84.84,0,0,1-.807-.869v-7.332a.81.81,0,1,1,1.615,0v7.332A.84.84,0,0,1,176.678,371.65Z" transform="translate(-169.092 -341.927)" fill="#f28705" />
                                                   <path id="Path_5219" data-name="Path 5219" d="M242.486,4.692a.84.84,0,0,1-.807-.869V.869a.81.81,0,1,1,1.615,0V3.822A.84.84,0,0,1,242.486,4.692Z" transform="translate(-231.296)" fill="#f28705" />
                                                 </g>
                                               </g>
@@ -1986,7 +2298,7 @@ function Header(props) {
                   </Popover>
                 </>
               ) : (
-                "  "
+                (window.onload = reloadUsingLocationHash()) && null
               )}
             </div>
 
@@ -2013,7 +2325,7 @@ function Header(props) {
                   : null}
               </Breadcrumbs>
             ) : (
-              ""
+              (window.onload = reloadUsingLocationHash()) && null
             )}
           </Hidden>
         </div>

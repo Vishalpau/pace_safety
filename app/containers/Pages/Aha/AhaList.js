@@ -40,6 +40,7 @@ import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
 import Loader from "../Loader";
 import DateFormat from "../../../components/Date/DateFormat";
+import Download from "../../Download/Download";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -471,26 +472,23 @@ function AhaList(props) {
             </Toolbar>
             <TableContainer component={Paper}>
               <Grid component={Paper}>
+                <Download />
                 <MUIDataTable
                   //title="Observations List"
                   className={`${
                     classes.dataTableSectionDesign
                   } dataTableSectionDesign`}
-                  data={Object.entries(allAHAData).map((item) => [
-                    item[1]["ahaNumber"],
-                    item[1]["typeOfPermit"] !== null
-                      ? item[1]["typeOfPermit"]
+                  data={allAHAData.map((item) => [
+                    item["ahaNumber"],
+                    item["typeOfPermit"] !== null ? item["typeOfPermit"] : "-",
+                    item["ahaStage"],
+                    item["ahaStatus"],
+                    item["createdByName"],
+                    DateFormat(item["createdAt"]),
+                    item["closedDate"] !== null
+                      ? DateFormat(item["closedDate"])
                       : "-",
-                    item[1]["ahaStage"],
-                    item[1]["ahaStatus"],
-                    item[1]["createdByName"],
-                    DateFormat(item[1]["createdAt"]),
-                    item[1]["closedDate"] !== null
-                      ? DateFormat(item[1]["closedDate"])
-                      : "-",
-                    item[1]["closedByName"] !== null
-                      ? item[1]["closedByName"]
-                      : "-",
+                    item["closedByName"] !== null ? item["closedByName"] : "-",
                   ])}
                   columns={columns}
                   options={options}

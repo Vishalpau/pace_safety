@@ -221,7 +221,6 @@ function JhaSummary(props) {
     } else {
       setAssessmentsView(true);
     }
-    console.log(result, "resultssss");
     await fetchNotificationSent(result.notifyTo);
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`);
     const resultTeam = resTeam.data.data.results;

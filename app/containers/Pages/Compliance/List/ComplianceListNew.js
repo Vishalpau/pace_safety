@@ -454,7 +454,7 @@ function ComplianceListNew(props) {
   };
 
   // method to push to new component
-  const handleSummaryPush = async (item, /*commentPayload*/) => {
+  const handleSummaryPush = async (item /*commentPayload*/) => {
     let id = item;
     localStorage.setItem("fkComplianceId", id);
     history.push({
@@ -469,9 +469,9 @@ function ComplianceListNew(props) {
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
   //Method to open ownership modal when we click on avatar
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
+  // const handleMyUserPClickOpen = () => {
+  //   setMyUserPOpen(true);
+  // };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
@@ -523,18 +523,26 @@ function ComplianceListNew(props) {
         setIsLoading(false);
       } else if (props.compliance === "Bookmark List") {
         const loginId = JSON.parse(localStorage.getItem("userDetails")).id;
-        const res = await api
-          .get(
-            `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
-          )
-          .then((res) => {
-            setAllComplianceData(res.data.data.results.results);
-            setTotalData(res.data.data.results.count);
-            setPageData(res.data.data.results.count / 25);
-            let pageCount = Math.ceil(res.data.data.results.count / 25);
-            setPageCount(pageCount);
-            setIsLoading(false);
-          });
+        const res = await api.get(
+          `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
+        );
+        if (res.data.data) {
+          console.log(res, "this is res");
+          const result = res.data.data.results.results;
+          setAllComplianceData(result);
+          setTotalData(res.data.data.results.count);
+          setPageData(res.data.data.results.count / 25);
+          let pageCount = Math.ceil(res.data.data.results.count / 25);
+          setPageCount(pageCount);
+          setIsLoading(false);
+        } else if (res.data.data === undefined) {
+          setAllComplianceData(res.data.data);
+          setTotalData(res.data.data.data.results.count);
+          setPageData(res.data.data.data.results.count / 25);
+          let pageCount = Math.ceil(res.data.data.data.results.count / 25);
+          setPageCount(pageCount);
+          setIsLoading(false);
+        }
       } else {
         const res = await api.get(
           `api/v1/audits/?search=${
@@ -708,6 +716,7 @@ function ComplianceListNew(props) {
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
     const [commentData, setCommentData] = useState("");
+    const [isCardLoading, setIsCardLoading] = useState(false);
 
     const deleteItem = {
       fkCompanyId: value.fkCompanyId,
@@ -779,6 +788,8 @@ function ComplianceListNew(props) {
           cardTitle={value.auditType}
           avatar={value.avatar}
           username={value.username}
+          redirectUrl={`/app/comments/compliance/${value.id}`}
+          commentPayload={commentPayload}
           itemId={value.id}
           headerFields={[
             { label: complianceLabels.header[0], value: value.auditNumber },

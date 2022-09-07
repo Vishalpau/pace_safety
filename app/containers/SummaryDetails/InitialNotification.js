@@ -95,10 +95,6 @@ const IncidentDetailsSummary = (props) => {
       });
   };
 
-  useEffect(() => {
-    console.log(evidence, 'evidenceeeeeeee');
-  },[evidence])
-
   const fetchPeopleAffectData = async () => {
     const response = await api
       .get(`api/v1/incidents/${fkid}/people/`)
@@ -209,9 +205,9 @@ const IncidentDetailsSummary = (props) => {
     history.push(`/incident/${id}/modify/`);
   };
 
-  useEffect(() => {
-    console.log(incidents);
-  }, [incidents]);
+  // useEffect(() => {
+  //   console.log(incidents);
+  // }, [incidents]);
 
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");

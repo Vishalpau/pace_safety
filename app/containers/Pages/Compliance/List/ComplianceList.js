@@ -40,6 +40,7 @@ import moment from "moment";
 import Loader from "../../Loader";
 import Pagination from "@material-ui/lab/Pagination";
 import DateFormat from "../../../../components/Date/DateFormat";
+import Download from "../../../Download/Download";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -155,11 +156,15 @@ function Actions(props) {
   };
   const [value, setValue] = React.useState(2);
 
-  // const handleChange = (event, newValue) => {
-  //   setValue(newValue);
+  // const handleDownload = () => {
+  //   if(button ===pdf ){
+
+  //   }
+  //   else if(button === csv){
+
+  //   }
   // };
 
-  //   Data for the table view
   const columns = [
     "Number",
     "Type",
@@ -501,11 +506,13 @@ function Actions(props) {
 
   return (
     <>
+      {" "}
       <Box>
         {isLoading === false ? (
           <>
             <TableContainer component={Paper}>
               <Grid component={Paper}>
+                <Download />
                 <MUIDataTable
                   //title="Compliance List"
                   data={allComplianceData.map((data) => [

@@ -25,6 +25,7 @@ import progress from "dan-images/progress.png";
 import completed from "dan-images/completed.png";
 import DateFormat from "../../../components/Date/DateFormat";
 import Toolbar from "@material-ui/core/Toolbar";
+import Download from "../../Download/Download";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -710,16 +711,22 @@ function ObservationsList(props) {
                 </Grid>
               </Grid>
             </Toolbar>
+
             <TableContainer component={Paper}>
               <Grid component={Paper}>
+                <Download />
                 <MUIDataTable
-                  data={Object.entries(allInitialData).map((item) => [
-                    item[1]["observationNumber"],
-                    item[1]["observationType"],
-                    item[1]["location"] ? item[1]["location"] : "-",
-                    DateFormat(item[1]["createdAt"]),
-                    item[1]["username"] ? item[1]["username"] : "-",
-                  ])}
+                  data={
+                    allInitialData
+                      ? allInitialData.map((item) => [
+                          item["observationNumber"],
+                          item["observationType"],
+                          item["location"] ? item["location"] : "-",
+                          DateFormat(item["createdAt"]),
+                          item["username"] ? item["username"] : "-",
+                        ])
+                      : ""
+                  }
                   // title="Observations List"
                   className={`${
                     classes.dataTableSectionDesign
