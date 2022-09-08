@@ -1840,7 +1840,7 @@ function AhaSummary(props) {
                                                             )
                                                           ).projectName
                                                             .projectId
-                                                        }&targetPage=/action/details/&targetId=${
+                                                        }&targetPage=action/details/${
                                                           action.id
                                                         }`}
                                                         target="_blank"

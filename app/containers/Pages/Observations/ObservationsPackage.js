@@ -558,12 +558,19 @@ function Actions(props) {
         );
         const result = allLogInUserData.data.data.results.results;
         setAllInitialData(result);
-        setTotalData(allLogInUserData.data.data.results.count);
-        setPageData(allLogInUserData.data.data.results.count / 25);
-        const pageCount = Math.ceil(
-          allLogInUserData.data.data.results.count / 25
-        );
-        setPageCount(pageCount);
+        if (allLogInUserData.data.data.results.count) {
+          setTotalData(allLogInUserData.data.data.results.count);
+          setPageData(allLogInUserData.data.data.results.count / 25);
+          const pageCount = Math.ceil(
+            allLogInUserData.data.data.results.count / 25
+          );
+          setPageCount(pageCount);
+        } else if (allLogInUserData.data.data.results.message) {
+          setTotalData(0);
+          setPageData(0 / 25);
+          const pageCount = Math.ceil(0 / 25);
+          setPageCount(pageCount);
+        }
       } else {
         const res = await api.get(
           `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`
@@ -596,12 +603,19 @@ function Actions(props) {
           );
           const result = allLogInUserData.data.data.results.results;
           setAllInitialData(result);
-          setTotalData(allLogInUserData.data.data.results.count);
-          setPageData(allLogInUserData.data.data.results.count / 25);
-          const pageCount = Math.ceil(
-            allLogInUserData.data.data.results.count / 25
-          );
-          setPageCount(pageCount);
+          if (allLogInUserData.data.data.results.count) {
+            setTotalData(allLogInUserData.data.data.results.count);
+            setPageData(allLogInUserData.data.data.results.count / 25);
+            const pageCount = Math.ceil(
+              allLogInUserData.data.data.results.count / 25
+            );
+            setPageCount(pageCount);
+          } else if (allLogInUserData.data.data.results.message) {
+            setTotalData(0);
+            setPageData(0 / 25);
+            const pageCount = Math.ceil(0 / 25);
+            setPageCount(pageCount);
+          }
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`
@@ -636,12 +650,19 @@ function Actions(props) {
           );
           const result = allLogInUserData.data.data.results.results;
           setAllInitialData(result);
-          setTotalData(allLogInUserData.data.data.results.count);
-          setPageData(allLogInUserData.data.data.results.count / 25);
-          const pageCount = Math.ceil(
-            allLogInUserData.data.data.results.count / 25
-          );
-          setPageCount(pageCount);
+          if (allLogInUserData.data.data.results.count) {
+            setTotalData(allLogInUserData.data.data.results.count);
+            setPageData(allLogInUserData.data.data.results.count / 25);
+            const pageCount = Math.ceil(
+              allLogInUserData.data.data.results.count / 25
+            );
+            setPageCount(pageCount);
+          } else if (allLogInUserData.data.data.results.message) {
+            setTotalData(0);
+            setPageData(0 / 25);
+            const pageCount = Math.ceil(0 / 25);
+            setPageCount(pageCount);
+          }
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`
@@ -676,12 +697,19 @@ function Actions(props) {
           );
           const result = allLogInUserData.data.data.results.results;
           setAllInitialData(result);
-          setTotalData(allLogInUserData.data.data.results.count);
-          setPageData(allLogInUserData.data.data.results.count / 25);
-          const pageCount = Math.ceil(
-            allLogInUserData.data.data.results.count / 25
-          );
-          setPageCount(pageCount);
+          if (allLogInUserData.data.data.results.count) {
+            setTotalData(allLogInUserData.data.data.results.count);
+            setPageData(allLogInUserData.data.data.results.count / 25);
+            const pageCount = Math.ceil(
+              allLogInUserData.data.data.results.count / 25
+            );
+            setPageCount(pageCount);
+          } else if (allLogInUserData.data.data.results.message) {
+            setTotalData(0);
+            setPageData(0 / 25);
+            const pageCount = Math.ceil(0 / 25);
+            setPageCount(pageCount);
+          }
         } else {
           const allLogInUserData = await api.get(
             `api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`
@@ -1082,7 +1110,7 @@ function Actions(props) {
             noBtn: "No",
             dataLength: allInitialData.length,
           }}
-          isFlagPresent={{flag:item.flag,flagReason:item.flagReason}}
+          isFlagPresent={{ flag: item.flag, flagReason: item.flagReason }}
           printFields={{
             typeOfModule: "Observation",
             printUrl: `api/v1/observations/${item.id}/print/`,

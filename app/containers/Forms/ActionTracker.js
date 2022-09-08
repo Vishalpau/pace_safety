@@ -226,6 +226,8 @@ export default function ActionTracker(props) {
         await props.handelShowData();
       }
       setLoading(false);
+      setOpen(false);
+      props.reloadActions && props.reloadActions()
     }
   };
 

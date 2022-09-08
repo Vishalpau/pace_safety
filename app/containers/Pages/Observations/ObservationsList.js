@@ -495,13 +495,26 @@ function ObservationsList(props) {
       const res = await api.get(
         `api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&bookmarked_by=${loginId}`
       );
+      debugger;
       if (res.status === 200) {
         const result = res.data.data.results.results;
-        await setAllInitialData(result);
-        let pageCount = Math.ceil(res.data.data.results.count / 25);
-        await setPageData(res.data.data.results.count / 25);
-        await setTotalData(res.data.data.results.count);
-        await setPageCount(pageCount);
+        // let pageCount = Math.ceil(res.data.data.results.count / 25);
+        // await setPageData(res.data.data.results.count / 25);
+        // await setTotalData(res.data.data.results.count);
+        // await setPageCount(pageCount);
+        if (res.data.data.results.count) {
+          await setAllInitialData(result);
+          setTotalData(res.data.data.results.count);
+          setPageData(res.data.data.results.count / 25);
+          const pageCount = Math.ceil(res.data.data.results.count / 25);
+          setPageCount(pageCount);
+        } else if (res.data.data.results.message) {
+          await setAllInitialData([]);
+          setTotalData(0);
+          setPageData(0 / 25);
+          const pageCount = Math.ceil(0 / 25);
+          setPageCount(pageCount);
+        }
         await setIsLoading(true);
       }
     } else {

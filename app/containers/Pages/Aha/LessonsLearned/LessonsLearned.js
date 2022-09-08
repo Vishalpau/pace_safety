@@ -197,8 +197,15 @@ const LessonsLearned = () => {
   useEffect(() => {
     handelJobDetails()
     handelUserName()
-    handelActionTracker()
   }, [])
+
+  const [reloadActions,setReloadActions] = useState(false)
+  const shouldReloadActions = () => {
+    setReloadActions(!reloadActions)
+  }
+  useEffect(() => {
+    handelActionTracker()
+  }, [reloadActions])
 
   const classes = useStyles();
   return (
@@ -331,6 +338,7 @@ const LessonsLearned = () => {
                                   fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
                                   createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                   handelShowData={handelActionTracker}
+                                  reloadActions={shouldReloadActions }
                                 />
                               </Grid>
                               {checkACL('action_tracker-actions', 'view_actions') &&

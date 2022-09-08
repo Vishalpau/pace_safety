@@ -461,6 +461,17 @@ function ObservationCorrectiveAction() {
       setATACLStatus(checkACL("action_tracker", "view_actions"));
     }
   }, []);
+
+  const [reloadActions,setReloadActions] = useState(false)
+  const shouldReloadActions = () => {
+    console.log("running")
+    setReloadActions(!reloadActions)
+  }
+  useEffect(() => {
+    console.log("running")
+    handelActionTracker();
+  }, [reloadActions]);
+
   const classes = useStyles();
   return (
     <>
@@ -947,6 +958,7 @@ function ObservationCorrectiveAction() {
                                 createdBy={userId}
                                 updatePage={updatePage}
                                 handelShowData={handelActionTracker}
+                                reloadActions={shouldReloadActions }
                               />
                             </Typography>
                           ) : (
@@ -964,6 +976,7 @@ function ObservationCorrectiveAction() {
                                 createdBy={userId}
                                 updatePage={updatePage}
                                 handelShowData={handelActionTracker}
+                                reloadActions={shouldReloadActions }
                               />
                             </Typography>
                           )}
