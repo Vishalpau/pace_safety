@@ -812,10 +812,14 @@ function PersonalDashboard(props) {
 
   // fecthing project structure with name and label
   const handelProjectStruct = async (compId, proId, tarProjectStruct) => {
-    const breakDownData = JSON.parse(tarProjectStruct);
-    localStorage.setItem("selectBreakDown", JSON.stringify(breakDownData));
-    dispatch(breakDownDetails(breakDownData));
-    redirectionAccount();
+    if (!window.location.pathname.includes("control-tower")) {
+      const breakDownData = JSON.parse(tarProjectStruct);
+      localStorage.setItem("selectBreakDown", JSON.stringify(breakDownData));
+      dispatch(breakDownDetails(breakDownData));
+      redirectionAccount();
+    } else {
+      ("");
+    }
   };
   // end fetching name and label
 
@@ -1021,8 +1025,7 @@ function PersonalDashboard(props) {
       setTimeout(() => history.push("app/icare"), 1000);
     }   */
     } else {
-      console.log("test02");
-      (window.onload = reloadUsingLocationHash()) && null;
+      ("");
     }
   }, []);
 
@@ -1030,7 +1033,7 @@ function PersonalDashboard(props) {
     event,
     isExpanded
   ) => {
-    console.log(panel,"projectPanel")
+    console.log(panel, "projectPanel");
     if (
       openPhase !== panel &&
       projectListData[index].breakdown &&
@@ -1119,102 +1122,108 @@ function PersonalDashboard(props) {
     subSubUnitIndex,
     depth
   ) => {
-    
-    console.log(depth,"depth")
-    const data = [];
-    const temp = [];
+    if (!window.location.pathname.includes("control-tower")) {
+      console.log(depth, "depth");
+      const data = [];
+      const temp = [];
 
-    data.push({
-      depth: "1L",
-      id: projectListData[index].firstBreakdown[phaseIndex].id,
-      label: projectListData[index].breakdown[0].structure[0].name,
-      name: projectListData[index].firstBreakdown[phaseIndex].structureName,
-    });
-    temp.push({
-      breakdownLabel: projectListData[index].breakdown[0].structure[0].name,
-      breakdownValue: projectListData[index].firstBreakdown,
-      selectValue: "",
-    });
+      data.push({
+        depth: "1L",
+        id: projectListData[index].firstBreakdown[phaseIndex].id,
+        label: projectListData[index].breakdown[0].structure[0].name,
+        name: projectListData[index].firstBreakdown[phaseIndex].structureName,
+      });
+      temp.push({
+        breakdownLabel: projectListData[index].breakdown[0].structure[0].name,
+        breakdownValue: projectListData[index].firstBreakdown,
+        selectValue: "",
+      });
 
-    if (depth === "4L") {
-      data.push({
-        depth: "2L",
-        id: secondBreakdown[unitIndex].id,
-        label: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].structureName,
-      });
-      data.push({
-        depth: "3L",
-        id: thirdBreakdown[subUnitIndex].id,
-        label: projectListData[index].breakdown[2].structure[0].name,
-        name: thirdBreakdown[subUnitIndex].structureName,
-      });
-      data.push({
-        depth: "4L",
-        id: fourthBreakdown[subSubUnitIndex].id,
-        label: projectListData[index].breakdown[2].structure[0].name,
-        name: fourthBreakdown[subSubUnitIndex].structureName,
-      });
-      temp.push({
-        breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
-        breakdownValue: secondBreakdown,
-        selectValue: "",
-      });
-      temp.push({
-        breakdownLabel: projectListData[index].breakdown[2].structure[0].name,
-        breakdownValue: thirdBreakdown,
-        selectValue: "",
-      });
-      temp.push({
-        breakdownLabel: projectListData[index].breakdown[3].structure[0].name,
-        breakdownValue: fourthBreakdown,
-        selectValue: "",
-      });
-    }
-    if (depth === "3L") {
-      data.push({
-        depth: "2L",
-        id: secondBreakdown[unitIndex].id,
-        label: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].structureName,
-      });
-      data.push({
-        depth: "3L",
-        id: thirdBreakdown[subUnitIndex].id,
-        label: projectListData[index].breakdown[2].structure[0].name,
-        name: thirdBreakdown[subUnitIndex].structureName,
-      });
-      temp.push({
-        breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
-        breakdownValue: secondBreakdown,
-        selectValue: "",
-      });
-      temp.push({
-        breakdownLabel: projectListData[index].breakdown[2].structure[0].name,
-        breakdownValue: thirdBreakdown,
-        selectValue: "",
-      });
-    }
-    if (depth === "2L") {
-      data.push({
-        depth: "2L",
-        id: secondBreakdown[unitIndex].id,
-        label: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].structureName,
-      });
-      temp.push({
-        breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
-        breakdownValue: secondBreakdown,
-        selectValue: "",
-      });
-    }
+      if (depth === "4L") {
+        data.push({
+          depth: "2L",
+          id: secondBreakdown[unitIndex].id,
+          label: projectListData[index].breakdown[1].structure[0].name,
+          name: secondBreakdown[unitIndex].structureName,
+        });
+        data.push({
+          depth: "3L",
+          id: thirdBreakdown[subUnitIndex].id,
+          label: projectListData[index].breakdown[2].structure[0].name,
+          name: thirdBreakdown[subUnitIndex].structureName,
+        });
+        data.push({
+          depth: "4L",
+          id: fourthBreakdown[subSubUnitIndex].id,
+          label: projectListData[index].breakdown[2].structure[0].name,
+          name: fourthBreakdown[subSubUnitIndex].structureName,
+        });
+        temp.push({
+          breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
+          breakdownValue: secondBreakdown,
+          selectValue: "",
+        });
+        temp.push({
+          breakdownLabel: projectListData[index].breakdown[2].structure[0].name,
+          breakdownValue: thirdBreakdown,
+          selectValue: "",
+        });
+        temp.push({
+          breakdownLabel: projectListData[index].breakdown[3].structure[0].name,
+          breakdownValue: fourthBreakdown,
+          selectValue: "",
+        });
+      }
+      if (depth === "3L") {
+        data.push({
+          depth: "2L",
+          id: secondBreakdown[unitIndex].id,
+          label: projectListData[index].breakdown[1].structure[0].name,
+          name: secondBreakdown[unitIndex].structureName,
+        });
+        data.push({
+          depth: "3L",
+          id: thirdBreakdown[subUnitIndex].id,
+          label: projectListData[index].breakdown[2].structure[0].name,
+          name: thirdBreakdown[subUnitIndex].structureName,
+        });
+        temp.push({
+          breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
+          breakdownValue: secondBreakdown,
+          selectValue: "",
+        });
+        temp.push({
+          breakdownLabel: projectListData[index].breakdown[2].structure[0].name,
+          breakdownValue: thirdBreakdown,
+          selectValue: "",
+        });
+      }
+      if (depth === "2L") {
+        data.push({
+          depth: "2L",
+          id: secondBreakdown[unitIndex].id,
+          label: projectListData[index].breakdown[1].structure[0].name,
+          name: secondBreakdown[unitIndex].structureName,
+        });
+        temp.push({
+          breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
+          breakdownValue: secondBreakdown,
+          selectValue: "",
+        });
+      }
 
-    localStorage.setItem("selectBreakDown", JSON.stringify(data));
-    localStorage.setItem("projectName", JSON.stringify(projectListData[index]));
-    dispatch(projectName(projectListData[index]));
-    dispatch(breakDownDetails(data));
-    setProjectOpen(false);
-    redirectionAccount();
+      localStorage.setItem("selectBreakDown", JSON.stringify(data));
+      localStorage.setItem(
+        "projectName",
+        JSON.stringify(projectListData[index])
+      );
+      dispatch(projectName(projectListData[index]));
+      dispatch(breakDownDetails(data));
+      setProjectOpen(false);
+      redirectionAccount();
+    } else {
+      ("");
+    }
   };
 
   return (
